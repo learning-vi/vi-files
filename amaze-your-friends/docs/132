@@ -1,0 +1,35 @@
+From: henkbo@philce.UUCP (Henk Boetzkes)
+Newsgroups: comp.editors
+Subject: Re: How to put vi into 132 column mode?
+Date: 2 May 88 14:00:01 GMT
+
+>From: lazer@mnetor.UUCP (Lazer Danzinger)
+>Date: 26 Apr 88 16:20:34 GMT
+>
+>	Although I am aware that by setting the "term" type appropriately,
+>	one can place a vt100 into 132 column mode, I would like to
+>	solicit (preferably csh) scripts which place a vt100 into 132 column
+>	mode; then invoke vi with "term" set to vt00-w; and upon existing
+>	from the script, return everything back to normal.
+>
+>	Thanks.
+
+No no, not an csh script but an alias !!!
+
+alias wi     'setenv TERM vt100-w ; echo "^[[?3h" ; vi \!\!:* ; setenv TERM vt100 ; echo "^[[?3l" '
+
+	  ^                               ^
+	  |_______________________________|___= Control [
+
+And this one is free !
+First an "grep foo files" and then edit "files" which has "foo" in it.
+
+alias grepvi 'vi `grep -l \!\!:1 \!\!:2`'
+
+-- 
+=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+# Henk.A.P.A. Boetzkes # E.D.P. N.P.B. Consumer Electronics # PO. BOX 218      #
+# 5600 MD Eindhoven, The Netherlands # Building SK4, Room 416                  #
+# +31 40 735983 # !uunet! -> mcvax!philmds!philce!henkbo                       #=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#=#
+
+
