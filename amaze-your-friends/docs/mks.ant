@@ -1,0 +1,58 @@
+Article 3806 of comp.editors:
+Newsgroups: comp.editors
+From: ant@mks.com (Anthony Howe)
+Subject: Q. about VI macros
+Sender: ant@mks.com (Anthony Howe)
+Organization: Mortice Kern Systems, Waterloo, Ontario, CANADA
+Date: Thu, 16 Jan 1992 20:48:38 GMT
+
+
+I'm trying to modify the bouncing ball macros for speed for MKS VI.
+The macro
+
+map P :g/../y z^M
+
+I change to
+
+map P "zy$
+
+This works fine with MKS VI but now fails to run on BSD VI.  Something
+about "Can't yank in global/macros" error.  However the Turing and Maze
+macros all use the above technique of   "zy$   in various places and
+these do work on both BSD and MKS VI.  What's the problem with BSD VI?
+
+So thinking that this might be a context senstive thing for BSD, I rewrite
+the general form of the macro for better speed and different context.
+
+I change macros of the form
+
+map -N  r-jltmaGvaE^[`aromaG0P0D`a@z
+
+to the following
+
+map -N r-jltromaGvaE^[0PD`a@z
+
+This work for MKS but not for BSD.  Now the problem seems to be that
+BSD beeps after the  ro  for no apparent reason, thus halting the macros.
+
+Does anyone really understand the behaviour of macros under BSD VI?
+The end result is that I want to avoid using the :g/../y Z^M version
+because :g takes time under MKS VI.
+
+-ant
+
+PS. Find below my modified version and the orignal ball macros plus
+one playing field.  Note that ant.mac is an experimental version.
+
+DO NOT ARCHIVE PLEASE
+
+#
+# UUencoded macros deleted by the archive mantainer on request.
+# 
+
+-- 
+ant@mks.com                                                   Anthony C Howe 
+Mortice Kern Systems Inc. 35 King St. N., Waterloo, Ontario, Canada, N2J 6W9
+"Congratulations, you've reached 10cm dilation. You may now give birth." - Worf
+
+
