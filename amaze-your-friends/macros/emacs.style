@@ -1,0 +1,60 @@
+From: kinzler@iuvax.cs.indiana.edu (Steve Kinzler)
+Subject: More vi macros
+Date: 10 Aug 90 20:48:46 GMT
+
+To comp.editors in news:
+
+At Maarten's suggestion, I'm posting this here.  I also have similar
+sets of macro bindings for tcsh(1) and fep(1) available upon request.
+
+| From: Steve Kinzler <kinzler@iuvax.cs.indiana.edu>
+| 
+| To lamour@mitre.org in mail:maart@cs.vu.nl
+| 
+| After seeing your vi macros summary in comp.editors, I thought you might
+| be interested is seeing my .exrc file.  Notable in it is a collection of
+| insert-mode macros (map!) that give an emacs-like line-editing
+| functionality with vi-like mnemonics.  Show this in your next emacs vs
+| vi debate when they complain that they have to type too many keystrokes
+| to do their line editing in vi!  I've put a star in front of my
+| favorites.  I don't have time to comment them all now -- if there's any
+| for which you can't figure out what I had in mind, drop me a note.
+| 
+| from the brain of Steve Kinzler    /o)\    kinzler@iuvax.cs.indiana.edu
+| an organ with a mind of its own    \(o/    {ames,rutgers}!iuvax!kinzler
+| 
+| 	set redraw
+| *	map ^A :w^M
+| *	map ^K "xd1G
+| *	map ^N "xdG
+| 	map ^O :"Unmapped: * V g v ^[1 ^[2 ^[6 ^[7 ^[8 ^[<string> @<buffer>^M
+| 	map ^X my`x"xd`y
+| 	map ^^ :e! #^M
+| *	map K :q!
+| 	map W "xPmx
+| 	map Y my`x"xy`y`y
+| *	map \ :e #^M
+| *	map q :w^M:n^M
+| 	map ^[0 !}fmt^M
+| 	map ^[3 :r ~/etc/sig^M
+| 	map ^[4 :%s/_^V^V^H//g^M
+| 	map ^[5 OT...:...T1....:.T..2....T....3..T.:....4T...:...T5....:.T..6....T....7..T.:....8^[
+| 	map ^[9 mx}:'x,s/^> //^M'x!}fmt^Mmx}:'x,s/./> &/^M
+| 	map ^[dp mp%x`px
+| 	map! ^A ^[I
+| 	map! ^B ^[bi
+| 	map! ^E ^[A
+| 	map! ^F ^[lea
+| 	map! ^K ^[Da
+| 	map! ^L ^[la
+| 	map! ^O ^[^Da
+| 	map! ^T ^[Xpa
+| 	map! ^R ^[bdwi
+| 	map! ^X ^[lxi
+| 	map! ^Y ^[ka
+| 	map! ^Z ^[ja
+| 	map! ^? ^[i
+| *	map! ^[, ^["mdd@m
+| *	map! ^[. ^[!!csh^M
+
+
