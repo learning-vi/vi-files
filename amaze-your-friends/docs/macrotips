@@ -1,0 +1,246 @@
+From jpr@jpradley.jpr.com (Jean-Pierre Radley)
+Subject: Re: How do we include a "|" in vi macros ??
+Date: Thu, 03 Sep 1992 02:41:14 GMT
+
+In article <1992Aug31.185656.12365@bnr.ca> mschee@bcarh600.bnr.ca (Michael SamChee) writes:
+>Does anyone know how one can include the pipe character "|" in a vi macro?
+>
+>eg. map ^A :!exec cat tmp | more
+>
+>Nothing I've tried seems to work.
+
+
+The '|' is used by ex as a command separator.
+
+Many shells maintain the obsolete symbol for piping, the '^'.
+
+So try
+	map ^A :! do_this ^ do_that ^M
+
+-- 
+Jean-Pierre Radley   Unix in NYC   jpr@jpr.com   jpradley!jpr   CIS: 72160,1341
+
+
+From sjreeves@eng.auburn.edu (Stan Reeves)
+Subject: vi macro question
+Date: Thu, 28 Jan 1993 15:44:58 GMT
+
+I have my EXINIT variable set as follows:
+
+setenv EXINIT "map q /^>Status:
+
+The purpose of the map is so that when I go into vi from mail I can hit
+"q" and have it automatically delete the mail header from quoted mail.
+This works just fine.  However, when I try to undo ("u") a delete later
+on in the editing session, it undoes *everything* from the point I 
+started the editing session.  Sometimes the editor mumbles something
+about a global macro, although I can't remember the exact circumstances.
+Anybody got any ideas on why "u" undoes everything rather than just the
+last change?  Any ideas on how to change that behavior?
+
+
+--
+Stan Reeves
+Auburn University, Department of Electrical Engineering, Auburn, AL  36849
+INTERNET: sjreeves@eng.auburn.edu
+
+
+From markhof@ls12r.informatik.uni-dortmund.de (Ingolf Markhof)
+Subject: vi macros (a challange)
+Date: 28 Jun 1993 15:46:27 GMT
+
+-------------------------------------------------------------------------------
+
+In the "VI Tutor" V2.1 from frc@dadd.ti.com, I found the following macro:
+
+>   3.  Let's define a map to complement the Insert Mode arrow keys:
+> 
+>       " <DELETE> key deletes characters in Command Mode AND Insert Mode
+>       map ^V<DELETE> x
+>       map! ^V<DELETE> ^V<ESC>lxi
+> 
+>       Usage:
+> 
+>       <DELETE> deletes the character under the cursor in Command Mode or
+>                Insert mode (one remains in Insert Mode when using <DELETE>).
+
+This is a good idea and the map works fine. But the map! is context
+dependend:  If you use "map! ^V<DEL> ^V<ESC>lxi", the meaning of the
+<DEL> key depends on your position in the line. If you are in the
+middle of a line, there is no problem. But if you are at the end of a
+line, the macro does not what it should do! Example:
+
+In command mode, type "o" to start a new line and then type some
+characters followed by <ESC>. Because you're at the end of the line,
+the curser moves back one char to be placed above the last character in
+the line (after timeout). Now, the "l" is not possible. If you type an
+"l" now, your terminal beeps or flashes. Next, press the "x". It
+deletes the wrong character. If you finally type the "i" to get back
+into insert mode, you're inserting at the wrong position.
+
+Well, one could say "simply don't use <DEL> when inserting at the end
+of a line. But I also want to map the <BACKSPACE> key by map! to use
+this key in insert mode, too. Here, the same problem arises, while it
+makes sense to use the <BACKSPACE> key when inserting at the end of a
+line.
+
+The problem is, that vi moves the curser back one character if you
+delete the last character in a line, but it does not move the cursor if
+you delete in the middle of a line. Thus, you must continue with append
+(a) in the one case, but with insert (i) in the other. But there is no
+way to make such a difference in a macro!
+
+And there is an even more dirty thing. If you map! <DEL> and
+<BACKSPACE>, these macros will also apply if you enter text in ex-mode
+(introduced by ":"). But this is definately not wanted, because you
+need this keys unmapped! to correct mistyped commands in ex-mode.
+
+I found no reasonable way to map! <DEL> and <BACKSPACE> so that they
+a) have a context independent meaning when editing the text buffer and
+b) they also can be used in ex-mode as expected.
+
+Challange:
+
+Is some able to solve this problem?
+
+Or is the best you can do simply to forget mapping (map!) <DEL> and
+<BACKSPACE>?
+
+Any hints are welcome!
+
+Ingolf Markhof!
+
+------------------------------------------------------------------------------
+      ____                                                                    
+  UniDo  /  Ingolf Markhof  University of Dortmund, LS Informatik XII         
+ ___/   /                   P.O. Box 500 500, D-44221 Dortmund, F.R. Germany
+ \  \  /                    Phone: +49 (231) 755 6142, Fax: +49 (231) 755 6116  
+  \__\/                     Email: markhof@ls12.informatik.uni-dortmund.de    
+                                                                              
+------------------------------------------------------------------------------
+
+
+
+From markhof@ls12r.informatik.uni-dortmund.de (Ingolf Markhof)
+Subject: vi macros - HELP!
+Date: 30 Jun 1993 13:10:37 GMT
+
+-------------------------------------------------------------------------------
+
+In vi, you can type
+
+	!!wc | awk '{print $2}' <CR>
+
+in a line of text to see how many words are in it. But if you try to use this
+in a macro, i.e.
+
+	:map \ !!wc | awk '{print $2}'^M
+
+vi doesn't like it. All you get is the message "awk: Not an editor command".
+
+Why? What's wrong?
+
+Ingolf Markhof
+
+
+------------------------------------------------------------------------------
+      ____                                                                    
+  UniDo  /  Ingolf Markhof  University of Dortmund, LS Informatik XII         
+ ___/   /                   P.O. Box 500 500, D-44221 Dortmund, F.R. Germany
+ \  \  /                    Phone: +49 (231) 755 6142, Fax: +49 (231) 755 6116  
+  \__\/                     Email: markhof@ls12.informatik.uni-dortmund.de    
+                                                                              
+------------------------------------------------------------------------------
+
+
+
+From markhof@ls12r.informatik.uni-dortmund.de (Ingolf Markhof)
+Subject: Re^2: vi macros - HELP!
+Date: 1 Jul 1993 09:33:35 GMT
+
+-------------------------------------------------------------------------------
+
+In article <20s3cdINN941@fbi-news.Informatik.Uni-Dortmund.DE>
+markhof@ls12r.informatik.uni-dortmund.de (Ingolf Markhof) writes:
+>In vi, you can type
+>
+>	!!wc | awk '{print $2}' <CR>
+>
+>in a line of text to see how many words are in it. But if you try to use this
+>in a macro, i.e.
+>
+>	:map \ !!wc | awk '{print $2}'^M
+>
+>vi doesn't like it. All you get is the message "awk: Not an editor command".
+>
+>Why? What's wrong?
+
+Thanks to the people who told me that the macro doesn't work because
+the pipe symbol "|" is a command separator. I wonder where one can find
+this information. - I found nothing in my SUN OS DOCUMENTATION TOOLS
+Manual.
+
+Of course, one can avoid the problem by using wc -w in the macro above.
+In fact, I didn't want to count words of a line, only. The macro above
+was only a reduced version...
+
+I now have sucessfully completed my macro. But I still have a problem
+(which I must handle by a workaround). Here is the Problem:
+
+The macro I want is for table processing: Move to (the begin of) the
+n-th field in the table and start the macro. The macro task is to go
+through the table, line by line, and to ckeck if the n-th field of
+the current line differs from the n-th field of the previous line.
+If so, a blank line is inserted. Thus, the table
+
+123 AAA dsfkl
+345 AAA lksda
+789 BBB fdsjf
+012 CCC sfsdd
+345 CCC fdsdj
+
+will be changed to
+
+123 AAA dsfkl
+345 AAA lksda
+
+789 BBB fdsjf
+
+012 CCC sfsdd
+345 CCC fdsdj
+
+if the macro is started at the AAA in the first line. Here is my current
+solution:
+
+map \ts mt"tyy"tP`tkD!!wc^M!!awk '{print "\!}awk @{if ($"$2+1"!=o) print \"\";
+print; o=$"$2+1"}@"}^M\@ts1
+map \@ts1 :s/@/'/g^M"tdd@t
+
+The first macro marks the current cursor position, yanks the current line,
+moves the curser to the column of this new line which is give my the mark,
+deletes the rest and counts the words to determine the word number (n-th
+word). Then, an awk is used to print a line of commands to be yanked in
+buffer t to be executed by a @t, finally. In fact, the line of commands
+pinted by the awk is a awk shell filter, again.
+
+Problems:
+
+1) How to print a single quote with awk? Due to some problems with the shell
+   and awk I was not able to get awk printing things like "'{print}'". Thus,
+   I use a workaround: Instead of single quotes, I use the at-sign "@" when
+   printing the comand line. Then, I change "$" to "'" before yanking the
+   line into buffer t. This works. But I guess it must be possible to do it
+   better.
+
+
+2) The first macro finally calls the second. Although there is semantically
+   no need to use two macros, vi doesn't like to see both in one. Why?
+
+Ingolf Markhof!
+
+------------------------------------------------------------------------------
+      ____                                                                    
+  UniDo  /  Ingolf Markhof  University of Dortmund, LS Informatik XII         
+ ___/   /                   P.O. Box 500 500, D-44221 Dortmund, F.R. Germany
+ \  \  /                    Phone: +49 (231) 755 6142, Fax: +49 (231) 755 6116  
+  \__\/                 
