@@ -1,0 +1,476 @@
+System: Bed version 1
+Patch #: 1
+Priority: LOW
+Subject: fails to compile on non BSD systems
+From:	john@dutesta.UUCP (John Nellen)
+	rhott@nswc-oas.ARPA (Bob Hott)
+
+Description:
+	If this program is compiled on SYS V it fails with an undefined
+	include file, undefined constants and system calls.
+
+Fix:
+	Run the command "patch < thisfile".
+	If patch indicates that "bed.c" is the wrong version, you may need
+	to apply one or more previous patches, or the patch may already
+	have been applied.  See the file "bed.c" to find out what has or
+	has not been applied.  In any event, don't continue with the patch.
+
+Index: patchlevel
+Prereq: 0
+1c1
+< Patch #: 0
+---
+> Patch #: 1
+
+*** bed.c.old	Sat Jun 15 19:00:39 1985
+--- bed.c	Sat Jun 15 18:57:25 1985
+***************
+*** 1,5
+  /* Written by Stephen J. Muir, Computing Dept., Lancaster University */
+  
+  # include <sys/types.h>
+  # include <sys/stat.h>
+  # include <sys/file.h>
+
+--- 1,13 -----
+  /* Written by Stephen J. Muir, Computing Dept., Lancaster University */
+  
++ /* version 1.0
++  * release date 4th June 1985
++  *
++  * patch date 15th June 1985
++  * changed to run on non-BSD systems
++  * added 'v' command
++  */
++ 
+  # include <sys/types.h>
+  # include <sys/stat.h>
+  # ifdef BSD
+***************
+*** 2,7
+  
+  # include <sys/types.h>
+  # include <sys/stat.h>
+  # include <sys/file.h>
+  # include <stdio.h>
+  # include <signal.h>
+
+--- 10,16 -----
+  
+  # include <sys/types.h>
+  # include <sys/stat.h>
++ # ifdef BSD
+  # include <sys/file.h>
+  # endif BSD
+  # include <stdio.h>
+***************
+*** 3,8
+  # include <sys/types.h>
+  # include <sys/stat.h>
+  # include <sys/file.h>
+  # include <stdio.h>
+  # include <signal.h>
+  
+
+--- 12,18 -----
+  # include <sys/stat.h>
+  # ifdef BSD
+  # include <sys/file.h>
++ # endif BSD
+  # include <stdio.h>
+  # include <signal.h>
+  
+***************
+*** 8,14
+  
+  extern char	*rindex (), *mktemp (), *getenv (), *getcom (), *getpar ();
+  
+! char	*version = "Bed version 1.0\n";
+  
+  char	*filename, *editor, *ap, abuf [32],
+  	*tempdata = "DbedXXXXXX", *temptext = "TbedXXXXXX";
+
+--- 18,24 -----
+  
+  extern char	*rindex (), *mktemp (), *getenv (), *getcom (), *getpar ();
+  
+! char	*version = "Bed version 1.1\n";
+  
+  char	*filename, *editor, *ap, abuf [32],
+  	*tempdata = "DbedXXXXXX", *temptext = "TbedXXXXXX";
+***************
+*** 373,380
+  	}
+  
+  copyorig ()
+! 	{ lseek (ofd, 0, 0);
+! 	  lseek (dfd, 0, 0);
+  	  ftruncate (dfd, 0);
+  	  while ((count = read (ofd, (char *)buf, sizeof (buf))) > 0)
+  		if (write (dfd, (char *)buf, count) != count)
+
+--- 383,392 -----
+  	}
+  
+  copyorig ()
+! 	{
+! # ifdef BSD
+! 	  lseek (ofd, 0, L_SET);
+! 	  lseek (dfd, 0, L_SET);
+  	  ftruncate (dfd, 0);
+  # else BSD
+  	  lseek (ofd, 0, 0);
+***************
+*** 376,381
+  	{ lseek (ofd, 0, 0);
+  	  lseek (dfd, 0, 0);
+  	  ftruncate (dfd, 0);
+  	  while ((count = read (ofd, (char *)buf, sizeof (buf))) > 0)
+  		if (write (dfd, (char *)buf, count) != count)
+  			syserr (tempdata);
+
+--- 388,398 -----
+  	  lseek (ofd, 0, L_SET);
+  	  lseek (dfd, 0, L_SET);
+  	  ftruncate (dfd, 0);
++ # else BSD
++ 	  lseek (ofd, 0, 0);
++ 	  lseek (dfd, 0, 0);
++ 	  close (creat (tempdata, 0));
++ # endif BSD
+  	  while ((count = read (ofd, (char *)buf, sizeof (buf))) > 0)
+  		if (write (dfd, (char *)buf, count) != count)
+  			syserr (tempdata);
+***************
+*** 421,426
+  	  }
+  	  if ((tfd = fopen (temptext, "w+")) == NULL)
+  		syserr (temptext);
+  	  lseek (dfd, 0, 0);
+  	  width = 0;
+  	  fstat (dfd, &status);
+
+--- 438,446 -----
+  	  }
+  	  if ((tfd = fopen (temptext, "w+")) == NULL)
+  		syserr (temptext);
++ # ifdef BSD
++ 	  lseek (dfd, 0, L_SET);
++ # else BSD
+  	  lseek (dfd, 0, 0);
+  # endif BSD
+  	  width = 0;
+***************
+*** 422,427
+  	  if ((tfd = fopen (temptext, "w+")) == NULL)
+  		syserr (temptext);
+  	  lseek (dfd, 0, 0);
+  	  width = 0;
+  	  fstat (dfd, &status);
+  	  printf ("Preparing for edit.\n");
+
+--- 442,448 -----
+  	  lseek (dfd, 0, L_SET);
+  # else BSD
+  	  lseek (dfd, 0, 0);
++ # endif BSD
+  	  width = 0;
+  	  fstat (dfd, &status);
+  	  printf ("Preparing for edit.\n");
+***************
+*** 441,447
+  	  fstat (fileno (tfd), &status);
+  	  if (status.st_mtime != t_mtime)
+  	  { fseek (tfd, 0, 0);
+! 	    lseek (dfd, 0, 0);
+  	    ftruncate (dfd, 0);
+  	    printf ("Copying back changes.\n");
+  	    if ((i = (*infunc) ()) < 0)
+
+--- 462,469 -----
+  	  fstat (fileno (tfd), &status);
+  	  if (status.st_mtime != t_mtime)
+  	  { fseek (tfd, 0, 0);
+! # ifdef BSD
+! 	    lseek (dfd, 0, L_SET);
+  	    ftruncate (dfd, 0);
+  # else BSD
+  	    lseek (dfd, 0, 0);
+***************
+*** 443,448
+  	  { fseek (tfd, 0, 0);
+  	    lseek (dfd, 0, 0);
+  	    ftruncate (dfd, 0);
+  	    printf ("Copying back changes.\n");
+  	    if ((i = (*infunc) ()) < 0)
+  	    { perror (tempdata);
+
+--- 465,474 -----
+  # ifdef BSD
+  	    lseek (dfd, 0, L_SET);
+  	    ftruncate (dfd, 0);
++ # else BSD
++ 	    lseek (dfd, 0, 0);
++ 	    close (creat (tempdata, 0));
++ # endif BSD
+  	    printf ("Copying back changes.\n");
+  	    if ((i = (*infunc) ()) < 0)
+  	    { perror (tempdata);
+***************
+*** 520,525
+  	  }
+  	  else
+  		filename = *argv;
+  	  if ((ofd = open (filename, O_RDWR, 0)) == -1)
+  		syserr (*argv);
+  	  if (flock (ofd, LOCK_EX | LOCK_NB) == -1)
+
+--- 546,552 -----
+  	  }
+  	  else
+  		filename = *argv;
++ # ifdef BSD
+  	  if ((ofd = open (filename, O_RDWR, 0)) == -1)
+  # else BSD
+  	  if ((ofd = open (filename, 2)) == -1)
+***************
+*** 521,526
+  	  else
+  		filename = *argv;
+  	  if ((ofd = open (filename, O_RDWR, 0)) == -1)
+  		syserr (*argv);
+  	  if (flock (ofd, LOCK_EX | LOCK_NB) == -1)
+  	  { fprintf (stderr, "%s: waiting for lock to be released\n", *argv);
+
+--- 548,556 -----
+  		filename = *argv;
+  # ifdef BSD
+  	  if ((ofd = open (filename, O_RDWR, 0)) == -1)
++ # else BSD
++ 	  if ((ofd = open (filename, 2)) == -1)
++ # endif BSD
+  		syserr (*argv);
+  # ifdef BSD
+  	  if (flock (ofd, LOCK_EX | LOCK_NB) == -1)
+***************
+*** 522,527
+  		filename = *argv;
+  	  if ((ofd = open (filename, O_RDWR, 0)) == -1)
+  		syserr (*argv);
+  	  if (flock (ofd, LOCK_EX | LOCK_NB) == -1)
+  	  { fprintf (stderr, "%s: waiting for lock to be released\n", *argv);
+  	    flock (ofd, LOCK_EX);
+
+--- 552,558 -----
+  	  if ((ofd = open (filename, 2)) == -1)
+  # endif BSD
+  		syserr (*argv);
++ # ifdef BSD
+  	  if (flock (ofd, LOCK_EX | LOCK_NB) == -1)
+  	  { fprintf (stderr, "%s: waiting for lock to be released\n", *argv);
+  	    flock (ofd, LOCK_EX);
+***************
+*** 526,531
+  	  { fprintf (stderr, "%s: waiting for lock to be released\n", *argv);
+  	    flock (ofd, LOCK_EX);
+  	  }
+  	  fstat (ofd, &status);
+  	  if ((status.st_mode & S_IFMT) != S_IFREG)
+  	  { printf ("%s: not regular file\n", *argv);
+
+--- 557,565 -----
+  	  { fprintf (stderr, "%s: waiting for lock to be released\n", *argv);
+  	    flock (ofd, LOCK_EX);
+  	  }
++ # else BSD
++ 	  /* too bad locking isn't present on most systems - oh well */
++ # endif BSD
+  	  fstat (ofd, &status);
+  	  if ((status.st_mode & S_IFMT) != S_IFREG)
+  	  { printf ("%s: not regular file\n", *argv);
+***************
+*** 535,540
+  	  umask (0);
+  	  mktemp (tempdata);
+  	  mktemp (temptext);
+  	  if ((dfd = open (tempdata, O_RDWR | O_CREAT, status.st_mode)) == -1)
+  		syserr (tempdata);
+  	  if ((editor = getenv ("VISUAL")) == 0 &&
+
+--- 569,575 -----
+  	  umask (0);
+  	  mktemp (tempdata);
+  	  mktemp (temptext);
++ # ifdef BSD
+  	  if ((dfd = open (tempdata, O_RDWR | O_CREAT, status.st_mode)) == -1)
+  # else BSD
+  	  if ((dfd = creat (tempdata, status.st_mode)) == -1 ||
+***************
+*** 536,541
+  	  mktemp (tempdata);
+  	  mktemp (temptext);
+  	  if ((dfd = open (tempdata, O_RDWR | O_CREAT, status.st_mode)) == -1)
+  		syserr (tempdata);
+  	  if ((editor = getenv ("VISUAL")) == 0 &&
+  	      (editor = getenv ("EDITOR")) == 0
+
+--- 571,582 -----
+  	  mktemp (temptext);
+  # ifdef BSD
+  	  if ((dfd = open (tempdata, O_RDWR | O_CREAT, status.st_mode)) == -1)
++ # else BSD
++ 	  if ((dfd = creat (tempdata, status.st_mode)) == -1 ||
++ 	      close (dfd) == -1 ||
++ 	      (dfd = open (tempdata, 2)) == -1
++ 	     )
++ # endif BSD
+  		syserr (tempdata);
+  	  if ((editor = getenv ("VISUAL")) == 0 &&
+  	      (editor = getenv ("EDITOR")) == 0
+***************
+*** 550,555
+  		    !quest ("File has not been modified; are you sure? ")
+  		   )
+  			break;
+  		if (rename (tempdata, filename) == -1)
+  		{ perror ("rename()");
+  		  fprintf (stderr, "new file is in \"%s\"\n", tempdata);
+
+--- 591,597 -----
+  		    !quest ("File has not been modified; are you sure? ")
+  		   )
+  			break;
++ # ifdef BSD
+  		if (rename (tempdata, filename) == -1)
+  # else BSD
+  		if (unlink (filename) == -1 ||
+***************
+*** 551,556
+  		   )
+  			break;
+  		if (rename (tempdata, filename) == -1)
+  		{ perror ("rename()");
+  		  fprintf (stderr, "new file is in \"%s\"\n", tempdata);
+  		  exit (1);
+
+--- 593,604 -----
+  			break;
+  # ifdef BSD
+  		if (rename (tempdata, filename) == -1)
++ # else BSD
++ 		if (unlink (filename) == -1 ||
++ 		    link (tempdata, filename) == -1 ||
++ 		    unlink (tempdata) == -1
++ 		   )
++ # endif BSD
+  		{ perror ("rename()");
+  		  fprintf (stderr, "new file is in \"%s\"\n", tempdata);
+  		  exit (1);
+***************
+*** 583,588
+  			reclen = atoi (getpar ("record length? "))
+  		       );
+  		break;
+  	      case 'h':
+  	      case '?':
+  		printf ("The following commands are available:\n");
+
+--- 631,639 -----
+  			reclen = atoi (getpar ("record length? "))
+  		       );
+  		break;
++ 	      case 'v':
++ 		printf (version);
++ 		break;
+  	      case 'h':
+  	      case '?':
+  		printf ("The following commands are available:\n");
+***************
+*** 596,601
+  		printf ("e - edit\n");
+  		printf ("w - write out file and quit\n");
+  		printf ("q - quit\n");
+  		printf ("radix = %d, bits = %d,", base, bits);
+  		printf (" length of record = %d bytes%s.\n",
+  			reclen,
+
+--- 647,653 -----
+  		printf ("e - edit\n");
+  		printf ("w - write out file and quit\n");
+  		printf ("q - quit\n");
++ 		printf ("v - print version\n");
+  		printf ("radix = %d, bits = %d,", base, bits);
+  		printf (" length of record = %d bytes%s.\n",
+  			reclen,
+*** Makefile.old	Sat Jun 15 19:00:49 1985
+--- Makefile	Sat Jun 15 05:06:26 1985
+***************
+*** 2,7
+  DESTMAN=/usr/man/mann/bed.n
+  CFLAGS=-O
+  OBJECTS=bed.o getcom.o quest.o
+  # The type whose width is 1 byte.
+  W8=char
+  # The type whose width is 2 bytes.
+
+--- 2,9 -----
+  DESTMAN=/usr/man/mann/bed.n
+  CFLAGS=-O
+  OBJECTS=bed.o getcom.o quest.o
++ # Comment out the next line for non BSD systems.
++ SYSTEM=-DBSD
+  # The type whose width is 1 byte.
+  W8=char
+  # The type whose width is 2 bytes.
+***************
+*** 16,22
+  
+  bed.o:	bed.c
+  	cc -c ${CFLAGS} -DW8=${W8} -DW16=${W16} -DW32=${W32} \
+! 	-DEDITOR=\"${EDITOR}\" bed.c
+  
+  install:bed
+  	install -s bed ${DESTBIN}
+
+--- 18,24 -----
+  
+  bed.o:	bed.c
+  	cc -c ${CFLAGS} -DW8=${W8} -DW16=${W16} -DW32=${W32} \
+! 	${SYSTEM} -DEDITOR=\"${EDITOR}\" bed.c
+  
+  install:bed
+  	install -s bed ${DESTBIN}
+*** bed.n.old	Sat Jun 15 19:01:00 1985
+--- bed.n	Sat Jun 15 04:57:19 1985
+***************
+*** 1,4
+! .TH BED 1 "4 June 1985"
+  .SH NAME
+  bed \- an editor for binary files
+  .SH SYNOPSIS
+
+--- 1,4 -----
+! .TH BED 1 "15 June 1985"
+  .SH NAME
+  bed \- an editor for binary files
+  .SH SYNOPSIS
+***************
+*** 68,73
+  .TP 8
+  q
+  Exits without updating the original.
+  .SH NOTES
+  The user must have read/write access to the original file
+  .I and
+
+--- 68,76 -----
+  .TP 8
+  q
+  Exits without updating the original.
++ .TP 8
++ v
++ Prints version number.
+  .SH NOTES
+  The user must have read/write access to the original file
+  .I and
