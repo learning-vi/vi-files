@@ -1,0 +1,273 @@
+vi tutorial #5: Tricks and Timesavers
+
+This lesson lasts 10-15 minutes.  You should have a strong
+understanding of tutorials #1-3 before working through these timesaving
+techniques.  Lines which begin with  >>>  mark exercises you should
+try.  When you want to exit this tutorial type  ZZ .
+
+
+CASE CONVERSION
+---------------
+When you want to change an upper-case character to a lower-case
+character (or lower-case to upper-case) there is a single command which
+does both:
+
+	~	(tilde) Convert case of current character
+
+>>>  Move the cursor to be OVER the first character in the example
+>>>  line below.  Press  ~  until you have changed the case of the
+>>>  entire line.  (  ~  will advance to the right automatically).
+
+	bOB WENT TO pARIS, fRANCE, TO SEE THE #1 CYCLING EVENT.  end.
+
+Note that  ~  only affects alphabetic characters.
+
+
+UNDOING
+-------
+You have already learned the  u  command which UNDOes the last change.
+The  U  command will undo more than one change.
+
+	U	(upper u) UNDO all changes made to the current line
+		as long as your cursor has not moved off the line
+
+There are three rules to learn:
+
+  U  will not re-do changes you have UNDOne (e.g. by pressing  U  twice)
+  U  will not restore a line which has been deleted
+  U  will not work if you have moved off the line you changed
+
+>>>  Move the cursor to the first line of the example text.  Delete
+>>>  the words "FISH" and "RAT" from the first line.  Now type  U
+>>>  (all changes to that line should be undone).  Type  U  again
+>>>  (nothing should happen).
+
+	EXAMPLE:  The FISH fed the cat.  The RAT fed the cat.  Example
+	text is HARD to make interesting.  The man fed the BUG.  The
+	worm fed the cat.  Example text is hard to make interesting.  END.
+
+>>>  Move the cursor to the second line of the example text.  Delete
+>>>  the words "HARD" and "BUG" from the second line.  Now type  j .
+>>>  Then type  k  .  Then type  U  (nothing should happen).
+
+>>>  Delete the first line of example text using  dd  .  Then type  U
+>>>  (nothing should happen).
+
+
+REPEAT LAST COMMAND
+-------------------
+Often you want to make the same change at multiple locations in the
+file.  To help accomplish this, vi remembers your previous action.
+
+	.	(dot) repeat last change
+
+>>> Go through the example below changing "FISH" to "TOAD":
+>>>	Go to the "F" in the first instance of "FISH"
+>>>	To change the word:  type  cw  then type  TOAD  then press ESC
+>>>     Move the cursor to "F" in the second occurence of "FISH"
+>>>     Type  .  (dot)
+>>>     Move the cursor to "F" in the final occurence of "FISH"
+>>>     Type  .  (dot)
+>>>     Now move the cursor to each occurence of "CROW";  Type  .  (dot)
+
+	EXAMPLE:  The FISH fed the cat.  The CROW fed the cat.  Example
+	text is FISH to make interesting.  The man fed the CROW.  The
+	worm fed the FISH.  Example text is hard to make CROW.  END.
+
+>>> Go through the example above deleting all occurences of "TOAD":
+>>>     Move to the beginning of the EXAMPLE paragraph above.
+>>>     Type  /TOAD  and press RETURN (recall tutorial #2)
+>>>	Delete the word by typing  dw
+>>>     Type  n  to move to the next occurence of "TOAD"
+>>>     Type  .  (dot) to repeat the  dw  command
+>>>     Use  n.  to delete the remaining "TOAD"s
+
+Note that  .  only repeats changes, not cursor movements.
+
+
+WINDOW ACTIONS
+--------------
+You are already familiar with the  ^U  (depress the control key and
+type u) and ^D  commands from tutorial #1.
+
+	^D	Move DOWN one half-screen
+	^U	Move UP one half-screen
+
+There are several related commands:
+
+	^F	Move FORWARD one full-screen
+	^B	Move BACKWARD one full-screen
+
+	^E	Move the window down one line without moving cursor
+	^Y	Move the window up one line without moving cursor
+
+The  ^E  and  ^Y  commands may seem obscure; however, notice that on
+the keyboard,  e and  y  are close to  d  and  u  respectively.  This
+should help you remember that  ^E  moves DOWN, and  ^Y  moves UP.
+
+Recall the  H  M  L  (HIGH MIDDLE LOW) window commands from Tutorial 2.
+Consider a scenario where you want to yank from the current line to a
+line near the top of the window.  You could use  ^E  and  ^Y  to
+position the text in the window before you use the  yH  command.
+
+The  z  command also moves the window without moving your cursor:
+
+    z<RETURN>	Position the current line to top of window
+	z.	Position the current line to middle of window
+	z-	Position the current line to bottom of window
+
+>>>     Move to this line.  Type  z  and press RETURN.  Notice that
+>>>     this text and the cursor have moved to the top of the window.
+>>>     Try  z-  and  z.  also.
+
+
+FILE AND DISPLAY CONTROL
+------------------------
+Here are two commands which you may need to use during a vi session but
+do not involve your text.
+
+	^G	Show status of current file 
+	^L	Refresh screen
+
+When you type  ^G  (depress the control key and type g) a line appears 
+at the bottom of the window describing the current file.  The line
+contains:
+
+	the name of the file
+	the message "[Read only]" if the file is read only
+	the message "[Modified]" if there are unsaved changes
+	the position of the cursor in the file
+	the percentage of the file above the cursor
+
+The  ^L  command clears and redraws your window.  This is useful when
+something other than vi outputs to your window, e.g. line noise from a
+modem, or incoming mail.  If there is no "garbage" in your window,
+pressing  ^L  may not do anything noticable.
+
+
+SUSPENDING VI
+-------------
+Here is a way to go back and forth between vi and the Unix command
+line:
+
+	^Z	Suspend this job and return to the Unix command line
+	fg	(foreground) Continue the suspended job
+
+With this pair of commands you can SUSPEND the vi session, do something
+from the Unix command line, then resume the suspended session by
+typing  fg  at the command line.  Note that  fg  stands for foreground.
+
+Read these instructions CAREFULLY before suspending vi.
+>>>     (Imagine you have an urge to type  ls  at the command line).
+>>>     Type  ^Z  to suspend vi.
+>>>     At the command line type  ls  and then  fg  to foreground vi.
+
+If your shell does not support job control, e.g. /bin/sh, then the ^Z
+command will beep instead of suspending vi.
+
+
+BANG COMMAND
+------------
+The exclamation point,  !  (aka BANG), command allows you to feed text
+to any Unix command.  The output of the Unix command replaces the
+original text.  Here is a useful Unix command to use from within vi:
+
+	!}fmt   Format the paragraph, joining and filling lines to
+		produce output lines of up to 72 characters
+
+>>>  Move to the example paragraph below. Type  !}fmt  and press
+>>>  RETURN.  Notice the paragraph will be reformatted such that
+>>>  the lines are of approximately equal length.
+
+	EXAMPLE:
+	So we grow together,
+	Like to a double cherry, seeming parted,
+	But yet an union in partition;
+	Two lovely berries moulded on one stem;
+	So, with two seeming bodies, but one heart;
+	END.
+
+Another useful command is:
+
+       !}sort	Sort lines of a paragraph alphabetically
+
+>>>  Move to the example text below. Type  !}sort  and press RETURN.
+
+	OBERON		king of the fairies.
+	PUCK		or Robin Goodfellow.
+	HERMIA		daughter to Egeus, in love with Lysander.
+	HELENA		in love with Demetrius.
+	LYSANDER	in love with Hermia.
+	DEMETRIUS	in love with Hermia.
+
+Remember, any Unix command may be used this way.
+
+
+SHIFTING TEXT
+-------------
+It is possible to shift large blocks of text right and left with the >
+and  <  commands.
+
+   >movement	Shift right to where the movement command specifies
+   <movement	Shift left to where the movement command specifies
+
+These commands work like the  d  command.  For example:
+
+	>}	Shift right to the end of the paragraph
+	<}	Shift left to the end of the paragraph
+	>>	Shift the current line right
+	<<	Shift the current line left
+
+>>>  Move the cursor to the first line of the paragraph below.
+>>>  Type  >>  and  <<  to shift the line back and forth.  Next
+>>>  try  >}  to shift the paragraph to the right, then  <}  to shift
+>>>  it left, then type  .  until all four lines start at the left edge.
+
+	THIS IS THE FIRST LINE OF EXAMPLE TEXT
+	    IS
+    EXAMPLE
+		TEXT END
+
+
+SUMMARY
+-------
+
+	~	(tilde) Convert case of current character
+
+	U	(upper u) UNDO all changes made to the current line
+		as long as your cursor has not moved off the line
+
+	.	(dot) repeat last change
+
+	^D      Move DOWN one half-screen
+		(depress the control key and type d)
+
+	^U      Move UP one half-screen
+		(depress the control key and type u)
+
+	^F	Move FORWARD one full-screen
+	^B	Move BACKWARD one full-screen
+
+	^E	Move the window down one line without moving cursor
+	^Y	Move the window up one line without moving cursor
+
+    z<RETURN>	Position the current line to top of window
+	z.	Position the current line to middle of window
+	z-	Position the current line to bottom of window
+
+	^G	Show status of current file 
+	^L	Refresh screen
+
+	!}fmt   Format the paragraph, joining and filling lines to
+		produce output lines of up to 72 characters
+
+       !}sort	Sort lines of a paragraph alphabetically
+
+   >movement	Shift right to where the movement command specifies
+   <movement	Shift left to where the movement command specifies
+
+
+These commands should significantly speed up your editing. Have a nice
+day.  Tutorial 6 contains even more nifty commands.
+
+Copyright (c) 1992 Jill Kliger and Wesley Craig.  All Rights Reserved.
