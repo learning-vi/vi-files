@@ -1,0 +1,47 @@
+#!/bin/csh -f
+#
+# Shell script to fold and unfold lines in vi.
+#
+# By Eric Bowles <bowles@is.s.u-tokyo.ac.jp>
+# Public domain, of course.
+# Let me know of improvements and bug fixes!
+#
+# This script does two things.  First, if it receives from standard
+# input a bunch of text whose first line doesn't match the special
+# "folded line" pattern (see below), it will save the text in a temporary 
+# file and return a new "folded line" pattern containing the name of that
+# temporary file.  
+# Second, if this script receives a line that matches the "folded line"
+# pattern, it will return the contents of the file encoded in the pattern.
+# NOTE: It will also delete that temporary file.  Comment out that line if
+#       you wish to stay on the safe side.
+#
+# The "folded line" pattern looks like:
+# 	$$FOLDED:-- <# of lines> <filename> --$$
+#
+
+set taghead             = '$$FOLDED:-- '
+set tagtail             = ' --$$'
+set filename_template   = /usr/tmp/vifold
+
+# Decide what to do based on the contents of the first input line.
+set first_line = $<
+
+if ("$first_line" =~ "$taghead"*"$tagtail") then	# Unfold text.
+    set line = ($first_line)
+    set filename = $line[3]
+
+    if (! -e $filename) then
+        echo '*** ACK! Cannot find '$filename' -- folded text may be lost.'
+		exit 1
+    endif
+    cat $filename
+    rm -f $filename		# not really safe... could comment this line out.
+else	# Fold text.
+    set filename = $filename_template.$$
+    echo "$first_line" >! $filename
+    cat >> $filename
+    set output = `wc -l $filename`
+    echo "$taghead$output$tagtail"		# Return "folded" marker.
+endif
+exit 0
