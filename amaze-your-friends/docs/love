@@ -1,0 +1,383 @@
+ 
+First, it works.
+ 
+It works on high speed and low speed terminals.
+ 
+It works on smart terminals, dumb terminals, and glass ttys.
+ 
+It works with function keys, arrow keys, meta keys... and just plain
+ASCII.
+ 
+It works on every brand of terminal known (Even Tektronix storage
+scopes).
+ 
+Second, it's predictable.
+ 
+It has a consistent command set.
+ 
+All commands take a consistent set of arguments.
+ 
+You can always back out of any command in the middle.
+ 
+Third, it's well integrated with UNIX.
+ 
+It uses the same regular expressions as awk, sed, grep, and so on.
+ 
+It handles filters cleanly with little overhead.
+ 
+It doesn't lose file permissions, create backup files, and so on.
+ 
+It doesn't take a lot of resources.
+ 
+Fourth, it's reliable.
+ 
+It keeps a journal file, which has saved my butt after system
+crashes more times I can count.
+ 
+It never hides information off teh side of the screen, or in
+hidden formatting entries.
+ 
+It never dies silently. If something's wrong, it tells me.
+ 
+It's not for editing huge files, to be sure. But it's a good solid workhorse,
+the ADM3A of UNIX editors...
+ 
+I know its quirks, and I rely on its strengths. I don't have to worry about
+it letting me down.
+
+-------
+ 
+I can count on it being there.  It's on every system that I have
+as soon as the machine is running.  No porting, no fumbling with
+different keyboard mappings, no worrying about versions (is it GNU,
+Unipress, microemacs, etc.).  
+ 
+-------
+
+I use vi, emacs, and ed on a regular basis, and like them all pretty
+much about the same.  I really like vi for editing text.  The orthogonal
+instruction set/object set provides a surprising amount of power, and
+I find that its behavior generally fits the Unix idiom quite well.
+ 
+As for intuitiveness, vi's modal nature does make a lot of sense to
+those of us who grew up with line editors.  Each to her own, eh?
+It does what I want it to do, and quickly.
+
+-------
+ 
+I like vi because it is fast. You can instantly teleport to any
+portion of your screen. You don't need a mouse, reach up for arrow
+or page up and down keys, or bother with function keys.
+  This is simpily not possible with the Ctrl-Alt-Shift-whatever
+combinations. You must use a two mode editor to move that quickly
+to anywhere on your screen. I so much prefer this speed that I
+often write text in vi, then inport it into word perfect for graphics
+and laser printing.
+
+-------
+ 
+I like vi because:
+a) it's the faster editor I've ever used for processing text;
+b) it rewards study;
+c) it's powerful.
+ 
+The fact that so many people whine about it is just icing on the cake.  ;-)
+ 
+Oh yeah, and I love seeing stuff like
+:wq
+ZZ
+:
+ 
+every so often.
+ 
+-------
+ 
+as someone mentioned above, its not perfect but its reliable, and the
+quirks are consistent (well almost). I think the phrase that stuck
+with me most re: this was posted last year some time. It was
+"Vi is like a Ferrari, when you're learning its a bitch to drive,
+but once you've learnt its POWERFUL and FAST".
+ 
+-------
+ 
+>I like vi because it is fast. You can instantly teleport to any
+>portion of your screen. You don't need a mouse, reach up for arrow
+>or page up and down keys, or bother with function keys.
+>  This is simpily not possible with the Ctrl-Alt-Shift-whatever
+>combinations. You must use a two mode editor to move that quickly
+>to anywhere on your screen. I so much prefer this speed that I
+>often write text in vi, then inport it into word perfect for graphics
+>and laser printing.
+ 
+I totally agree with this.  Every time I have to use some
+``user-friendly'' WYSIWYG word processor... I start cursing the
+number of keystrokes to do anything.  I can use vi without taking
+my fingers off the home keys (except of course to reach up to
+Alaska to hit the ESC key on the 101 key ``enhanced'' keyboards :-)
+ 
+I think the other features I like best are:
+    1.  The % key to jump to the matching ()[]...  I use this
+        all the time in C programs, shell scripts, etc to find
+        the other end of a block.
+    2.  The > < operators to indend blocks of text.  Used
+        extensively with % above to properly indent things in C
+        Programs.  (I've often wondered if the ugly style of most
+        of the gnu C code isn't directly related to the EMACS
+        idiosyncracies).
+ 
+
+-------
+ 
+One starts to suspect that vi is a religion, not an editor!
+ 
+-------
+ 
+Main reason: I am a touch typist, and yet most other editors insisted on
+sending my fingers flying far from the keyboard's home row, or at least on
+sticking some pinky to control/alt/meta sort of keys; with vi's interface,
+at least on a keyboard with a reasonably placed ESC key (like my beloved
+HP2393A's "46021A" kb, currently under attack on comp.sys.hp...), my fingers
+are saving kilometers of wasted movement per day; I type and edit more
+productively, and my hands get less tired.  The "price" to be paid for that
+is obviously the much-hated modefulness of vi, since it's the only approach
+to have unadorned homerow keys act BOTH as inserting-keys sometimes, and as
+command-keys at other times; it's a price I'm VERY glad to pay.
+ 
+Vi's *extremely* regular verb-object "syntax" (if I know how to *move* to
+some place, I also know how to *delete* to it, how to *yank* to it, how
+to *change* to it, etc etc) is a secondary but meaningful source of love.
+Indeed, the WORST vi commands, for me, are those which do NOT follow the
+syntax, such as the infamous ~ for case-switching, which I CAN'T follow with
+movement-commands such as ']' to case-switch-to-end-of-line, etc.
+ 
+A third nice point of vi, for me, is NOT using funny/fancy keys - I can't
+stay glued all day to my HP2393A terminal, I have to use PC-like keyboards,
+Sun ones, sundry IBM ones, even (shudder!) DEC's (alleged) keyboards.  The
+normal printing keys, and Ctrl and Esc (well, Ctrl-[ on DEC...) can be
+found easily on most any of them; on editors based on F-keys, either on
+PC's or IBM 3270-like terminals, I remember MUCHO pain when I had to
+switch often between keyboards with PF-keys on TOP, on LEFT (in 2 columns),
+on RIGHT (in 3 columns), and so on and on...
+ 
+Vi's marginally less useful in implementations where I can't filter blocks
+of text through external programs (MSDOS, VAX/VMS), but not enough to make
+me go back to other editors; so, the external-program feechur I can't count
+as a crucial one in my vi-love...
+ 
+What I do NOT like: not enough visual feedback (on most vi I can "set
+showmode", but NOT on all - and the words describing mode being shown are
+often VERY badly chosen ['OPEN MODE', say some System/V's, rather than
+'INPUT MODE', when you go 'o' or 'O'... BUT ex's open-mode is a TOTALLY
+different thing$$$], and also they are often mistakenly scrolled onto the
+screen [you need a Ctrl-L to repaint]), e.g. a visual mark-highlight block
+for subsequent operation as a sometimes-useful alternative to normal
+verb-object syntax; even more, not a real, useful programming language for
+editor macros (a la Rexx-cum-Xedit, etc).  I guess I could go with emacs
+and vip and hack around a bit and make things better, and maybe I shall
+when RAM costs are down another order of magnitude and CPU power is up
+by as much again... for now, I make do.
+ 
+-------
+ 
+Those of us who use vi exclusively for years probably don't notice 
+hitting i and esc, because it has become intuitive.
+ 
+-------
+ 
+Your hands don't have to leave the keyboard to find the F...ing mouse or the 
+arrows.
+ 
+-------
+ 
+>One starts to suspect that vi is a religion, not an editor!
+ 
+You're not too wrong there, Mike.  The choice of editors seems to draw
+more heat compared to our elections.  :-)
+ 
+-------
+ 
+Another favorite is to change all input up to a particular letter (such
+as a comma or a full-stop):
+ 
+cf[LETTER]my input[ESC]
+ 
+-------
+ 
+The only word processors I don't like are the WYSIWYG ones - they chew
+up too much CPU time, memory, and disk space.  Like the Macintosh, they
+hide too much detail from me and I feel frustrated when I can't see
+what is ACTUALLY happening to my document.  Being a programmer, I
+prefer text processing languages instead.  In addition since I know the
+syntax of the language, I can add output (such as graphs and bitmaps)
+from my programs to my document without hassles.
+ 
+-------
+ 
+long, long ago, in a galaxy far, far away, i used to hate vi; then one
+day i decided, why not try it?  i mean, all those millions of vi users
+just couldn't be _that_ wrong about an editor, could they?  after all, i
+had some _very_ bright friends who insisted vi was the greatest (along
+with some other very bright ones who insisted emacs was divinely
+inspired :-).  i gave it my best shot, & after a somewhat steep learning
+curve (along with much glancing at a vi cheat sheet), i found that vi is
+_fast_ for my fingers.  what i mean is, i can do _my_ kind of text
+editing, i.e., programming, more rapidly using vi than using any other
+editor, including the one i learned on, wordstar, or others i've
+learned, such as emacs or edt.  i also want to point out that i'd been
+an emacs & wordstar fan until i learned vi.
+ 
+perhaps the real reason for all this difference of opinion :-) lies in
+the fact that i'm a touch typist; i prefer for my fingers to hang out
+around the "home row" of a keyboard.  i've even been known to type
+ctrl-[ just so i didn't have to roam too far in search of ESC :-).  i
+think this also explains my order of editor preference: vi, emacs/ws,
+edt.  in other words, as you move further away from vi, your fingers
+move further away from touch-typist-optimized movements.  edt is the
+last straw: a keypad editor.  i used to make _dozens_ of mistakes in
+edt because i had to keep moving my fingers off the home row, then back
+again.  i would inevitably miss the home row sometimes & being a touch
+typist, just start typing garbage.  think about the contortions your
+fingers go through to type even some of the fundamental movements in
+emacs.  now think about those same movements in vi.  i think you can
+see why i prefer vi.
+ 
+-------
+ 
+I would like to say that Peter da Silva has said most of what I would
+have said. I'm currently typing this at 2400 baud and editting is
+NOT a chore. Not too long ago, I used 1200 baud.
+Some additions of my own are:
+1)  Access to the ex command set. I used ed for a while years back and
+    still find it quicker to use them.
+2)  % to flip between matching braces is a godsend for lisp programming.
+    It's pretty good for C, too.
+3)  Marks, m[a-z]. > and < for indenting.
+    These speed editting up considerably.
+4)  :s ex substitution. This a MUST. I prefer it to sed since it's
+    interactive and undo'able.
+And the final capper.
+5)  :map and :map$ macros. This are so short and simple to use that I
+    can use them anytime I think I should without going through help
+    manuals or man pages. I regularly do maps like
+    :map z ^4f(ldt)lDj  to munge text lines. If I'm doing it a lot, 
+    I can always map
+    :map Z zzzzzzzzzzzzzz
+    without blinking. I haven't re-read the docs on macros in well over
+    a year and I started vi less than 2 yrs ago.
+    So how are macros done in emacs?
+ 
+-------
+ 
+Another great feature is the ability to execute the content of a named buffer
+as EX commands.
+ 
+How do vi haters learn vi quickly?  Buy/borrw/beg this book:
+ 
+    "The Ultimate Guide to the VI and EX Text Editors"
+    by the Hewlett-Packard Co.
+    Benjamin/Cummings Publishing Co.
+    copywrite 1990
+ 
+This is a great tutorial and reference (I have no affliation with HP).
+ 
+-------
+ 
+> [...] vi is unuseable to anyone who has used a
+> more intuitive screen editor, and I wish old-time unix types would stop
+> pushing it on the rest of us.
+> 
+> mt
+ 
+Actually, I don't think anyone is actually "pushing" 'vi' on anyone, or 
+at least not the way I'd picture a "pusher" ... "Psst, hey kid!  C'mere!
+Yeah, you, the one with the pocket-protector!  Wanna try a new, far-out 
+experience?"  Opens his coat revealing reels of mag-tape.  "Ye-e-e-eah, 
+we call it, 'vi'!"
+ 
+This gets back to one of 'vi's pluses.  It's there.  Pure and simple.
+Nobody's pushing it.  Nobody's charging you an arm and a leg for it.  No
+massive billboards all over the landscape.  It's just there.  If you
+have Unix, and you know 'vi', you can get started right away, because 
+you _know_it's_there._  It's _always_ there.
+ 
+Other editors are rarely there.  If you like Microsoft Word, you're 
+going to find yourself working at a company that owns WordPerfect.  If 
+you love the heck out some public domain editor, you'll find yourself
+with an Administrator who hasn't the time to hunt it down, or doesn't
+have the resources to install it for you.
+ 
+But if it's Unix, or any of the popular clones, and even most of the
+unpopular clones, 'vi' is there.
+ 
+Once you know it, it's second nature.  Even if you prefer other editors,
+and for some applications I do, you can still fall back on 'vi'.
+ 
+Old reliable.  'vi' doesn't mind if you use other editors or word
+processors.  It doesn't get jealous.  It'll still be there, waiting with
+open arms, when you need to do ":%s/^/> /" to quote an article, or some
+other esoteric application that's difficult or impossible in the typical
+WYSIWYG editor.
+ 
+Then, for those who don't like 'vi', and there's plenty of reason not
+to, there are lots of expensive and free alternatives.  They just aren't
+there, that's all.  You have expend effort to acquire them.  You have to 
+justify the time and expense.  You have to fill out the paperwork.  You 
+have to get management permission.
+ 
+You need do none of that for 'vi', because it's already there.
+ 
+In conclusion, I guess that all I have to say to the 'vi' haters on 
+the net is ... who needs ya?  You want something else, it's out there.  
+You may feel it's worth the effort to get a "better editor," and that's 
+fine.  Buy it.  Use it.  And don't complain.
+ 
+But remember.  When you get that great job with more money and a
+promotion, but you have to move to another state or another company ...
+'vi' will be there.
+ 
+-------
+ 
+    It is a big setback of vi that it does not have an on-line help system (by
+    function) and an informative but brief 'learn-by-example' on-line manual.
+    (The explaination of advanced commands in the man-page hardly makes sense
+    unless you already know what they are.)
+ 
+I *LOVE* vi, but I hated it bitterly when I had to learn it after
+getting so used to Xedit. Vi would be much more appealing to beginners
+if it had an on-line help -- those who started to learn vi normally do
+not even know how to use man pages. And it took LONG before I became an
+efficient VI user (you got to start to know m'`, fFtT, ^]0, LMH, ]]/[[, %, G,
+and markers before you would love it.) -- I did not have a GOOD SIMPLE vi
+reference!!!
+
+-------
+ 
+Wonder why I love vi? Some of my favorite are:
+ 
+    within-finger-reach and short commands to move, seach, modify -- enabling
+    me to type fast (I am a self-taught touchy typiest).
+    the great invention of integrating the edit commands and movement commands
+    '.', u, p, y, g, v, ^D with input mode, o, O, >>, <<
+    tags, marks, buffers, abbrivation, macros
+    integration with unix through filter (":$ ...."), plus some knowlege of
+    AWK (an half-day investment) -- However, I couldn't understand
+    or get any clue of the filter's usefulness from the on-line manul.
+ 
+-------
+ 
+It is especially great for those who edit programs most of the time: it has 
+a tag system and an excellent set of cursor movement and/or positioning
+commands, and they are just under your finger tips -- this may not be fully
+appreciated by text-editing people.
+ 
+I was once tempted to learn emacs because vi does not offer window or 
+text-formating fuction. And I became quite proficeint with Emacs. But I
+cannot stand its key-strok-inefficiency (both in the numbers and 
+easy-to-reachness) even with basic cursor-movement commands. Many of Emacs
+facilities are great but not frequently needed. They can mostly be compensated
+by vi's shell filter, which is a little clumsy but it's a lot of trouble to
+remember or find their Emacs conterparts through on-line help anyways.)
+ 
+I would be totally satisfied if VI has windows and simple text-formatting
+facility like paragraph-formatting.
+ 
