@@ -1,0 +1,64 @@
+Newsgroups: comp.editors
+From: frc@process (Robert Colon)
+Subject: Re: column cut & paste in vi
+Nntp-Posting-Host: process.dadd.ti.com
+Organization: Texas Instruments
+Distribution: inet
+Date: Thu, 24 Jun 1993 15:37:11 GMT
+Lines: 284
+
+Ingolf Markhof (markhof@ls12r.informatik.uni-dortmund.de) wrote:
+> In article <C936IK.GpI@hunan.rastek.com>, darren@hunan.rastek.com (Darren Hiebert) writes:
+> |> In article <aslee.1.0@llnl.gov> aslee@llnl.gov (Anthony S Lee) writes:
+> |> >Can vi (or any vi based editors) performs column cut and paste?
+> |> 
+> |> Yes! VIM (VI Imitation) can do! Recommended.
+
+> Fine. But where can I get VIM? Is it public domain? Is there any ftp site...
+> Is VIM a superset of vi, or is it just similar to vi?
+
+I too recommend vim as a superior alternative to vi.  vim appears to be a 
+superset of vi.  If one is not aware of the enhancements, it behaves very
+similarly to vi.  It does column (aka block, aka rectangular) cut and paste
+quite well.  Version 1.27 is available via ftp :
+
+[ oes.orst.edu:pub/aminet/util/edit/Vim-1.27-{bin,src}.{lha,readme} ]
+[ wuarchive.wustl.edu:/mirrors/misc/unix/lha101u.tar-z ] unix version of lha.
+
+but I suggest waiting for Version 1.28 which will have several bug fixes as
+well as some new capabilities (like the ability to toggle between horizontal
+line scrolling and standard vi line wrap).  I expect that the announcement of
+this new version will appear in this group.
+
+In the meantime, or if one wants to stay with vi, I offer the following 
+utility that I have used for some years to perform this function.  It is
+called rcut and works with 4 vi key maps to produce an effective column
+editing facility.  It works very similarly to the capability in vim with
+the major exception, of course, that it cannot display the columns to be 
+cut or copied in reverse video.  It also only uses one buffer, whereas
+vim can use all of the named buffers (a-z) to store text.
+
+The rcut utility has been successfully compiled and run on Suns (Solaris 1
+and 2), Hpux, and Apollo DomainOS.
+
+I attach below the rcut man page as well as the uuencoded c source file that
+contains the "real" key maps.  rcut is also available in the same place as 
+the vitutor that Bob Ware offers from the Colorado School of Mines:
+
+"Version 2.1 is now available via anonymous ftp from ftp.mines.colorado.edu"
+
+This version of vitutor contains some additional information about rcut in
+its section on key maps.
+
+####
+#
+#  Stuff extracted by the archive-manager
+#
+####
+
+--
+Robert Colon                              EMAIL: frc@dadd.ti.com
+Texas Instruments, Inc.                   MSGID: FRC
+Design Automation Division  MS 3937       PHONE: 214/917-3644
+P.O. Box 650311  Dallas, Tx 75265           FAX: 214/917-7966
+
