@@ -1,0 +1,35 @@
+Path: funic!news.funet.fi!sunic!uupsi!rpi!zaphod.mps.ohio-state.edu!usc!cs.utexas.edu!uunet!sparky!kent
+From: gregm@otc.otca.oz.au (Greg McFarlane)
+Newsgroups: comp.sources.misc
+Subject: v17i009:  maze-via-vi - maze solving vi macros, Part01/01
+Message-ID: <1991Feb20.045212.17372@sparky.IMD.Sterling.COM>
+Date: 20 Feb 91 04:52:12 GMT
+Sender: kent@sparky.IMD.Sterling.COM (Kent Landfield)
+Organization: Sterling Software, IMD
+Lines: 472
+Approved: kent@sparky.imd.sterling.com
+X-Checksum-Snefru: 50329ddd 403d0bfd 0e327166 92cb83eb
+
+Submitted-by: Greg McFarlane <gregm@otc.otca.oz.au>
+Posting-number: Volume 17, Issue 9
+Archive-name: maze-via-vi/part01
+
+A real working model. See it walk the maze in front of your very own eyes.
+
+To prove that you can do anything in vi, I wrote a couple of macros that
+allows vi to solve mazes. It will solve any maze produced by maze.c
+that was posted to the alt.sources last month. (Maze.c is also included
+in this posting as well as an example of its output.)
+
+The uncommented version of the macros was sent to alt.sources last month.
+However, so many people mailed me requesting the commented version of the
+macros that I decided to post it. I have made some modifications to the
+original macros to make them easier to follow and also after I learnt
+that you can escape the special meaning of '|' in macros by using '^V|'.
+
+After studying these macros, anyone who cannot write an emacs emulator
+in vi macros should just curl up and :q!.
+
+Greg
+
+---- Cut Here and unpack ----
