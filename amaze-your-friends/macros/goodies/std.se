@@ -1,0 +1,3 @@
+" std.se -- standard settings
+"
+set redraw wm=0 ai nosm
