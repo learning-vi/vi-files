@@ -1,0 +1,22 @@
+OK you want to quit.  Here are some ways to leave 'vi'.
+
+:q<CR>            quit only if you have not changed anything.
+
+:q!<CR>           quit WITHOUT recording any changes. Emergency exit.
+
+:wq<CR> or :x<CR> write whole buffer to the default file and exit.
+
+ZZ                shorthand for ':wq<CR>' . 'ZZ' is the normal exit command.
+
+:i,jwq<CR>        write lines i through j to the default file and exit.
+
+:.,+nwq<CR>       write the current line and the following n lines to the
+                  default file and exit.
+
+
+
+
+
+-------------------------------------------------------------------bt 88/01/25
+Type '^c' to continue editing or 'v' to visit old buffer.
+
