@@ -1,0 +1,697 @@
+From stanj@hpnmdla.sr.hp.com (Stan Jaffe)
+Newsgroups: comp.editors
+Subject: Using shell filters in VI
+Date: 2 Dec 91 19:34:13 GMT
+Status: O
+
+This has always puzzled me.  Perhaps someone out there knows the answer
+to this:
+
+  When using the !<line label> feature in vi to write out a selected segment
+  of a file through a filter, I find that sometimes the text is replaced
+  "instantaneously" (seemingly all at once), while other times it "scrolls"
+  through on replacing.  (If you don't know what I mean, you probably
+  haven't experienced it).  I don't know if this is something unique to
+  my hardware/terminal type, or perhaps is related to the speed of my
+  filter programs.  If I could control it, I would much prefer the "all
+  at once" replacement, since it is easier to see what changed when toggling
+  using "u".  I don't think it has to do with my filter program, because
+  it has the same behavior when toggling also.
+
+Thanks in advance,
+
+Stan Jaffe         stanj@sr.hp.com
+
+
+From harichan@eecae.ee.msu.edu (Ronald Harichandran)
+Subject: VI: Freeing macro space for map command
+Keywords: vi map macro
+Date: 4 Dec 91 18:42:44 GMT
+Status: O
+
+Most implementations of vi have a limit on the amount of mapping that
+can be done using the map and map! commands.  For HPUX the limit is 512
+characters total in combined existing macros.  The problem that I have
+is that I am unable to free space for new mapping by unmapping some or
+all of the existing mappings.  In other words, unmapping existing macros
+does not seem to free any space.  This means that I have to quit vi,
+rename the ~/.exrc file in which my usual macros are, then reenter vi to
+define new mappings - quite a pain.  Any suggestions regarding this
+problem are welcome.  (This problem also exists on Sun's version of vi.)
+
+Ron Harichandran
+Department of Civil & Environmental Engineering
+Michigan State University
+
+
+From adk@sun13.SCRI.FSU.EDU (Tony Kennedy)
+Subject: Re: How do do these things in vi?
+Date: 7 Dec 91 08:33:18 GMT
+In-reply-to: xiaofei@acsu.buffalo.edu's message of 7 Dec 91 03:11:10 GMT
+Status: O
+
+xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+   Subject: How do do these things in vi?
+                ^
+And while you're about it could someone kindly tell me:
+
+5) how to change multiple empty lines to one; that is do what the
+substitution 
+
+  :%s/^[ ^I]*$^[ ^I]*$/^$/g 
+
+would do if the pattern ^$ really did match and end-of-line
+beginning-of-line pair, just as the pattern \n doesn't ;-)
+
+
+From les@chinet.chi.il.us (Leslie Mikesell)
+Subject: Re: How do do these things in vi?
+Date: 7 Dec 91 17:59:52 GMT
+Status: O
+
+xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+
+>Subject: How do do these things in vi?
+>1) change CR to CR/LF [ That is CR plus  LF ]
+
+This has to be done before you load into vi (or on the way in) since vi
+needs the LF to terminate its concept of a line.  Instead of :r file
+use :0r !tr '\015' '\012' <file
+This gets normal LF endings, so follow by:
+
+>2) change LF to CR/LF [ That is CR plus  LF ]
+:%s/$/^M/
+       ^type ^V^M for this
+
+>3) delete LF. 
+>    ( msdos to Mac ) 
+Delete the CR first instead:
+:%s/^M//
+     ^type^V^M again
+Follow by:
+>4) change LF to CR.  
+
+Do this on the way out:
+:w !tr '\012' '015' >file
+
+If you do this a lot, it would probably be worth making shell scripts
+for each function using tr and sed.  Or, if you are using a file
+transfer protocol to move the files among the different machines, just
+switch to one like kermit that adjusts the text to the native format
+during the transfer.
+
+Les Mikesell
+  les@chinet.chi.il.us
+
+
+From xiaofei@acsu.buffalo.edu (XiaoFei Wang)
+Subject: Re: How do do these things in vi?
+Date: 8 Dec 91 08:49:54 GMT
+Status: O
+
+
+
+/* From the keyboard of les@chinet.chi.il.us (Leslie Mikesell) */:
+
+* 
+
+* >2) change LF to CR/LF [ That is CR plus  LF ]
+
+* :%s/$/^M/
+
+*        ^type ^V^M for this
+
+* 
+
+I found this does not work as expected. Everything gets double spaced
+as this. I expected a ^M sign at the end of each line. 
+
+-- 
+xiaofei@acsu.buffalo.edu | Subscribe Chinese Poem Exchange and Discussion List 
+mail LISTSERV@UBVM.BITNET with "SUB CHPOEM-L 1st LastName" in the MESSAGE BODY
+Posting address: CHPOEM-L@UBVM.BITNET | InterNet Address: UBVM.CC.BUFFALO.EDU
+
+
+From dattier@ddsw1.MCS.COM (David W. Tamkin)
+Subject: Re: How do you do these things in vi?
+Date: 8 Dec 91 05:24:00 GMT
+Status: O
+
+adk@sun13.SCRI.FSU.EDU (Tony Kennedy) wrote in
+<ADK.91Dec7033318@ds2.sun13.SCRI.FSU.EDU>:
+
+| And while you're about it could someone kindly tell me:
+| 
+| 5) how to change multiple empty lines to one; that is do what the
+| substitution 
+| 
+|   :%s/^[ ^I]*$^[ ^I]*$/^$/g 
+| 
+| would do if the pattern ^$ really did match and end-of-line
+
+I think Tony meant "$^".
+
+| beginning-of-line pair, just as the pattern \n doesn't ;-)
+
+vi cannot search for a pattern that crosses line boundaries.  If you have
+Berkeley cat, 
+:%!/usr/ucb/cat -s
+but in System V cat, the -s flag means something entirely different (to be
+_s_ilent about errors) from _s_queeze.
+
+If not,
+:%!sed /./,/^$/!d
+
+Neither of those allows for lines that contain nothing but whitespace.  You
+can do :%s/[ ^I]*$// first to get rid of all trailing whitespace, or you
+can change the sed filter to this:
+:%!sed /[!-~]/,/^[^!-~]*$/!d
+Yes, there two carets there, one on each side of the bracket.
+
+David W. Tamkin  Box 7002  Des Plaines, Illinois  60018-7002  +1 708 518 6769
+dattier@ddsw1.mcs.com   CIS: 73720,1570   MCI Mail: 426-1818  +1 312 693 0580
+
+"Parker Lewis Can't | reflector subscriptions: flamingo-request@esd.sgi.com
+ Lose" mailing list | digest subscriptions:  flamingo-request@ddsw1.mcs.com
+
+
+From dattier@vpnet.chi.il.us (David W. Tamkin)
+Subject: Re: How do do these things in vi?
+Date: 7 Dec 91 18:50:15 GMT
+Status: O
+
+xiaofei@acsu.buffalo.edu (XiaoFei Wang) wrote in
+<1991Dec7.031110.26373@acsu.buffalo.edu>:
+
+| Subject: How do do these things in vi?
+| 
+| 1) change CR to CR/LF [ That is CR plus  LF ]
+|    ( Mac to msdos ) 
+
+If the file has no LF's in it, vi probably won't be able to handle it.  It
+will see the entire file as a single line of text.  If, however, the entire
+file's length is within vi's limit for a single text line, it can read it in
+(though it will complain that the last [actually only] line is incomplete).
+You can then try this:
+:s/\^M/^M/g
+where ^M is entered by typing ctrl-V ctrl-M.  Note the backslash in the
+search string.
+
+If the file is too long for vi to accept it as a single line, change the CR's
+to LF's with
+tr '\015' '\012' < macfile > unixfile
+and go to question #2.
+
+| 2) change LF to CR/LF [ That is CR plus  LF ]
+|     ( Unix to msdos ) 
+
+If you don't have lef or utod and must do this within vi,
+:%s/$/\^M/
+where ^M is entered with ctrl-V ctrl-M as in #1.  Again, note the backslash.
+
+| 3) delete LF. 
+|     ( msdos to Mac ) 
+
+That is HIGHLY unadvisable in vi.  You can do it by filtering through tr,
+but you're FAR better off doing it outside vi because vi needs LF's:
+
+tr -d '\012' < dosfile > macfile
+
+| 4) change LF to CR.  
+|     ( unix to mac ). 
+
+As in #3, use tr outside vi:
+
+tr '\012' '\015' < unixfile > macfile
+
+David W. Tamkin  Box 7002  Des Plaines, Illinois  60018-7002  +1 708 518 6769
+dattier@vpnet.chi.il.us  CIS: 73720,1570  MCI Mail: 426-1818  +1 312 693 0580
+
+"Parker Lewis Can't | reflector subscriptions: flamingo-request@esd.sgi.com
+ Lose" mailing list | digest subscriptions:  flamingo-request@ddsw1.mcs.com
+
+
+From dattier@vpnet.chi.il.us (David W. Tamkin)
+Subject: Re: How do do these things in vi?
+Date: 8 Dec 91 21:52:23 GMT
+Status: O
+
+les@chinet.chi.il.us (Leslie Mikesell) wrote in
+<1991Dec7.175952.3773@chinet.chi.il.us>:
+
+| In article <1991Dec7.031110.26373@acsu.buffalo.edu>
+| xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+
+ ...
+
+| >2) change LF to CR/LF [ That is CR plus  LF ]
+| :%s/$/^M/
+|        ^type ^V^M for this
+
+That will double-space the entire file.  vi, in a :s command's replacement
+string, takes ^M to mean a linefeed unless a backslash precedes it.  (This is
+the sort of thing *Les* usually tells *me*.)
+
+:%s/$/\^M/      is the right syntax.
+
+| >3) delete LF. 
+| >    ( msdos to Mac ) 
+| Delete the CR first instead:
+| :%s/^M//
+|      ^type^V^M again
+
+That will work, even without the backslash (though a backslash wouldn't
+hurt).  ^M in a target string does match a carriage return [it can't very
+well match a linefeed because the target string cannot cross a line boundary].
+
+David W. Tamkin  Box 7002  Des Plaines, Illinois  60018-7002  +1 708 518 6769
+dattier@vpnet.chi.il.us  CIS: 73720,1570  MCI Mail: 426-1818  +1 312 693 0580
+
+"Parker Lewis Can't | reflector subscriptions: flamingo-request@esd.sgi.com
+ Lose" mailing list | digest subscriptions:  flamingo-request@ddsw1.mcs.com
+
+
+From jerrys@truevision.com (Jerry Schwartz)
+Subject: vi window scrolling
+Date: 10 Dec 91 21:16:08 GMT
+Status: O
+
+How do you get a window to redraw instead of scrolling when doing a
+simple search ?
+
+Redraw is faster than an annoying short scroll.
+
+
+
+					Thanks,
+					Jerry Schwartz
+					jerrys@truevision.com
+
+
+From heinz@marvin.tuwien.ac.at (Heinz Herbeck)
+Subject: How to change timeout length in vi without timeoutlen ?
+Keywords: vi,timeout,macros
+Date: 11 Dec 91 13:16:43 GMT
+Status: O
+
+Hello netters,
+
+I just got the macro collection for vi from the alf-archive and copied the
+'cvi' macros into my .exrc. Unfortunately my version of vi does not support
+the 'timeoutlen' option, it's only possible to toggle 'timeout'. With 'timeout'
+set, I have to be *very* fast, because all the macros are three characters
+long and the length of the timeout period is less than a second. With
+'notimeout', typing text is a pain, because every single letter is a possible
+start of a macro. So you never see what you typed until vi decides that you
+did not type in a macro (which may take quite long :-(.
+
+I'm running Interactive SVR3.2, :version in vi gives 'Version SVR3.1', hardware
+platform is an i486 AT.
+
+Is there a way to change the timeout period even if the appropriate option
+does not exist (e.g. patching the executable or other hacks like this) ?
+
+If not, is there a way to get the source code for ex/vi ?
+
+And, no, changing the names of the macros is not the way to go, because there
+are *lots* of them and I'd like to keep the names at least a little bit
+mnemonic (sp ?). (If everything else fails, well, then I'll have to change
+the macro definitions. Sigh.)
+
+All suggestions will be gladly appreciated.
+
+MfG
+HH
+-- 
+--------------------------------------------------------------------------------
+- Heinz M. Herbeck                  // Technical University of Vienna, Austria -
+- EMail: heinz@marvin.tuwien.ac.at  // Institute for Computer Graphics         -
+-        herbeck@eichow.una.ac.at   // FROM SYSTEM IMPORT StandardDisclaimer;  -
+--------------------------------------------------------------------------------
+
+
+From les@chinet.chi.il.us (Leslie Mikesell)
+Subject: Re: How do do these things in vi?
+Date: 10 Dec 91 17:01:57 GMT
+Status: O
+
+In article <1991Dec8.084954.26281@acsu.buffalo.edu> xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+>
+>* >2) change LF to CR/LF [ That is CR plus  LF ]
+>* :%s/$/^M/
+>*        ^type ^V^M for this
+
+>I found this does not work as expected. Everything gets double spaced
+>as this. I expected a ^M sign at the end of each line. 
+
+Oops - you actually have to type \^V^M to make that one work.  And while
+I was trying it I also noticed that something very strange happens if you
+leave out the ^V.  On SysVr3, doing :%s/$/\^M/  adds \377 to the ends
+of the lines.
+
+Les Mikesell
+  les@chinet.chi.il.us
+
+
+From frank@algol.uucp (Frank Huemme)
+Subject: ctrl-u in vi
+Date: 12 Dec 91 09:58:11 GMT
+Status: O
+
+Hello,
+in vi i use Ctrl-d to go down and vi make a jump-scroll. If i use 
+Ctrl-u to scroll upwards its much slower ( on a terminal or in Xwindows ),
+Can i configure vi to use a jump-scrool in that case too ?
+
+	Frank
+-- 
+Frank Huemme	frank@bsa.de	email: ..!unido!algol!frank
+
+
+From chuck@edsi.plexus.com (Chuck Tomasi,Sysop,734-3462)
+Subject: Re: vi window scrolling (vt100)
+Date: 11 Dec 91 22:32:19 GMT
+Status: O
+
+I am using SCO Xenix 2.3.4 on an IBM and I was wondering if someone
+could help me with this.  The new version of vi uses terminfo, however
+my previous version (2.3.2) uses termcap.  I was using 2.3.4 vi for a
+while, but my users were having too many problems.  Rather than try and
+modify my terminfo database to match my customized termcap I decided to
+go back to the termcap vi from 2.3.2.
+
+Some of the users who were using vt100 emulation noticed that the line
+delete worked much better in 2.3.4 in that it would actually delete the
+line rather than putting "@" at the beginning and clearing to the end of
+the line.  I have tried playing with the "dl" entry in termcap for my
+vt100 entry, but I just can't seem to make it fly.  Does anyone have any
+ideas on how to make a vt100 delete the line and what the termcap entry
+would look like?
+--
+Chuck Tomasi           |  "Seen it."  "Hated it"  "Taped it."
+chuck@edsi.plexus.COM  |   (Joel)       (Servo)     (Crow)  -- MST3K
+-----<Enterprise Data Systems Incorporated, Appleton Wisconsin>-----
+
+
+From peter@ficc.ferranti.com (peter da silva)
+Subject: Re: vi window scrolling
+Date: 12 Dec 91 15:37:53 GMT
+Status: O
+
+In article <1991Dec10.211608.23849@truevision.com>, jerrys@truevision.com (Jerry Schwartz) writes:
+> How do you get a window to redraw instead of scrolling when doing a
+> simple search ?
+
+You search far enough ahead that a rewraw is faster than a scroll.
+
+> Redraw is faster than an annoying short scroll.
+
+It may be less annoying for you, but it's not faster. Seriously.
+-- 
+-- Peter da Silva
+-- Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
+From peter@ficc.ferranti.com (Peter da Silva)
+Subject: Re: vi window scrolling (vt100)
+Status: O
+
+OK, a *real* vt100 doesn't have delete and insert line, which is why you're
+getting the @ characters: the terminfo entry is for a real circa 1981 vt100.
+
+Select vt220, vt320, or some similar terminal type... or add both insert line
+and delete line to the terminfo entry.
+-- 
+-- Peter da Silva
+-- Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
+From mdoob@ccu.umanitoba.ca
+Subject: Reverse video in vi
+Keywords: reverse video, vi
+Date: 17 Dec 91 16:23:47 GMT
+
+
+Vi seems to know most of the termcap entries. Sometimes a message appears
+in reverse video on the bottom line of the screen.
+
+Is in possible to get vi to highlight an area in reverse video? Just as
+one can yank from the current point to end of line, end of paragraph, 
+mark a, etc., it would be nice to give a command that would highlight 
+the screen in the same manner.
+
+Michael Doob
+Department of Mathematics
+University of Manitoba
+
+
+From coops@engin.umich.edu (David John Cooper)
+Subject: Going crazy with non-vi DOS editor 
+Date: Tue, 17 Dec 91 22:21:20 EST
+Status: O
+
+I have found myself in a DOS development situation,
+and am going crazy trying to use the "user-friendly"
+non-vi editors (qedit, dos edit, brief, etc...)
+
+Does anyone know of a shareware vi for DOS, or where
+there is "gnu" sourcecode or the like for a vi editor?
+
+dave
+coops@engin.umich.edu
+
+P.S. I have a (I think shareware) DOS vi called "z"
+by Jom Goodnow, but it only handles files of up to
+about 50k and doesn't have global search and replace,
+file toggle  (with  e#) and is missing many other goodies)
+(also only handles 7-bit characters).
+
+
+
+From kev@sol.acs.unt.edu (Mullet Kevin Wright)
+Subject: ex command to delete blank lines
+Date: 23 Dec 91 14:37:32 GMT
+Status: O
+
+...okay, I'll take a vi command too, but I assume if I want to do 
+this in vi it'll be done at the ex level.
+
+This sounds real easy, but I can't figgure a way to do it -- I want to 
+kill all blank lines in a vi buffer.
+
+I know there's probably lotsa ways to do this with vi !!filters through
+a script, but I'm interested in seeing if there's a way to do this from
+vi or ex alone.
+
+Please send to me and I'll post to the net.
+
+-Kevin Mullet
+ University of North Texas
+
+
+From xiaofei@acsu.buffalo.edu (XiaoFei Wang)
+Subject: Re: ex command to delete blank lines
+Date: 26 Dec 91 12:11:04 GMT
+Status: O
+
+/* From the keyboard of kev@sol.acs.unt.edu (Mullet Kevin Wright) */:
+:...okay, I'll take a vi command too, but I assume if I want to do 
+:this in vi it'll be done at the ex level.
+ 
+:This sounds real easy, but I can't figgure a way to do it -- I want to 
+:kill all blank lines in a vi buffer.
+ 
+:I know there's probably lotsa ways to do this with vi !!filters through
+:a script, but I'm interested in seeing if there's a way to do this from
+:vi or ex alone.
+
+I am not sure why no one posts an answer. I am no unix/vi expert but I
+will post one: 
+
+:1,$!sed -e '/^ *$/d'
+-- 
+xiaofei@acsu.buffalo.edu | Subscribe Chinese Poem Exchange and Discussion List 
+mail LISTSERV@UBVM.BITNET with "SUB CHPOEM-L 1st LastName" in the MESSAGE BODY
+InterNet Address: UBVM.CC.BUFFALO.EDU | Posting in UUENCODED GB and BIG5
+
+
+From lutwak@athena.mit.edu (Robert Lutwak)
+Subject: Re: ex command to delete blank lines
+Date: 26 Dec 91 14:14:45 GMT
+Status: O
+
+How about:
+
+:1,$ g/^$/d
+
+
+From dylan@ibmpcug.co.uk (Matthew Farwell)
+Subject: Re: ex command to delete blank lines
+Date: 28 Dec 91 23:40:58 GMT
+Status: O
+
+In article <1991Dec26.121104.3477@acsu.buffalo.edu> xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+>/* From the keyboard of kev@sol.acs.unt.edu (Mullet Kevin Wright) */:
+>:...okay, I'll take a vi command too, but I assume if I want to do 
+>:this in vi it'll be done at the ex level.
+> 
+>:This sounds real easy, but I can't figgure a way to do it -- I want to 
+>:kill all blank lines in a vi buffer.
+> 
+>:I know there's probably lotsa ways to do this with vi !!filters through
+>:a script, but I'm interested in seeing if there's a way to do this from
+>:vi or ex alone.
+>
+>I am not sure why no one posts an answer. I am no unix/vi expert but I
+>will post one: 
+>
+>:1,$!sed -e '/^ *$/d'
+
+I didn't see this first time round. Theres no need to resort to sed this
+time (although your example will work). You can do this using the 'g'
+command, ie
+
+:g/^$/d
+
+g stands for 'global'. The effect of the command is to execute the
+specified ex command (in this case 'd') on every line which matches the
+pattern. 'g' has a converse, 'v', which means execute the command on
+every line *not* matching. The generic format for the g and v command is
+
+:<range>g/<pat>/<ex command>
+
+Most vi's accept the range, although I'm not sure if all do. If your vi
+does let you use it, it's of the usual form, ie '1,$', etc. the /'s can
+be replaced by another punctuation character, as normal. The ex command
+can be almost anything.
+
+Quick example: You want to replace all occurences of 'foo' with 'bar' on
+each line which contains the string 'walter', and each previous line.
+The search is restricted to the first 1000 lines.
+
+:1,1000g/walter/.-1,.s/foo/bar/g
+
+Everyone got that? I'll be asking questions on it later....
+
+Dylan.
+-- 
+dylan@ibmpcug.co.uk || ...!uunet!uknet!ibmpcug!dylan
+It is sometimes hard to decide whether Usenet is a glimpse into the 21st
+century or a New England town meeting gone international - Andrew Tanenbaum
+
+
+From ado@elsie.nci.nih.gov (Arthur David Olson)
+Subject: Re: ex command to delete blank lines
+Status: O
+
+> > :1,$!sed -e '/^ *$/d'
+> 
+> :g/^$/d
+
+Or use
+	:v/./d
+and save a keystroke and two shifts.
+-- 
+		Arthur David Olson	ado@elsie.nci.nih.gov
+		ADO and Elsie are Ampex and Borden trademarks
+
+
+From wagner@hatteras.cs.unc.edu (Michael Wagner)
+Subject: vi (including file name)
+Date: 9 Jan 92 20:47:44 GMT
+Status: O
+
+
+I'm working on a macro (in vi) that would allow me
+to automatically write the name of the file into
+the current cursor location in the file.
+
+I know that "%" seems to be the name of the file,
+it seems that you can rename a file with
+
+        :w %.new
+
+I think I could usually simulate what I want with a
+        :r !ls %
+
+but there has to be a better way.
+
+Mike
+
+
+From steinbac@hpl-opus.hpl.hp.com (Guenter Steinbach)
+Subject: Re: vi (including file name)
+Date: 10 Jan 92 23:41:01 GMT
+Status: O
+
+In comp.editors, wagner@hatteras.cs.unc.edu (Michael Wagner) writes:
+
+
+> I'm working on a macro (in vi) that would allow me
+> to automatically write the name of the file into
+> the current cursor location in the file.
+Yes!  I'd like that also.  Right now all I can do is ^G to display the
+name, then cut it with the mouse (under X11) and paste it where I need
+it.  But a macro would be so much nicer.
+
+> I think I could usually simulate what I want with a
+>         :r !ls %
+Usually, but not before the file has been written, else instead of
+"filename" you'll get "filename not found".
+
+	 Guenter Steinbach			steinbac@hpl-opus.hpl.hp.com
+
+
+From dattier@gagme.chi.il.us (David W. Tamkin)
+Subject: Re: vi (including file name)
+Date: 10 Jan 92 23:30:03 GMT
+Status: O
+
+wagner@hatteras.cs.unc.edu (Michael Wagner) wrote in <8656@borg.cs.unc.edu>:
+
+| I'm working on a macro (in vi) that would allow me
+| to automatically write the name of the file into
+| the current cursor location in the file.
+
+:r !echo %      will write it below the current line, and
+:-r !echo %     will write it above the current line.
+
+David W. Tamkin  Box 7002  Des Plaines, Illinois  60018-7002  +1 708 518 6769
+dattier@gagme.chi.il.us  CIS: 73720,1570  MCI Mail: 426-1818  +1 312 693 0580
+
+
+From ttobler@unislc.uucp (Trent Tobler)
+Subject: Re: vi (including file name)
+Date: 13 Jan 92 17:40:53 GMT
+Status: RO
+
+steinbac@hpl-opus.hpl.hp.com (Guenter Steinbach) writes:
+> In comp.editors, wagner@hatteras.cs.unc.edu (Michael Wagner) writes:
+> 
+> 
+> > I'm working on a macro (in vi) that would allow me
+> > to automatically write the name of the file into
+> > the current cursor location in the file.
+>
+> Yes!  I'd like that also.  Right now all I can do is ^G to display the
+> name, then cut it with the mouse (under X11) and paste it where I need
+> it.  But a macro would be so much nicer.
+> 
+> > I think I could usually simulate what I want with a
+> >         :r !ls %
+> Usually, but not before the file has been written, else instead of
+> "filename" you'll get "filename not found".
+
+would
+	:r !echo %
+work?
+
+
+--
+  Trent Tobler - ttobler@csulx.weber.edu
+
+
