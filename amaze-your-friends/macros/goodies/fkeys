@@ -1,0 +1,13 @@
+
+" define function keys
+"
+map #1 :write 
+map #2 :quit!
+map #3 :so /usr/local/lib/vi/
+map #4 :%s/
+map #5 :vi! 
+map #6 :e!#
+map #7 :map 
+map #8 :map! 
+map #9 :abbreviate 
+map #0 :read 
