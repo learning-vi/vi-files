@@ -1,0 +1,96 @@
+
+In article <DANJ1.91Apr28061619@cbnewse.ATT.COM> might as well reply to netnews, it's the usual editor war writes:
+>In article <1991Apr24.155049.21710@njitgw.njit.edu> ken@hertz.njit.edu 
+>(Ken Ng CCCC) writes:
+>>  Instead of scrolling through the actual function source code each and every
+>>  time, if you could hide or close off certain sections of code from being
+>>  presently displayable, you could find the functions easier.  If you were
+>>  not sure how function 'foo' works, you could open up/display the text that
+>>  was hidden.
+>
+> GNU Emacs got things like that:
+
+Now so does vi... well, sort of.
+
+My previous "word completion" macros were well received, so I decided
+to put together a couple of macros to fold and unfold lines of text in
+vi, more or less.  That is, it's possible to hide selected lines of
+text and then expose them.   Text can be recursively folded (as long as
+it's more than one line you're folding).  If you're careful, it's even
+possible to save the folded file, quit, edit that file again, and
+unfold it.  It's also quite easy to lose that text unless you know what
+you're doing. :-(
+
+Here is the basic command:
+
+<1>  !<address> vfold <CR>
+
+        To fold (hide) text, position the cursor on the first line that
+        you want to hide, then hit "!" followed by a motion command
+        that indicates the last line to be hidden, then type "vfold"
+        and return.  (This filters the range of text to the shell
+        command "vfold", which perhaps you should install in ~/bin).
+        This command replaces the range of lines with the following
+        ugly marker:
+
+        $$FOLDED:-- 15 /usr/tmp/vifold.8137 --$$
+
+        The number after the two dashes (e.g., "15") indicates the number of
+        hidden lines.  The filename after that (e.g., "/usr/tmp/vifold.8137")
+        tells where the hidden text was stored.  
+
+        To unfold (expose) the hidden text, just pass the line containing the
+        "folded" marker to "vfold", like this:  "!!vfold", and hit return.
+        The `[u' macro below does precisely this.
+
+Now here are some macros to make things easier:
+
+<2>  [f   - This macro folds all lines between the opening and closing braces
+            of a C function.  Specifically, it will find the previous 
+            occurrence of ?^{? and fold lines until /^}/ is encountered.
+            (Try it on a copy of a C source file and you'll understand what
+            I'm trying to say...)
+
+<3>  [u   - This unfolds the folded text that the cursor currently lies on.
+
+<4>  [n   - This finds the next "folded text" marker (that ugly thingy).
+
+
+WARNING: Do not use 'u' (undo) with these macros.  The "vfold" script 
+         currently deletes the temporary file when text is unfolded.  By
+         using "undo", it is possible to return to the "folded" state within
+         vi, but the shell script will not know this.  The upshot is, if you
+         unfold something, undo it, then unfold the same line, you will lose 
+         the original text!  
+
+         One solution would be to comment out the code in "vfold" that
+         deletes the file.  However, you could be left with a bunch of
+         temporary files that you'd have to remove yourself.
+
+Here is the stuff you need to add to your .exrc (passed through "cat -v"):
+
+|     " vi macros to fold and unfold text.
+|     " by Eric Bowles <bowles@is.s.u-tokyo.ac.jp>
+|     " (Let me know of improvements & bug fixes).
+|     "
+|     " Commands:
+|     "   !<address> vfold   - fold specified range of lines.
+|     "   [f                 - fold current C function.
+|     "   [u                 - unfold current line.
+|     "   [n                 - go to next folded line.
+|     "
+|     :map [f j[[j!/^}/-1^M~/bin/vfold^M
+|     :map [u !!~/bin/vfold^M 
+|     :map [n /^$$FOLDED:-- /^M
+
+I've attached at the end of this posting a shar file containing a uuencoded
+version of the above macros (just append it to your .exrc -- how convenient),
+and the "vfold" shell script, which should be in your ~/bin directory.
+
+Experiment with these, and be sure to let me know of any comments, 
+improvements, and bug fixes.  
+===============================================================================
+Eric Edward Bowles              Dept of Information Science, Faculty of Science
+                                University of Tokyo, 7-3-1 Hongo, Bunkyo-ku
+bowles@is.s.u-tokyo.ac.jp       Tokyo, JAPAN 113.     +81-3-3812-2111 x4096
+
