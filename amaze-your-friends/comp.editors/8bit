@@ -1,0 +1,752 @@
+From: davis@pacific.mps.ohio-state.edu ("John E. Davis")
+Subject: 8 bit clean implies what?
+Reply-To: davis@pacific.mps.ohio-state.edu  (John E. Davis)
+Date: Sat, 6 Feb 1993 18:22:29 GMT
+Lines: 46
+
+Hi,
+
+I have a few questions regarding the meaning of 8 bit clean editors.
+
+
+As I understand it, an editor which is 8 bit clean can display ALL 256
+characters on the output device.  That is, the character should not be mapped
+to a displayable representation (i.e., ascii char 1 to two character sequence
+^A).  So for example, if character 235 corresponds to the greek letter alpha
+on the output device, an alpha should appear when char 235 is sent.  In
+addition, the editor should be able to take ANY 8 bit character form the input
+device and display it.  That is, if the input device is capable of sending the
+char 235 (alpha), then the char should be deisplayed as above.  Is this
+correct?
+
+On my PC, the char 255 do not display anything on the screen (just a space).
+255 is also -1 when converted to signed char and usually denoted end of file
+or something special like that.  Is it just a coincidence that 255 displays
+nothing on my PC or is this a general feature?  Should I make any assumptions
+regarding 255?  I would like to reserve it for my own purposes.
+
+Finally, are characters with the hi bit set (>= 128) ever involved in keymaps?
+This might seem like a silly question but for my purposes, it is the most
+important question.  I tend to think of keymaps as involving only 7 bit chars,
+e.g., escape map. But is any known case of a keymap where the prefix character
+has the high bit set?
+
+In case you are wondering, I am working on an editor (JED).  Recently, I
+released version 0.80 which I thought to be 8 bit clean, but in retrospect, it
+is not. I hear people say ``Just treat ALL characters the same!''.  However, I
+am concerned with memory usage on PCs and I would like to cut corners wherever
+I can.  Berfore I release the next version (0.81), I want to make SURE that I
+get the 8 bit thing correct.
+
+I appreciate any comments on the subject. Thank You.
+
+
+
+--
+     _____________
+#___/John E. Davis\_________________________________________________________
+#
+# internet: davis@amy.tch.harvard.edu
+#   bitnet: davis@ohstpy
+#   office: 617-735-6746
+#
+
+
+From: michael@chpc.utexas.edu (Michael Lemke)
+Subject: Re: 8 bit clean implies what?
+Organization: The University of Texas System - CHPC
+Date: Sat, 6 Feb 93 20:38:11 GMT
+Lines: 38
+
+In article <DAVIS.93Feb6132229@pacific.mps.ohio-state.edu> davis@pacific.mps.ohio-state.edu  (John E. Davis) writes:
+>Hi,
+>
+>I have a few questions regarding the meaning of 8 bit clean editors.
+>
+>
+>As I understand it, an editor which is 8 bit clean can display ALL 256
+>characters on the output device.  
+>That is, the character should not be mapped
+>to a displayable representation (i.e., ascii char 1 to two character sequence
+>^A).  
+
+I don't think this is correct but I am not an expert on this.  Check out 
+what ISO-Latin-1 means.  There are quite a lot of control sequences 
+>128. e.g., CSI which is ESC [? in 7bit.  Any terminal sending or 
+accepting 8bit controls will use them.  Secondly, an 8bit clean editor 
+needs to know what are corresponding uppercase and lower case 
+characters, e.g. åis lower case of Å.
+
+>Finally, are characters with the hi bit set (>= 128) ever involved in keymaps?
+
+Yes, see my comment above.
+
+>This might seem like a silly question but for my purposes, it is the most
+>important question.  I tend to think of keymaps as involving only 7 bit chars,
+>e.g., escape map. But is any known case of a keymap where the prefix character
+>has the high bit set?
+
+I do think but haven't tried that my vt220 will send CSI something or so 
+if I tell it to use 8bit control chars, which I haven't.  You might also
+look at the C LC_CTYPE stuff or how that is called, don't have my C book
+handy.  There is support for 8bit char sets.
+
+Michael
+-- 
+Michael Lemke
+Astronomy, UT Austin, Texas
+(michael@io.as.utexas.edu or UTSPAN::UTADNX::IO::MICHAEL [SPAN])
+
+
+From: davis@pacific.mps.ohio-state.edu ("John E. Davis")
+Subject: Re: 8 bit clean implies what?
+Reply-To: davis@pacific.mps.ohio-state.edu  (John E. Davis)
+Organization: "Dept. of Physics, The Ohio State University"
+Date: Sat, 6 Feb 1993 21:16:29 GMT
+Lines: 19
+
+In article <1993Feb6.203811.24134@chpc.utexas.edu> michael@chpc.utexas.edu
+(Michael Lemke) writes: 
+   ...accepting 8bit controls will use them.  Secondly, an 8bit clean editor 
+   needs to know what are corresponding uppercase and lower case 
+   characters, e.g. åis lower case of Å.
+
+This is an excellent point that I have not thought of.  The natural solution
+is through the use of a lookup table.  But, in general, this requires TWO
+tables: uppercase and lowercase.  However, a single CHANGE_CASE table is
+sufficient if it is guaranteed that lower_case(x) >= upper_case(x).  Does
+anyone know if this assumption is valid?
+--
+     _____________
+#___/John E. Davis\_________________________________________________________
+#
+# internet: davis@amy.tch.harvard.edu
+#   bitnet: davis@ohstpy
+#   office: 617-735-6746
+#
+
+
+From: michael@chpc.utexas.edu (Michael Lemke)
+Subject: Re: 8 bit clean implies what?
+Organization: The University of Texas System - CHPC
+Date: Sat, 6 Feb 93 22:49:10 GMT
+Lines: 31
+
+In article <DAVIS.93Feb6161629@pacific.mps.ohio-state.edu> davis@pacific.mps.ohio-state.edu  (John E. Davis) writes:
+>In article <1993Feb6.203811.24134@chpc.utexas.edu> michael@chpc.utexas.edu
+>(Michael Lemke) writes: 
+>   ...accepting 8bit controls will use them.  Secondly, an 8bit clean editor 
+>   needs to know what are corresponding uppercase and lower case 
+>   characters, e.g. å is lower case of Å.
+>
+>This is an excellent point that I have not thought of.  The natural solution
+>is through the use of a lookup table.  But, in general, this requires TWO
+>tables: uppercase and lowercase.  However, a single CHANGE_CASE table is
+>sufficient if it is guaranteed that lower_case(x) >= upper_case(x).  Does
+>anyone know if this assumption is valid?
+
+
+Yes, this is true for at least ISO-Latin-1 and DEC Multinational
+Character Set (almost identical).  The high order part of these char
+sets are pretty much an image of the low order part except the 8th bit
+is 1.  You should really have a look at the ISO-Latin-1 character
+tables, for example in the appendix of a terminal that has 8bit chars
+(e.g., vt220 and higher, GraphOn225 and higher). Also think about sort
+sequences.  An ANSI C implementation must provide functions like
+isupper(int C) which are controled by the current locale which in turn
+is controled by the setlocale function.  I haven't done anything with it
+but this is exactly the kind of problem the stuff was invented for. 
+The world isn't ASCII anymore.
+
+Michael
+-- 
+Michael Lemke
+Astronomy, UT Austin, Texas
+(michael@io.as.utexas.edu or UTSPAN::UTADNX::IO::MICHAEL [SPAN])
+
+
+From: scott@inferno.Kodak.COM (Kevin Scott)
+Subject: Re: 8 bit clean implies what?
+Organization: Eastman Kodak Company
+Date: Sun, 7 Feb 93 18:30:16 GMT
+Lines: 19
+
+For what it's worth, here is my OPINION on what 8-bit clean means:
+
+1)  you can use an 8-bit-clean text editor to edit non-text files
+    (such as .EXE files or .COM files or binary data files).  This
+    would be of occasional use to hack in changes in any embedded text
+    in the file you are editing.  I have been able to use the Turbo C
+    editor (ver 1.0) to do this type of thing (or perhaps it was a
+    Turbo Pascal editor; I forget; the timeframe was 1987 or so).
+    Of course, if you are editing a file that is not intended to be
+    text, the editor must not have any restriction on line length or
+    requirement that non-empty files end with a newline (sequence).
+
+2)  it is perfectly OK to represent non-printable characters as a
+    multicharacter sequence (such as ^A for ASCII code 1).  What is
+    "printable" vs. "non-printable" is determined by the environment.
+
+3)  it is possible to enter any 8-bit character from the keyboard on
+    any IBM-PC compatible system.  Just hold down Alt while typing the
+    desired character code on the numeric keypad.
+
+
+From: jhallen@world.std.com (Joseph H Allen)
+Subject: Re: 8 bit clean implies what?
+Organization: The World Public Access UNIX, Brookline, MA
+Date: Sun, 7 Feb 1993 21:25:10 GMT
+Lines: 73
+
+In article <DAVIS.93Feb6132229@pacific.mps.ohio-state.edu> davis@pacific.mps.ohio-state.edu  (John E. Davis) writes:
+>Hi,
+
+>I have a few questions regarding the meaning of 8 bit clean editors.
+
+>As I understand it, an editor which is 8 bit clean can display ALL 256
+>characters on the output device.  That is, the character should not be mapped
+>to a displayable representation (i.e., ascii char 1 to two character sequence
+>^A).  So for example, if character 235 corresponds to the greek letter alpha
+>on the output device, an alpha should appear when char 235 is sent.  In
+>addition, the editor should be able to take ANY 8 bit character form the input
+>device and display it.  That is, if the input device is capable of sending the
+>char 235 (alpha), then the char should be deisplayed as above.  Is this
+>correct?
+
+Yes.  But here's another fly in the ointment: You shouldn't be so
+eurocentric... there are apparently versions of vt220s which display two
+successive characters as a single chinese or japanese character.  So you
+need to make a mode where all deletes operate on two characters...  (I would
+appreciate it if someone would elaborate on this more.. I still need to add
+this mode to my editor JOE.  I don't understand yet if the character set is
+broken into half-charatcers which fit together or if the first character is
+really a prefix character).
+
+>On my PC, the char 255 do not display anything on the screen (just a space).
+>255 is also -1 when converted to signed char and usually denoted end of file
+>or something special like that.  Is it just a coincidence that 255 displays
+>nothing on my PC or is this a general feature?  Should I make any assumptions
+>regarding 255?  I would like to reserve it for my own purposes.
+
+Nope, can't do that.  Some international character sets use 255.  Originally
+I tried to make all of the 'chars' in JOE 'unsigned chars' so that when a
+character was returned in an 'int' the range was 0 - 255 instead of -128 -
+127.  That way -1 could still be an error return.  The only problem is that
+stupid ANSI compilers give bazillions of warnings (it's bad enough they give
+warning for 'char *' being mixed with 'const char *', but char/unsigned-char
+warnings are rediculous.  I hate ANSI-C.  I wish it would go away. (stupid
+catering to the IBM PC..)).  Anyway, I now use MAXINT (defined as 2^31-1 or
+32767) for error returns and have characters in the range of -128 to 127. 
+You still need to cast them to unsigned sometimes (for table lookup), but
+not very often.
+
+I've decided that 'unsigned' as a C keyword is close to useless because of
+the compatibility problems, so I now avoid it as much as possible.
+
+>Finally, are characters with the hi bit set (>= 128) ever involved in keymaps?
+>This might seem like a silly question but for my purposes, it is the most
+>important question.  I tend to think of keymaps as involving only 7 bit chars,
+>e.g., escape map. But is any known case of a keymap where the prefix character
+>has the high bit set?
+
+True gnu-emacs keyboards are supposed to have a Meta- key, which sets the
+high bit.  In Linux, there is a mode which makes the ALT- key the Meta-
+key...
+
+>In case you are wondering, I am working on an editor (JED).  Recently, I
+>released version 0.80 which I thought to be 8 bit clean, but in retrospect, it
+>is not. I hear people say ``Just treat ALL characters the same!''.  However, I
+>am concerned with memory usage on PCs and I would like to cut corners wherever
+>I can.
+
+:-) Software virtual memory...
+
+>  Berfore I release the next version (0.81), I want to make SURE that I
+>get the 8 bit thing correct.
+
+JED is neat.  The extension language looks like reverse-polish LISP, but
+without parenthasis.
+-- 
+/*  jhallen@world.std.com (192.74.137.5) */               /* Joseph H. Allen */
+int a[1817];main(z,p,q,r){for(p=80;q+p-80;p-=2*a[p])for(z=9;z--;)q=3&(r=time(0)
++r*57)/7,q=q?q-1?q-2?1-p%79?-1:0:p%79-77?1:0:p<1659?79:0:p>158?-79:0,q?!a[p+q*2
+]?a[p+=a[p+=q]=q]=q:0:0;for(;q++-1817;)printf(q%79?"%c":"%c\n"," #"[!a[q-1]]);}
+
+
+From: michael@chpc.utexas.edu (Michael Lemke)
+Subject: Re: 8 bit clean implies what?
+Organization: The University of Texas System - CHPC
+Date: Sun, 7 Feb 93 21:39:01 GMT
+Lines: 36
+
+In article <1993Feb7.183016.23290@kodak.kodak.com> scott@inferno.Kodak.COM (Kevin Scott) writes:
+>For what it's worth, here is my OPINION on what 8-bit clean means:
+>
+>1)  you can use an 8-bit-clean text editor to edit non-text files
+>    (such as .EXE files or .COM files or binary data files).  This
+>    would be of occasional use to hack in changes in any embedded text
+>    in the file you are editing.  I have been able to use the Turbo C
+>    editor (ver 1.0) to do this type of thing (or perhaps it was a
+>    Turbo Pascal editor; I forget; the timeframe was 1987 or so).
+>    Of course, if you are editing a file that is not intended to be
+>    text, the editor must not have any restriction on line length or
+>    requirement that non-empty files end with a newline (sequence).
+>
+>2)  it is perfectly OK to represent non-printable characters as a
+>    multicharacter sequence (such as ^A for ASCII code 1).  What is
+>    "printable" vs. "non-printable" is determined by the environment.
+>
+>3)  it is possible to enter any 8-bit character from the keyboard on
+>    any IBM-PC compatible system.  Just hold down Alt while typing the
+>    desired character code on the numeric keypad.
+
+
+This I would call a *binary* editor.  A 8-bit clean text editor allows
+me to enter any *printable* character from my keyboard, which is done
+with the compose key in my current set up.  Don't restrict your views
+to PCs.  As I said in an other post in this thread, it also means the
+editor knows how to capitalize åNgSTrÖm as Ångström.
+The thing I am using right now does not allow me to do either of these
+but I can enter the characters numerically in a similar fashion as you
+describe above.  Not really 8bit clean but quite a pain.
+
+Michael
+-- 
+Michael Lemke
+Astronomy, UT Austin, Texas
+(michael@io.as.utexas.edu or UTSPAN::UTADNX::IO::MICHAEL [SPAN])
+
+
+From: upham@cs.ubc.ca (Derek Upham)
+Subject: Re: 8 bit clean implies what?
+Date: 7 Feb 1993 18:32:33 -0800
+Organization: Raven's Auto Body Repair Shop, Mega-Tokyo.
+Lines: 24
+
+jhallen@world.std.com (Joseph H Allen) writes:
+>Yes.  But here's another fly in the ointment: You shouldn't be so
+>eurocentric... there are apparently versions of vt220s which display two
+>successive characters as a single chinese or japanese character.  So you
+>need to make a mode where all deletes operate on two characters...
+
+Actually, it gets worse than that.  The GB and Big5 character sets
+used in Taiwan have FOUR-byte characters.  In general, an application
+looks at the high-order bit of the byte "n".  If it is zero, the byte
+is interpreted as 7-bit ASCII.  Otherwise it is interpreted as the
+first byte of some character in the alternate set.  What's more, there
+are various ways of interpreting high-bits in successive bytes to
+switch between character sets and save space (the specifics now escape
+me, unfortunately).  In general, if you want to be safe, do everything
+on four byte characters internally, and then add conversion interfaces
+to work with whatever character set is needed.
+
+Derek
+
+-- 
+Derek Lynn Upham                               University of British Columbia
+upham@cs.ubc.ca                                   Computer Science Department
+=============================================================================
+"Ha!  Your Leaping Tiger Kung Fu is no match for my Frightened Piglet Style!"
+
+
+From: ketil@edb.tih.no (Ketil Albertsen,TIH)
+Subject: Re: 8 bit clean implies what?
+Organization: T I H / T I S I P 
+Date: Mon, 8 Feb 1993 09:07:53 GMT
+Lines: 48
+
+In article <DAVIS.93Feb6132229@pacific.mps.ohio-state.edu>, davis@pacific.mps.ohio-state.edu 
+("John E. Davis") writes:
+
+>As I understand it, an editor which is 8 bit clean can display ALL 256
+>characters on the output device. 
+
+If you go by international standards (frequently called ANSI standards by the
+US community... :->): No. The 190 (+space) characters. There just aren't 256
+character (code)s. 
+
+The 64 codes from 0 to 31, and 127 (DEL) to 160 are NOT character codes but
+control codes. The correct handling is to *process* them rather than to
+display them. The processing may have an effect on the display, eg. CR and
+LF, both changing the active position, or ESC-sequences switching to a 
+different character set (among other things), but the codes are not, per se,
+"displayed". The "processing" may be limited to simply storing (conserving)
+them because the display or software does not support the defined function
+for the control code.
+
+Wrt. input: There should be no restriction on how you enter the control
+functions. CR (13) has its own key (did you ever notice that uppercase 
+letters are entered by key combinations?), but there is nothing wrong by
+entering ESC [ 1 2 m ("Second alternative font") as a menu choice rather
+than as five separate hex values.
+
+But obviously this assumes that you plan to honor ISO character code 
+definitions. So, many people would say that it is not "clean". But as
+another poster commented, there is a distinction between a binary 
+editor and an 8-bit clean editor. If you want to be able to edit arbitrary
+character sets, with arbitrary use of the control codes (CR/LF relocated
+to other code positions...), then you need a binary editor. IMHO it is
+sufficient for an editor anno 1993 to support ISO character sets - 
+preferably all of them.
+
+>Is it just a coincidence that 255 displays
+>nothing on my PC or is this a general feature?  Should I make any assumptions
+>regarding 255?  I would like to reserve it for my own purposes.
+
+In 8859/1, 255 is umlaut y. In 8859/2, /3 and /4 it is dot above. Several
+character sets do not use 160 and 255 because it would prohibit representation
+in a 7-bit environment; ISO 2022 distinguishes between 94 and 96 character
+C1 sets.
+
+Before you run out to buy the entire collection of ISO standards for character
+sets and control functions: If you were to implement all of it, you'd have
+enough to do for the rest of your life... Writing a binary editor may be
+simpler.
+
+
+
+From: wolff@inf.fu-berlin.de (Thomas Wolff)
+Subject: Re: 8 bit clean implies what?
+Organization: Free University of Berlin, Germany
+Date: Mon, 8 Feb 1993 18:15:16 GMT
+Lines: 10
+
+scott@inferno.Kodak.COM (Kevin Scott) writes:
+
+>For what it's worth, here is my OPINION on what 8-bit clean means:
+
+>3)  it is possible to enter any 8-bit character from the keyboard on
+>    any IBM-PC compatible system.  Just hold down Alt while typing the
+>    desired character code on the numeric keypad.
+Due to some ridiculous mis-function in Microsoft's standard keyboard 
+driver, one of the codes can not be entered that way. (I seem to remember 
+it was 156 or so.)
+
+
+From: guy@Auspex.COM (Guy Harris)
+Subject: Re: 8 bit clean implies what?
+Date: 8 Feb 93 19:07:55 GMT
+Organization: Auspex Systems, Santa Clara
+Lines: 15
+
+>>However, a single CHANGE_CASE table is
+>>sufficient if it is guaranteed that lower_case(x) >= upper_case(x).  Does
+>>anyone know if this assumption is valid?
+>
+>Yes, this is true for at least ISO-Latin-1 and DEC Multinational
+>Character Set (almost identical).
+
+I.e., the upper-case version of the German "sz" character has a loweer
+code than the lower-case version?
+
+Warning: that is a trick question, at least as I understand the German
+case conventions.  It may be unwise to assume that translating a string
+from lower-case to upper-case can be done simply by replacing each
+lower-case letter in the string with a character that's the upper-case
+version of that letter.
+
+
+From: rnelson@wsuaix.csc.wsu.edu (roger nelson;S23487)
+Subject: Re: 8 bit clean implies what?
+Organization: Washington State University
+Date: Mon, 8 Feb 93 20:22:05 GMT
+Lines: 34
+
+In article <1993Feb6.224910.3822@chpc.utexas.edu> michael@chpc.utexas.edu (Michael Lemke) writes:
+>In article <DAVIS.93Feb6161629@pacific.mps.ohio-state.edu> davis@pacific.mps.ohio-state.edu  (John E. Davis) writes:
+>>In article <1993Feb6.203811.24134@chpc.utexas.edu> michael@chpc.utexas.edu
+>>(Michael Lemke) writes: 
+>>   ...accepting 8bit controls will use them.  Secondly, an 8bit clean editor 
+>>   needs to know what are corresponding uppercase and lower case 
+>>   characters, e.g. å is lower case of Å.
+>>
+>>This is an excellent point that I have not thought of.  The natural solution
+>>is through the use of a lookup table.  But, in general, this requires TWO
+>>tables: uppercase and lowercase.  However, a single CHANGE_CASE table is
+>>sufficient if it is guaranteed that lower_case(x) >= upper_case(x).  Does
+>>anyone know if this assumption is valid?
+>
+>
+>Yes, this is true for at least ISO-Latin-1 and DEC Multinational
+>Character Set (almost identical).  The high order part of these char
+>sets are pretty much an image of the low order part except the 8th bit
+>is 1.  You should really have a look at the ISO-Latin-1 character
+>tables, for example in the appendix of a terminal that has 8bit chars
+>(e.g., vt220 and higher, GraphOn225 and higher). Also think about sort
+>sequences.  An ANSI C implementation must provide functions like
+>isupper(int C) which are controled by the current locale which in turn
+>is controled by the setlocale function.  I haven't done anything with it
+>but this is exactly the kind of problem the stuff was invented for. 
+>The world isn't ASCII anymore.
+>
+>Michael
+>-- 
+>Michael Lemke
+>Astronomy, UT Austin, Texas
+>(michael@io.as.utexas.edu or UTSPAN::UTADNX::IO::MICHAEL [SPAN])
+
+
+
+
+From: goer@ellis.uchicago.edu (Richard L. Goerwitz)
+Subject: Wide Characters (was Re: 8 bit clean implies what?)
+Date: 9 Feb 93 01:43:10 GMT
+Organization: University of Chicago
+Lines: 18
+
+allen@world.std.com (Joseph H Allen) writes:
+
+>>As I understand it, an editor which is 8 bit clean can display ALL 256
+>>characters on the output device.
+
+>Yes.  But here's another fly in the ointment: You shouldn't be so
+>eurocentric... there are apparently versions of vt220s which display two
+>successive characters as a single chinese or japanese character....
+
+The idea is to keep all character-based code potentially indifferent to char-
+acter size.  Soon we hope that the internationalization/localization issue
+will be solved, to some extent, by ISO 10646, which specifies, as I recall,
+32-bit wide characters.  Somebody correct me if I'm wrong.
+
+-- 
+
+   -Richard L. Goerwitz              goer%midway@uchicago.bitnet
+   goer@midway.uchicago.edu          rutgers!oddjob!ellis!goer
+
+
+From: michael@chpc.utexas.edu (Michael Lemke)
+Subject: Re: 8 bit clean implies what?
+Organization: The University of Texas System - CHPC
+Date: Tue, 9 Feb 93 03:28:15 GMT
+Lines: 28
+
+In article <16849@auspex-gw.auspex.com> guy@Auspex.COM (Guy Harris) writes:
+>>>However, a single CHANGE_CASE table is
+>>>sufficient if it is guaranteed that lower_case(x) >= upper_case(x).  Does
+>>>anyone know if this assumption is valid?
+>>
+>>Yes, this is true for at least ISO-Latin-1 and DEC Multinational
+>>Character Set (almost identical).
+>
+>I.e., the upper-case version of the German "sz" character has a loweer
+>code than the lower-case version?
+
+Well, not really. But this is indeed tricky as the reverse, lowercasing
+SS, is not unique.  `MASSE' can be `Masse' or `Maße', depending on context.
+As a native German I'd let these cases alone.
+
+>
+>Warning: that is a trick question, at least as I understand the German
+>case conventions.  It may be unwise to assume that translating a string
+>from lower-case to upper-case can be done simply by replacing each
+>lower-case letter in the string with a character that's the upper-case
+>version of that letter.
+
+
+Michael
+-- 
+Michael Lemke
+Astronomy, UT Austin, Texas
+(michael@io.as.utexas.edu or UTSPAN::UTADNX::IO::MICHAEL [SPAN])
+
+
+From: rnelson@wsuaix.csc.wsu.edu (roger nelson;S23487)
+Subject: Re: 8 bit clean implies what?
+Sender: news@serval.net.wsu.edu (USENET News System)
+Organization: Washington State University
+Date: Tue, 9 Feb 93 07:59:20 GMT
+Lines: 34
+
+>>This is an excellent point that I have not thought of.  The natural solution
+>>is through the use of a lookup table.  But, in general, this requires TWO
+>>tables: uppercase and lowercase.  However, a single CHANGE_CASE table is
+>>sufficient if it is guaranteed that lower_case(x) >= upper_case(x).  Does
+>>anyone know if this assumption is valid?
+
+One will notice that (with the exception of codes 32-63) the lower order
+nyble of the ASCII code for the uppercase character is the same as the
+respective lowercase character (and also the respective control character).
+The most significant bit of the upper order nyble is an encoding of the 
+shift keys used:
+
+   codes  0000 - 0001  Denote a ctrl character  Ie Ctrl-A = 0000 0001
+   codes  0010 - 0011  don't follow the general encoding scheme
+            ^
+   codes  0100 - 0101  Denote a shifted char.   Ie      A = 0100 0001
+           ^
+   codes  1000 - 1111  Denote an unshifted char Ie      a = 0110 0001
+          ^
+(Note that there are a few exceptions to the shift key encoding:
+ 64,94,95,96,126 and 127.)
+
+>Yes, this is true for at least ISO-Latin-1 and DEC Multinational
+>Character Set (almost identical).  The high order part of these char
+>sets are pretty much an image of the low order part except the 8th bit
+>is 1.  
+
+Is the shift key encoding of the characters in the 8-bit character set
+preserved?
+
+Roger
+
+
+
+
+
+From: ketil@edb.tih.no (Ketil Albertsen,TIH)
+Subject: Re: 8 bit clean implies what?
+Sender: ketil@edb.tih.no (Ketil Albertsen,TIH)
+Organization: T I H / T I S I P 
+Date: Tue, 9 Feb 1993 15:37:50 GMT
+Lines: 17
+
+In article <1993Feb9.075920.20683@serval.net.wsu.edu>, rnelson@wsuaix.csc.wsu.edu 
+(roger nelson;S23487) writes:
+
+>One will notice that (with the exception of codes 32-63) the lower order
+>nyble of the ASCII code for the uppercase character is the same as the
+>respective lowercase character (and also the respective control character).
+
+Basing a case conversion on this is not a good solution. Eg. 8859/2 (suiting
+a number of East European languages) follows this pattern with a distance
+of 16 for the codes A9 to AF, but a distance of 32 for C0 to DE. True, the
+low nibble is the same, but it doesn't help you that much. 
+IS 6937 also has a distance of 16 for most upper-half codes, but with 
+exceptions. And there will always be a number of special cases, such as
+the German double-s. So, a translation table gets you a lot further. If
+you extend the table with some trapping mechanism for special cases, you
+could get it good enough for "any" use.
+
+
+
+From: ant@mks.com (Anthony Howe)
+Subject: Re: 8 bit clean implies what?
+Organization: Mortice Kern Systems Inc., Waterloo, Ontario, CANADA
+Date: Tue, 9 Feb 1993 14:21:34 GMT
+Lines: 52
+
+To my knowledge, 8-bit clean means that you must make no assumptions about
+any characters in the character set other than what the ctype macro/functions
+tell you.  (See ANSI C section 4.3 Character Handling.)
+
+	"The header <ctype.h> declares several functions useful for testing
+	and mapping characters.  In all cases the argument is an int, the
+	value of which shall be representable as an assigned char or shall
+	equal the value of the macro EOF.  If the argument has any other
+	value, the behaviour is undefined."
+
+	int isalnum(int c);
+	int iscntrl(int c);
+	int isupper(int c);
+	...
+
+P.J. Plauger has a column in "The C User Journal".  In one issue (which I
+can't remember) he discuss <ctype.h> and issues concerning 8-bit clean.
+I recommend doing a search back over that last two years for it.
+
+>From my understanding of the quote above, the ctype table must be at least
+256 bytes.  You must be careful of sign-extension with char pointers, like
+
+	{
+		char *p = "Hi\375\376\377 there";
+		...
+		if (isalpha(p[2])) {
+			...
+		} else if (iscntrl(p[4])) {
+			...
+		}
+	}
+
+If your compiler defaults to chars being signed, the results of the ctype
+ctype table look up will be undefined, since p[2] will be sign-extended to
+-3 and p[4] will be sign-extended to -1 and so fall off the bottom of the
+table.  Also EOF, typically -1, does NOT equal 255.  Remember that the
+argument is an int, so EOF is really going to be (int) -1 while 255 will
+be (unsigned char) 255, which are not the same.  
+
+You should come up with a mapping function something like unctrl() that will
+represent control characters (non-printables) in a sensible manner.  Allow
+the mapping to be altered/configured from system to system.
+
+You also have to be careful about 9-bit char.  There are still systems 
+out there that have 9-bit bytes, which would mean a ctype table of 512 
+bytes.  Plauger's article covers all these issues very well. 
+
+-ant
+-- 
+ant@mks.com                                                   Anthony C Howe 
+Mortice Kern Systems Inc. 35 King St. N., Waterloo, Ontario, Canada, N2J 6W9
+"Nice legs.  For a human that is." - Worf (Q-pid)
+
+
+From: jschief@finbol.toppoint.de (Joerg Schlaeger)
+Subject: Re: 8 bit clean implies what?
+Date: Tue, 09 Feb 93 17:24:01 GMT
+Lines: 35
+
+upham@cs.ubc.ca writes in article <1l4go1INNq8v@cascade.cs.ubc.ca>:
+> ..................
+> switch between character sets and save space (the specifics now escape
+> me, unfortunately).  In general, if you want to be safe, do everything
+> on four byte characters internally, and then add conversion interfaces
+> to work with whatever character set is needed.
+> 
+> Derek
+> 
+> -- 
+> Derek Lynn Upham                               University of British Columbia
+> upham@cs.ubc.ca                                   Computer Science Department
+> =============================================================================
+> "Ha!  Your Leaping Tiger Kung Fu is no match for my Frightened Piglet Style!"
+> 
+
+Hi,
+and please don't forget the big- & small endian problem for more than one
+byte per character, because you can't besure that your stdin is a keyboard
+and that the byteorder is the allways the same.
+I've the problem with named pipe's filled with messages from Intel & Motorala
+Workstations and 16-Bit charsets.
+Is there anyone who knows the solution for every character set,1 & 2 & 4 Byte.
+Perhabs a sign like "\n" thats all the same, to detect the need for byteswapping.
+
+Joerg
+
+--
++++++++++++++++++++++++++++++++++++
+Joerg Schlaeger
+Home: +49 431 682210 (voice & fax & ...)
+jschief@finbol.toppoint.de
+-----------------------------------
+(to be faster with the /2)
++++++++++++++++++++++++++++++++++++
+
+
+From: jimc@tau-ceti.isc-br.com (Jim Cathey)
+Newsgroups: comp.editors
+Subject: Re: 8 bit clean implies what?
+Date: 10 Feb 93 23:45:35 GMT
+Organization: Olivetti North America, Spokane, WA
+Lines: 20
+
+In article <729278641snx@finbol.toppoint.de> jschief@finbol.toppoint.de (Joerg Schlaeger) writes:
+>and please don't forget the big- & small endian problem for more than one
+>byte per character, because you can't besure that your stdin is a keyboard
+>and that the byteorder is the allways the same.
+
+Unicode has a magic cookie that's a NOP whose byte-reversed form is also
+a (different) NOP.  It may be embedded in any string (presumably at the front)
+as a byte-sex tag if you need such things.
+
+-- 
++----------------+
+! II      CCCCCC !  Jim Cathey
+! II  SSSSCC     !  ISC-Bunker Ramo
+! II      CC     !  TAF-C8;  Spokane, WA  99220
+! IISSSS  CC     !  UUCP: uunet!isc-br!jimc (jimc@isc-br.isc-br.com)
+! II      CCCCCC !  (509) 927-5757
++----------------+
+			One Design to rule them all; one Design to find them.
+			One Design to bring them all and in the darkness bind
+			them.  In the land of Mediocrity where the PC's lie.
+
+
