@@ -1,0 +1,40 @@
+
+
+
+
+
+
+
+
+
+			Yanking
+
+
+
+
+
+
+
+
+
+
+
+		o  y(CR) - yank whole line
+		o  y^ - yank from beginning of line to cursor
+
+		o  yb - yank previous word		***
+		o  yB - yank previous long word		***
+
+		o  ye - yank to end of word
+		o  yE - yank to end of long word
+
+		o  yW - yank long word			***
+
+		o  yH - yank from beginning of window to cursor line
+		o  yM - yank from curor line to middle of screen
+		o  yL - yank from cursor to end of window
+
+
+
+		*** numeric count can be added before command
+
