@@ -1,0 +1,78 @@
+Newsgroups: comp.editors,news.answers,comp.answers
+Followup-To: poster
+Message-ID: <Ruben9402280919.CSPOINTER.001@alf.uib.no>
+From: buboo@alf.uib.no
+Expires: Tue, 07 Mar 94 09:19:51 GMT
+Subject: Introduction to comp.editors (July 29 1993)
+Date: Tue, 28 Feb 94 09:19:50 GMT
+Reply-To: buboo@alf.uib.no
+Sender: buboo@alf.uib.no
+X-FaqTool: FaqWare version 1.00-000 - Copyright(C) Ove Ruben R Olsen
+
+Archive-name: editor-faq/pointer
+
+
+This message is automatically posted once a week to inform new readers
+of what Comp.Editors is about.  It also contains where to get the
+latest version of the regular postings that is in this group.
+If you don't want to see this posting every week, please add the subject 
+line to your kill file.  
+The Subject: indicates when this message was last changed.
+
+
+
+What is the group comp.editors about ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Comp.editors is an INET group for the discussion of editors, editing
+interfaces and internals generally. For discussion of what an INET
+group is, please see the regular postings in news.announce.newusers.
+There was discussion some time back about making comp.editors into a
+regular usenet group, but so far nothing has come of it.
+
+If, however, you are interested in "EMACS", a very special editor,
+then you should look at (and post to) these groups:
+   comp.emacs
+   gnus.emacs.help
+However, if the question is about an emacs in relation to another type
+of editor, then its probably ok to post it here.
+
+There was 4 regular postings to this group:
+
+  - List of EMACS implementations (Posted every 2. month).
+  - The INDEX files in the VI/EX archives around the world (Posted monthly).
+  - FAQ for Comp.Editors.
+
+The two following FAQ is looking for a new home:
+  - List of editors.
+
+
+The files can be found on the following archives:
+
+Europe 
+  alf.uib.no               
+    /pub/vi/comp.editors.ARC        Comp.Editors FAQ VI/EX archivelist
+    /pub/vi/comp.editors.FAQ        Comp.Editors FAQ.
+
+Japan  
+  utsun.s.u-tokyo.ac.jp    
+    /misc/vi/comp.editors.ARC       Comp.Editors FAQ VI/EX archivelist.
+    /pub/lpf/misc/comp.editors.FAQ  Comp.Editors FAQ.
+
+Mexico, Canada and USA   
+  cs.uwp.edu               
+    /pub/vi/comp.editors.ARC        Comp.Editors FAQ VI/EX archivelist.
+    /pub/lpf/misc/comp.editors.FAQ  Comp.Editors FAQ.
+  pit.mit.edu
+    /pub/usenet/comp.editors/Emacs_implementations,_list_of,_regular_post_[long]
+    /pub/usenet/comp.editors/comp.editors_-_VI_Archives
+  ftp.uu.net 
+    /pub/text-processing/vi/comp.editors.FAQ    Comp.Editors FAQ.
+    /pub/text-processing/vi/comp.editors.ARC    Comp.Editors FAQ VI/EX archive.
+
+Australia, NZ and the rest Down Under
+  monu6.cc.monash.edu.au 
+    /pub/Vi/comp.editors.ARC        Comp.Editors FAQ VI/EX archivelist.
+    /pub/lpf/misc/comp.editors.FAQ  Comp.Editors FAQ.
+
+
+\Ruben.
