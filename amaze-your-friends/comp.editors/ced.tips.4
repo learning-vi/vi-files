@@ -1,0 +1,441 @@
+From  wagner@hatteras.cs.unc.edu (Michael Wagner)
+Subject: vi (including file name)
+Date: 9 Jan 92 20:47:44 GMT
+Status: RO
+
+
+I'm working on a macro (in vi) that would allow me
+to automatically write the name of the file into
+the current cursor location in the file.
+
+I know that "%" seems to be the name of the file,
+it seems that you can rename a file with
+
+        :w %.new
+
+I think I could usually simulate what I want with a
+        :r !ls %
+
+but there has to be a better way.
+
+Mike
+
+
+From  steinbac@hpl-opus.hpl.hp.com (Guenter Steinbach)
+Subject: Re: vi (including file name)
+Date: 10 Jan 92 23:41:01 GMT
+Status: O
+
+In comp.editors, wagner@hatteras.cs.unc.edu (Michael Wagner) writes:
+
+
+> I'm working on a macro (in vi) that would allow me
+> to automatically write the name of the file into
+> the current cursor location in the file.
+Yes!  I'd like that also.  Right now all I can do is ^G to display the
+name, then cut it with the mouse (under X11) and paste it where I need
+it.  But a macro would be so much nicer.
+
+> I think I could usually simulate what I want with a
+>         :r !ls %
+Usually, but not before the file has been written, else instead of
+"filename" you'll get "filename not found".
+
+	 Guenter Steinbach			steinbac@hpl-opus.hpl.hp.com
+
+
+From  dattier@gagme.chi.il.us (David W. Tamkin)
+Subject: Re: vi (including file name)
+Date: 10 Jan 92 23:30:03 GMT
+Status: O
+
+wagner@hatteras.cs.unc.edu (Michael Wagner) wrote in <8656@borg.cs.unc.edu>:
+
+| I'm working on a macro (in vi) that would allow me
+| to automatically write the name of the file into
+| the current cursor location in the file.
+
+:r !echo %      will write it below the current line, and
+:-r !echo %     will write it above the current line.
+
+David W. Tamkin  Box 7002  Des Plaines, Illinois  60018-7002  +1 708 518 6769
+dattier@gagme.chi.il.us  CIS: 73720,1570  MCI Mail: 426-1818  +1 312 693 0580
+
+
+From  ttobler@unislc.uucp (Trent Tobler)
+Subject: Re: vi (including file name)
+Date: 13 Jan 92 17:40:53 GMT
+Status: O
+
+steinbac@hpl-opus.hpl.hp.com (Guenter Steinbach) writes:
+> In comp.editors, wagner@hatteras.cs.unc.edu (Michael Wagner) writes:
+> 
+> 
+> > I'm working on a macro (in vi) that would allow me
+> > to automatically write the name of the file into
+> > the current cursor location in the file.
+>
+> Yes!  I'd like that also.  Right now all I can do is ^G to display the
+> name, then cut it with the mouse (under X11) and paste it where I need
+> it.  But a macro would be so much nicer.
+> 
+> > I think I could usually simulate what I want with a
+> >         :r !ls %
+> Usually, but not before the file has been written, else instead of
+> "filename" you'll get "filename not found".
+
+would
+	:r !echo %
+work?
+
+
+--
+  Trent Tobler - ttobler@csulx.weber.edu
+
+
+From  gerolima@netlabs.com (Mark Gerolimatos)
+Subject: VI: Changing case for an entire word...how did I do it?
+Date: 19 Jan 92 01:58:39 GMT
+Status: O
+
+
+
+Somehow, I managed to do this by accident. Just now, I did it again.
+And the damned thing is that I don't know how!
+
+Now, '~' will toggle the case of a character, but it seems to be immune to the
+standard VI  [count] command [address modifier] syntax (i.e. '~w' will toggle
+the case of the current character, and then move on to the next word).
+
+
+		How did I do this?
+
+If possible, please respond via mail...
+-Mark
+P.S. If it's in the manual, I couldn't find it...
+====================================Cut Here====================================
+gerolima@neon.stanford.edu	"Righteousness comes ONLY from Jesus Christ...
+	@netlabs.com			...NEVER from an apron."
+						-Jack T. Chick
+================================================================================
+
+
+From  gregg@cbnewsc.cb.att.com (gregg.g.wonderly)
+Subject: Re: How do I... (vi or awk question, perhaps?)
+Date: 25 Jan 92 00:02:07 GMT
+Status: O
+
+>From article <1992Jan16.215423.11078@ux1.cso.uiuc.edu>, by weller@osiris (Bonnie Weller):
+> For instance, my vi file looks like this...
+> 
+>         Field 1  Field 2
+> Record#   Coorx  Coory
+> 
+> 1         1234   4321
+> 2         1111   4444
+> 3         2222   3333
+> 
+> 
+> I want it to look like this....
+> 
+>         Field 1  Field 2  Field 3
+> Record#   Coorx  Coory    Label
+> 
+> 1         1234   4321      1
+> 2         1111   4444      2
+> 3         2222   3333      3
+
+
+Two people have suggested using awk, and their solutions involve doing
+something with an intermediate file.  From within vi, you can filter
+your file by doing the following.  On the top line of your
+file, add the following line.
+
+!Gawk '{printf "\%s\%8d\n", $0, NR}'
+
+Next type
+
+	1G"ayy
+
+to put the top line (the one with awk on it) into the buffer a.
+Next, put the cursor at the beginning of the first line of data
+that you want to change.  Then, type
+
+	@a
+
+to tell vi to eat the contents of buffer a as keystrokes you have typed.
+If you don't like the spacing, type a 'u' to undo the changes, and change
+the '%8' to be '%5', or something.  Then start over at "Next type"
+above.
+
+Filtering and using the named buffers as macros are very useful parts
+of vi.  Knowing how to use them can save you many hours of work...
+
+-- 
+-----
+gregg.g.wonderly@att.com   (AT&T bell laboratories)
+
+
+From  lwv26@cas.org (Larry W. Virden)
+Subject: Re: .exrc location(s)
+Date: 25 Jan 92 15:53:13 GMT
+Status: O
+
+In article <1992Jan24.211333.18456@jpradley.jpr.com> jpr@jpradley.jpr.com (Jean-Pierre Radley) writes:
+:In article <1992Jan24.001030.8749@samba.oit.unc.edu> uevans@med.unc.edu (Elizabeth A. Evans) writes:
+:>So why am I finding that the file has to be in (or linked to) every
+:>subdirectory I'm in during a vi session?  Is there some other way
+:>I should do it?
+:
+:Try putting it into your $HOME directory; vi looks there too.
+:
+:I don't use a .exrc file, since it's alledgedly quicker to put the information
+:into an EXINIT environment variable, which I do in my .profile or .login.
+:
+:You can "localize" your vi macros, if the last thing in your $HOME/.exrc, or in
+:your EXINIT, is ":so .exrc+". Then you can have a different .exrc+ in your
+:directory for for new C code; in your directory for mail, etc. Most often, the
+:kind of macros I'd put in a .exrc+ would concern sw and wm.
+
+1. I dont know why some folks on Suns seem not get to their ~/.exrc used,
+unless they have EXINIT set to "" - it should be unset altogether!
+
+2. A warning about many vi's that I have used.  It appears that the .exrc
+handling isnt too smart.  For instance, if you edit a file in your HOME
+directory - .exrc gets read twice (once as your HOME exrc and once for your 
+local perhaps?).  Well, so what?  If you have a lot of macros defined in
+your HOME/.exrc, you will find you start getting error msgs when you edit
+in your HOME directory - you run the macro code out of buffer space.  The
+thing is, if you have the same macro defined IDENTICALLY (or any other way)
+both definitions appear in vi's macro buffer - I believe he only executes
+the last one - but the others are still there.
+
+Sigh.
+-- 
+Larry W. Virden			UUCP: osu-cis!chemabs!lwv26
+Same Mbox: BITNET: lwv26@cas    INET: lwv26@cas.org
+Personal: 674 Falls Place,   Reynoldsburg,OH 43068-1614
+America Online: lvirden
+
+
+From  jpr@jpradley.jpr.com (Jean-Pierre Radley)
+Subject: Re: vi macro def at startup
+Date: 26 Jan 92 18:57:42 GMT
+Status: O
+
+In article <sjreeves.920125112507@eng.auburn.edu> sjreeves@eng.auburn.edu (Stan Reeves) writes:
+>I want to define a macro in my ~/.exrc file, but it doesn't seem to work.
+>For example, I put 
+>
+>:map t dd
+>
+>in the ~/.exrc file to test it, and it doesn't take.  I don't have another
+>.exrc file in the directory I was using.  Any ideas?
+
+
+One little colon!
+
+If you're already inside 'vi', then typing
+	:map t dd
+would map 't' to 'dd'.
+
+But that ':' doesn't belong in your .exrc file.
+-- 
+Jean-Pierre Radley   Unix in NYC   jpr@jpr.com   jpradley!jpr   CIS: 72160,1341
+
+
+From  mike@swsrv1.cirr.com (Mike Haddon)
+Subject: Re: vi macro def at startup
+Date: 26 Jan 92 21:44:11 GMT
+Status: O
+
+In article <sjreeves.920125112507@eng.auburn.edu> sjreeves@eng.auburn.edu (Stan Reeves) writes:
+>I want to define a macro in my ~/.exrc file, but it doesn't seem to work.
+>For example, I put 
+>
+>:map t dd
+
+I am doing this in my .exrc file as:
+
+map P :t dd
+
+where P is the macro identifier to use when you want to execute the macro
+and it works pretty well.
+
+
+-- 
+******************************************************************************
+*                      |                        |                            *
+* Mike Haddon          | 6717 Woodsmoke Way     | Fort Worth, Tx.  76137     *
+* mike@swsrv1.cirr.com | ...!egsner!swsrv1!mike | ...!void!swsrv1!mike       *
+
+
+From  hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: vi macro def at startup
+Date: 29 Jan 92 02:20:08 GMT
+Status: O
+
+In <1992Jan26.185742.11545@jpradley.jpr.com> jpr@jpradley.jpr.com (Jean-Pierre Radley) writes:
+>In article <sjreeves.920125112507@eng.auburn.edu> sjreeves@eng.auburn.edu (Stan Reeves) writes:
+>>:map t dd
+
+>One little colon!
+
+>But that ':' doesn't belong in your .exrc file.
+
+What version of vi are you using?
+
+All versions I've ever seen allow you to type 1 (one) superfluous colon
+at the start of an ex command.
+
+And, frankly, I find myself doing that a lot when in ex mode.
+
+--
+Hans Mulder		hansm@cs.kun.nl
+
+
+From  hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: vi macro def at startup
+Date: 29 Jan 92 11:49:59 GMT
+Status: O
+
+In <1992Jan26.214411.795@swsrv1.cirr.com> mike@swsrv1.cirr.com (Mike Haddon) writes:
+>I am doing this in my .exrc file as:
+
+>map P :t dd
+
+>where P is the macro identifier to use when you want to execute the macro
+>and it works pretty well.
+
+When I try that, vi says "t requires a trailing address".
+
+Wouldn't it be better to write:
+
+map P :t 'd ^M
+
+[As always, getting a ^M requires typing control-V control-M.]
+
+--
+Hans Mulder		hansm@cs.kun.nl
+
+
+From  soh@andromeda.trl.OZ.AU (Kam Hung Soh)
+Subject: Re: .exrc location(s)
+Date: 29 Jan 92 21:29:41 GMT
+Status: O
+
+jos@and.nl (Jos Horsmeier) writes:
+
+>In article <1992Jan24.001030.8749@samba.oit.unc.edu> uevans@med.unc.edu (Elizabeth A. Evans) writes:
+>|Well, I knew this a while back and then didn't fiddle with vi macros
+>|for a while, and now I'm back at them.  To create a vi macro, I
+>|create a file called .exrc with the macro(s) defined in it, right?
+>|So why am I finding that the file has to be in (or linked to) every
+>|subdirectory I'm in during a vi session?  Is there some other way
+>|I should do it?
+
+[ Jos quotes from the Sun vi man page ... ]
+
+>It simply doesn't work that way. Vi (with SunOS 4.1.1.) just checks
+>the cwd for .exrc, *not* the ~/ dir. 
+
+On my system (SparcStation 1+, SunOS 4.1.1), vi reads .exrc in the
+present directory, AND .exrc in my home directory.
+
+If the EXINIT environment variable is defined, vi will use that
+variable and only .exrc in the present directory, ignoring .exrc in my
+home directory.
+
+Regards,
+
+---
+Soh, Kam Hung | h.soh@trl.oz.au | Telecom Research Laboratories,
+              | +61 3 253 6638  | POB 249 Clayton, Victoria 3168, Australia 
+
+From  marzouki@rhone.imag.fr (Meryem Marzouki)
+Subject: Re: vi macro def at startup
+Date: 29 Jan 92 10:03:34 GMT
+Status: O
+
+In article <1992Jan26.185742.11545@jpradley.jpr.com> jpr@jpradley.jpr.com (Jean-Pierre Radley) writes:
+>In article <sjreeves.920125112507@eng.auburn.edu> sjreeves@eng.auburn.edu (Stan Reeves) writes:
+>>I want to define a macro in my ~/.exrc file, but it doesn't seem to work.
+>>For example, I put 
+>>
+>>:map t dd
+>>
+>>in the ~/.exrc file to test it, and it doesn't take.  I don't have another
+>>.exrc file in the directory I was using.  Any ideas?
+ 
+>One little colon!
+ 
+>If you're already inside 'vi', then typing
+>	:map t dd
+>would map 't' to 'dd'.
+ 
+>But that ':' doesn't belong in your .exrc file.
+
+It also works in the ~/.exrc file ! This macro (and any macro) syntax is 
+the same if you are either inside vi or if it's a line of your .exrc. 
+The only difference is that in the first case, the macro is no longer 
+valid after your current vi session.
+
+Meryem MARZOUKI - Groupe Architecture des Ordinateurs - Lab TIM3/IMAG INPG 
+Tel. (+33) 76 57 46 96 - Fax. (+33) 76 47 38 14
+46 avenue Felix Viallet - 38031 Grenoble Cedex - France
+Internet : marzouki@archi.imag.fr - Bitnet : marzouki@frcime51.bitnet
+
+
+Newsgroups: comp.editors
+From  jjj@mits.mdata.fi (Joni Jarvenkyla)
+Subject: Octal code quotation in vi search & replace?
+
+
+How to quote octal codes to vi seach & replace command
+(%s/string1/string2/g)?
+
+Problem is that I've got a file with octal codes \204 and \244 which
+should get translated to ascii characters { and |.
+
+-- 
+jjj@mits.mdata.fi	"Miks mun pit{is olla vastuussa jos t{{lt{
+jjj@niksula.hut.fi	 l|ytyy jotain vitun irtop{it{?"
+
+			-Kari Nenonen, "Ken Kuolleita Kutsuu"
+
+
+From  beaty@aberdeen.FtCollins.NCR.com (Steve Beaty)
+Subject: Re: .exrc location(s)
+Date: 31 Jan 92 16:42:00 GMT
+Status: O
+
+uevans@med.unc.edu (Elizabeth A. Evans) writes:
+> Well, I knew this a while back and then didn't fiddle with vi macros
+> for a while, and now I'm back at them.  To create a vi macro, I
+> create a file called .exrc with the macro(s) defined in it, right?
+
+i recently was dorking around with this stuff and realized that i
+wanted to change my mappings based on the type of file i was editing.
+i wrote the following csh file to do this:
+----------------------------------------------------------------------
+#! /bin/csh -f
+set suffix = $argv[1]:e
+if (-e ~/.exrc.$suffix) then
+	/usr/ucb/vi +":so ~/.exrc.$suffix" $argv
+else
+	/usr/ucb/vi $argv
+endif
+----------------------------------------------------------------------
+what this does is search in my home directory for files like ".exrc.c"
+and ".exec.tex" for mappings for C and TeX source file mappings.  i
+then just place my generic stuff in .exrc and the source-specific
+stuff in the additional .exec.*.  if there isn't an associated file,
+it just runs with the generic arguments.  pretty handy.  one problem i've
+found is that vi doesn't seem to source the extra .exrc's when editing
+an empty file.  oh well.
+
+Steve Beaty					Steve.Beaty@ftcollins.ncr.com
+Advanced Development		              beaty@longs.lance.colostate.edu
+NCR Microelectronics                              (303) 226-9622 (palinphone)
+"What You See Is What You Get, but it sure ain't what we need." Talking Heads
+
