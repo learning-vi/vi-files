@@ -1,0 +1,392 @@
+
+9
+9        _E_x _Q_u_i_c_k _R_e_f_e_r_e_n_c_e
+
+
+_E_n_t_e_r_i_n_g/_l_e_a_v_i_n_g _e_x
+
+ % ex _n_a_m_e         edit _n_a_m_e, start at end
+ % ex +_n _n_a_m_e      ... at line _n
+ % ex -t _t_a_g       start at _t_a_g
+ % ex -r           list saved files
+ % ex -r _n_a_m_e      recover file _n_a_m_e
+ % ex _n_a_m_e ...     edit first; rest via :n
+ % ex -R _n_a_m_e      read only mode
+ : x               exit, saving changes
+ : q!              exit, discarding changes
+_E_x _s_t_a_t_e_s
+
+Command
+7              Normal  and  initial
+              state.         Input
+              prompted for  by  :.
+              Your  kill character
+              cancels partial com-
+              mand.
+Insert
+7              Entered by a  i  and
+              c.   Arbitrary  text
+              then terminates with
+              line  having  only .
+              character on  it  or
+              abnormally      with
+              interrupt.
+Open/visual
+7              Entered by  open  or
+              vi,  terminates with
+              Q or ^\.
+_E_x _c_o_m_m_a_n_d_s
+
+abbrev   ab   next         n     unabbrev     una
+append   a    number       nu    undo         u
+args     ar   open         o     unmap        unm
+change   c    preserve     pre   version      ve
+copy     co   print        p     visual       vi
+delete   d    put          pu    write        w
+edit     e    quit         q     xit          x
+file     f    read         re    yank         ya
+global   g    recover      rec   _w_i_n_d_o_w       z
+insert   i    rewind       rew   _e_s_c_a_p_e       !
+join     j    set          se    _l_s_h_i_f_t       <
+list     l    shell        sh    _p_r_i_n_t _n_e_x_t   CR
+map           source       so    _r_e_s_u_b_s_t      &
+mark     ma   stop         st    _r_s_h_i_f_t       >
+move     m    substitute   s     _s_c_r_o_l_l       ^D
+_E_x _c_o_m_m_a_n_d _a_d_d_r_e_s_s_e_s
+
+_n     line _n      /_p_a_t   next with _p_a_t
+.     current     ?_p_a_t   previous with _p_a_t
+$     last        _x-_n    _n before _x
++     next        _x,_y    _x through _y
+-     previous    '_x     marked with _x
++_n    _n forward   ''     previous context
+%     1,$
+
+
+
+9
+9
+9
+9_S_p_e_c_i_f_y_i_n_g _t_e_r_m_i_n_a_l _t_y_p_e
+
+ % setenv TERM _t_y_p_e           _c_s_h and all version 6
+ $ TERM=_t_y_p_e; export TERM     _s_h in Version 7
+ See also _t_s_e_t(1)
+_S_o_m_e _t_e_r_m_i_n_a_l _t_y_p_e_s
+
+2621   43     adm31    dw1     h19
+2645   733    adm3a    dw2     i100
+300s   745    c100     gt40    mime
+33     act4   dm1520   gt42    owl
+37     act5   dm2500   h1500   t1061
+4014   adm3   dm3025   h1510   vt52
+_I_n_i_t_i_a_l_i_z_i_n_g _o_p_t_i_o_n_s
+
+EXINIT       place set's here in environment var.
+set _x        enable option
+set no_x      disable option
+set _x=_v_a_l    give value _v_a_l
+set          show changed options
+set all      show all options
+set _x?       show value of option _x
+_U_s_e_f_u_l _o_p_t_i_o_n_s
+
+autoindent   ai     supply indent
+autowrite    aw     write before changing files
+ignorecase   ic     in scanning
+lisp                ( ) { } are s-exp's
+list                print ^I for tab, $ at end
+magic               . [ * special in patterns
+number       nu     number lines
+paragraphs   para   macro names which start ...
+redraw              simulate smart terminal
+scroll              command mode lines
+sections     sect   macro names ...
+shiftwidth   sw     for < >, and input ^D
+showmatch    sm     to ) and } as typed
+slowopen     slow   choke updates during insert
+window              visual mode lines
+wrapscan     ws     around end of buffer?
+wrapmargin   wm     automatic line splitting
+
+_S_c_a_n_n_i_n_g _p_a_t_t_e_r_n _f_o_r_m_a_t_i_o_n
+
+ |^           beginning of line
+ $           end of line
+ .           any character
+ \<          beginning of word
+ \>          end of word
+ [_s_t_r]       any char in _s_t_r
+ [|^_s_t_r]      ... not in _s_t_r
+ [_x-_y]       ... between _x and _y
+ *           any number of preceding
+
+
+
+
+
+
+
+
+9
+9
+9
+9        _V_i _Q_u_i_c_k _R_e_f_e_r_e_n_c_e
+
+
+_E_n_t_e_r_i_n_g/_l_e_a_v_i_n_g _v_i
+
+ % vi _n_a_m_e           edit _n_a_m_e at top
+ % vi +_n _n_a_m_e        ... at line _n
+ % vi + _n_a_m_e         ... at end
+ % vi -r             list saved files
+ % vi -r _n_a_m_e        recover file _n_a_m_e
+ % vi _n_a_m_e ...       edit first; rest via :n
+ % vi -t _t_a_g         start at _t_a_g
+ % vi +/_p_a_t _n_a_m_e     search for _p_a_t
+ % view _n_a_m_e         read only mode
+ ZZ                  exit from vi, saving changes
+ ^Z                  stop vi for later resumption
+_T_h_e _d_i_s_p_l_a_y
+
+Last line
+7            Error messages, echoing input  to
+            :  /  ? and !, feedback about i/o
+            and large changes.
+@ lines     On screen only, not in file.
+~ lines     Lines past end of file.
+^_x          Control characters, ^? is delete.
+tabs        Expand to spaces, cursor at last.
+
+_V_i _s_t_a_t_e_s
+
+Command
+7            Normal   and   initial
+            state.   Others return
+            here.   ESC   (escape)
+            cancels  partial  com-
+            mand.
+Insert
+7            Entered by a i A I o O
+            c  C s S R.  Arbitrary
+            text  then  terminates
+            with ESC character, or
+            abnormally with inter-
+            rupt.
+Last line
+7            Reading input for :  /
+            ? or !; terminate with
+            ESC or CR to  execute,
+            interrupt to cancel.
+_C_o_u_n_t_s _b_e_f_o_r_e _v_i _c_o_m_m_a_n_d_s
+
+line/column number   z  G  |
+scroll amount        ^D  ^U
+replicate insert     a  i  A  I
+repeat effect        most rest
+_S_i_m_p_l_e _c_o_m_m_a_n_d_s
+
+dw                delete a word
+de                ... leaving punctuation
+dd                delete a line
+3dd               ... 3 lines
+i_t_e_x_tESC          insert text _a_b_c
+cw_n_e_wESC          change word to _n_e_w
+ea_sESC            pluralize word
+xp                transpose characters
+
+
+9
+9
+9
+9_I_n_t_e_r_r_u_p_t_i_n_g, _c_a_n_c_e_l_l_i_n_g
+
+ ESC       end insert or incomplete cmd
+ ^?        (delete or rubout) interrupts
+ ^L        reprint screen if ^? scrambles it
+_F_i_l_e _m_a_n_i_p_u_l_a_t_i_o_n
+
+ :w            write back changes
+ :wq           write and quit
+ :q            quit
+ :q!           quit, discard changes
+ :e _n_a_m_e       edit file _n_a_m_e
+ :e!           reedit, discard changes
+ :e + _n_a_m_e     edit, starting at end
+ :e +_n         edit starting at line _n
+ :e #          edit alternate file
+ ^|^            synonym for :e #
+ :w _n_a_m_e       write file _n_a_m_e
+ :w! _n_a_m_e      overwrite file _n_a_m_e
+ :sh           run shell, then return
+ :!_c_m_d         run _c_m_d, then return
+ :n            edit next file in arglist
+ :n _a_r_g_s       specify new arglist
+ :f            show current file and line
+ ^G            synonym for :f
+ :ta _t_a_g       to tag file entry _t_a_g
+ ^]            :ta, following word is _t_a_g
+_P_o_s_i_t_i_o_n_i_n_g _w_i_t_h_i_n _f_i_l_e
+
+ ^F          forward screenfull
+ ^B          backward screenfull
+ ^D          scroll down half screen
+ ^U          scroll up half screen
+ G           goto line (end default)
+ /_p_a_t        next line matching _p_a_t
+ ?_p_a_t        prev line matching _p_a_t
+ n           repeat last / or ?
+ N           reverse last / or ?
+ /_p_a_t/+_n     n'th line after _p_a_t
+ ?_p_a_t?-_n     n'th line before _p_a_t
+ ]]          next section/function
+ [[          previous section/function
+ %           find matching ( ) { or }
+_A_d_j_u_s_t_i_n_g _t_h_e _s_c_r_e_e_n
+
+ ^L          clear and redraw
+ ^R          retype, eliminate @ lines
+ zCR         redraw, current at window top
+ z-          ... at bottom
+ z.          ... at center
+ /_p_a_t/z-     _p_a_t line at bottom
+ z_n.         use _n line window
+ ^E          scroll window down 1 line
+ ^Y          scroll window up 1 line
+
+
+
+
+
+
+
+9
+9
+9
+9_M_a_r_k_i_n_g _a_n_d _r_e_t_u_r_n_i_n_g
+
+ ``      previous context
+ ''      ... at first non-white in line
+ m_x      mark position with letter _x
+ `_x      to mark _x
+ '_x      ... at first non-white in line
+_L_i_n_e _p_o_s_i_t_i_o_n_i_n_g
+
+ H          home window line
+ L          last window line
+ M          middle window line
+ +          next line, at first non-white
+ -          previous line, at first non-white
+ CR         return, same as +
+  or j      next line, same column
+ |^ or k     previous line, same column
+_C_h_a_r_a_c_t_e_r _p_o_s_i_t_i_o_n_i_n_g
+
+ |^           first non white
+ 0           beginning of line
+ $           end of line
+ h or ->     forward
+ l or <-     backwards
+ ^H          same as <-
+ space       same as ->
+ f_x          find _x forward
+ F_x          f backward
+ t_x          upto _x forward
+ T_x          back upto _x
+ ;           repeat last f F t or T
+ ,           inverse of ;
+ |           to specified column
+ %           find matching ( { ) or }
+_W_o_r_d_s, _s_e_n_t_e_n_c_e_s, _p_a_r_a_g_r_a_p_h_s
+
+ w       word forward
+ b       back word
+ e       end of word
+ )       to next sentence
+ }       to next paragraph
+ (       back sentence
+ {       back paragraph
+ W       blank delimited word
+ B       back W
+ E       to end of W
+_C_o_m_m_a_n_d_s _f_o_r _L_I_S_P
+
+ )       Forward s-expression
+ }       ... but don't stop at atoms
+ (       Back s-expression
+ {       ... but don't stop at atoms
+
+
+
+
+
+
+
+
+
+9
+9
+9
+9_C_o_r_r_e_c_t_i_o_n_s _d_u_r_i_n_g _i_n_s_e_r_t
+
+ ^H        erase last character
+ ^W        erases last word
+ erase     your erase, same as ^H
+ kill      your kill, erase input this line
+ \         escapes ^H, your erase and kill
+ ESC       ends insertion, back to command
+ ^?        interrupt, terminates insert
+ ^D        backtab over _a_u_t_o_i_n_d_e_n_t
+ |^^D       kill _a_u_t_o_i_n_d_e_n_t, save for next
+ 0^D       ... but at margin next also
+ ^V        quote non-printing character
+_I_n_s_e_r_t _a_n_d _r_e_p_l_a_c_e
+
+ a       append after cursor
+ i       insert before
+ A       append at end of line
+ I       insert before first non-blank
+ o       open line below
+ O       open above
+ r_x      replace single char with _x
+ R       replace characters
+_O_p_e_r_a_t_o_r_s (_d_o_u_b_l_e _t_o _a_f_f_e_c_t _l_i_n_e_s)
+
+ d       delete
+ c       change
+ <       left shift
+ >       right shift
+ !       filter through command
+ =       indent for LISP
+ y       yank lines to buffer
+_M_i_s_c_e_l_l_a_n_e_o_u_s _o_p_e_r_a_t_i_o_n_s
+
+ C       change rest of line
+ D       delete rest of line
+ s       substitute chars
+ S       substitute lines
+ J       join lines
+ x       delete characters
+ X       ... before cursor
+ Y       yank lines
+_Y_a_n_k _a_n_d _p_u_t
+
+ p       put back lines
+ P       put before
+ "_xp     put from buffer _x
+ "_xy     yank to buffer _x
+ "_xd     delete into buffer _x
+_U_n_d_o, _r_e_d_o, _r_e_t_r_i_e_v_e
+
+ u       undo last change
+ U       restore current line
+ .       repeat last change
+ "_dp     retrieve _d'th last delete
+
+
+
+
+
+
+9
+9
