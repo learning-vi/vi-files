@@ -1,0 +1,91 @@
+From etxmesa@eos.ericsson.se (Michael Salmon)
+Subject: Re: Q: Tab size in shell
+Reply-To: etxmesa@eos.ericsson.se (Michael Salmon)
+Date: Fri, 5 Jun 1992 08:53:11 GMT
+
+In article <1992Jun5.065506.27336@nuscc.nus.sg>, ccechk@nuscc.nus.sg (Heng Kek) writes:
+|> How does one set the tab size for programs like 'cat', 'more'
+|> etc?  I edited a table using 'vi' whose tabstop setting is 2
+|> (i.e. tabstop=2).  When I 'more' the file containing the table,
+|> the format is screwed up because the tabs expand to 8 spaces or
+|> something.  
+|> 
+|> I've gone thru the man pages for 'stty' and tried some stuff but
+|> met with no success.  Anyone know how to hack this?  I'm on
+|> ULTRIX 4.2 with vt100 term.
+|> 
+|> Kek
+
+try piping your file through expand.
+
+-- 
+
+Michael Salmon
+
+#include	<standard.disclaimer>
+#include	<witty.saying>
+#include	<fancy.pseudo.graphics>
+
+Ericsson Telecom AB
+Stockholm
+
+
+From nh@cbnewsg.cb.att.com (nicholas.hounsome)
+Subject: Re: damn tabs
+Date: 6 Oct 92 07:39:48 GMT
+
+>From article <1992Oct6.040531.25139@cronkite.ocis.temple.edu>, by ray@astro.ocis.temple.edu (Ray Lauff):
+> Hello
+>    I hate the way vi places tabs in the file instead of spaces.
+> Don't get me wrong - the Autoindent feature is very spiffy -- 
+> but I hate the <tab> characters it leaves behind.  
+> 
+>    Right now I use the Unix "expand" command to remove all the
+> tabs, but it is a tedious process.  Is there a way to request
+> vi to replace the tabs with spaces before it saves the file?
+> 
+>     Any help appreciated.  Thanks in advance.
+> 
+> Ray.
+> ray@astro.temple.edu
+
+set tabstop=1000
+
+This will handle autoindent and initial 'tabbing' with ^T but of course
+you must never touch the tab key. To get around this type
+
+map! ^V^I ^V ^V ^V ^V ^V 
+
+i.e. map tab to however may spaces you want -(be careful with your ^Vs
+here)
+
+Of course this is not proper tabbing so you may just want to map it to 
+one space. 
+
+I never understand why people object to tabs apart from when perverts 
+decide to treat them as other than every 8th position. If it is just
+that you want smaller indentation then the trick is to set shiftwidth
+and 'tab' in with ^T instead of TAB - To my mind this is realy clever
+because it produces your indentation with the minimum possible 
+number of TABs and spaces.
+
+Nick Hounsome
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: TABs in vi
+Date: 27 May 1993 19:58:05 +0200
+
+In <1993May27.094810.724@philce.ce.philips.nl> i323856@indus.cad-sg.ce.philips.nl ( DEWENDRA SHASTRI     ) writes:
+>Dear Netters,
+>I want to use the auto-indent feature of vi but it should not put TABs
+>for indenting. Is there any setting by which this can be done. Can I
+>override TAB with spaces ? If I press TAB key ^I character should not
+>be put, instead spaces should be used. Can this be done ?
+
+If you don't want any TAB characters in the file, you can :set tabstop=200
+or so.  This makes TAB characters show as ridiculous amounts of whitespace
+and makes the autoindent feature use ^I characters only if you indent past
+column 200.
+
+You'd probably also want t
