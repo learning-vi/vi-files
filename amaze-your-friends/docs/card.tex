@@ -1,0 +1,74 @@
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%
+% @(#)vi.card.tex 1.1 TeX source 88/01/25 23:20:36 
+%
+% Run this through plain TeX
+%
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+%
+% Author:
+%
+%   Bo Thide\'e
+%   Swedish Institute of Space Physics
+%   S-755 90 Uppsala, Sweden
+%   UUCP: ...enea!kuling!irfu!bt
+%
+%:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+% 
+\nopagenumbers
+\magnification=\magstep0
+\font\tt=cmtt12
+\hsize 15 true cm
+\parindent=0pt
+\centerline{PREPEND ALL APPROPRIATE {\bf vi} COMMANDS BY {\it n} TO REPEAT {\it n} TIMES}
+\centerline{TYPE {\rm $\langle${\tt ESC}$\rangle$} TO RETURN FROM INPUT TO COMMAND MODE}
+\medskip
+\settabs\+{\tt m}{\it x} [{\tt `}{\it x\/}]
+\quad &{\tt s}ubstitute next [to end of line]
+\quad &{\tt <<} [{\tt >>}]\quad &{\tt e}xpose 1 more line at bottom [top]\cr
+\+{\tt a} [{\tt A}] &{\tt a}ppend after cursor [line]
+&{\tt w} [{\tt W}] &{\tt w}ord [``{\tt W}ord'']\cr
+\+{\tt b} [{\tt B}] &{\tt b}ack one word [``Word'']
+&{\tt x} [{\tt X}] &{\tt cross} out char at [before] cursor\cr
+\+{\tt c} [{\tt C}] &{\tt c}hange next [to end of line]
+&{\tt y} [{\tt Y}] &{\tt y}ank next [whole line]\cr
+\+{\tt d} [{\tt D}] &{\tt d}elete next [to end of line]
+&{\tt z}{\it pos} &redraw {\tt z}one at {\it pos} [{\tt .}, {\tt -}, or
+$\langle${\tt CR}$\rangle$]\cr
+\+{\tt e} [{\tt E}] &{\tt e}nd of word [``Word'']
+&{\tt ZZ} &exit {\bf vi}, write changes to file\cr
+\+{\tt f} [{\tt F}] &{\tt f}ind next [previous] in line
+&{\tt \^\/b}[{\tt \^\/f}] &{\tt b}ackward [{\tt f}orward] paging\cr
+\+{\tt G} [{\it n}{\tt G}] &{\tt G}o to last [{\it n\/}:th] line
+&{\tt \^\/d}[{\tt \^\/u}] &{\tt d}ownward [{\tt u}pward] scrolling\cr
+\+{\tt h} [{\tt l}] &cursor left [right]
+&{\tt \^\/d}[{\tt \^\/t}] &{\tt d}elete [{\tt t}ab] one {\it sw} during insert\cr
+\+{\tt H} [{\tt L}] &to {\tt H}ome [{\tt L}ast] line on screen
+&{\tt \^\/e}[{\tt \^\/y}] &{\tt e}xpose 1 more line at bottom [top]\cr
+\+{\tt i} [{\tt I}] &{\tt i}nsert before cursor [line]
+&{\tt \^\/h}[{\tt \^\/w}] &{\tt back} 1 char [{\tt w}ord] during insert\cr
+\+{\tt j} [{\tt k}] &cursor down [up]
+&{\tt \~~}&change case (upper/lower) of char\cr
+\+{\tt J} &{\tt J}oin line with next
+&{\tt +} [{\tt -}] &to first char in {\tt next} [{\tt prev}] line\cr
+\+{\tt m}{\it x} [{\tt `}{\it x\/}] &{\tt m}ark [return to] position {\it x}
+&{\tt 0} [{\tt \$}] &to {\tt first} [{\tt last}] character in line\cr
+\+{\tt M} [{\it n}{\tt |}]&to {\tt M}iddle line [{\it n\/}:th column]
+&{\tt ;} [{\tt ,}] &repeat [reverse] last {\tt f}, {\tt F}, {\tt t},
+or {\tt T}\cr
+\+{\tt n} [{\tt N}] &to {\tt n}ext [previous] occurrence
+&{\tt .} &repeat last change of the text\cr
+\+{\tt o} [{\tt O}] &{\tt o}pen a line below [above]
+&{\tt <<} [{\tt >>}] &shift line one {\it sw} left [right]\cr
+\+{\tt p} [{\tt P}] &{\tt p}ut in after [before]
+&{\tt (} [{\tt )}] &to beginning of [next] sentence\cr
+\+{\tt Q} &{\tt Q}uit {\bf vi}, go to {\bf ex}
+&$\{$ [$\}$] &to beginning of [next] paragraph\cr
+\+{\tt r} [{\tt R}] &{\tt r}eplace 1 [all] character[s]
+&{\tt /} [{\tt ?}] &search forward [backward]\cr
+\+{\tt s} [{\tt S}] &{\tt s}ubstitute character [line]
+&{\tt `\/`} [{\tt '\/'}] &return to previous position [line]\cr
+\+{\tt t} [{\tt T}] &{\tt t}o next [previous] in line
+&{\tt :} [{\tt :!}] &execute {\bf ex} [shell] command\cr
+\+{\tt u} [{\tt U}] &{\tt u}ndo last change[s in line]
+&{\tt !} [{\tt !!}] &shell command on next [this line]\cr
