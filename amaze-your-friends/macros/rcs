@@ -1,0 +1,20 @@
+" From: phil@compnews.co.uk (Phil Male)
+" Newsgroups: comp.editors
+" Subject: RCS vi macros
+" Date: 10 Jul 1993 19:00:52 GMT
+" Organization: Computer Newspaper Services, Howden, UK.
+" Reply-To: phil@compnews.co.uk
+" 
+" Anyone got any better macros to drive RCS?
+" 
+"
+" RCS
+"
+" co -l file
+map \o :!co -l %:e! %
+"
+" ci -u file
+map \i :w:e /dev/nullicreate log message, write log with \e:map!  > A> A
+map \e 1Gdddd:%s/^> //g1G!Gci -u #:e! #:unmap! 
+
+
