@@ -1,0 +1,21 @@
+" From: lee@sq.sq.com (Liam R. E. Quin)
+" Subject: Re: Word completion in vi
+" Keywords: vi, ~
+" Date: 12 Oct 90 18:01:50 GMT
+" 
+" javey@hybrid.UUCP (shahram javey) writes:
+" >How can the case of a word be changed [...] ?
+" 
+" Here is a macro that will do that.  Not as elegant as it could be, but...
+" This goes from upper to lower case.  To go the other way, you need to
+" use \L instead of \U, or, if on a sun with broken \L, use \l and put a g
+" just after the last !.
+"
+map!   bywPbi:s/!\(els\)/\U\1/!F:"zd3f/@z
+"
+" Above line makes ^B turn the last word you typed into uppercase [lee@sq]
+"
+" 
+" Liam R. E. Quin,  lee@sq.com, SoftQuad Inc., Toronto, +1 (416) 963-8337
+
+
