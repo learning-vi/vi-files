@@ -1,0 +1,81 @@
+From alm@netcom.com (Andrew Moore)
+Subject: Appending to external file with vi?
+Date: 8 Jul 92 19:49:43 GMT
+Article-I.D.: netcom.#77lg=q.alm
+
+I use the vi (ex?) command format:
+
+    :'x,.w file
+
+to write a section of text to an external file (file).
+But I don't know good way to append to an existing file.
+The best I can think of is:
+
+    !'xtee -a file
+
+where ! filters from the current position to 'x through tee.
+Any ideas are welcomed.  Thank you.
+-Andrew Moore <alm@netcom.com>
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Appending to external file with vi?
+Date: Wed, 8 Jul 1992 23:52:46 GMT
+
+In <#77lg=q.alm@netcom.com> alm@netcom.com (Andrew Moore) writes:
+>I use the vi (ex?) command format:
+
+It's an ex command, like everything that starts with ':'.
+
+>    :'x,.w file
+
+>to write a section of text to an external file (file).
+>But I don't know good way to append to an existing file.
+
+How about:
+
+    :'x,.w >>file
+
+Believe it or not, vi just informed me that "Write forms are 'w' and 'w>>'".
+I'd swear I've never seen that message before.  Typing
+
+    :w>
+
+seems to trigger it.
+
+>The best I can think of is:
+
+>    !'xtee -a file
+
+>where ! filters from the current position to 'x through tee.
+
+I'd never thought of that.  I might have come up with:
+
+    :'x,.w !cat>>file
+	  ^
+where "w !" pipes (a portion of) the buffer into the indicated command.
+Note the SPACE between the 'w' and the '!'.  Without it, you'd be
+creating a file named "cat>>file".  (Creating files with shell meta-
+characters in their names is always fun.  Try creating a file named
+"`rm -r $HOME`" sometime. :-) 
+
+--
+Hans Mulder			hansm@cs.kun.nl
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Appending to external file with vi?
+Date: Fri, 10 Jul 1992 13:51:35 GMT
+
+In <1992Jul10.094141.7431@usage.csd.unsw.OZ.AU> cameron@spectrum.cs.unsw.oz.au (Cameron Simpson) writes:
+
+>pputter@dos-lan.cs.up.ac.za (Mnr Phillip Putter) writes:
+>| Use :'x,.w!>>file
+
+>No, just
+
+>	:'x,.w>>file
+
+>Note the lack of `!', which changes the meaning completely.
+
+No, they'll both 
