@@ -1,0 +1,117 @@
+#!/bin/sh
+#
+# $Id: shvi,v 1.3 1991/10/07 21:25:51 vogel Exp $
+#
+# NAME:
+#	shvi
+#
+# SYNOPSIS:
+#	shvi [VI options] [file ...]
+#
+# DESCRIPTION:
+#	"shvi" is a collection of macros to assist in shell programming
+#	with VI.  The following VI settings are used:
+#
+#		set autowrite
+#		set autoindent
+#		set edcompatible
+#		set noremap
+#		set redraw
+#		set timeout
+#		set wm=2
+#		set writeany
+#		set shell=/bin/sh
+#
+#	The following keys are mapped in command mode:
+#
+#		` (grave)		delete to end of line
+#		; (semicolon)		indent one tab space right
+#		= (equals)		indent one tab space left
+#		, (comma)		turns line numbering off
+#		. (period)		turns line numbering on
+#		[ (left bracket)	start new comment
+#		g			suspend
+#		V			comments out the current line
+#		K			undoes use of V key
+#		q			puts current line in center of screen
+#
+#		E			read a file containing a scan-line
+#					which looks like this:
+#
+#	T	T	T	T	T	T	T	T
+#|...*....1....*....2....*....3....*....4....*....5....*....6....*....7....*
+#
+#	The following key sequences are mapped in insert mode:
+#
+#		''	adds carriage-return and starts new comment line
+#		['	starts entirely new comment block
+#		br'	adds break statement
+#		ca'	adds case...esac block
+#		co'	adds continue statement
+#		ei'	adds elif...then block
+#		el'	adds else block
+#		fo'	adds for; do ... done block
+#		if'	adds if; then ... fi block
+#		re'	adds return statement
+#		wh'	adds while; do ... done block
+#
+#		sh'	begins a new shell script by reading in a template
+#			and replacing the word "template" with the basename
+#			of the current file
+#
+# OPTIONS:
+#	Any legitimate VI arguments.
+#
+# AUTHOR:
+#	Karl Vogel
+# 
+# BUGS:
+#	None noticed yet.
+#
+# HISTORY:
+#	$Log: shvi,v $
+# Revision 1.3  1991/10/07  21:25:51  vogel
+# 1.  Reformatted comments.
+# 2.  Added set redraw command.
+#
+#
+
+BASE=`basename $1`
+ 
+EXINIT="set autowrite\
+| set autoindent\
+| set edcompatible\
+| set noremap\
+| set redraw\
+| set timeout\
+| set wm=2\
+| set writeany\
+| set shell=/bin/sh\
+| map \`    D\
+| map ;     >>\
+| map =     <<\
+| map ,     :set nonumber\
+| map .     :set number\
+| map [     oi##	#kkA\
+| map g     \
+| map E     :r /d/cdc/vogel/etc/help/vi.scan\
+| map V     I#	\
+| map K     ^xx\
+| map q     z.\
+| map! ''   o#	\
+| map! ['   i##	#kA\
+| map! br'  break\
+| map! ca'  case inesackkA\
+| map! co'  continue\
+| map! ei'  elif thenk:.,+1<kA\
+| map! el'  else<<o	\
+| map! fo'  for dodonekkA\
+| map! if'  if thenfikkA\
+| map! re'  return\
+| map! sh'  :r!sed -e s/template/$BASE/g /d/cdc/vogel/sh/template:1dd\
+| map! wh'  while dodonekkA\
+"
+
+PS1="(sh-vi) "
+export EXINIT PS1
+exec /usr/ucb/vi $*
