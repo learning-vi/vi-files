@@ -1,0 +1,10 @@
+change	/usr/local/lib/vi/tags/lvi.change	1
+cross	/usr/local/lib/vi/tags/lvi.cross	1
+delete	/usr/local/lib/vi/tags/lvi.delete	1
+init	/usr/local/lib/vi/tags/lvi.init		1
+insert	/usr/local/lib/vi/tags/lvi.insert	1
+open	/usr/local/lib/vi/tags/lvi.open		1
+put	/usr/local/lib/vi/tags/lvi.put		1
+quit	/usr/local/lib/vi/tags/lvi.quit		1
+replace	/usr/local/lib/vi/tags/lvi.replace	1
+subst	/usr/local/lib/vi/tags/lvi.subst	1
