@@ -1,0 +1,72 @@
+" From: Tom Christiansen <tchrist@convex.COM>
+" Subject: Re: Vi macro limitation
+" Keywords: vi macro limit limitation undo
+" Date: Tue, 23 Jun 1992 00:16:11 GMT
+" 
+" You should try feeding your compiler output into error -v.
+" 
+" You might consider the following macros as inspirational reading.
+" Note expecially the lint macro.
+" 
+" --tom
+" 
+" """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+map 	 \
+"	so we can use both ^I and \ for meta-key
+"
+map \/ dePo/\<pA\>"wdd@w
+"	find current word, uses w buffer
+"
+"	INVERT CASE ON WORDS -- V is like W, v is like w.  3V is fine, but only to EOL.
+"	uses both register n and mark n.
+map \v ywmnoP:s/./\~/g0"nDdd`n@n
+"	abc -> ABC    ABC->abc
+map \V yWmnoP:s/./\~/g0"nDdd`n@n
+"	abc.xyz -> ABC.XYZ    ABC.XYZ->abc.xyz
+"
+"
+map \@ "mdd@m
+"	xqt line as a straight vi command (buffer m, use @@ to repeat)
+map \! 0i:r!"ndd@n
+"	xqt line as :r! command (buffer n, use @@ to repeat)
+"
+map \t :r!cat /dev/tty
+"	read in stuff from X put buffer
+"	
+"	LINT MACRO.  deletes all text from "lint output:" and below, (if any)
+"	replacing it with lint output in pretty block comment form.  could
+"	do sed work myself, but this is faster.  
+"
+"	the map! is for subsequent map, not by people, 
+"	tho /o would make sense.
+"	this is one of those famous time/space tradeoffs 
+"
+map! o lint output
+"
+"	and now for the real work
+map \l Go/* o/odG:wo/*** o<<:r!lint -u -lc %|sed 's/^/ *  /'Go***/N
+"
+"	indent this for me
+"
+map \i :%!indent -i4
+"
+"	COMMENTING MACROS -- these are actually pretty amazing
+"
+"	from edit mode, this comments a line
+map ^X ^i/* A */^
+"
+"	and this undoes it
+map ^Y :s/\/\* \([^*]*\) \*\//\1
+"
+"	this next one defeats vi's tail-recursion defeatism
+"	called by 2 maps following this one 
+map! ^N :unmap! 
+"
+"	while in insert mode, this will put you "inside" a comment
+map! ^X :map!  a^Noa /*  */hhi
+"
+"	while in edit mode, this begins a block comment -- ^N to escape
+map \c	O/* *  */k:map!  *  A
+"
+"	and this is for adding more lines to a block comment -- ^N to escape
+map \o	:map! ^M ^M*  A
