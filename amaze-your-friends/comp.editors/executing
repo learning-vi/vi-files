@@ -1,0 +1,262 @@
+From nh@cbnewsg.cb.att.com (nicholas.hounsome)
+Subject: Re: UNIX COMMAND IN VI SESSION.
+Date: Fri, 2 Oct 1992 07:33:09 GMT
+
+>From article <=1=p9lb@lynx.unm.edu>, by hamjavar@carina.unm.edu (Farid Hamjavar):
+> 
+> Hello : 				OCT-01-92
+> 
+> VI allows you to execute UNIX commands in a VI session.
+> How can I enter AT THE CURSER, the output of the  UNIX's  "date" command ?
+> 
+
+:map ^X i^M^[:r!date^MddpkkJJ
+
+This will not work correctly at the end of a line because of the two joins.
+
+or
+
+:map ^X ma:r!date^Mj0d$`apmajdd`a
+
+This uses d$ to delete to the end of the line but not the newline and
+uses the little known but useful backquote which puts you at the marked
+character position.
+
+There is no way to read in directly at the cursor position because
+the read has to be done in ex line editor mode which does not understand
+cursor position (or `).
+
+> 
+> 
+> ThankS a lot.
+> Farid Hamjavar
+> hamjavar@carina.unm.edu
+
+Nic Hounsome
+
+
+
+From shrchin@csug.cs.reading.ac.uk (Jonathan H. N. Chin)
+Subject: Re: UNIX COMMAND IN VI SESSION.
+Date: 2 Oct 92 08:29:38 GMT
+
+hamjavar@carina.unm.edu (Farid Hamjavar) asked:
+
+>VI allows you to execute UNIX commands in a VI session.
+>How can I enter AT THE CURSER, the output of the  UNIX's  "date" command ?
+
+If you want the cursor to end up in the same place as it started:
+
+mao^[!!date^M"ad$`aPjdd`a
+
+where ^[ is the ESC key and ^M is the RETURN key. Alternatively to get the
+cursor to finish _after_ the inserted text:
+
+i^M^Mx^[k!!date^MkJxJxx
+
+Again ^[ is ESC and ^M is RETURN. The first and last x are not needed but ensure
+that no spaces are either added or deleted.
+
+Note that there are numerous other ways to do this operation. If you don't plan
+on using the above inside a macro, you can omit the named buffers from the first
+example, making it the same number of keystrokes as the second example. Or you can
+omit various bits if you don't care where the cursor ends up, etc.
+
+Jonathan
+-- 
+Jonathan H N Chin, 8 kyu \ Dept. of Cybernetics, \ "Respondeo, etsi mutabor"
+                          \ University of Reading \
+shrchin@uk.ac.rdg.susssys1 \ Box 225, Whiteknights \ < Rosenstock-Huessy >
+bq305@cleveland.freenet.edu \ Reading, RG6 2AY, U K \
+
+
+From rac@sherpa.uucp (Roger Cornelius)
+Subject: Re: UNIX COMMAND IN VI SESSION.
+Date: Fri, 02 Oct 1992 14:13:43 GMT
+
+In article <=1=p9lb@lynx.unm.edu>, hamjavar@carina.unm.edu (Farid Hamjavar) writes:
+> 
+> Hello : 				OCT-01-92
+> 
+> VI allows you to execute UNIX commands in a VI session.
+> How can I enter AT THE CURSER, the output of the  UNIX's  "date" command ?
+
+vi has no builtin way to do this.
+!!date
+will overwrite the contents of the current line, or
+:<address>r !date
+will insert the date at <address> or after the current line if
+<address> is not specified.  Otherwise, create a macro to do what
+you want.
+
+--
+Roger Cornelius        sherpa!rac@uunet.uu.net       ...!uunet!sherpa!rac
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Paragraphs and vi
+Date: Mon, 5 Oct 1992 14:29:57 GMT
+
+In <1992Oct4.050951.2469@ils.nwu.edu> eric@ils.nwu.edu (Eric Goldstein) writes:
+>In vi, fmt can be invoked for the paragraph in question by
+>using the !}fmt command.
+
+>In my case, this just about works (but not quite).  The 
+>paragraph does get formated, but the system then inserts
+>a message directly into my text.  Using the example I gave
+>earlier:
+>------------------------------------------------------------------
+>stty: TCGETS: Operation not supported on socket
+
+Oh well, at least stty mentions it's name in the message you get.
+Biff just says "Where are you?", giving you no clue whatsoever.
+
+This is essentially question 2.7 in the FAQ for comp.unix.questions.
+The answer is that it is a problem with your .cshrc file (or equivalent
+for whatever shell you use.)
+That file contains a line with an stty command, maybe:
+
+	stty erase ^H		# or whatever
+
+If your shell is a C shell or compatible, change that to read:
+
+	if ($?prompt)
+		stty erase ^H		# or whatever
+	endif
+
+Or, if it's a Bourne shell compatible, make that:
+
+	if	[ ${PS1+x} = x ]
+	then	stty erase ^H		# or whatever
+	fi
+
+Oh, if there is a line starting with:
+
+	set prompt=
+or
+	PS1=
+
+respectively, put that line between the if/endif pair c.q. then/fi
+pair as well.
+
+--
+Hope this helps,
+
+Hans Mulder				hansm@cs.kun.nl
+
+
+From pckizer@tamsun.tamu.edu (Philip Kizer)
+Subject: Re: Piping just *1* line [Was: mapping space bar]
+Date: 27 Jan 1993 22:41:14 -0600
+
+Once, djf@bnr.ca wrote:
+>BTW:
+> - is there a way to pipe just *1* line through a filter?  I find things like
+>   !jsome_command<return>
+>always send two lines.
+
+Certainly:
+
+    !!some_command<return>
+
+Just like dd, cc, and yy say to delete, change and yank the current line
+(respectively), !! says to pipe the current line to the command.
+
+
+G'day,
+philip
+
+
+
+
+From kevinpb@sierra.COM (Kevin P. Brannen)
+Subject: Re: more shell command in "vi"
+Date: 26 May 93 17:47:20 GMT
+Article-I.D.: sierra.1993May26.174720.15762
+
+In article <1993May22.024258.17919@cs.rit.edu>, xxj3910@cs.rit.edu (Xia X Jin) writes:
+|> I have the following question: how to you, for example, do the
+|> following sorting in vi:
+|> 
+|> 1. given a line, sort all words in that	line alphabetically.
+|> 
+
+Put your cursor on the line you want to change and try:
+	!!tr " " "\012" | sort | xargs
+
+|> 2. given several lines, sort those lines according to the second
+|> 	word of each line.
+|> 
+
+Mark one of the lines (with the ma command) and try:
+	!'a!sort +1 -2
+
+|> 
+|> 
+|> Thanks.
+
+Your welcome, try reading up on the ! command.
+
+|> 
+|> --
+|> Steve	xxj3910@cs.rit.edu
+
+Bonus info to whomever:  I found a new book about vi that's really good, though
+somewhat biased towards HP machines:  "The Ultimate Guide to the VI and EX Text 
+Editors", ISBN#0-8053-4460-8
+
+Kevin Brannen
+kevinpb@sierra.com
+
+
+From dyas@ukraine.corp.mot.com (Bob Dyas)
+Subject: vi escape filter problems
+Reply-To: dyas@ukraine.corp.mot.com
+Date: Sun, 11 Jul 1993 22:22:36 GMT
+
+I've been having a problem whenever I use the vi escape filter mechanism.  The
+following line always ends up in the file I'm editing:
+
+stty: TCGETS: Operation not supported on socket
+
+Anyone out there know what I can do to get rid of this?
+I'm running vi from an xterm under OpenWindows.
+
+---
+Bob Dyas
+dyas@ukraine.corp.mot.com
+
+
+
+From wyg9633@uxa.cso.uiuc.edu (Wooed Sun)
+Subject: Why this output with ! in vi?
+Date: 21 Jul 1993 19:15:08 GMT
+
+Hi,
+
+When I use '!)sort', ':.,30!sort' or a similar kind in vi, I always get
+the output that is preceded by '^[P1.yHHHH:FFFFF^[\'
+('^[' = Escape;  HHHH = machine name;  FFFF = file pathname).
+
+What's wrong and how can I avoid this?
+BTW, I am editing on an SGI IRIS (4.0).
+Thanks in advance.
+-- 
+email : w-yang@uiuc.edu (wyg9633@uxa.cso.uiuc.edu)
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: Why this output with ! in vi?
+Date: 22 Jul 1993 11:57:44 +0200
+
+In <22k4js$2o7@vixen.cso.uiuc.edu> wyg9633@uxa.cso.uiuc.edu (Wooed Sun) writes:
+
+>Hi,
+
+>When I use '!)sort', ':.,30!sort' or a similar kind in vi, I always get
+>the output that is preceded by '^[P1.yHHHH:FFFFF^[\'
+>('^[' = Escape;  HHHH = machine name;  FFFF = file pathname).
+
+>What's wrong
+
+In you're .cshrc you're setting 
