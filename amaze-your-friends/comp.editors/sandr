@@ -1,0 +1,94 @@
+From: dylan@ibmpcug.co.uk (Matthew Farwell)
+Newsgroups: comp.editors
+Subject: vi search and replace (LONG)
+Keywords: vi replace
+Date: 16 Sep 91 18:48:17 GMT
+Reply-To: dylan@ibmpcug.CO.UK (Matthew Farwell)
+Organization: The IBM PC User Group, UK.
+
+In article <stanley.685027807@techunix.technion.ac.il> stanley@techunix.technion.ac.il (stan c) writes:
+>can anyone tell me how to correctly use the replace 
+>feature in vi?
+>I have a (rather long) file which has a whole bunch of control
+>characters at the end of each line (cat -v shows it as ^M)
+>How can I get rid of them?
+
+Ok, the quick answer is:
+
+:1,$s/^M//g
+
+where ^M is ctrl-V ctrl-M.
+
+The replace command has a format like this:
+:<range of lines>s/<old text>/<new text>/<qualifiers>
+
+<range of lines> can be specified in a number of ways.  You can give the
+numbers, ie 1,4 does lines 1 2 3 4 ($ is last line), you can say from
+mark 'm' to mark 'n', ie 'm,'n, or you can give a search command, ie
+/^$/,/^fredleg/ does from the next blank line to the next line matching
+^fredleg.  Or you can have any combination of those.  You can even
+search backwards using ? instead of / if you want to.
+
+so:
+:1,$		== every line
+:/^$/,$		== lines from the first blank line to the end
+:'m,/^$/	== lines from mark m to the first blank line after the
+		   current cursor position
+:1,?^$?		== line 1 to the previous blank line.
+
+but be careful when using the searching commands when defining a range
+of lines.  If you have wrapscan set it can sometimes have interesting
+effects, if, say, you don't hit a match before the end of the file.  I
+find that using searches that aren't certain to hit the right place is a
+recipe for disaster.  I just prefer to go to the line, mark it and then
+go back and use :'m,.  or whatever.
+
+<old text> is just a normal regular expression [*]
+<new text> is the replacement text. The simple form is:
+
+:1,$s/dylan/matthew/
+or
+:1,$s/dyl*an/matthew/
+
+You can also use the \L \l \U \u \E and \e qualifiers.  These convert
+text to lower case or to upper case.  The lower case versions of these
+only work on the next letter.  ie if you want to capitalize the 'd'
+every occurence of the word 'dylan' in your text, then you can use
+
+:1,$s/dylan/\u&/	(& means all matched text, in this case 'dylan')
+
+If, however you want to capitalise the whole word, then you use \U. If
+you want the entire matched string capitalised, then just using \U is
+sufficient. If, however, you want to capitalise only parts of the
+string, then you can use \e[**] to terminate the changes. ie
+
+:1,$s/\(dyl\)\(an\)/\U\1\e\2/	(\1 and \2 are equivalent to whatever
+				the first and second \( \) sequences
+				matched, in this case \1 == 'dyl' and \2
+				== 'an')
+
+changes all occurences of dylan to DYLan.
+
+Now, the above statements are not strictly true. By default, vi only
+susbstitutes the first match on a line, so for instance only the first
+dylan in the first line of my .sig would get changed. If you want to do
+*all* occurences, then you must add a 'g' qualifier to the end, ie
+
+:1,$s/dylan/matthew/g
+
+The other qualifiers are 'c' and 'p'. 'c' asks for confirmation before
+making the change. 'p' prints the matched strings after any replacement
+has occured.
+
+Hope this helps.
+
+Dylan.
+
+[*] I haven't got time right now to go into the depths of regular
+expressions. Maybe some other time.
+[**] As far as I can see, \e and \E have exactly the same effect and are
+interchangeable. I'm willing to be corrected though.
+-- 
+dylan@ibmpcug.co.uk || ...!uunet!ukc!ibmpcug!dylan
+C makes it easy for you to shoot yourself in the foot. C++ makes that
+harder, but when you do, it blows away your whole leg - Bjarne Stroustrup
