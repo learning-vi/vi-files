@@ -1,0 +1,10 @@
+" #
+" # See file: folding.d.Z for a description of this macro.
+" #
+"
+" From: roger@quantime.co.uk (Roger Phillips)
+" Date: 21 Aug 91 10:15:27 GMT
+"
+" :map [; y$o^[p:s/^\([a-zA-Z0-9_.]*\)[^a-zA-Z0-9_.].*$/:e! \1/^M"add@a
+:map [; y$op:s/^\([a-zA-Z0-9_.]*\)[^a-zA-Z0-9_.].*$/:e! \1/"add@a
+"
