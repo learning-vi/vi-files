@@ -1,0 +1,162 @@
+From: werner@aecom.UUCP (Craig Werner)
+Subject: VI Beginner's Guide (by request)
+Date: Mon, 28-Oct-85 23:52:14 EST
+
+	I recently posted a WS guide here, and in the posting I mentioned I
+also had one for 'vi'.  By the request of several, here it is.
+	Please note that I wrote this while I was teaching a beginner course
+at Harvard several years ago, so the whole thing is applicable EXCEPT the
+original setup information.
+	This is local to site. Currently, I use a TERM=whatever, followed by
+export TERM to take care of the setup. This is more flexible than the .exrc.
+
+
+This list is not complete, but I like to think that it is comprehensive. 
+Except for typos, my only additions in three years have been the following four:
+
+J 
+Buffers - they used to be mentioned in "Things I'm telling you about."  Now 
+	there is a short description after yy/dd in the editing section. 
+#1,#2 w name - writing excerpts
+:r!command  - reading command output directly to current file. 
+
+	If you detect any egregious ommisions let me know.
+
+				Craig Werner
+				1935-14E Eastchester Rd.
+				Bronx NY 10461
+				(werner@aecom.UUCP)
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+A Naive Introduction to vi (the visual editor)
+					c. 1982 by Craig Werner, 
+					Harvard Core Computer Requirement
+					(revised 1984,1985)
+
+To enter vi, unless this is your first time, just type
+
+& vi filename <return> directly to the shell
+			 where "filename" can be any name you want
+
+If this is your first time, then before you do that, type
+	& cat > .exrc  <return>  (the cursor will go down one line)
+	set term=t1061 <return>  (with no shell prompt, &)
+		   ^-- or whatever terminal (vt100 h19 etc) you are on.
+	<control-d>              (the control key is next to the shift key)
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+Cursor Movement Commands
+
+				     1G
+				     (k)
+				      -
+				      ^
+				      |
+				      |
+          0 b (h) backspace <--------here---------> space (l) w $
+				      #G
+				      |
+				      |
+				     \|/
+				    ENTER
+				     (j)
+				      G
+where
+backspace, space, - , and ENTER go one move in their respective direction
+    (as do h,l,k, and j, which are all next to each other in the right hand)
+w and b move one word away
+0 (zero), $, 1G, and G go to the beginning or end in that particular direction
+#G (where # is a number)  takes you to the line with that number
+	(--> to find out what number line you are on, type <control>-g)
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+Insert Commands   (This is where you do all your writing)
+
+i  insert
+a  append (just like insert except starts one character later)
+o  open   (makes an empty line after the current one, and insert)
+	  (just like "a <ENTER>")
+A  append to end of line 
+	  (just like  $ a)
+
+NOTES:
+	1. All insert commands put one in the insert mode. To leave the
+	   insert mode to do other commands, one must hit <ESCAPE>.
+	2. While in the insert mode, one must hit <Rubout> and not
+	   <backspace> to back up.
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+Editing Commands
+
+x remove a character (x it out)
+r replace a character
+s substitute a character. This does an x, then puts you in the insert mode
+
+NOTE: x and s (but not r - a rare exception) will take a number in front of
+	them. For instance, 5x will nuke 5 letters.
+
+J - join two lines (remove a carriage return and concatenate)
+
+d delete, which is used as
+dw  - delete word
+dd  - delete an entire line
+
+c change, similarly
+cw  - change word
+cc  - change line
+	(c first deletes, but not on the screen, and then puts you in the
+	 insert mode)
+
+yw/yy - yank lines into a buffer, where you can use
+p     - to put them somewhere else in a file.
+
+NOTE: the yanked lines can be put as often as one likes, which is a good way
+	to repeat things.
+      Also, deleted lines can be put as well, so dd is the same as yy,dd
+NOTE 2: There is only one default buffer. To move two things, or to yank and 
+	put with other work in between, you can save to named buffers. To do
+	this type ' "a command', where  the double quote is typed, the 'a' can 
+	be replaced by any letter a-z, and the command is yy/dd, etc.
+	The text so selected can then be put by ' "a p '.
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+Search Commands
+/ pattern - searches for a pattern in the text after the cursor
+? pattern -     "     "  "   "     "   "   "   before "    "
+n next    - keeps searching in the same direction
+N  "      -  "       "      "   " opposite direction
+
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+Two Special Commands
+
+u undo - This is IMPORTANT. It undoes the last thing you did, in case you
+	 really goof.
+. repeat (That's a period) repeats the last editing or insert command, great
+	  for use along with the search commands to correct a mistake
+	  occuring everywhere, etc...
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+Things I'm not telling you - ask for more info
+
+Other commands (including capital letters which are sometime significant)
+
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+Colon Commands
+
+:w 		write the file and save the changes
+:w name         same, but the changes go into a file with the new name
+:#1,#2 w name   write only the lines #1 to #2 to the file (for excerpting)
+:q 		quit, leave the editor
+:q! 		quit, leave the editor - with extreme prejudice
+:wq 		write and quit at the same time
+:r 		read in a file to the point where the cursor is
+			(good for combining files)
+:!shell-command execute a shell-command (no space between ! and name) without
+	ever leaving the editor.
+:r!shell-command  (execute as above, but bring output into document.)
+:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+-- 
+
+				Craig Werner
+				!philabs!aecom!werner
+               "Why is it that half the calories is twice the price?"
