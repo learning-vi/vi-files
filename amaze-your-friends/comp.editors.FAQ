@@ -1,0 +1,261 @@
+Newsgroups: comp.editors,news.answers
+Approved: news-answers-request@MIT.Edu
+Followup-To: comp.editors
+Subject: comp.editors - Frequently Asked Questions
+Expires: Fri 10 Sep 92 09:07:34 1992 GMT 
+Reply-To: Ruben@Uib.no
+
+Archive-name: editor-faq/The_FAQ 
+
+
+
+The following file is a set of Frequently Asked Questions for the group
+comp.editors.  Certain questions get asked time and again, and this is
+an attempt to reduce the bandwidth taken up by these posts and their
+associated replies.  If you have a question, please check this file
+before you post.  It may save a lot of peoples time.
+
+This FAQ tends to ignore emacs related questions, as they tend to be
+answered adequately in the comp.emacs FAQ.
+
+Please send all comments, discussion, suggestions for new questions and
+so on to me, Ove Ruben R Olsen <Ove.R.Olsen@ubb.uib.no>.  I'll try to 
+answer everything I get.  I especially need more 'where to get sources'
+answers.  I'd like some Anonymous UUCP sites, if at all possible.
+
+01) What is comp.editors?
+02) Where can I get the latest release of GNU emacs/elvis/crisp/joe/...?
+03) Someone has just posted 'my editor is better than your editor'. What
+04) Can I get hold of the source code for VI?
+05) I have a Emacs question. Should I ask it in comp.editors, or in
+06) Someone just mentioned the 'buffer gap method'. What do they mean?
+07) How do I reformat paragraphs in vi?
+08) Has anyone got a simple editor for Unix?
+09) Are there any vi archive sites around?
+10) Where can I get vi for VMS?
+11) How do I edit binary files with VI ?
+12) Why does vi sometimes tell me 'Too much macro text'?
+13) Is there a list of bugs in vi?
+14) Whats a folding editor?
+15) Where can I get the DEC editor EDT for UNIX.
+
+
+01) What is comp.editors?
+
+Comp.editors is an INET group for the discussion of editors, editing
+interfaces and internals generally.  For discussion of what an INET
+group is, please see the regular postings in news.announce.newusers.
+There was discussion some time back about making comp.editors into a
+regular usenet group, but so far nothing has come of it.
+
+Almost anything editor-related is acceptable in comp.editors, with a few
+caveats (see question 05).
+
+
+02) Where can I get the latest release of GNU emacs/elvis/crisp/joe/...?
+
+You should check out the companion posting on this issue.
+
+
+03) Someone has just posted 'my editor is better than your editor'. What
+    should I do?
+
+Ignore it.  Don't post a reply to comp.editors, whatever you do.  These
+flame wars tend to go on for ages and they never change anyones mind.
+If you really must reply use email, or alt.religion.emacs.
+
+
+04) Can I get hold of the source code for VI?
+
+Not without a AT&T source license.  VI is a direct descendent of ed(1),
+and is therefore subject to AT&T licensing.  Even if you were to get
+hold of the code, to remove all of the AT&T code would be impractical.
+
+There are, however a lot of public domain clones of vi around, Elvis and
+Stevie being two.  You may also want to check out Vile, which is a vi
+feelalike, based on Microemacs.
+
+
+05) I have a Emacs question. Should I ask it in comp.editors, or in
+    comp.emacs/gnu.emacs.help?
+
+If the question is specifically about an emacs variant, no.  You would
+probably get more joy from one of comp.emacs or gnus.emacs.help.
+Gnu.emacs.help is specifically for GNU Emacs, whereas comp.emacs
+encompasses all variants of emacs (Yes, there is more than one type of
+Emacs - there are over 50 in fact). 
+
+However, If the question is about an emacs in relation to another type
+of editor, then its probably ok to post it here.
+
+
+06) Someone just mentioned the 'buffer gap method'. What do they mean?
+
+An editor can hold text in memory in a number of ways. If you use the
+buffer gap, the file is split into two buffers, with the cursor always
+between the two buffers, ie:
+
+[ first buffer ][ second buffer ]
+                ^ cursor is here
+
+When the cursor is moved, a character is just copied from one buffer to
+the other (depending on direction). This method makes inserting &
+deleting and string searching easy. Insertion just requires extending
+the first buffer by one character. Deletion is just removing the last
+character of the first buffer. For string searching the file can just
+be treated as a single string, with care only needing to be taken when
+the match straddles the gap. Disadvantages include difficulty with line
+based operations, and problems with page faults when the second buffer
+is large. It's also quite hard to implement properly on some segmented
+architectures. This is the method used by GNU Emacs.
+
+Another method is a linked list of lines. This is exactly what it says.
+When you read in the file, you split it up into lines, maintaining
+pointers to the previous & next line. Line-based functions are much
+easier with this method, but searching isn't so easy.
+
+
+07) How do I reformat paragraphs in vi?
+
+Rather than write a set of macros to do this for you, it's usually
+easier just to use an external program to do it for you.  If you have
+fmt(1), then {!}fmt will reformat the paragraph under the cursor.  This
+can be fitted into a macro easily enough.
+
+If you don't have fmt, then you can use nroff(1) similarly (with a few
+caveats about getting rid of trailing blank lines).
+
+A format program is also to be found inside the EX/VI archives.  The
+filename is vi.reformat.tar.Z.  It claims to be a WordStar reformat.
+
+
+08) Has anyone got a simple editor for Unix?
+
+This comes up a lot. The answer is usually Microemacs, or some clone of
+it. Another choice might be joe, crisp or fpted. See question 02 for 
+where to get them from.
+
+
+09) Are there any vi archive sites around?
+
+Ove Ruben R Olsen maintains one of the biggest vi archive sites around.
+His site is mirrored at a number of sites worldwide.  See the companion
+posting for more information.
+
+
+10) Where can I get vi for VMS?
+
+Both TPU and GNU Emacs have vi emulations.  You can generally find them
+in ftp archives.
+
+
+11) How do I edit binary files with VI ?
+
+To do this you need a program that converts you binary file to
+a plain ascii file. In the EX/VI archives there are two programs
+to do this:
+
+vi.bed.tar.Z     - A good frontend.
+vi.bined.tar.Z   - Two filters to convert binary files to/from ascii.
+                   Claims to solve the "Line to long" message.
+
+
+12) Why does vi sometimes tell me 'Too much macro text'?
+
+When vi starts up, it looks in three places for initialisation commands
+of some description.  It first looks in your EXINIT environmental
+variable.  If it doesn't find that, then it looks in the current
+directory for a file called .exrc (some vi's do this *as well as*
+looking at EXINIT anyway), and sources that instead.  If it doesn't find
+either of these, then it sources $HOME/.exrc.
+
+The problem is that some vi's source both .exrc files anyway (this is
+wrong - it should only ever source one), and vi's buffers overflow
+giving you the above error message.  One more bug found, Mr. Joy.
+
+
+13) Is there a list of bugs in vi?
+
+Not at the minute.  If anyone would like to collect a list of known
+bugs, I'd be happy to post it with this FAQ.
+
+
+14) Whats a folding editor?
+
+Another word for 'folding editor' is 'outline editor'.
+
+This is quite a hard concept to explain without having a folding editor
+in front of you to explain with.  The idea behind it is to hide text
+behind some sort of descriptive heading.  For instance, if you were
+working on some C code, but didn't want to see the millions of C
+headers, you could fold that text away behind the heading 'INCLUDE FILES',
+like:
+
+In a normal text editor, the file would look like:
+--- begin ---
+#include <stdio.h>
+#include <stdlib.h>
+#include <bar/foo/blrufl.h>
+#include <ktb/kick/inside.h>
+#include <mary/had/a/little/lamb.h>
+
+int heights()
+{
+	return wuthering();
+}
+--- end ---
+
+in a folding editor, it might look something like this:
+
+--- begin ---
+... INCLUDE FILES
+
+int heights()
+{
+	return wuthering();
+}
+--- end ---
+
+Of course, the line can be unfolded, and you can see the original text,
+and in editors such as Origami, this folding can be nested.
+
+
+
+15) Where can I get the DEC editor EDT for UNIX.
+
+  [ Information supplied by Castor Fu (castor@drizzle.stanford.edu) ]
+
+  1. Using the the GNU Emacs EDT emulator. 
+     This provides you with the key bindings but doesn't really have 
+     the look and feel.  One of the nicest things about EDT for novices 
+     is that it really controls a vtxxx terminal competently, and makes 
+     use of highlighting, keypad, etc. to aid casual users.  This 
+     implementation is designed for the "expert" edt user who has no 
+     need for such niceties and primarily wants the key bindings for 
+     his keypad.
+
+  2. Buy a commercial product.  Probably the most widely used such is 
+     EDT+ from:
+
+     Boston Business Computing
+     3 Dundee Park,
+     Andover, MA 01810
+     USA
+     +1 508 470-0444, FAX +1 508 474-8244.
+
+     I used their product a little bit on a Multiflow, but not enough to 
+     REALLY tell how good it is. 
+     Their product will probably cost somewhere $500 and $1000. But it 
+     really looks like EDT to me.
+
+  3. Wait for DEC to announce it's port of TPU to Ultrix? I heard they 
+     intend to make this a product.  
+
+  4. We've started using Anker Berg-Sonne's SEDT. It's become the editor 
+     of choice in our group among those who don't already know vi or 
+     emacs, because it's very easy to use.  I don't know why, but it is 
+     not widely used/known about in the unix world for some reason. 
+     (See also question 2 for where to find this editor).
+
+
+
