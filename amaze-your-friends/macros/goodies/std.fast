@@ -1,0 +1,56 @@
+set redraw remap wm=0 ai nosm
+"
+map #1 :write 
+map #2 :quit!
+map #3 :so /usr/local/lib/vi/
+map #4 :%s/
+map #5 :vi! 
+map #6 :e!#
+map #7 :map 
+map #8 :map! 
+map #9 :abbreviate 
+map #0 :read 
+"
+map!  bi
+"
+"
+map q $
+map g 1G
+map = b~
+map  z
+map V :so /usr/local/lib/vi/
+map v dePOpI?"xdd@x
+map  :write:stop
+"
+map!  :map!  
+"
+map!  :ab 
+map!  A
+map!  o
+map!  o	
+map @ :so /usr/local/lib/vi/std.mc:unmap @
+"
+"	vt-stuff
+"
+map! ` 
+map! [23~ 
+map! [24~ 
+"
+map ` 
+map [23~ 
+map [24~ 
+map [1~ /
+map [2~ i
+map [3~ x
+map [4~ ma
+map [5~ 
+map [6~ 
+"
+" Cursortasten im InsertMode !!! Juhu!
+" Cursor nach unten (^J) muss `Zeilen-Umbruch'
+" bleiben.
+"
+map! OA kA
+map! OB jA
+map! OC la
+map! OD i
