@@ -1,0 +1,92 @@
+From alex@am.sublink.org (Alex Martelli)
+Subject: Re: Writing out a section of a file to another file with vi ???
+Date: 28 Sep 92 22:14:35 GMT
+
+mpalmer@encore.com (Mike Palmer) writes:
+
+:>What's the easiest way to write out a "block" of lines to another file, 
+:>without having to count the lines, or find the first line number and the
+:>last?   What I'd really like to do is dump a named buffer to disk:
+
+:>mx
+:>y'x
+:>write x to disk 
+
+Once you have yanked to the *named* buffer, :e the file you want
+to write it into, and just put it.  NAMED buffers are remembered
+by vi; it's only the UNNAMED one which is lost when switching files.
+You will have to :w the current file before :e to the new one if
+there were any changes (unless you :set autowrite, or are willing
+to lose the changes).
+
+Alternatively, if you want to write to disk file pip from the
+current line to mark x, just :.,'x w pip...
+
+I suggest that any followup be to comp.editors, as a more appropriate
+newsgroup than comp.unix.anything would be.
+-- 
+Alex Martelli - alex@am.sublink.org - +39 (51) 250434 - Bologna, Italia
+
+
+From rouben@math9.math.umbc.edu (Rouben Rostamian)
+Subject: Re: Writing a "block" of lines to another file
+Date: Sat, 26 Sep 1992 12:41:44 GMT
+
+In article <Bv6n4M.Dox@encore.com> mpalmer@encore.com (Mike Palmer) writes:
+>I'd like to be able to write a "block" of lines to a file, without having to
+>count the lines, or get the start & end loine number.  Can I use the temp
+>buffers something like:
+>
+>mx
+>y'x
+>write x to file
+
+Almost right.  Mark the first line of the block, say, mx.  Move to
+the last line of the block and do any of:
+:'x,.w file         [if writing to a new file]
+or
+:'x,.w! file        [if re-writing an existing file]
+or
+:'x,.w >> file      [if appending to an existing file]
+as necessary.
+
+--
+
+
+
+
+From yan@integ.frec.bull.fr (Yves A. Nicollet)
+Subject: Re: Writing a "block" of lines to another file
+Date: 5 Oct 92 12:13:42 GMT
+Reply-To: Y.A.Nicollet@frec.bull.fr
+
+In article <1992Sep26.124144.6699@umbc3.umbc.edu>, rouben@math9.math.umbc.edu (Rouben Rostamian) writes:
+>In article <Bv6n4M.Dox@encore.com> mpalmer@encore.com (Mike Palmer) writes:
+>>I'd like to be able to write a "block" of lines to a file, without having to
+>>count the lines, or get the start & end loine number.  Can I use the temp
+>>buffers something like:
+>>
+>>mx
+>>y'x
+>>write x to file
+>
+>Almost right.  Mark the first line of the block, say, mx.  Move to
+>the last line of the block and do any of:
+>:'x,.w file         [if writing to a new file]
+>or
+>:'x,.w! file        [if re-writing an existing file]
+>or
+>:'x,.w >> file      [if appending to an existing file]
+>as necessary.
+
+And if you wanted to move lines from a file to another file you would like
+then to edit, you could:
+
+go to the 1st line and type
+mx                 [to mark the beginning of the block]
+go to the last line and type
+"xy'x              [to yank from the mark x till the current line into buffer x]
+go to the other file by typing
+:e# (or :e file)
+go to where you want to put the block and type
+"xp             
