@@ -1,0 +1,69 @@
+#ifndef	lint
+static char    *tst_mkrcsh_rcsid =
+"$Id: tst.mkrcsh,v 1.2 1991/08/16 17:47:14 vogel Exp $";
+
+static char    *tst_mkrcsh_source =
+"$Source: /d/cdc/vogel/tst/util/RCS/tst.mkrcsh,v $";
+
+#endif
+
+/*
+ *	tst:		tests "mkrcsh" function, also serves as the "mkrcsh"
+ *			main program.
+ *
+ *		Usage:	tst [file ...]
+ *			mkrcsh [file ...]
+ *
+ *		Where:	"file"	is any file for which an RCS header is
+ *				desired.  The output header is written to
+ *				stdout.
+ *
+ *				If no files are entered on the command line,
+ *				stdin is read.
+ */
+
+#include	<stdio.h>
+#include	<strings.h>
+#include	<sys/param.h>
+
+main (argc, argv)
+int             argc;
+char          **argv;
+{
+
+/*
+ *	Variables.
+ */
+
+	char           *newline;
+	char            header[MAXPATHLEN];
+	char            path[MAXPATHLEN];
+
+	int             k;
+
+/*
+ *	Read the command line or stdin.
+ */
+
+	if (argc == 1)
+	{
+		while (fgets (path, MAXPATHLEN, stdin))
+		{
+			if (newline = index (path, '\n'))
+				*newline = '\0';
+
+			mkrcsh (path, header);
+			puts (header);
+		}
+	}
+	else
+	{
+		for (k = 1; k < argc; ++k)
+		{
+			mkrcsh (argv[k], header);
+			puts (header);
+		}
+	}
+
+	exit (0);
+}
