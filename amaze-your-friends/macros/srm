@@ -1,0 +1,58 @@
+From: dwallach@soda.Berkeley.EDU (Dan Wallach)
+Subject: Re: Macros with parameters in vi?
+Summary: yes, but awfully painful
+Date: 7 Mar 91 06:49:51 GMT
+
+>[wanting macros that take user parameters]
+
+Sure.  You could do it, but it wouldn't be exactly elegant.  Let's say
+you wanted to do an exaggerated search/replace thing.
+
+(in your .exrc -- ^V's left off for brevity and sanity :)
+(This probably has bugs in it, even if you get the ^V's right, and I'm
+ not claiming it works.  Bleah, bleah, bleah.  You get the idea.)
+
+map \getreplace "addddkk2dd0i:%s/^[$a//g^V^M^[hhh"aP"add:unmap! ^V^M ^M@a
+map \doreplace oPlease enter replace text^M^[:map! ^V^M \getreplace^M
+map \dosearch Go-----^MPlease enter search text then hit <return>^M^[map! ^V^M \doreplace^M
+map SR \dosearch
+
+Gack!  That was fun.  Basically, the user types SR (vi allows key combinations)
+It goes and runs a more complicated macro \dosearch (which may or may not
+parse on your version of VI. Use a shorter name if you really want...)
+\dosearch goes and writes some text at the end of the file, leaves the
+user on a blank line, and remaps the return key to go and run the next
+macro.  Warning: remapping the return key is always a nightmare because
+you want to use it later in other mappings.  Beware!  Expect to use lots
+more ^V's than I did.
+
+The real fun happens in \getreplace.  Translated: delete the current line
+into buffer A.  Delete the three information lines, with the cursor ending
+up on the first line.  Insert :%s/ before it and //g^M afterward.  Stuff
+the replacement text between those two /'s.  Delete the line into buffer
+A.  Unmap return.  Execute the buffer.
+
+This goes along nicely with what the previous anti-vi-flame-thrower was
+saying about illegible macros, but it shows the general idea.
+
+Are you sure you really want to do this?  The last time I played around
+with the return key turned about to be an entire evening of hell (and
+avoiding studying for a midterm, much like my midterm tomorrow :-).
+
+If anybody's interested, I've got some cool tcsh/csh aliaes that go and run
+ex in open mode on your command history, letting you hit <return> to
+actually execute that command (based on something similar by Mike Cuddy
+and Tony Sanders).  They're more useful than tcsh command histories
+for searching and then doing funky editing.
+
+Enjoy.
+
+Dan Wallach
+dwallach@soda.berkeley.edu
+
+Maybe some sadistic compiler guy could write a vi macro high-level language,
+somewhat like EASE for sendmail.  Then all those nasty ^V's and things won't
+be so nasty any more.  I'd just hate to see the output.  You thought Tom's
+.exrc was pretty nasty...
+
+
