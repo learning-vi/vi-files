@@ -1,0 +1,106 @@
+#!/bin/sh
+#
+#  vimotd  -	Let user edit temporary MOTD file, then parse it via
+#		a nawk script, then generate each host's /etc/motd via NFS.
+#		By Paul Balyoz <pab@rainbow.cse.nau.edu>
+#
+PATH=/usr/local/bin:/usr/com/bin:/usr/ucb:/bin:/usr/bin
+export PATH
+
+NFSPATH=/r
+MOTDDIR=/usr/local/lib/motd
+MOTDAWK=motd.nawk
+MOTD=motd
+
+# Move into our working directory and check things out
+
+if test ! -d $MOTDDIR; then
+	echo "I cannot cd into directory $MOTDDIR."
+	exit 1
+fi
+cd $MOTDDIR
+
+if test ! -f $MOTDAWK; then
+	echo "I cannot locate file $MOTDAWK in $MOTDDIR."
+	exit 1
+fi
+
+# If user doesn't have write permission to this host's /etc/motd file,
+# then they probably can't use this program.
+
+if test ! -w /etc/motd; then
+	echo 'You do not have write-permission to /etc/motd on this host.'
+	echo 'Only the system administrator should run this program.'
+	exit 1
+fi
+
+# If no global motd file, create an empty one.  Let the user edit this file.
+# If diff says file wasn't modified, exit now; otherwise go on.
+
+if test ! -f $MOTD; then
+	cp /dev/null $MOTD
+fi
+cp $MOTD /tmp/motd$$
+vi /tmp/motd$$
+if diff $MOTD /tmp/motd$$ > /dev/null; then
+	echo 'no changes made.'
+	rm -f /tmp/motd$$
+	exit 0
+fi
+
+# Save the old motd file as "motd.old" and bring back the edited one.
+
+echo -n 'updating all motd files...'
+if test -f $MOTD; then
+	mv $MOTD $MOTD.old
+fi
+cp /tmp/motd$$ $MOTD
+rm -f /tmp/motd$$
+
+# Delete output from previous run.  Send the global motd file through nawk.
+
+rm -f *.text > /dev/null 2>&1
+nawk -f motd.nawk < $MOTD
+if test $? -ne 0; then
+	echo 'vimotd: nawk failed for some reason.  exiting.'
+	exit 1
+fi
+
+# Loop through all host's motd files.
+
+for i in *.text; do
+
+# Append an extra blank line to the bottom of each host's motd file.
+
+	echo "" >> $i
+
+# Make sure each host is up, before we try to access it via NFS.
+
+	host=`echo "$i" | awk -F. '{print $1}'`
+	echo -n " $host"
+	if /usr/etc/ping $host 5 > /dev/null; then
+
+# Prepend each host's top-line from their old motd file.
+
+		head -1 $NFSPATH/$host/etc/motd > $host.top
+		cat $i >> $host.top
+		rm -f $i
+		mv $host.top $i
+
+# Copy each host's motd file back to each host.
+
+		cp $i $NFSPATH/$host/etc/motd
+		chmod 644 $NFSPATH/$host/etc/motd
+
+# If we couldn't contact host, skip it.
+
+	else
+		echo -n '(down)'
+	fi
+done
+echo ''
+
+# Clean up and exit.
+
+rm -f *.text
+exit 0
