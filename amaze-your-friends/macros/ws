@@ -1,0 +1,55 @@
+" Author:  Ove Ruben R Olsen (rubenro@viggo.blh.no)
+" Date:    Mon Aug 26 16:49:41 GMT 1991
+" Version: 0.00
+"
+" A modeless vi using WordStar commands.
+" 
+" Nearly all WS commands have been emulated.
+" After a command you will be placed in Insertmode.
+"
+set notimeout
+"
+" Down, Up, LeftWord, RightWord (Right and Left cannot be mapped)
+map!  li
+map!  ji
+map!  ki 
+map!  bi
+map!  wi
+"
+" ^Q is impossible to fix, ^Q is ^U
+"
+map! s 0i
+map! d $i
+map! e Hi
+map! x Li
+map! r 1Gi
+map! c Gi
+map! b 'ai
+map! k 'bi
+map! p 'c
+map! v ni
+map! y d$i
+map!  d0i
+"
+" Scrolling of screen (^Z is not fixed)
+"
+map!  i
+map!  i 
+map!  i
+"
+" ^V is not fixed.
+"
+map!  
+map!  dwi
+map!  ddi
+"
+" Block commands.
+map! y 'ad'bi 
+map! s mc:w!1Gi
+map! d :w!1GdG
+map! x :wq!
+map! q :q!
+"
+" Find and Replace
+map! f :Type '<ESC>/string<ENTER>i'
+map! a :Type '<ESC>:%s/find/replace/gc<ENTER>'
