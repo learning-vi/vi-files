@@ -1,0 +1,15 @@
+Article: 4951 of comp.editors
+From: wes@terminator.cc.umich.edu (Wesley Craig)
+Subject: vilearn -- an interactive tutorial for vi in 5 movements
+Message-ID: <1992Aug23.213500.24070@terminator.cc.umich.edu>
+Organization: University of Michigan
+Date: Sun, 23 Aug 1992 21:35:00 GMT
+Lines: 1710
+
+vilearn is a textual tutorial to be viewed by with vi, similar to the
+GNU Emacs tutorials. This is a beta release. It is not quite complete,
+but we've been sitting on it for quite some time and wanted to get it
+out.
+
+wes
+
