@@ -1,0 +1,60 @@
+From cjlin@math.ntu.edu.tw ()
+Subject: How to count words ?
+Date: Sat, 3 Jul 1993 02:13:38 GMT
+
+Dear netters :
+
+Could someone tell me how to count the number 
+of words in Vi or under UNIX shell ?
+
+Thanks in advance.
+
+Chih-Jen Lin
+Dept. of Math.
+National Taiwan Univ.
+
+
+From markhof@ls12r.informatik.uni-dortmund.de (Ingolf Markhof)
+Subject: Re: How to count words ?
+Date: 3 Jul 1993 12:15:30 GMT
+
+In article <1993Jul3.021338.16304@ccds3.ntu.edu.tw>, cjlin@math.ntu.edu.tw () writes:
+|> Could someone tell me how to count the number 
+|> of words in Vi or under UNIX shell ?
+
+Yes, that's easy: Just type
+
+	:!wc -w % <CARRIGE RETURN>
+
+in command mode to get the number of words, or
+
+	:!wc % <CARRIGE RETURN>
+
+to get the number of lines, words and characters.
+
+
+------------------------------------------------------------------------------
+      ____                                                                    
+  UniDo  /  Ingolf Markhof  University of Dortmund, LS Informatik XII         
+ ___/   /                   PFrom hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: How to count words ?
+Date: 6 Jul 1993 21:51:42 +0200
+
+In <1993Jul3.021338.16304@ccds3.ntu.edu.tw> cjlin@math.ntu.edu.tw () writes:
+
+>Dear netters :
+
+>Could someone tell me how to count the number 
+>of words in Vi or under UNIX shell ?
+
+In vi:
+	:w !wc -w
+	  ^
+          ^ this space is essential.
+
+In the shell:
+	wc -w filename
+
+HansM
+
+
