@@ -1,0 +1,392 @@
+From tfoley@bnr.ca (Tristram Colville-Foley)
+Subject: Still too much macro text!
+Date: Mon, 06 Jul 1992 09:21:35 GMT
+
+I have been struggling to get round the now all too familiar `Too much
+macro text' error message. I am sourcing the macros when I need them, 
+and not putting them in my .exrc, but after using them for a short period 
+of time, I get the above error message. Unmapping them doesn't work, but
+if I can set up a macro to exit and then re-enter the file, now that
+would be cool! Even better if I can come back to the place I was at.
+How about a command echo the filename into a temporary file. Then I
+could exit the vi session, read the temporary file and start up
+another session.
+
+Any ideas?
+
+P.S. I have found that if you want to unmap a whole series of mappings
+by sourcing a file, you must make the file look like this.
+
+unmap this|  
+unmap that|
+unabbreviate this_as_well| <--- with the pipe symbol at the end, otherwise
+                                you get silly errors like, 
+                                `That macro wasn't mapped'
+
+Sorry if this is obvious but it took several attempts and lots of head
+banging before I figured it out.
+
+
+From cameron@spectrum.cs.unsw.oz.au (Cameron Simpson)
+Subject: Re: Too much macro text
+Reply-To: cameron@spectrum.cs.unsw.oz.au (Cameron Simpson)
+Date: Tue, 7 Jul 1992 09:57:36 GMT
+
+In article <1992Jul2.114727.24357@cas.org> lvirden@cas.org (Larry W. Virden) writes:
+| In article <1992Jul1.134106.16089@news.eng.convex.com> tchrist@convex.COM (Tom Christiansen) writes:
+| :From the keyboard of tfoley@bnr.ca (Tristram Colville-Foley):
+| ::Any way I can get round this?
+| :
+| :Not easily.  My bandaid solution was to re-compile vi with 
+| :a much larger buffer.  I took the liberty of upping things
+| :like line length and macro space by an order of magnitude.
+| 
+| There IS one thing that you can try.  Put your macros into some file
+| OTHER than $HOME/.exrc .  Do NOT source it in during $HOME/.exrc.  Instead,
+| source it in when you need it.
+
+And bypass macros as much as possible. My mail reader is a small Perl script
+to update an index file and a set of vi macros. I append it as a shar file
+later.
+
+Anyway, it sources on startup two files, which I list here:
+The first file sets some catches for unused maps:
+	map \M !!
+	map Z 
+	map \d 
+	map \h 
+	map \r 
+	map \s 
+	map \v 
+The second sets up the macros for perusing the index:
+	map \d :so .ex/index-d
+	map \h 
+	map \r :so .ex/index-r
+	map \s 
+	map \v :so .ex/index-v
+	" map + :so .ex/+
+
+As much work as possible is done as ex-mode commands, reducing the macro text
+(which I think maxes out at 128 characters on this system. Jeez.)
+
+| I suppose one thing one might do is add a bunch of unmaps to the beginning
+| of the file so that you clear out previous macros before defining new ones -
+| anyone know if that will reclaim space?
+
+I tried this:
+	- vi complains and aborts the command sequence if you unmap something
+	  which wasn't mapped. Hence the first file shown above.
+	- there's a space leak of some kind. The unmaps don't get back nearly
+	  enough. I gave them up.
+	- there's leaks in the remapping, too. Eventually my mail reader spins
+	  out (harmlessly so far) and I have to leave and re-enter. Fortunately
+	  this is pretty painless; it starts up fast.
+
+Peeves:
+	- vi aborts on an error. This is mostly ok, but it considers failed
+	  searches an error. I may have to replace .ex/reply (below) with
+	  something like
+		f reply
+		%!make-reply
+	  This would be slower as it involves using another program.
+	- Worse! Vi (here, anyway) picks up next time in the middle of whatever
+	  sequence it aborted. Totally weird. I suspect a local bug.
+
+Anyone know how to do conditional code in vi?
+	- Cameron Simpson
+	  cameron@cs.unsw.oz.au
+
+#!/bin/sh
+#
+
+mkdir cameron && cd cameron && mkdir .ex .pl bin || exit $?
+
+sed 's/^X//' > '.pl/updindex.pl' <<'EOF-//fuligin/1/cameron/etc/mail/.pl/updindex.pl'
+X#!/usr/local/bin/perl
+X#
+X
+X$cmd=$0;
+X
+X@INDEX=();
+Xundef %indexed;
+Xif (open(INDEX,"< .index"))
+X	{ while (<INDEX>)
+X		{ push(@INDEX,$_);
+X		  next if !/^\s*(\d+)/;
+X
+X		  $indexed{$1}=$#INDEX;
+X		}
+X
+X	  close(INDEX);
+X	}
+Xelse
+X{ print STDERR "can't open .index: $!\n";
+X}
+X
+Xif (opendir(DIR,"."))
+X	{ @files=grep(/^\d+$/ && !defined($indexed{$_}),readdir(DIR));
+X	  closedir(DIR);
+X	}
+Xelse
+X{ @files=();
+X  print STDERR "can't opendir .: $!\n";
+X}
+X
+X$xtra=0;
+Xfor $F (@files)
+X	{ if (!open(F,"< $F\0"))
+X		{ print STDERR "$cmd: can't open \"$F\": $!\n";
+X		  next;
+X		}
+X
+X	  $to='';
+X	  $from='';
+X	  $subject='';
+X	  while (<F>)
+X		{ last if /^$/;
+X		  next if /^\s/;
+X
+X		  ($field,$body)=/^([^:\s]*):\s*(.*)/;
+X		  $field =~ tr/A-Z/a-z/;
+X		  if ($field eq 'subject')	{ $subject=$body; }
+X		  elsif ($field eq 'from')	{ $from=$body; }
+X		  elsif ($field eq 'to')	{ $to=$body; }
+X		}
+X
+X	  close(F);
+X
+X	  if ($from =~ /\(\s*(\S.*\S)\s*\)/
+X	   || $from =~ /(\S.*\S)\s*<\S*@\S*>\s*$/)
+X		{ $from=$1;
+X		}
+X
+X	  push(@INDEX,sprintf("%5d %-17.17s %s\n",
+X				$F,length($from)?$from:"To: $to",$subject
+X			     )
+X	      );
+X	  $indexed{$F}=$#INDEX;
+X	  print STDERR $INDEX[$#INDEX];
+X	  $xtra=1;
+X	}
+X
+Xif ($xtra)
+X	{ print STDERR "updating .index ...\n";
+X	  if (open(INDEX,"> .index"))
+X		{ for (sort bynum keys %indexed)
+X			{ print INDEX $INDEX[$indexed{$_}];
+X			}
+X
+X		  close(INDEX);
+X		}
+X	  else
+X	  { print STDERR "$cmd: can't rewrite .index: $!\n";
+X	  }
+X	}
+X
+Xsub bynum
+X	{ # print STDERR "\"$a\" <=> \"$b\"=".(($a+0) <=> ($b+0))."\n";
+X	  ($a+0) <=> ($b+0);
+X	}
+EOF-//fuligin/1/cameron/etc/mail/.pl/updindex.pl
+
+sed 's/^X//' > 'bin/vmail' <<'EOF-//fuligin/1/cameron/bin/vmail'
+X#!/bin/sh
+X#
+X# Enter my mail folder and run vi as a user agent.
+X#
+X
+XMAILDIR=${MAILDIR-$HOME/etc/mail}
+Xexport MAILDIR
+X
+Xcase "$1" in
+X	'')	folder=$MAILDIR/inbox ;;
+X	/*)	folder=$1 ;;
+X	+*)	folder=$MAILDIR/`exec expr "$1" : '+\(.*\)'` ;;
+X	*)	folder=$MAILDIR/$1 ;;
+Xesac
+X
+Xcd "$folder" || exit $?
+Xperl .pl/updindex.pl
+Xexec vi '+so .ex/map|so .ex/index-map|$' .index
+EOF-//fuligin/1/cameron/bin/vmail
+
+sed 's/^X//' > '.ex/+' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/+'
+Xmap \M :e! .index
+EOF-//fuligin/1/cameron/etc/mail/.ex/+
+
+sed 's/^X//' > '.ex/ctrl-m' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/ctrl-m'
+Xmap! 
+EOF-//fuligin/1/cameron/etc/mail/.ex/ctrl-m
+
+sed 's/^X//' > '.ex/index' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/index'
+Xn .index
+Xso .ex/index-map
+EOF-//fuligin/1/cameron/etc/mail/.ex/index
+
+sed 's/^X//' > '.ex/index-d' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/index-d'
+Xs/^ *\([^ ]*\).*/mv \1 $MAILDIR\/deleted\&
+X.w !sh
+Xd
+EOF-//fuligin/1/cameron/etc/mail/.ex/index-d
+
+sed 's/^X//' > '.ex/index-map' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/index-map'
+Xmap \d :so .ex/index-d
+Xmap \h 
+Xmap \r :so .ex/index-r
+Xmap \s 
+Xmap \v :so .ex/index-v
+X" map + :so .ex/+
+EOF-//fuligin/1/cameron/etc/mail/.ex/index-map
+
+sed 's/^X//' > '.ex/index-r' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/index-r'
+X.t.
+Xs/^ *\([^ ]*\).*/n \1|so .ex\/reply
+X.w! fnord
+Xd
+Xso fnord
+EOF-//fuligin/1/cameron/etc/mail/.ex/index-r
+
+sed 's/^X//' > '.ex/index-v' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/index-v'
+X.t.
+Xs/^ *\([^ ]*\).*/n \1|so .ex\/mail
+X.w! fnord
+Xd
+Xso fnord
+EOF-//fuligin/1/cameron/etc/mail/.ex/index-v
+
+sed 's/^X//' > '.ex/mail' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/mail'
+Xmap \d :!mv % $MAILDIR/deleted >/dev/null&
+Xmap \h :so .ex/index
+Xmap \r :so .ex/reply
+Xmap \s 
+Xmap \v 
+EOF-//fuligin/1/cameron/etc/mail/.ex/mail
+
+sed 's/^X//' > '.ex/mailto' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/mailto'
+Xw!
+Xf mailto
+Xmap \h :n .index
+Xmap \r 
+Xmap \s :so .ex/reply-s
+Xmap \d :so .ex/reply-d
+Xmap \v 
+X1s/^/
+X1
+X/^From:/t0
+X1s/^From/To
+X/^$/+1,$s/^/| 
+X1
+X/^| Subject:/t1
+X2s/| 
+Xw!
+EOF-//fuligin/1/cameron/etc/mail/.ex/mailto
+
+sed 's/^X//' > '.ex/map' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/map'
+Xmap \M !!
+Xmap Z 
+Xmap \d 
+Xmap \h 
+Xmap \r 
+Xmap \s 
+Xmap \v 
+EOF-//fuligin/1/cameron/etc/mail/.ex/map
+
+sed 's/^X//' > '.ex/reply' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/reply'
+Xw!
+Xf reply
+Xmap \h :n .index
+Xmap \r 
+Xmap \s :so .ex/reply-s
+Xmap \d :so .ex/reply-d
+Xmap \v 
+X1s/^/
+X1
+X/^From:/t0
+X1s/^From/To
+X/^$/+1,$s/^/| 
+X1
+X/^| Subject:/t1
+X2s/| 
+Xw!
+EOF-//fuligin/1/cameron/etc/mail/.ex/reply
+
+sed 's/^X//' > '.ex/reply-d' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/reply-d'
+Xw>>dead.letter
+Xso .ex/index
+EOF-//fuligin/1/cameron/etc/mail/.ex/reply-d
+
+sed 's/^X//' > '.ex/reply-s' <<'EOF-//fuligin/1/cameron/etc/mail/.ex/reply-s'
+Xw!
+X!smail <% &
+X0r!echo From $USER `date`
+X1s/[^ ][^ ]* \([0-9]*\)$/\1
+Xw!
+X!filemail -m $MAILDIR/outmail <%
+Xso .ex/index
+EOF-//fuligin/1/cameron/etc/mail/.ex/reply-s
+
+exit 0
+
+
+From Tom Christiansen <tchrist@convex.COM>
+Subject: Re: Too much macro text
+Reply-To: tchrist@convex.COM (Tom Christiansen)
+Date: Wed, 1 Jul 1992 13:41:06 GMT
+              Corp. The opinions expressed are those of the user and
+              not necessarily those of CONVEX.
+
+>From the keyboard of tfoley@bnr.ca (Tristram Colville-Foley):
+:I am implementing a programming mode and its looking good. Only problem is I 
+:can't finish it because I have reached the limits of the vi macro capabilities.
+:Any way I can get round this?
+
+Not easily.  My bandaid solution was to re-compile vi with 
+a much larger buffer.  I took the liberty of upping things
+like line length and macro space by an order of magnitude.
+
+But since we don't have a real vi with source, not everyone
+can do this.  Instead, they're at the mercy of their vendors,
+who are amazingly lethargicly at fixing things.  Then you've
+got some TLA vendors who've stepped back into the past somehow
+and broken existing versions of vi.
+
+The following message from EDZ might someday help ameliorate
+these problems.
+
+    Date:         30 Jun 92 19:48:30 GMT
+    From:         zwicky@erg.sri.com (Elizabeth Zwicky)
+    Subject:      Re: Why don't vendors update std utilities?
+    Organization: SRI International, Menlo Park, CA
+    Newsgroups:   comp.unix.questions
+    Message-ID:   <1992Jun30.194830.6324@erg.sri.com>
+
+
+    One of the projects that has been suggested for the SAGE electronic
+    information distribution working group is the development of a
+    third-party bugs database. One of my favorite visions of using such a
+    database involves taking one of these common bugs in a standard
+    utility, calling up one vendor, and saying "This bug has been reported
+    against four vendors. One of them issued a patch. One of them said it
+    would be fixed in the next release. Now it's your turn; you can do as
+    well as your competitors, or not, and the direct comparison will be in
+    the database for all the world to see." (It's right up there with "No,
+    I don't think I am the only person with the bug; right here I see it
+    being reported by 18 people in 5 different countries.")
+
+    More information about joining this working group is available by
+    sending mail to "sage-online-request@usenix.org". SAGE is the USENIX
+    System Administrators' Guild, a USENIX special technical group devoted
+    to system administration interests; to join its mailing list, send
+    mail to "sage-request@usenix.org".
+
+	    Elizabeth D. Zwicky
+	    zwicky@erg.sri.com
+
+
+--tom
+
+-- 
+    Tom Christiansen      tchrist@convex.com      convex!tchrist
+
+
+Emacs 
