@@ -1,0 +1,286 @@
+From hansm@wsinti04.info.win.tue.nl (Hans Mulder)
+Subject: Re: Demystifying vi one step further..
+Date: 29 Jun 1993 14:38:43 +0200
+
+In <C9Cnsu.5Do@vti.com> johnw@vti.com (John Wiegley) writes:
+
+ >Here's something neat I just learned while playing around
+ >with vi the other day.  Usually when I learn an arcane tool,
+ >I like to guess the author's motives behind naming all the
+ >key-combinations (because that helps me remember them).
+
+I'm afraid that for some key-combinations (e.g. control-G),
+the motive was mostly that all of the good ones were taken.
+
+ >Two of the ones I couldn't figure out in vi were "t" and "f".
+
+ >  [n] f [character] - jump to the nth occurence of character.
+ >  [n] t [character] - jump to the character JUST BEFORE
+ >                      the nth occurence of character.
+ >  [n] F [character] - jump back to the nth occurence of char.
+ >  [n] T [character] - jump back to the character JUST AFTER
+ >                      the nth occurence of character.
+
+ >Well, the reason for having these commands seemed a little
+ >obscure, and the reason for their names was even MORE obscure,
+ >until one day...
+
+ >  I was editing a ":" delimited database, and realized that
+ >  I could conveniently jump to field "9" by typing "9f:".  So
+ >  the "f" stood for "field".  Or, if I wanted to delete the
+ >  first four fields on a line, I could type "d4f:".
+
+ >  And..
+
+ >  I was hacking around in some files, and got to a line where
+ >  I wanted to delete everything UP TO, BUT NOT INCLUDING some
+ >  character.  I then realized that "t" stands for "to".  You
+ >  can read "d2tk" as "delete to the 2nd k".
+
+ >Using those pneumonics I never forget the pair, and find that
+ >I use them all the time now..
+
+To save you some wear of the "f" and "t" keys, let me point out
+that ";" repeats the most recent "f", "t", "F" or "T", and ","
+jumps to the same character in the opposite direction.
+
+I have no idea why ";" and "," were chosen for this function.
+
+HansM
+
+
+From tbrown@db1 (Terry Brown)
+Subject: Re: Demystifying vi one step further..
+Date: Tue, 29 Jun 1993 13:50:27 GMT
+
+johnw@vti.com (John Wiegley) writes:
+:   I was editing a ":" delimited database, and realized that
+:   I could conveniently jump to field "9" by typing "9f:".  So
+:   the "f" stood for "field".  Or, if I wanted to delete the
+:   first four fields on a line, I could type "d4f:".
+: 
+	Funny, I always though 'f' stood for 'find'.
+
+: Using those pneumonics I never forget the pair, and find that
+: I use them all the time now..
+: 
+	And not that they only work on the current line, they never
+	take you to another line.
+
+
+       __o
+     _`\<,_		Terry
+    (_)/ (_)
+
+
+
+From ray@Celestial.COM (Ray Jones)
+Subject: Re: Demystifying vi one step further..
+Date: Tue, 29 Jun 1993 16:35:26 GMT
+
+In <C9Cnsu.5Do@vti.com> johnw@vti.com (John Wiegley) writes:
+
+[stuff about vi being obscure deleted]
+
+>Well, the reason for having these commands seemed a little
+>obscure, and the reason for their names was even MORE obscure,
+>until one day...
+
+>  I was editing a ":" delimited database, and realized that
+>  I could conveniently jump to field "9" by typing "9f:".  So
+>  the "f" stood for "field".  Or, if I wanted to delete the
+>  first four fields on a line, I could type "d4f:".
+
+>  And..
+
+>  I was hacking around in some files, and got to a line where
+>  I wanted to delete everything UP TO, BUT NOT INCLUDING some
+>  character.  I then realized that "t" stands for "to".  You
+>  can read "d2tk" as "delete to the 2nd k".
+
+>Using those pneumonics I never forget the pair, and find that
+>I use them all the time now..
+
+In the classes I teach on vi, I try to point out to the students that almost
+all vi commands are pneumonic.  I think "f" means "forward", BTW, but
+"field" if it helps you remember.
+
+Some other helpful hints: Uppercase keys have either a greater action than
+the lowercase key (as in a,A i,I u,U h,H l,L w,W e,E r,R b,B c,C d,D s,S) or
+the opposite action ( as in f,F t,T o,O p,P)
+-- 
+INTERNET:  ray@Celestial.COM   Ray A. Jones; Celestial Software
+UUCP:   ...!thebes!camco!ray   6641 East Mercer Way
+             uunet!camco!ray   Mercer Island, WA 98040; (206) 947-5591
+The probability of one or more spelling errors in this missive approaches
+
+
+From william@festival.ed.ac.uk (William Warburton)
+Subject: Re: Demystifying vi one step further..
+Date: 30 Jun 93 09:34:32 GMT
+Reply-To: W.Warburton@ed.ac.uk
+
+|> In <C9Cnsu.5Do@vti.com> johnw@vti.com (John Wiegley) writes:
+|> ...
+|> >Using those pneumonics I never forget the pair, and find that
+
+In article <1993Jun29.163526.19829@Celestial.COM>, ray@Celestial.COM (Ray Jones) writes:
+|> all vi commands are pneumonic.  I think "f" means "forward", BTW, but
+
+ Mnemonic. I think pneumonic implies airheaded.
+
+|> The probability of one or more spelling errors in this missive approaches
+
+ Your .sig is being stripped to four lines, I think, either that or
+it could use a full stop to clarify its rather "zen" ring. :-) 
+
+	W.
+-- 
+| W.Warburton@ed.ac.uk				Tune to KBHR, 570 AM!
++=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+
+
+
+
+From hansm@wsinti04.info.win.tue.nl (Hans Mulder)
+Subject: Re: Demystifying vi one step further..
+Date: 30 Jun 1993 16:06:27 +0200
+
+In <1993Jun29.163526.19829@Celestial.COM) ray@Celestial.COM (Ray Jones) writes:
+
+)In <C9Cnsu.5Do@vti.com> johnw@vti.com (John Wiegley) writes:
+
+)[stuff about vi being obscure deleted]
+
+)In the classes I teach on vi, I try to point out to the students that almost
+)all vi commands are pneumonic.  I think "f" means "forward", BTW, but
+)"field" if it helps you remember.
+
+I thought it meant "find", but hey...
+
+)Some other helpful hints: Uppercase keys have either a greater action than
+)the lowercase key (as in a,A i,I u,U h,H l,L w,W e,E r,R b,B c,C d,D s,S) or
+)the opposite action ( as in f,F t,T o,O p,P)
+
+... or something completely unrelated (as in j,J m,M z,Z)
+
+HansM
+
+P.S.  The pairs n,N and x,X are missing from your opposites list.
+
+
+From Ophof@CS.UWindsor.Ca (F. Scott Ophof)
+Subject: Re: Demystifying vi one step further..
+Date: 30 Jun 1993 12:47:40 -0500
+
+On 29 Jun 1993 12:38:43 GMT Hans Mulder said:
+>In <C9Cnsu.5Do@vti.com> johnw@vti.com (John Wiegley) writes:
+> >Here's something neat I just learned while playing around
+> >with vi the other day.  Usually when I learn an arcane tool,
+> >I like to guess the author's motives behind naming all the
+> >key-combinations (because that helps me remember them).
+
+>I'm afraid that for some key-combinations (e.g. control-G),
+>the motive was mostly that all of the good ones were taken.
+
+And that points out the main problem when linking commands to
+key-combinations instead of supplying the commands as easy-to-
+remember WORDS which users can then link to any key-combo they
+wish, or type as-is on a command-line...
+Disallowing a command-line (or some alternative to the default
+method of command-invocation) is imho one of the gravest errors
+application implementors make most often.  And I know only one
+editor which allows the user the freedom to (re)define commands
+and their invocation-method (plus synonyming).  Though I might
+change my mind after trying out "ne", advertised recently here
+on comp.editors.
+
+Regards.
+$$\
+
+
+From penny@root.co.uk (Penny Gaines)
+Subject: Re: Demystifying vi one step further..
+Date: Mon, 5 Jul 1993 13:59:19 GMT
+
+In <1993Jul2.210933.17371@ucsu.Colorado.EDU> crosby@ucsu.Colorado.EDU (Matthew Crosby) writes:
+
+>Ok.  Why is dd delete line?  Wouldn't dl be better?  Is it just because dd is
+>fast to type?  Does anyone know.
+
+>-Matt							crosby@cs.colorado.edu
+
+
+dl will delete to next character left, but most people use its fast form, 'x'.
+
+In commands that process text that character twice acts on the whole line -
+hence dd, cc, yy.
+
+In vi you can combine any command that processes text (e.g. c,d,y) 
+with any command that moves the cursor (e.g. l, M, w). 
+
+Once you realise this (i.e. so you can use it without thinking about it), you will 
+realise one of the reasons why vi is so powerful.  For the record, when deleting 
+the stuff in your posting I used d} and d4L, to delete most of the extraneous stuff.
+
+
+Penny Gaines
+
+
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: Demystifying vi one step further..
+Date: 6 Jul 1993 21:48:59 +0200
+
+In <C9p2ux.7JA@root.co.uk> penny@root.co.uk (Penny Gaines) writes:
+
+>In <1993Jul2.210933.17371@ucsu.Colorado.EDU> crosby@ucsu.Colorado.EDU (Matthew Crosby) writes:
+
+>>Ok.  Why is dd delete line?  Wouldn't dl be better?  Is it just because dd is
+>>fast to type?  Does anyone know.
+
+>>-Matt							crosby@cs.colorado.edu
+
+
+>dl will delete to next character left, but most people use its fast form, 'x'.
+
+Actually, 'l' moves the cursor to the right, 'dl' and 'x' delete the
+character under the cursor; 'h' move the cursor left, 'dh' and 'X'
+delete the character to the left of the cursor.
+
+>In commands that process text that character twice acts on the whole line -
+>hence dd, cc, yy.
+
+For consistency, there is a "line" command: '_', e.g. 'd_' deletes the
+current line '42y_' yanks 42 lines, etc.  "Stuttering" (doubling the
+operator character) is more convenient, though.
+
+>In vi you can combine any command that processes text (e.g. c,d,y) 
+>with any command that moves the cursor (e.g. l, M, w). 
+
+>Once you realise this (i.e. so you can use it without thinking about it), you
+>will realise one of the reasons why vi is so powerful.  For the record, when
+>deleting the stuff in your posting I used d} and d4L, to delete most of the
+>extraneous stuff.
+
+Plus, if you learn more operators and more movement commands, the number
+of useful combinations goes up very quickly.
+
+HansM
+
+
+From ray@Celestial.COM (Ray Jones)
+Subject: Re: Demystifying vi one step further..
+Date: Tue, 06 Jul 1993 20:19:27 GMT
+
+In <1993Jul2.210933.17371@ucsu.Colorado.EDU> crosby@ucsu.Colorado.EDU (Matthew Crosby) writes:
+
+>In article <1993Jul01.161714.15055@Celestial.COM> ray@Celestial.COM (Ray Jones) writes:
+>>
+>...
+>>
+>Ok.  Why is dd delete line?  Wouldn't dl be better?  Is it just because dd is
+>fast to type?  Does anyone know.
+
+Could be, however, (another fact about vi) double letter command are used to
+indicate whole lines.  Examples: d=delete, dd delete line(s),  c=chan
