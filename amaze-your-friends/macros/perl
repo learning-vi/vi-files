@@ -1,0 +1,84 @@
+#!/bin/sh
+#
+# From: kenr@cruise.cc.rochester.edu (Kenneth C. Rich)
+# Newsgroups: comp.lang.perl
+# Subject: Re: perl-mode for vi,(not emacs)
+# Summary: my perl EXINIT
+# Keywords: vi, EXINIT, perlmode
+# Date: 23 Apr 92 21:35:41 GMT
+# Sender: kenr@cc.rochester.edu
+# Organization: University of Rochester (Rochester, NY)
+# Status: RO
+# 
+# In article <MARTINC.92Apr22005733@grover.cs.unc.edu> 
+#   martinc@grover.cs.unc.edu (Charles R. Martin) writes:
+# >
+# >   Has anyone implemented a 'perl mode' for emacs?  Ideally, this would
+# 
+# how about this little script that gives me my perl-mode vi.
+# Hope the control-characters make it thru untarnished.
+# -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+# !/bin/sh
+# vk: $Revision: 1.9 $ $Date: 1992/04/17 18:07:29 $ $Author: kenr $
+
+# The 'case' below cuz my copy contains separate EXINITS for
+# sh, csh, C, mail, docs...
+# Usage: vk -p filename
+
+case "$1" in
+
+	 -p)
+ 
+EXINIT='set ai sw=4'\
+'|:map # 0i# j'\
+'|:map - :s/# //
+'|ab qif if( @ ) {
+'|ab qelse else {
+'|ab qwh while( <> ) {
+'|ab qsw switch( @ ) {
+'|ab qfr foreach( @x ) {
+'|ab qfor for( @; @; @ ) {
+'|ab qdo do {
+'|ab qpr print, "\n";F,i'\
+'|ab qop printf( "%s\n" );Bhi,'\
+'|ab qsc ##
+'|ab qec ##
+'|ab qs  ##'\
+'|ab qc ## ##Bhi'\
+'|ab qcq #? ?#Bhi'\
+'|ab qic O## ##Bhi'\
+'|ab quc -ky$jp:s/[^ 	]/-/g
+'|ab qp cl( )hi'\
+'|ab qpp cl( );hhi'\
+'|ab qsb cl[ ]hi'\
+'|ab qcb cl{ }hi'\
+'|ab qbb {
+'|ab qrcs # $aRevision$ $aDate$ $aAuthor$'\
+'|ab qfil !open( FH, $file ) && die( "file error" );
+'|ab qx #!/usr/ucc/bin/perl
+		shift
+		;;
+
+	 *)
+ 
+EXINIT='set ai '\
+'|:map  !}fmt -65
+'|:map * 0i> j'\
+'|:map # 0i# j'\
+'|:map - :s/[#>] //
+'|:map _ :1,$s/^> //
+'|:map @ Go
+'|ab qs Go--:r ~/.signature
+'|ab QS Go--:r ~/mail/.signature2
+'|ab qp cl( )hi'\
+'|ab qb cl[ ]hi'
+
+	esac
+
+export EXINIT
+vi $*
+#
+#--
+#-ken rich                    (yow!)                    kenr@cc.rochester.edu
+#
+#
