@@ -1,0 +1,19 @@
+" From: ekw@world.std.com (Elliott C Winslow)
+" Keywords: search cursor vi
+" Date: Mon, 2 Sep 1991 09:33:11 GMT
+map  [z  "zye o/   "zp       "zdd0 @z
+map  [Z  "zye o/\< "zp A\> "zdd0 @z
+map  \z  "zye :e ztmp go/  "zp      "zyy @z :e! #jn
+map  \Z  "zye :e ztmp go/\<"zpA\> "zyy @z :e! #jn
+" The [ ones create the macro on the next line, then delete it (to the
+" z buffer), so the current file *gets* changed.
+" The \ ones write to a tmpfile (assume that current file *hasn't* been
+" changed, or they will fail).
+" The z ones search for the string as a reg exp.
+" The Z ones search for the string as a discrete word.
+" 
+" They operate from the next line on.
+"
+" #
+" # See the file wordsearch.d.Z for more info
+" #
