@@ -1,0 +1,238 @@
+From: maart@cs.vu.nl (Maarten Litmaath)
+Subject: another collection of macros
+Date: 9 Aug 90 15:29:21 GMT
+Reply-To: maart@cs.vu.nl (Maarten Litmaath)
+
+--------------------------------------------------------------------------
+
+	A vi Macro Summary -- compiled by Michael Lamoureux (lamour@mitre.org)
+
+	with special thanks to:
+		munnari!cjbj@uunet.uu.net
+		lavi!wyle
+		rock@sun.com
+		hitz@auspex.com
+	and also:
+		chen-dahe@yale.arpa
+		hamlin@afit-ab.arpa
+		hossein@unocss.unl.edu
+		jdpeek@radan.acs.syr.edu
+		scs@itivax.iti.org
+		maart@cs.vu.nl
+		bchivers@chance.mitre.org
+
+
+	**This file contains control chars...use cat -v to print it**
+	[ I ran it through cat -v to mail it.  Use "ctrl" from comp.
+	unix.sources volume 18 to switch them back...or do it by
+	hand.  -- mjl ]
+
+	In regards to my earlier request for vi macros, here is a
+summary of some of the features, and groupings of the major classes of
+macros I received.  Of course, I took the liberty of mercilessly
+disecting & modifying these macros to my personal tastes.  If you would
+like the actual text that I received, just drop me a line.  A couple of
+these things were culled out of a discussion on comp.editors, and those
+people have been credited above.  If there are any useful additions, I
+will accept them and update this list periodically.
+	The first thing that I thought was odd was the fact that
+several people had some macros mapped to several different keys.  I
+imagine this might have something to do with faulty memory or some
+such, but that's a personal preference I guess ;-)  The most important
+thing that came out of this is that it broke through some of the walls
+I had constructed, and really shed some light on the power of these
+macro functions.
+	For instance, macro mappings can be more than one keystroke.  I
+had only been thinking about mapping functions to keys.  Mapping to
+strings hadn't occured to me.  The most useful method of this is to
+select a macro prefix (a key you don't use for anything...some used ^A,
+@, ;, etc), and then follow it with a semi-meaningful string of two or
+three characters.  i.e.
+
+	map ^Afm {!} fmt -c ^M        (use ^V to quote the control chars)
+	map @cc :cc %^M               (% is replaced by current filename)
+	map ;unshar /^# /^Mkd1G/^exit 0/^MjdG
+
+Of course, you would most likely use the same prefix for all of your 
+macros.  The four PF keys may be mapped using #1, #2, #3, and #4.
+	To save space, you can group all the set commands into one line:
+
+	set ai nu ic magic sw=4 ...
+
+This allows you to use macros to define modes (text, programming, etc).
+	Another interesting thing is that a map! expands immediately
+while an ab requires some delimitter (such as a space, tab, etc) before
+it will expand.  Thus I can really see little reason to use an ab for
+anything.  The other implication of this is that no map or map! can be
+a subset of another.
+	Another shortcut is that ex commands at the : can be delimitted
+by a pipe (|).  In this case, shell escapes must be last on the logical
+line.  Oh, and remember to use a ^V to escape the pipe so it doesn't get
+interpretted when the macro is being set.
+	Here's a trick that Dave Hitz contributed.  Set a second tags
+file in your .exrc and use it to access files which you edit a lot.
+
+	set tags=tags\ /your/home/directory/.tags.file
+
+then the tags file is sorted with a format like this:
+
+	errno	/usr/include/sys/errno.h	/^/
+	exrc	/home/directory/.exrc		/^/
+	phone	/home/directory/sub/phones	/^/
+	todo	/home/directory/sub/to.do	/^/
+
+Then use :ta exrc from within vi to edit your .exrc file.
+	What follows is a commented (a comment is denoted by a ") .exrc
+file split into groups according to functionality.  You may choose to
+group them differently.  One thing which needs to be said is that there
+is a limit to the number (bytes?) of macros which can be set in your
+.exrc file.  This file will easily be too large.  It will also be neccessary
+to change <key> to the key or string you wish to bind the macro to.
+"
+"	*****General Use*****
+"
+"	^L from within insert mode
+map!	^L	^[^La
+"	write and background
+map	<key>	;w^M^Z
+"	find next occurance of current word
+map	<key>	yeo^[pI/^["kdd@k
+"	execute command on current line
+map	<key>	mx"xy$@x^M`x
+"	look through .exrc  (or .exrc.help.kind.of.file)
+map	<key>	:!less ~/.exrc^M
+"	popular timesaver   (can map either 1G or `` to g)
+map	g	1G
+"	surround word with "s (or *s, or 's, or ...)
+map	<key>	bi"^[ea"^[
+"	surround line with /* */ (or anything else)
+map	<key>	I/*^[A*/^[
+"
+"	*****Text*****
+"
+"	format paragraph using fmt
+map	<key>	{!} fmt -c^M
+"	format rest of document
+map     <key>   !G fmt -c^M
+"	sort paragraph
+map	<key>	{!} sort^M
+"	insert a ruler
+map	<key>	0O....+....1....+....2....+....3....+....4....+....5....+....6....+....7....+....8^[
+"	down case line
+map	<key>	:s/.*/\L&/^[
+"	down case of rest of line
+map	<key>	DO^[p:s/.*/\L&/^M0Dj$pkdd
+"	up case line
+map     <key>   :s/.*/\U&/^[
+"	swap case of line
+map	<key>	:s/\([a-z]*\)\([A-Z]*\)/\U\1\L\2/g^M
+"
+"	*****Mail*****  (most of this is from lavi!wyle)
+"
+"	send through your favorite mailer (CUNY, mitvma, uunet, ucbvax, etc)
+map	<key>	0f@r%Ea@mitvma.mit.edu
+"	quote to end of message with >s
+map	<key>	:.,$s/^/> /^M
+"	strip everything but the sharfile
+map	<key>	/^# /^Mkd1G/^exit 0/^MjdG
+"	insert mail header file  (with Reply-To, To, and Subject lines, etc)
+map	<key>	1G0^[:r ~/.mailheader^M1Gdd3GA
+"	add .sig
+map	<key>	:r ~/.signature^M
+"	pipe through sendmail
+map	<key>	:w >> ~/your/outbox/file^M:%!/usr/lib/sendmail -t^Mu
+"	
+"	*****C Programming*****  (most from cjbj;  Dave Hitz also sent a
+"	                          similar set)
+"
+"	block comments
+map!	<key>	 ^[o/*^M *	^M*/^[kA
+"	line comments
+map!	<key>	 ^[A/**/^[hi
+"	surround line with /* */
+map	<key>	I/*^[A*/^[
+"	unsurround line
+map	<key>	03x$xxx
+"	box comment line
+map	<key>	I/^[76i*^[a/^[
+"	if statement and {}s
+map!	<key>	 if ()^M{^M}^[kk$i
+"	else if ...
+map!	<key>	 else if ()^M{^M}^[kk$i
+"	else ...
+map!	<key>	 else^M{^M}^[O	
+"	for ...
+map!	<key>	 for ()^M{^M}^[kk$i
+"	for with x's inserted for quick loop construction
+map!	<key>	 for (x = 0; x < x; x++)^M{^M}^[O	
+"	while ...
+map!	<key>	 while ()^M{^M}^[kk$i
+"	; with null body comment
+map!	<key>	 ; /* null body */
+"	switch with all the fixins
+map!	<key>	 switch ()^M{^M} /* switch */^[O^Mdefault:^M	^Mbreak;^M^[6k$i
+"	case section of a switch
+map!	<key>	 case :^M	break;^M^M^[3k$i
+"	printf
+map!	<key>	 printf();^[hi
+"	often used includes can be done like this
+map!	<key>	 #include <ctype.h>
+map!	<key>	 #include <curses.h>
+map!	<key>	 #include <string.h>
+"	def & include
+map!	<key>	 #define	
+map!	<key>	 #include "
+"	could use this to start off main
+map	<key>	i#include <stdio.h>^M^Mmain()	{^M^M}^[ki	
+"	compile from within vi
+map	<key>	 :!cc %^M
+"	C beautify the file...
+map	<key>	 :!cb -s -l78 %^M
+"	...or indent it
+map	<key>	:!indent %^M
+"
+"	*****Modula 2*****   (verbatim from lavi!wyle)
+"	                     (the <cntrl>s in this set need to change)
+"
+"	Finally,  here is a set of macros I call "Electric Modula-2."  It 
+"	is long, involved, and has a weird syntax because it is copied 
+"	directly from Dr.  Gutknecht's Sara macro set:
+"
+"	In order to keep EXACTLY the same command structure between Lilith,
+"	Ceres, macMeth, and Unix, the original (Gutknecht) macro set is:
+"
+map ;ce iCARDINAL var ^V^[bcw
+map ;C iLONGCARD var ^V^[bcw
+map ;in iINTEGER var ^V^[bcw
+map ;re iREAL var ^V^[bcw
+map ;R iLONGREAL var ^V^[bcw
+map ;bi iBITSET var ^V^[bcw
+map ;bo iBOOLEAN var ^V^[bcw
+map ;se iSET OF var ^V^[bcw
+map ;ar iARRAY OF var ^V^[bcw
+map ;pr iPROCEDURE proc(vars) : BOOLEAN;^V^M(* PreConditions:  *)^V^M(*
+PostConditions: *)^V^MEND proc;^V^M^V^[kkkkwcw
+map ;pt iPOINTER TO var ^V^[bcw
+map ;ex iEXPORT var^V^[bcw
+map ;im iIMPLEMENTATION MODULE mod; ^V^[bbcw
+map ;fr iFROM mod IMPORT vars; ^V^[bbbbcw
+map ;im iIMPORT module; ^V^[bbcw
+map ;if iIF ( cond ) THEN^V^M  statement ^V^MEND;^V^M^V^[kkkwwcw
+map ;ie iIF ( cond ) THEN^V^M  statement ^V^MELSE^V^M
+statement2^V^MEND;V^M^^V
+^[5kwwcw
+map ;ii iELSEIF ( cond2 ) THEN^V^M  stmnt2^V^MELSEIF ( cond3 ) THEN^V^M
+stmnt3
+^V^M^V^[
+map ;wh iWHILE ( cond ) DO^V^M  statement^V^MEND;^V^M^V^[kkkwwcw
+map ;wi iWITH var DO^V^M  statement^V^MEND;^V^M^V^[kkkwcw
+map ;fo iFOR var := low TO high DO^V^M  statement^V^MEND;^V^M^V^[kkkwcw
+map ;rp iREPEAT^V^M  statement^V^MUNTIL ( condition );^V^M^V^[kkwcw
+map ;lo iLOOP^V^M  statement^V^M  IF ( cond ) THEN EXIT
+END;V^MEND;V^[kkkwc^^w
+map ;rc ivar = RECORD^V^M  var1 : t1^V^M  var2 : t2^V^MEND;^V^M^V^[kkkkcw
+--
+   "UNIX was never designed to keep people from doing stupid things, because
+    that policy would also keep them from doing clever things."  (Doug Gwyn)
+
+
