@@ -1,0 +1,294 @@
+From jafo@miranda.accum.com (Sean Reifschneider)
+Subject: Re: Editing multiple files in vi
+Date: Thu, 24 Jun 1993 05:42:33 GMT
+
+In article <C9156L.44K@cbfsb.cb.att.com> vinlai@cbnewsb.cb.att.com (vincent.lai) writes:
+>Let's say I wish to edit all files ending in '.c'
+>
+>I would enter 'vi *.c', proceed with editing the first file, press 'ZZ'
+>to save and enter ':n' to move on to the next file.
+
+You can always do something like:
+
+	map q :w^M:n^M
+
+where ^M is Control-M.  Then just press 'q' to go on to the next file.
+
+Sean
+-- 
+"If you were happy every day of your life, you wouldn't be a human being...
+You'd be a gameshow host."     -- Heathers
+
+Sean Reifschneider, Supreme hack
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: Editing multiple files in vi
+Date: 24 Jun 1993 21:19:37 +0200
+
+In <C9156L.44K@cbfsb.cb.att.com> vinlai@cbnewsb.cb.att.com (vincent.lai) writes:
+
+>I would enter 'vi *.c', proceed with editing the first file, press 'ZZ'
+>to save and enter ':n' to move on to the next file.
+
+>Question:  Is there a set of keystrokes/commands that will enable me to
+>both save the current file and move on to the next one?  I tried ':wn'
+>but vi burped.  Thanks ...
+
+You could use ':w|n'.  you could also do ':set autowrite' (or 'se aw'
+if you hate typing).  This instructs vi to automatically :w whenever
+that seems like a good idea (e.g when you do :n or :! or ^Z, but not
+if the file wasn't modified).
+You could also consider putting the string 'set autowrote' in a file
+named .exrc in your home directory.  This has the effect of setting
+the option every time you start vi.  Type ':se noaw' to shut it off.
+
+--
+HansM
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: Editing multiple files in vi
+Date: 24 Jun 1993 21:27:04 +0200
+
+In <C94Kqo.Krq@encore.com> tma@encore.com (Thanh Ma) writes:
+
+>jafo@miranda.accum.com (Sean Reifschneider) writes:
+
+>>In article <C9156L.44K@cbfsb.cb.att.com> vinlai@cbnewsb.cb.att.com (vincent.lai) writes:
+>>>Let's say I wish to edit all files ending in '.c'
+>>>
+>>>I would enter 'vi *.c', proceed with editing the first file, press 'ZZ'
+>>>to save and enter ':n' to move on to the next file.
+
+>>You can always do something like:
+
+>>	map q :w^M:n^M
+
+I wouldn't use the letter 'q'.  Being fumblefingered, I occasionally hit
+it accidentally.
+
+>>where ^M is Control-M.  Then just press 'q' to go on to the next file.
+
+Note that you have to type it as control-V control-M.
+
+>How do you map to go backward ? (in a circular fashion may be)
+
+You can get back to the start of the list by typing :w (if necessary)
+and then :rew .  The command :ar displays the list of files, with []
+around the name of the one you're currently editing.
+
+Unfortunately, there's no :prev .
+
+HansM
+
+
+From matthew@lenny.cs.mun.ca (Matthew J. Newhook)
+Subject: Re: Editing multiple files in vi
+Date: Thu, 24 Jun 1993 12:39:06 GMT
+
+jafo@miranda.accum.com (Sean Reifschneider) writes:
+>>I would enter 'vi *.c', proceed with editing the first file, press 'ZZ'
+>>to save and enter ':n' to move on to the next file.
+
+>You can always do something like:
+>	map q :w^M:n^M
+>where ^M is Control-M.  Then just press 'q' to go on to the next file.
+
+Well, the command sequence
+:w|n
+will also work.  | being the command seperator.
+
+>Sean
+>-- 
+>"If you were happy every day of your life, you wouldn't be a human being...
+>You'd be a gameshow host."     -- Heathers
+
+>Sean Reifschneider, Supreme hack
+
+Matthew
+-- 
+Matthew Newhook (matthew@engr.mun.ca)       |  "...get on with the fascination
+Faculty of Engineering and Applied Science  |  the real relation, the underlying
+Memorial University of Newfoundland, Canada |  theme" - Limelight, Rush
+
+
+From bill@bilver.uucp (Bill Vermillion)
+Subject: Re: Editing multiple files in vi
+Date: Sun, 27 Jun 1993 14:32:01 GMT
+
+In article <20cv68$pgj@wsinti06.info.win.tue.nl> hansm@wsinti06.info.win.tue.nl (Hans Mulder) writes:
+>In <C94Kqo.Krq@encore.com> tma@encore.com (Thanh Ma) writes:
+
+>>jafo@miranda.accum.com (Sean Reifschneider) writes:
+
+>>>In article <C9156L.44K@cbfsb.cb.att.com> vinlai@cbnewsb.cb.att.com (vincent.lai) writes:
+>>>>Let's say I wish to edit all files ending in '.c'
+>>>>
+>>>>I would enter 'vi *.c', proceed with editing the first file, press 'ZZ'
+>>>>to save and enter ':n' to move on to the next file.
+
+>>>You can always do something like:
+
+>>>	map q :w^M:n^M
+
+>I wouldn't use the letter 'q'.  Being fumblefingered, I occasionally hit
+>it accidentally.
+
+>>>where ^M is Control-M.  Then just press 'q' to go on to the next file.
+
+>Note that you have to type it as control-V control-M.
+
+>>How do you map to go backward ? (in a circular fashion may be)
+
+>You can get back to the start of the list by typing :w (if necessary)
+>and then :rew .  The command :ar displays the list of files, with []
+>around the name of the one you're currently editing.
+
+>Unfortunately, there's no :prev .
+
+With a couple of more keystrokes you can simulate :prev is you use
+less.
+
+less the files you wish to edit.  When it comes up, or when you search
+to the part you want in the file, v will put you in to vi.  Then a :wq
+will take you back to less and then the N and P will take you to next
+file or previous file.    Not the answer, but it may be a solution if
+you need to invoke multiple files and perhaps not edit them all.   You
+can get to all in the list that way.
+
+
+-- 
+Bill Vermillion - bill@bilver.uucp  OR  bill@bilver.oau.org
+
+
+From bspahh@gdr.bath.ac.uk (Andrew Henry)
+Subject: Re: Editing multiple files in vi
+Date: Mon, 28 Jun 1993 14:29:32 GMT
+
+In the referenced article, hansm@wsinti06.info.win.tue.nl (Hans Mulder) writes:
+>In <C94Kqo.Krq@encore.com> tma@encore.com (Thanh Ma) writes:
+
+>>How do you map to go backward ? (in a circular fashion may be)
+>
+>You can get back to the start of the list by typing :w (if necessary)
+>and then :rew .  The command :ar displays the list of files, with []
+>around the name of the one you're currently editing.
+>
+>Unfortunately, there's no :prev .
+
+Try <ctrl>6, or possibly <ctrl><shift>6  
+
+For me that toggles between the last two files that have been 
+edited in a list.  It also remembers the cursor position.
+If you have altered the current file you might have to write
+it out first.
+
+Andrew  Henry
+bspahh@gdr.bath.ac.uk
+
+
+From darren@hunan.rastek.com (Darren Hiebert)
+Subject: Re: Editing multiple files in vi
+Date: Wed, 30 Jun 1993 14:54:52 GMT
+
+In the referenced article, hansm@wsinti06.info.win.tue.nl (Hans Mulder) writes:
+>In <C94Kqo.Krq@encore.com> tma@encore.com (Thanh Ma) writes:
+
+>>How do you map to go backward ? (in a circular fashion may be)
+>
+>You can get back to the start of the list by typing :w (if necessary)
+>and then :rew .  The command :ar displays the list of files, with []
+>around the name of the one you're currently editing.
+>
+>Unfortunately, there's no :prev .
+
+I recommend getting VIM. It's the best vi clone (superset) going.
+It has a "previous" command (i.e. ":pre[vious]") and everything else.
+-- 
+-------------------------------------------------------------------------------
+Darren Hiebert (darren@hunan.rastek.com) "Made entirely from recycled materials"
+-------------------------------------------------------------------------------
+
+
+From darren@hunan.rastek.com (Darren Hiebert)
+Subject: Re: View Content of Buffer [VIM can do this]
+Date: Wed, 30 Jun 1993 15:23:25 GMT
+
+In article <1993Jun30.075639.5512@alf.uib.no> chun@eik.ii.uib.no (Chunming Rong) writes:
+> Does anyone know how to view the content of the buffers within VI?
+> Emacs has such function.
+
+VIM (VI Imitation) can do this (i.e. ":di[splay]"). This shows the contents 
+of all numbered and named buffers.
+
+VIM, the best vi clone (superset) in the known universe!
+Comes complete with source.
+
+(Yes, I am a enthusiastic advocate)
+-- 
+-------------------------------------------------------------------------------
+Darren Hiebert (darren@hunan.rastek.com) "Made entirely from recycled materials"
+-------------------------------------------------------------------------------
+
+
+From hansm@wsinti07.info.win.tue.nl (Hans Mulder)
+Subject: Re: Editing multiple files in vi
+Date: 2 Jul 1993 13:53:41 +0200
+
+In <C9Fw3H.7nn@hunan.rastek.com> darren@hunan.rastek.com (Darren Hiebert) writes:
+[ I wrote, about vi: ]
+>>Unfortunately, there's no :prev .
+
+>I recommend getting VIM. It's the best vi clone (superset) going.
+>It has a "previous" command (i.e. ":pre[vious]") and everything else.
+
+Does that imply that VIM has no :pre[serve] command?
+
+Do you just loose your work if the system goes down unexpectedly?
+
+HansM
+
+
+From darren@hunan.rastek.com (Darren Hiebert)
+Subject: Re: Editing multiple files in vi
+Date: Fri, 2 Jul 1993 15:15:41 GMT
+
+In article <2117k5$3el@wsinti07.info.win.tue.nl> hansm@wsinti07.info.win.tue.nl (Hans Mulder) writes:
+>In <C9Fw3H.7nn@hunan.rastek.com> darren@hunan.rastek.com (Darren Hiebert) writes:
+[ I wrote, about vi: ]
+>
+>>>Unfortunately, there's no :prev .
+>
+>>I recommend getting VIM. It's the best vi clone (superset) going.
+>>It has a "previous" command (i.e. ":pre[vious]") and everything else.
+>
+>Does that imply that VIM has no :pre[serve] command?
+>
+>Do you just loose your work if the system goes down unexpectedly?
+
+VIM keeps an autoscript file that contains the changes made to a file since 
+the last save. This autoscript file is updated every 100 keystrokes or 
+after two seconds of inactivity (both configurable). This allows recovery 
+using the usual vi-like method of "vim -r filename".
+
+BTW, VIM uses ":N[ext]" (opposite direction as ":n[ext]") or ":pre[vious]" 
+(two forms of the same command).
+-- 
+-----------------------------------------------------------------------------
+Darren Hiebert (darren@rastek.com)  "Made entirely from recycled materials"
+-----------------------------------------------------------------------------
+
+
+From cmorgan@intel.com (Clark Morgan)
+Subject: Re: Editing multiple files in vi
+Date: Fri, 2 Jul 1993 18:27:45 GMT
+
+Does vim support the display of multiple windows in the same session,
+ala vile and emacs?  I.E., can I open two windows -- one editing, say,
+j.c and one editing, say, k.c, and then use vim commands to switch
+between the two windows/buffers?
+
+BTW, vile supports this feature and I've become addicted to it.
+-- 
+Clar
