@@ -1,0 +1,335 @@
+From: jhallen@wpi.wpi.edu (Joseph H Allen)
+Subject: Re: Simple editor question (I think)
+
+>How would/do you 'store' the file in memory?  I guess what i am asking is
+>what is the data structure that would be used for a _very_ basic screen
+>oriented editor.
+
+One of the simplest and most effecient ways of storing a file in memory is
+with a gap buffer.  The file is broken into three parts in one big array:  The
+beginning, the gap and the end.  The beginning and end parts are just normal
+text stored in an array:  if the size of the gap is zero, then the buffer
+looks like a file loaded simply into an array.  The gap lets you insert and
+delete characters without moving any large amount of data.  All you have to do
+is change the size of the gap.  You do have to move the gap if it's not at the
+spot you want to insert or delete, however.  If you can get away with it, it's
+a good idea to always keep the gap at the cursor.  (I.E., so moving the cursor
+right means to move one character from the end part to the beginning part.) 
+
+Here's the buffer manager from an editor I wrote (and which I'm using right
+now) and an explanation of the functions/macros provided.  Like emacs, it does
+not force the gap to be at the point.
+
+The file is stored in memory like this:
+
+lowest:		buffer - > +---------+
+			   |beginning|
+			   |  part   |
+                hole   - > +---------+
+                           |  Gap    |
+                ehole  - > +---------+
+                           |   end   |
+                           |  part   |
+highest:        filend - > +---------+
+
+Other variables:
+
+	bufsiz		size of malloc block which begins at 'buffer'
+	point		where everything takes place
+	change		becomes set after the buffer has changed
+
+The functions and macros the rest of the editor would use are:
+
+(types:  position and size are of type 'unsigned' character is of type 'char'
+         string is 'char *' and FILE is C library file pointer)
+
+(All of these functions expect you not to goof:  don't point past the end of
+the buffer or try to read character from past the end)
+
+    fmrc()		Get character under point
+    fmwc(c)		Write a character at the point
+    fmgetc()		Get character under point and advance point
+    fmputc(c)		Write character under point and advance point
+    fminsc(c)		Insert character at point
+    fmdel(x)		Delete x characters beginning at point
+    fmnote()		Return number of bytes between point and beg. of file
+    fmsize()		Return number of characters in file
+    fmeof()		Return true if at end of file
+    fmpoint(x)		Set point to some offset from beginning of file
+    fmrgetc()		Move point back one and return character under point
+    fmnnl()		Advance point by one and then point to first \n found
+    fmnrnl()		Move point back one and then point to first \n found in
+			reverse direction
+    fmfnl()		Move point to first \n found (this won't move the
+			point if there is a \n under it)
+    fmrnl()		Move point to first \n found in reverse direction
+			(this won't move move the point if there is a \n
+			under it)
+      (In the search routines above, the search stops at the beg. or end of
+       file.  Also, they return true if the \n was found, false otherwise)
+    fminss(string,size)	Insert a string of indicated size at the point
+    fmcmp(string,size)  Return 0 if string matches the one under the point
+    fmicmp(string,size) Same as above but ignore case
+    fminsfil(FILE)	Insert a file at the point (FILE is an open file)
+    fmsavfil(FILE,size) Save size bytes beginning at point into FILE
+     (the above two return true if there were no errors)
+    fmopen()		Initialize the buffer
+
+The utility functions which the above use are:
+
+    fmholesize()	Return size of gap.
+    memmove(dst,drc,s)	Move possibly overlapping memory.
+    fmexpand(s)		Make the malloc block 'buffer' at least s bytes larger
+                        than 'filend-buffer'
+    fmhole()		Position gap at the point
+    fmbig(s)		Make gap at least s bytes in size
+
+- - - - - -
+
+/* Hole manager for E.  Written by: Joseph H. Allen, 9/10/89 */
+/* Do whatever you want with this but leave my name on it    */
+
+unsigned bufsiz;	/* Size of buffer */
+char *point;		/* The point */
+char *buffer;		/* The buffer */
+char *filend;		/* First character not in buffer */
+char *hole;		/* Beginning of hole */
+char *ehole;		/* First character not in hole */
+int changed=0;		/* Set when file has been changed */
+
+#define HOLESIZE 16384  /* Amount hole grows by */
+
+/* Macros */
+
+#define fmholesize() (ehole-hole)
+#define fmrc() (point==hole?*(point=ehole):*point)
+#define fmwc(c) (((point==hole)?point=ehole:0),((point==filend)?(fmexpand(1),filend++):0),*point=(c),changed=1)
+#define fmgetc() ((point==hole)?(point=ehole+1,*ehole):*(point++))
+#define fmputc(c) (((point==hole)?point=ehole:0),((point==filend)?(fmexpand(1),filend++):0),*(point++)=(c),changed=1)
+#define fminsc(c) ((point!=hole?fmhole():0), (hole==ehole?fmbig(1):0), *(hole++)=(c), changed=1)
+#define fmdel(x) ((point!=hole?fmhole():0), ehole+=(x), changed=1)
+#define fmnote() ((point>=ehole)?(point-buffer)-(ehole-hole):point-buffer)
+#define fmsize() ((filend-buffer)-(ehole-hole))
+#define fmeof() ((point==hole)?(ehole==filend):(point==filend))
+#define fmpoint(x) (point=buffer+(x), (point>hole)?(point+=ehole-hole):0)
+#define fmrgetc() (point==ehole?*(point=hole-1):*(--point))
+#define fmnnl() (fmeof()?0:(fmgetc(),fmfnl()))
+#define fmnrnl() (fmnote()?(fmrgetc(),fmrnl()):0)
+
+/* Functions */
+
+memmove(dst,src,s)
+char *dst;
+char *src;
+unsigned s;
+{
+if(src==dst || s==0) return;
+if(src>dst)
+ do *(dst++)= *(src++); while(--s);
+else
+ {
+ dst+=s;
+ src+=s;
+ do *(--dst)= *(--src); while(--s);
+ }
+}
+
+fmopen()
+{
+buffer=(char *)malloc(bufsiz=HOLESIZE);
+point=buffer;
+hole=buffer;
+ehole=buffer+HOLESIZE;
+filend=ehole;
+}
+
+fmexpand(amount)
+unsigned amount;
+{
+if(filend+amount-buffer>bufsiz)
+ {
+ char *old=buffer;
+ buffer=(char *)realloc(buffer,bufsiz=(filend+amount+HOLESIZE-buffer));
+ point+=buffer-old;
+ filend+=buffer-old;
+ hole+=buffer-old;
+ ehole+=buffer-old;
+ }
+}
+
+fmhole()
+{
+if(point==hole) return;
+if(point==ehole)
+ {
+ point=hole;
+ return;
+ }
+if(point<hole)
+ {
+ memmove(ehole-(hole-point),point,hole-point);
+ ehole=ehole-(hole-point);
+ hole=point;
+ }
+else
+ {
+ memmove(hole,ehole,point-ehole);
+ hole+=point-ehole;
+ ehole=point;
+ point=hole;
+ }
+}
+
+fmbig(size)
+unsigned size;
+{
+if(size>fmholesize())
+ {
+ size+=HOLESIZE;
+ fmexpand(size);
+ memmove(ehole+size,ehole,filend-ehole);
+ ehole+=size;
+ filend+=size;
+ }
+}
+
+int fmfnl()
+{
+while(((point==hole)?(point=ehole):point)!=filend)
+ if(*point=='\n') return 1;
+ else point++;
+return 0;
+}
+
+int fmrnl()
+{
+if(fmrc()=='\n') return 1;
+while((point==ehole?point=hole:point)!=buffer)
+ if(*(--point)=='\n') return 1;
+return 0;
+}
+
+int fminss(string,size)
+char *string;
+unsigned size;
+{
+fmhole();
+if(size>fmholesize())
+ fmbig(size);
+memmove(hole,string,size);
+hole+=size;
+changed=1;
+}
+
+int fmcmp(string,size)
+char *string;
+unsigned size;
+{
+char *x;
+if(point==hole) point=ehole;
+if(hole>point && hole<point+size && hole!=ehole)
+ {
+ if(fmcmp(string,hole-point)) return 1;
+ else
+  {
+  x=point;
+  point=ehole;
+  if(fmcmp(string+(hole-x),size-(hole-x)))
+   {
+   point=x;
+   return 1;
+   }
+  else
+   {
+   point=x;
+   return 0;
+   }
+  }
+ }
+else
+ {
+ x=point;
+ do
+  if(*(x++)!=*(string++)) return 1;
+  while(--size);
+ return 0;
+ }
+}
+
+int tupp(c)
+{
+if(c>='a' && c<='z') return c+'A'-'a';
+else return c;
+}
+
+int fmicmp(string,size)
+char *string;
+unsigned size;
+{
+char *x;
+if(point==hole) point=ehole;
+if(hole>point && hole<point+size && hole!=ehole)
+ {
+ if(fmcmp(string,hole-point)) return 1;
+ else
+  {
+  x=point;
+  point=ehole;
+  if(fmcmp(string+(hole-x),size-(hole-x)))
+   {
+   point=x;
+   return 1;
+   }
+  else
+   {
+   point=x;
+   return 0;
+   }
+  }
+ }
+else
+ {
+ x=point;
+ do
+  if(tupp(*(x++))!=tupp(*(string++))) return 1;
+  while(--size);
+ return 0;
+ }
+}
+
+int fmsave(file,size)
+FILE *file;
+unsigned size;
+{
+if(!size) return 1;
+if(point==hole) point=ehole;
+if(hole>point && hole<point+size && hole!=ehole)
+ {
+ if(hole-point!=fwrite(point,1,hole-point,file)) return 0;
+ if(size-(hole-point)!=fwrite(ehole,1,size-(hole-point),file)) return 0;
+ return 1;
+ }
+else
+ return size==fwrite(point,1,size,file);
+}
+
+int fminsfil(file)
+FILE *file;
+{
+struct stat buf;
+unsigned amount;
+fstat(fileno(file),&buf);
+if(buf.st_size==0) return 1;
+changed=1;
+fmhole();
+fmbig(buf.st_size);
+amount=fread(hole,1,buf.st_size,file);
+hole+=amount;
+return amount==buf.st_size;
+}
+-- 
+---
+            "Come on Duke, lets do those crimes" - Debbie
+"Yeah... Yeah, lets go get sushi... and not pay" - Duke
+
+
