@@ -1,0 +1,269 @@
+\documentstyle[11pt,fullpage]{article}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{5pt}
+
+\title{A vi Tutorial}
+\author{Chet Creider}
+
+\begin{document}
+
+\maketitle
+
+\section{Getting started} 
+
+\subsection{About vi}
+
+Vi (pronounced [vi aj], i.e., ``vee eye'') is a programming editor 
+which you may prefer to emacs. Although less powerful than emacs, 
+and initially somewhat hard to get used to, it has many features 
+and conveniences which make it probably the world's most popular 
+programming editor in terms of numbers of users. It is also the 
+world's most written about editor--there are at least four 
+books about it, it is given chapter length treatment in 
+countless others, it is described in detail in manuals for 
+various operating systems (e.g. for Sun workstations, for SCO 
+Xenix), and there are a number of manuals and reference documents 
+in the public domain. In view of this wealth of material, the 
+present document is limited to the briefest possible tutorial 
+introduction. 
+
+\subsection{Invoking vi}
+
+To invoke vi, simply type the letters {\bf vi} at your operating 
+system prompt. To edit a file, follow these letters with the 
+name of the file, e.g., {\bf vi foo}. Do this now. You will see a 
+screen with a column of tildes (\verb+~+) down the left side of the 
+screen. Vi is now in command mode. Anything you type will be 
+understood as a command, not as text to be input. In order to 
+input text, you must type a command to do so. The two basic input 
+commands are the following:
+
+\begin{verbatim}
+     i     insert text to the left of the cursor
+     a     insert text to the right of the cursor
+\end{verbatim}
+
+Since you are at the beginning of an empty file, it doesn't matter 
+which of these you type. Type one of them, and then type in the 
+following text (a poem by Augustus DeMorgan found in {\em The Unix Programming 
+Environment} by B.W. Kernighan and R. Pike):
+
+\begin{verbatim}
+     Great fleas have little fleas<Enter>
+       upon their backs to bite 'em,<Enter>
+     And little fleas have lesser fleas<Enter>
+       and so ad infinitum.<Enter>
+     And the great fleas themselves, in turn,<Enter>
+       have greater fleas to go on;<Enter>
+     While these again have greater still,<Enter>
+       and greater still, and so on.<Enter>
+     <Esc>
+\end{verbatim}
+
+Note that you press the {\bf Esc} key to end insertion and return 
+to command mode.
+
+\subsection{Cursor movement commands}
+
+\begin{verbatim}
+     h     move the cursor one space to the left
+     j     move the cursor one space down
+     k     move the cursor one space up
+     l     move the cursor one space to the right
+\end{verbatim}
+
+These commands may be repeated by holding the key down. Try moving 
+around in your text now. If you attempt an impossible movement, 
+e.g., pressing the letter {\bf k} when the cursor is on the top line, 
+the screen will flash. Don't worry, it won't bite, and your file 
+will not be harmed.
+
+\subsection{Deleting text}
+\begin{verbatim}
+     x     delete the character at the cursor
+     dd    delete a line
+\end{verbatim}
+
+Move the cursor to the second line and position it so that it 
+is underneath the apostrophe in {\em 'em}. Press the letter {\bf x}, and 
+the {\em '} will disappear. Now press the letter {\bf i} to move into 
+insert mode and type the letters {\bf th}. Press {\bf Esc} when you 
+are finished.
+
+\subsection{File saving}
+\begin{verbatim}
+     :w    save (write to disk)
+     :q    exit 
+\end{verbatim}
+
+Make sure you are in command mode by pressing the {\bf Esc} key. Now
+type {\bf :w}. This will save your work by writing it to a disk file.
+
+The command for quitting vi is {\bf q}. If you wish to combine saving 
+and quitting, just type {\bf :wq}. There is also a convenient abbreviation 
+for {\bf :wq} --- {\bf ZZ}. Since much of your programming work will consist of 
+running a program, encountering a problem, calling up the program in 
+the editor to make a small change and then exiting from the editor to 
+run the program again, {\bf ZZ} will be a command you use often. (Actually,
+{\bf ZZ} is not an exact synonym for {\bf :wq} --- if you have not made any changes
+to the file you are editing since the last save, {\bf ZZ} will just exit
+from the editor whereas {\bf :wq} will (redundantly) save before exiting.)
+
+If you have hopelessly messed things up and just want to start 
+all over again, you can type {\bf q!} (remember to press the {\bf Esc} 
+key first). If you omit the {\bf !}, vi will not allow you to quit 
+without saving.
+
+\subsection{What's next}
+
+The ten commands you have just learned should be enough for your 
+course work. However, you have just scratched the surface of 
+the vi editor. There are commands to copy material from 
+one place in a file to another, to move material from one place 
+in a file to another, to move material from one file to another, 
+to fine tune the editor to your personal tastes, etc. In all, 
+there about 150 commands. 
+
+\section{More complicated operations}
+
+In the following sections, the command sequences for copying, moving and
+deleting material are given. It is a good idea to practice these commands
+are some scratch material such as the poem used in section. In addition,
+remember that if things get hopelessly messed up, you can always exit with
+{\bf :q!} and start over again!
+
+\subsection{Copying, deleting, and moving material within a file}
+
+As is the case with emacs, the initial step in all of these operations is 
+to set a mark. To set a mark in vi, simply position the cursor at the
+desired location and type {\bf ma}. Or you can type {\bf mb} or {\bf mz}.
+Vi has available 26 marks, one for each lowercase letter
+of the alphabet. A mark is placed by
+moving the cursor to the place you want to mark and typing {\bf m} followed
+by the mark name you want to use, from {\bf a} to {\bf z}.
+
+Having set a mark, now move the cursor to the line ending the region you
+wish to perform some operation upon. To delete the region, simply type
+{\bf d'a}. To copy the region, type {\bf y'a} --- {\bf y} stands for ``yank.''
+To move a region, first delete it, and then position the cursor in the 
+new location. Type {\bf p}. This pulls the deleted material from the deletion 
+buffer and places it in the new location. Use the {\bf p} command as well to
+pull copied material into new locations.
+
+If you only have a few lines to copy or delete, there are simpler commands
+which you can use. For example, to copy 3 lines, position the cursor at the
+beginning of the three lines and type {\bf 3yy}. To delete the three lines, 
+type {\bf 3dd}. For a single line, {\bf yy} or {\bf dd} are sufficient.
+
+\subsection{Extracting a region to a new file}
+
+If you wish to extract a portion of a file and write it to a new file,
+type {\bf ma} at the beginning of the region or block, {\bf mb} at the 
+end of the block, and {\bf :'a,'b w filename} to write the region to the
+new file.
+
+\subsection{Copying material between two files}
+
+Although vi does not permit multiple windows, it does provide for editing 
+more than one file at a time. To open a second file while you are editing
+a first file, save any changes in the first file by typing {\bf :w} and then
+type {\bf :e filename}, giving the name of the second file. It is now possible
+to refer to the first file with the symbol {\bf \#}. Follow this sequence
+to copy material from file2 to file1:
+
+Vi has twenty-six named cut buffers, one for each letter of the alphabet,
+"a through "z, but only one will be needed for the cut and paste
+operation. The example below shows how to copy five lines of a program
+from one file to another.
+
+\begin{verbatim}
+     C:\> vi file1
+                                (move cursor to desired location)
+     "z 5yy                     (yank five lines into buffer 'z')
+     :e file2                   (call up the destination file)
+                                (move cursor to desired location)
+     "zp                        (paste the material below the cursor)
+\end{verbatim}
+
+The above method is the standard one and works for most versions of vi.
+If, however, you are using Stevie, a small, fast vi clone, the following
+method must be used.
+
+\begin{verbatim}
+     C:\> vi file1
+     :e file2
+     ma                         (set a mark)
+     y'a                        (move to the end of the region and copy)
+     :e#                        (edit file1)
+     p                          (move to desired location and pull)
+\end{verbatim}
+
+\subsection{Search and replace}
+
+Searching for a string in a file is very easy in vi. Simply type {\bf /string}.
+For example to search for the string {\em big fleas}, type {\bf /big
+fleas}. To continue searching, type {\bf n}. To search backwards, use
+{\bf ?} instead of {\bf /} and {\bf N} instead of {\bf n}.
+
+There are several ways to do search and replace operations in vi, but the 
+safest is probably the following:
+
+\begin{verbatim}
+     /search_string<Enter>      (search for the string)
+     cwnew_string<Esc>          (change to new_string)
+     n                          (find the next instance of search_string)
+     .                          (repeat the previous cw command)
+\end{verbatim}
+
+{\bf Cw} is a command to change a word. The new word is ended by pressing
+the {\bf Esc} key.
+
+\subsection{More cursor movement commands}
+
+Here are a few more useful cursor movement commands.
+
+\begin{verbatim}
+     0                          (move to the beginning of a line)
+     $                          (move to the end of a line)
+     G                          (move to the end of a file)
+     1G                         (move to the beginning of a file)
+     123G                       (move to the 123rd line of a file)
+\end{verbatim}
+
+\subsection{More input commands}
+
+Here are some common variants for the basic input commands, {\bf i} and
+{\bf a}. They are very handy.
+
+\begin{verbatim}
+    o                           (open a line below current line for input)
+    O                           (open a line above current line for input)
+    A                           (append to the end of the current line)
+    I                           (insert at beginning of the current line)
+\end{verbatim}
+
+\section{References}
+
+Below are listed some of the many books 
+dealing in whole or in part with vi as well as some of 
+the documents which are available electronically.
+
+
+Hansen, August. 1986. {\em vi: The UNIX Screen Editor}. Prentice-Hall.
+
+Bolsky, Morris. 1986. {\em The vi User's Handbook}. Prentice-Hall.
+
+Morgan, Christopher L. 1986. {\em Inside Xenix}. Howard W. Sams.
+
+Horspool, R. Nigel. 1986. {\em C Programming in the Berkeley UNIX
+environment}. Prentice-Hall.
+
+Joy, William. ms. ``An Introduction to Display Editing with Vi.'' 
+(Joy is the creator of vi; this document may be obtained via 
+ftp from star.cs.vu.nl (192.31.231.42)).
+
+Sailor, Lee and Maarten Litmaath. ms. ``Vi Manual.'' (available as 
+a \LaTeX document via ftp from star.cs.vu.nl)
+
+\end{document}
+
