@@ -1,0 +1,190 @@
+# This is a shell archive.  Remove anything before this line,
+# then unpack it by saving it in a file and typing "sh file".
+#
+# Wrapped by bt at irfu on Sun Jan 17 16:12:52 1988
+#
+# This archive contains:
+#	./nvi				/usr/local/lib/vi/vi.help	
+#	/usr/local/lib/vi/vi.card.tex	
+#
+
+echo Compiling unpacker for non-ascii files
+pwd=`pwd`; cd /tmp
+cat >unpack$$.c <<'EOF'
+#include <stdio.h>
+#define DEC(c)	(((c) - ' ') & 077)
+main()
+{
+	int n;
+	char dest[128], a,b,c,d;
+
+	scanf("begin %o ", &n);
+	gets(dest);
+
+	if (freopen(dest, "w", stdout) == NULL) {
+		perror(dest);
+		exit(1);
+	}
+
+	while ((n=getchar()) != EOF && (n=DEC(n))!=0)  {
+		while (n>0) {
+			a = DEC(getchar());
+			b = DEC(getchar());
+			c = DEC(getchar());
+			d = DEC(getchar());
+			if (n-- > 0) putchar(a << 2 | b >> 4);
+			if (n-- > 0) putchar(b << 4 | c >> 2);
+			if (n-- > 0) putchar(c << 6 | d);
+		}
+		n=getchar();
+	}
+	exit(0);
+}
+EOF
+cc -o unpack$$ unpack$$.c
+rm unpack$$.c
+cd $pwd
+
+echo x - nvi '[non-ascii]'
+/tmp/unpack$$ <<'@eof'
+begin 755 nvi
+M34]213TG+6-D,C(G"F5X<&]R="!-3U)%"D5824Y)5#TB)$5824Y)5%P*?'-E
+M="!N;V%U=&]W<FET92!W:6YD;W<],C-<"GQM87 @#2 Z7")4>7!E(#Q#5%),
+M/F$@9F]R(&%S<VES=&%N8V4-*UP*?&UA<" @ 2 Z(2]U<W(O8FEN+VUO<F4@
+M+W5S<B]L;V-A;"]L:6(O=FDO=FDN:&5L< U<"GQM87 A( $@&SHA+W5S<B]B
+M:6XO;6]R92 O=7-R+VQO8V%L+VQI8B]V:2]V:2YH96QP#1MA7 HB"F5X<&]R
+M="!%6$E.250*96-H;R B)%133"12158@5'EP92!I(%MA72!F;W(@:6YS97)T
+M(%MA<'!E;F1=(&%N9" \15-#/B!F;W(@8V]M;6%N9',N7&X@5'EP92 \0U12
+M3#YA(&9O<B!A<W-I<W1A;F-E('=I=&@@961I=&]R(&-O;6UA;F1S+EQN(%=A
+M:70@+BXN7&XD4T=2,"1&4TPB"G-L965P(#4*97AE8R O=7-R+V)I;B]V961I
+%=" D*@HN
+ 
+end
+@eof
+
+chmod 755 nvi
+
+echo x - /usr/local/lib/vi/vi.help
+cat >/usr/local/lib/vi/vi.help <<'@EOF'
+a [A]  append after cursor [line]      w [W]  word ["word"]
+b [B]  back one word ["word"]          x [X]  cross out char at [before] cursor
+c [C]  change next [to end of line]    y [Y]  yank next [whole line]
+d [D]  delete next [to end of line]    zpos   redraw zone at pos (.,-, or CR)
+e [E]  end of word ["word"]            ZZ     write changes to file, exit editor
+f [F]  find next [previous] in line    ^B[^F] backward [forward] paging
+G [nG] go to last [nth] line in file   ^D[^U] downward [upward] scrolling 
+h [l]  cursor left [right]             ^D[^T] delete [tab] one sw during insert
+H [L]  to home [last] line on screen   ^E[^Y] expose 1 more line at bottom [top]
+i [I]  insert before cursor [line]     ^G     get file name and statistics 
+j [k]  cursor down [up]                ~      change case (upper/lower) of char 
+J      join line with next             + [-]  to first char in next [prev] line
+mx[`x] mark [return to] position 'x'   0 [$]  to first [last] character in line
+M      to midpoint on screen           ; [,]  repeat [reverse] last f,F,t, or T
+n [N]  to next [previous] occurrence   .      repeat last change of the text
+o [O]  open a line below [above]       <<[>>] shift line one sw left [right]
+p [P]  put in after [before]           ( [)]  to beginning of [next] sentence
+Q      quit 'vi', go to 'ex'           { [}]  to beginning of [next] paragraph
+r [R]  replace 1 [all] character[s]    / [?]  search forward [backward]
+s [S]  substitute next [to end of line]``[''] return to previous position [line]
+t [T]  to next [previous] in line      : [:!] execute 'ex' [shell] command
+u [U]  undo last change in file [line] ! [!!] shell command on next [this line]
+PREPEND BY n TO REPEAT n TIMES. TYPE <ESC> TO RETURN FROM INPUT TO COMMAND MODE!
+
+Type <ESC><ESC> and wait for 'vi' to confirm with a beep that it is in command
+mode. Then a large variety of ':' ("last line commands") are avilable:
+
+SUBSTITUTIONS:
+:s/<pattern>/new/<CR>            change FIRST <pattern> in CURRENT LINE to 'new'
+:s/<pattern>/new/g<CR>           change ALL <pattern>s in CURRENT LINE to 'new'
+:%s/<pattern>/new/g<CR>          change ALL <pattern>s in ALL LINES to 'new'
+:s/\(<pat1>\)\(<pat2>\)/\2new\1/ change FIRST occurrence of <pat1><pat2> in
+				 CURRENT LINE to <pat2>'new'<pat1>. 
+:g/<pat1>/s/<pat2>/new$/         ONLY in lines containing <pat1> change <pat2>
+                                 to 'new' ONLY AT THE END OF THE LINE.
+:.,+ns/^./new/                   change in CURRENT and FOLLOWING n lines ANY
+                                 character at the BEGINNING of the line to 'new'
+:%s/<pattern>/new1&new2/g        change ALL <pattern>s in ALL lines to the
+				 combination 'new1'<pattern>'new2'
+    <pattern>    means
+    aaa        the string 'aaa' 
+    [aA]aa     the string 'aaa' OR the string 'Aaa'
+    [^A]aa     the string 'xaa' where 'x' is any character EXCEPT 'A'
+    a*         the strings '', 'a', 'aa', 'aaa', ... 
+
+plus more advanced types of <patterns>; see tutorials on 'ed', 'ex' and 'vi'.
+
+Such patterns can also be used in searches ('/' and '?' on the previous page).
+Type 'u' to undo a substitution!
+@EOF
+
+chmod 644 /usr/local/lib/vi/vi.help
+
+echo x - /usr/local/lib/vi/vi.card.tex
+cat >/usr/local/lib/vi/vi.card.tex <<'@EOF'
+\nopagenumbers
+\magnification=\magstep0
+\font\tt=amtt10 at 12 pt
+\hsize 15 true cm
+\parindent=0pt
+\centerline{PREPEND APPROPRIATE {\bf vi} COMMAND BY {\it n} TO REPEAT {\it n} TIMES}
+\centerline{TYPE {\rm $\langle${\tt ESC}$\rangle$} TO RETURN FROM INPUT TO COMMAND MODE}
+\medskip
+\settabs\+{\tt m}{\it x} [{\tt `}{\it x\/}]
+\quad &{\tt s}ubstitute next [to end of line]
+\quad &{\tt <<} [{\tt >>}]\quad &{\tt e}xpose 1 more line at bottom [top]\cr
+\+{\tt a} [{\tt A}] &{\tt a}ppend after cursor [line]
+&{\tt w} [{\tt W}] &{\tt w}ord [``word'']\cr
+\+{\tt b} [{\tt B}] &{\tt b}ack one word [``word'']
+&{\tt x} [{\tt X}] &{\tt cross} out char at [before] cursor\cr
+\+{\tt c} [{\tt C}] &{\tt c}hange next [to end of line]
+&{\tt y} [{\tt Y}] &{\tt y}ank next [whole line]\cr
+\+{\tt d} [{\tt D}] &{\tt d}elete next [to end of line]
+&{\tt z}{\it pos} &redraw {\tt z}one at {\it pos} [{\tt .}, {\tt -}, or
+$\langle${\tt CR}$\rangle$]\cr
+\+{\tt e} [{\tt E}] &{\tt e}nd of word [``word'']
+&{\tt ZZ} &exit editor, write changes to file\cr
+\+{\tt f} [{\tt F}] &{\tt f}ind next [previous] in line
+&{\tt \^\/b}[{\tt \^\/f}] &{\tt b}ackward [{\tt f}orward] paging\cr
+\+{\tt G} [{\it n}{\tt G}] &{\tt G}o to last [{\it n\/}th] line
+&{\tt \^\/d}[{\tt \^\/u}] &{\tt d}ownward [{\tt u}pward] scrolling\cr
+\+{\tt h} [{\tt l}] &cursor left [right]
+&{\tt \^\/d}[{\tt \^\/t}] &{\tt d}elete [{\tt t}ab] one {\it sw} during insert\cr
+\+{\tt H} [{\tt L}] &to {\tt H}ome [{\tt L}ast] line on screen
+&{\tt \^\/e}[{\tt \^\/y}] &{\tt e}xpose 1 more line at bottom [top]\cr
+\+{\tt i} [{\tt I}] &{\tt i}nsert before cursor [line]
+&{\tt \^\/g} &{\tt g}et file name and statistics\cr
+\+{\tt j} [{\tt k}] &cursor down [up]
+&{\tt \~~}&change case (upper/lower) of char\cr
+\+{\tt J} &{\tt J}oin line with next
+&{\tt +} [{\tt -}] &to first char in {\tt next} [{\tt prev}] line\cr
+\+{\tt m}{\it x} [{\tt `}{\it x\/}] &{\tt m}ark [return to] position {\it x}
+&{\tt 0} [{\tt \$}] &to {\tt first} [{\tt last}] character in line\cr
+\+{\tt M} &to {\tt M}idpoint on screen
+&{\tt ;} [{\tt ,}] &repeat [reverse] last {\tt f}, {\tt F}, {\tt t},
+or {\tt T}\cr
+\+{\tt n} [{\tt N}] &to {\tt n}ext [previous] occurrence
+&{\tt .} &repeat last change of the text\cr
+\+{\tt o} [{\tt O}] &{\tt o}pen a line below [above]
+&{\tt <<} [{\tt >>}] &shift line one {\it sw} left [right]\cr
+\+{\tt p} [{\tt P}] &{\tt p}ut in after [before]
+&{\tt (} [{\tt )}] &to beginning of [next] sentence\cr
+\+{\tt Q} &{\tt Q}uit {\bf vi}, go to {\bf ex}
+&$\{$ [$\}$] &to beginning of [next] paragraph\cr
+\+{\tt r} [{\tt R}] &{\tt r}eplace 1 [all] character[s]
+&{\tt /} [{\tt ?}] &search forward [backward]\cr
+\+{\tt s} [{\tt S}] &{\tt s}ubstitute next [to end of line]
+&{\tt `\/`} [{\tt '\/'}] &return to previous position [line]\cr
+\+{\tt t} [{\tt T}] &{\tt t}o next [previous] in line
+&{\tt :} [{\tt :!}] &execute {\bf ex} [shell] command\cr
+\+{\tt u} [{\tt U}] &{\tt u}ndo last change in file [line]
+&{\tt !} [{\tt !!}] &shell command on next [this line]\cr
+@EOF
+
+chmod 644 /usr/local/lib/vi/vi.card.tex
+
+rm /tmp/unpack$$
+exit 0
+-- 
+>>> Bo Thide', Swedish Institute of Space Physics, S-755 90 Uppsala, Sweden <<<  Phone (+46) 18-300020.  Telex: 76036 (IRFUPP S).  UUCP: ..enea!kuling!irfu!bt
+
+
