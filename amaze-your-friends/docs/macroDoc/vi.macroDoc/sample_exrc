@@ -1,0 +1,41 @@
+map [a :ar
+"
+"	search for the next occurence of the pattern cursor is resting on
+map ]/ dePoi/p"zdd@z
+"
+"	grep for all occurences of the pattern cursor is resting
+"	on in this file...
+map [/ mzdePoi:!grep -n pa % | /usr/local/bin/less"zdd@z`z
+"
+"	 take the next word and use it as input to aid (apropos id)...
+map ]a mzebdePOi:!aid pa | /usr/local/bin/less"zdd@z`z
+"
+"	take the next word and use it as input to eid...
+map ]e ebdePOi:!eid p"zdd@z
+"
+"	 take the next word and use it as input to gid (grep id)...
+map ]g mzebdePOi:!gid pa | /usr/local/bin/less"zdd@z`z
+"
+"	get a saved screen from some process run by "screen"
+map ]s :r /usr2/people/daniel/text/screens/hardcopy.
+map ]c mm'c:.,'m w! /usr2/people/daniel/src/.cut
+map ]n :n
+map ]p :r /usr2/people/daniel/src/.cut
+map [p :pop
+map ]q :q
+map ]t :ta 
+map ]w :w
+"
+"	write a backup file...
+map [w :w! %.bak
+"
+"	comment a line
+map ]* O/*jo*/
+"
+"	uncomment a line
+map [* kddjdd
+map  :w
+map @s :set shell=/bin/csh
+map @@s :set shell=/bin/sh
+unmap 
+se report=1
