@@ -1,0 +1,206 @@
+"
+"	The Super .exrc File
+"
+"	An assorted collection of macros from various users.
+"	Compiled and edited by Anthony Howe <ant@mks.com>
+"	
+"	
+"	From: nessie.cs.id.ethz.ch!wyle (Mitchell Wyle)
+"	Reformat a complete paragraph.
+:map F {j!}fmt}be
+"
+"
+"	From: Dave Myers <pioneer.uswest.com!dmyers>
+"	Goto top of file.  Complement of G.
+:map g 1G
+"
+"
+" 	From: Tom Christiansen <pixel.convex.com!tchrist>
+"
+"	INPUT MACROS that i always want active
+"
+map!  :stop
+"	so i can stop in input mode.  note that autowrite is set, so 
+map!  :stop!
+"	will stop me without writing.
+"
+map!  O
+"	lets me do kindof a negative carriage return in input mode.
+map!  bi
+"	non-destructive ^W
+map!  Ea
+"	and its inverse
+"
+"	EMACS Style ARROW MACROS
+"
+map!  i
+map!  lli
+map!  I
+map!  A
+"
+"
+"	EXCHANGE MACROS -- for exchanging things
+"
+map v xp
+"	exchange current char with next one in edit mode
+map V :m+1
+"	exchange current line with next one in edit mode
+map!  hxpa
+"	exchange last typed char with penultimate one in insert mode
+map = 
+"	edit previously editted file
+"
+"	OTHER MACROS
+"
+map  :w
+"	write out the file
+"
+map * i
+"	split line
+"
+map  :stop!
+"	unconditional stop
+map Y y$
+"	so Y is analagous to C and D
+map  ddu
+"	single-line redraw
+map  :n +/
+"	go to next file in arg list, same position 
+"	useful for "vi +/string file1 file2 file3"
+"
+"
+"	META MACROS, all begin with meta-key '\' ; more later in file
+"
+map 	 \
+"	so can use both ^I and \ for meta-key
+"
+map \/ dePo/\<pA\>"wdd@w
+"	find current word, uses w buffer
+"
+map \C ok:co.:s/./ /go80a :-1s;^;:s/;:s;$;//;"mdd@m:s/\(.\)./\1/g:s;^;:-1s/^/;"mdd@mjdd
+"	center text.  there's a better way, but i lost the short version.
+"
+"	INVERT CASE ON WORDS -- V is like W, v is like w.  3V is fine, but only to EOL.
+"	uses both register n and mark n.
+map \v ywmnoP:s/./\~/g0"nDdd`n@n
+"	abc -> ABC    ABC->abc
+map \V yWmnoP:s/./\~/g0"nDdd`n@n
+"	abc.xyz -> ABC.XYZ    ABC.XYZ->abc.xyz
+"
+"
+"	EXECUTION MACROS --	these two are for executing existing lines.  
+"
+map \@ "mdd@m
+"	xqt line as a straight vi command (buffer m, use @@ to repeat)
+map \! 0i:r!"ndd@n
+"	xqt line as :r! command (buffer n, use @@ to repeat)
+"
+map \t :r!cat /dev/tty
+"	read in stuff from X put buffer
+"	
+"
+"	BLOCK MACROS -- these help when dealing with C blocks
+"
+map!  {} O
+"	this will begin a block, leaving in insert mode
+map!  /}a
+"	and this  will take you past its end, leaving in insert mode
+"
+"
+"
+"	LINT MACRO.  deletes all text from "lint output:" and below, (if any)
+"	replacing it with lint output in pretty block comment form.  could
+"	do sed work myself, but this is faster.  
+"
+"	the map! is for subsequent map, not by people, 
+"	tho /^Lo would make sense.
+"	this is one of those famous time/space tradeoffs 
+"
+map! o lint output
+"
+"	and now for the real work
+map \l Go/* o/odG:wo/*** o<<:r!lint -u -lc %|sed 's/^/ *  /'Go***/N
+"
+"	indent this for me
+"
+map \i :%!indent -i4
+"
+"	COMMENTING MACROS -- these are actually pretty amazing
+"
+"	from edit mode, this comments a line
+map  ^i/* A */^
+"
+"	and this undoes it
+map  :s/\/\* \([^*]*\) \*\//\1
+"
+"	this next one defeats vi's tail-recursion defeatism
+"	called by 2 maps following this one 
+map!  :unmap! 
+"
+"	while in insert mode, this will put you "inside" a comment
+map!  :map!  aoa /*  */hhi
+"
+"	while in edit mode, this begins a block comment -- ^N to escape
+map \c	O/* *  */k:map!  *  A
+"
+"	and this is for adding more lines to a block comment -- ^N to escape
+map \o	:map!  *  A
+"
+"
+"	this stuff (probably) only works with UW vi.  commented out.
+"
+map _ i_ll
+"	this character will now be underlined when less'd, rn'd, etc.
+"
+"	SPELL MACROS
+"
+map \s :wgo:$r!spell %
+"	spell the file, placing errors at bottom, use \w to find
+map \n Gdd\/
+"	for find next spelling error
+"
+"
+"	FORMATING MACROS
+"
+map \P :.,$!fmt -75
+"	format thru end of document
+map \p !}fmt -75
+"	format paragraph
+map \f 1G/---j:.,$!fmt -75
+"	format message
+map \e :%!expand -4
+"	expand tabs to 4 stops
+"
+map \r 1G/^-/:r!sed -e '1,/^$/d' -e 's/^./> &/' @ /^-/j
+"	read in @, quoted (for MH replies, who link @ to current file)
+map \d :s/$/ $/$r 74|? s$xx0
+"
+"
+ab Jan January
+ab jan january 
+ab Feb February
+ab feb february
+ab Sep September
+ab sep september
+ab Oct October
+ab oct october
+ab Nov November
+ab nov november
+ab Dec December
+ab dec december
+ab Xmas Christmas
+ab xmas christmas
+ab Mon Monday
+ab mon monday
+ab Tue Tuesday
+ab tue tuesday
+ab Wed Wednesday
+ab wed wednesday
+ab Thu Thursday
+ab thu thursday
+ab Fri Friday
+ab fri friday
+ab Sat Saturday
+ab Sun Sunday
+ab Int International
+ab info information
