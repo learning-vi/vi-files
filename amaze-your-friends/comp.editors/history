@@ -1,0 +1,25 @@
+From dcd@tc.fluke.COM (David Dyck)
+Subject: Origin of % in replacement pattern in vi
+Date: 24 Jun 92 19:57:18 GMT
+Article-I.D.: tc.1992Jun24.195718.16732
+
+I've been using vi for a long time, but it's been a while
+since I've tried the command
+:s/foo/%/
+
+Until now this would replace the string foo with the character '%',
+but now it appears that % does something similar to the metacharacter ~ 
+in the replacement part of a substitute command.
+
+Earlier vi's did not do this, and the earlier manuals did not mention
+this (Although the LATEST manual from Sun that we have (SunOS Release 4.1.2)
+has added a sentence about it.
+
+Would someone please explain why vi was changed?
+
+(I have seen mentions about a ucb vs. sysV vi, is this one of the new
+ features of sysV?)
+
+            David Dyck			dcd@tc.fluke.COM
+
+
