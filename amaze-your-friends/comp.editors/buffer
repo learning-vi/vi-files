@@ -1,0 +1,83 @@
+From cn@Materna.DE (Carsten Neumann)
+Subject: Re: View Content of Buffer
+Date: 1 Jul 93 12:57:36 GMT
+
+In <1993Jun30.075639.5512@alf.uib.no> chun@eik.ii.uib.no (Chunming Rong) writes:
+
+> Does anyone know how to view the content of the buffers within VI?
+> Emacs has such function.
+
+What's wrong with
+   "ap
+for printing buffer a at cursor location and
+   u
+for clearing this lines?
+
+BTW: Please cut your .sig!
+Carsten
+--
+Carsten Neumann     cn@Materna.de        (+49 231) 5599-196 (work)
+Schwerter Str. 215, DW-4600 Dortmund 41, (+49 231) 448341   (home)
+
+
+From mac@bnr.ca (Michael Campbell)
+Subject: Re: View Content of Buffer [VIM can do this]
+Date: 2 Jul 1993 16:56:59 GMT
+
+I have heard a lot of praise for VIM in this  group  (and  others).  I
+downloaded a copy myself a few weeks ago, to my  DOS/Windows  box, and
+gave it a whirl.  I almost immediately removed it from my machine when
+I discovered that it *insists* on displaying my .exrc :map commands on
+the  terminal  prior to  bringing up the file I have asked it to edit.
+The documentation  suggests that this is the way it is supposed to act
+under DOS.  Strangely  enough, it doesn't  do this  under  Unix  (also
+tried the Unix variant of the same version).
+
+So the question is (if you haven't  guessed by now!), is there any way
+to stop VIM from  displaying  the :map  commands  when run under  DOS?
+This is so  annoying  that I  returned  to Elvis,  which is very good.
+Thanks in advance for any help.
+
+========================================================================
+Michael Campbell                  BNR Inc.              Richardson, Tx.
+214-684-5595       (ESN 444)     Dept 2Q35             email: mac@bnr.ca
+========================================================================
+"A baby is a bundle of needs that initiates a 20 year parental emergency"
+-Gail Sheehy
+
+
+From darkstar@bach.udel.edu (The Sleepless Wonder)
+Subject: Re: View Content of Buffer [VIM can do this]
+Date: Fri, 2 Jul 1993 20:31:35 GMT
+
+In article <211pcr$1bb@crchh327.bnr.ca> mac@bnr.ca (Michael Campbell) writes:
+>I have heard a lot of praise for VIM in this  group  (and  others).  I
+>downloaded a copy myself a few weeks ago, to my  DOS/Windows  box, and
+>gave it a whirl.  I almost immediately removed it from my machine when
+>I discovered that it *insists* on displaying my .exrc :map commands on
+>the  terminal  prior to  bringing up the file I have asked it to edit.
+>The documentation  suggests that this is the way it is supposed to act
+>under DOS.  Strangely  enough, it doesn't  do this  under  Unix  (also
+>tried the Unix variant of the same version).
+>
+>So the question is (if you haven't  guessed by now!), is there any way
+>to stop VIM from  displaying  the :map  commands  when run under  DOS?
+>This is so  annoying  that I  returned  to Elvis,  which is very good.
+>Thanks in advance for any help.
+
+Well, believe it or not, there is a way around it.  (I should probably
+cross-post this to alt.hackers 8)
+
+Rename _vilerc to something like vile.rc (sounds like a good DOS name).
+Then set your exinit environment variable to this: set exinit=so vim.rc
+
+What happens is that vim doesn't find the default rc file so thus
+defaults to looking at the env variable for instructions.  The
+instructions say to source file.  When a file is sourced, it doesn't
+display the key mappings...
+
+Now, to make two comments.  VIM is a great editor/vi clone, with one
+exception.  VIM has to edit the file in memory.  No problem on
+systems with flat memory models, but on DOS boxes, you can't edit large
+files (approximately anything larger then 700k on my system).  I think
+that the 
