@@ -1,0 +1,33 @@
+" Newsgroups: comp.editors
+" From: jpr@jpradley.jpr.com (Jean-Pierre Radley)
+" Subject: Re: Smart 'C' editors?!?
+" Date: Sat, 26 Oct 1991 18:29:00 GMT
+" 
+" In vi, the '%' command will fly back and forth from a '(' to its matching ')',
+" or from a '{' to a '}.
+" 
+" And these macros might be of interest to you:
+"
+" #####
+" #
+" # These macros are not propperly expanded.
+" # You must do it yourself.
+" #
+" # Ove Ruben R Olsen
+" # LPF- Archive maintainer.
+" #
+" #####
+" 
+se nu ts=5 wm=0 sw=5
+map! /*		/*  */hhi
+map! ca'	case :	break;k0f:i
+map! ei'	else if () {}kk0f(a
+map! el'	else {}ki
+map! if'	if () {}k0f(a
+map! fo'	for (;;) {}k0f(a
+map! wh'	while () {}k0f(a
+map  #0	:!cc %
+" -- 
+" Jean-Pierre Radley   Unix in NYC   jpr@jpr.com   jpradley!jpr   CIS: 72160,1341
+
+
