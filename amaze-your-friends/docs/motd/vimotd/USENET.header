@@ -1,0 +1,15 @@
+From: pab@rainbow.cse.nau.edu (Paul Balyoz)
+Newsgroups: alt.sources
+Subject: vimotd - global /etc/motd file editor part 1 of 1
+Message-ID: <4657@naucse.cse.nau.edu>
+Date: 8 Feb 92 23:01:41 GMT
+Sender: news@naucse.cse.nau.edu
+Organization: Northern Arizona University, Flagstaff AZ
+Lines: 492
+Nntp-Posting-Host: rainbow.cse.nau.edu
+Originator: pab@rainbow.cse.nau.edu
+
+Here is a useful utility I wrote for maintaining /etc/motd files on many
+hosts connected by a TCP/IP network and NFS.
+
+
