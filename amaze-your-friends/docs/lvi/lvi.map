@@ -1,0 +1,50 @@
+":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+"
+" @(#)lvi.map 1.1 Vi macros 88/01/25 23:20:35 
+"
+" This is a set of macros for 'lvi', a tutorial
+" for the totally unexperienced vi(1) learner.
+"
+":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+"
+" Author:
+"
+"   Bo Thide'
+"   Swedish Institute of Space Physics
+"   S-755 90 Uppsala, Sweden
+"   UUCP: ...enea!kuling!irfu!bt
+"
+":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+"
+:se readonly
+:map  :rew!:so /usr/local/lib/vi/lvi.unm:"Hit <CTRL>a for assistance.
+:map V :"Not active! Hit q to bail out, ^c to continue, or <CTRL>a for assistance.
+:map v :e! #
+:map a :ta insert:unm a
+:map A :ta insert:unm A
+:map c :ta change:unm c
+:map C :ta change:unm C
+:map d :ta delete:unm d
+:map D :ta delete:unm D
+:map i :ta insert:unm i
+:map I :ta insert:unm I
+:map J V
+:map o :ta open:unm o
+:map O :ta open:unm O
+:map p :ta put:unm p
+:map P :ta put:unm P
+:map q :ta quit
+:map Q V
+:map r :ta replace:unm r
+:map R :ta replace:unm R
+:map s :ta subst:unm s
+:map S :ta subst:unm S
+:map x :ta cross:unm x
+:map X :ta cross:unm X
+:map ! V
+:map . V
+:map < V
+:map > V
+:map ~ V
+:map  V
+:map  V
