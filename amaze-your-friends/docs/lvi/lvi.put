@@ -1,0 +1,22 @@
+You have typed 'p' or 'P'.  The one you typed is now activated.
+
+p     put the content of the unnamed buffer 1 after the cursor position.
+
+"np   put the content of the unnamed buffer n (1-9) after the cursor position.
+
+"xp   put the content of the named buffer 'x' (a-z) after the cursor position.
+
+P     put the content of the unnamed buffer 1 before the cursor position.
+
+"nP   put the content of the unnamed buffer n (1-9) before the cursor position.
+
+"xP   put the content of the named buffer 'x' (a-z) before the cursor position.
+
+
+Use this text for harmless practicing.  Undo last change with 'u'.
+
+
+
+-------------------------------------------------------------------bt 88/01/25
+Type '^c' to continue editing or 'v' to visit old buffer. Type 'q' to quit.
+
