@@ -1,0 +1,90 @@
+From larryhsu@mtl.mit.edu (Lawrence Hsu)
+Subject: Paragraph wrapping in VI
+Date: Fri, 29 May 1992 19:41:54 GMT
+
+Is there a relatively simple way of wrapping paragraphs in vi?
+What I often want to do is wrap several short lines into fewer longer lines
+without having to "J" them all together and then insert carriage returns.
+
+Many thanks,
+
+Larry Hsu
+larryhsu@mtl.mit.edu
+
+
+From hashmi@cse.uta.edu (Atiqullah Hashmi)
+Subject: Re: Paragraph wrapping in VI
+Date: Sat, 30 May 1992 23:41:07 GMT
+
+In article <1992May29.194154.18364@athena.mit.edu> larryhsu@mtl.mit.edu (Lawrence Hsu) writes:
+>Is there a relatively simple way of wrapping paragraphs in vi?
+>What I often want to do is wrap several short lines into fewer longer lines
+>without having to "J" them all together and then insert carriage returns.
+
+Go to the first line of a paragraph and break that line where you 
+want the right margin. Then go to the starting of the first line(col. 1)
+of that paragraph and do these things: 
+
+press a '!' 
+press a ']'
+ Here your cursor will go to the bottom of screen and '!' will appear, then
+type 'fmt'                
+ 
+Note: Don't type any quotes as I have shown above, I used them for
+clarity. Also, this method works for one paragraph only, so you will
+have to do for each paragraph if you have more than one.
+
+Hope it helps
+
+hashmi  
+
+
+-- 
+---------------------------------
+Atiqullah Hashmi                     
+UTA (Univ. of Texas at Arlington)   
+hashmi@cse.uta.edu                 
+
+
+From dylan@ibmpcug.co.uk (Matthew Farwell)
+Subject: Re: Paragraph wrapping in VI
+Date: Sun, 31 May 1992 14:22:12 GMT
+
+In article <1992May30.234107.8048@cse.uta.edu> hashmi@cse.uta.edu (Atiqullah Hashmi) writes:
+>In article <1992May29.194154.18364@athena.mit.edu> larryhsu@mtl.mit.edu (Lawrence Hsu) writes:
+>>Is there a relatively simple way of wrapping paragraphs in vi?
+>>What I often want to do is wrap several short lines into fewer longer lines
+>>without having to "J" them all together and then insert carriage returns.
+>Go to the first line of a paragraph and break that line where you 
+>want the right margin. Then go to the starting of the first line(col. 1)
+>of that paragraph and do these things: 
+>
+>press a '!' 
+>press a ']'
+          ^
+> Here your cursor will go to the bottom of screen and '!' will appear, then
+>type 'fmt'                
+
+Of course, he means '}' here.
+
+Dylan.
+-- 
+It is no coincidence that in no known language does the phrase 'As
+pretty as an Airport' appear -- Douglas Adams
+
+
+From agc@bnr.ca (Alan Carter)
+Subject: Re: Paragraph wrapping in VI
+Date: 2 Jun 92 10:31:38 GMT
+
+In article <1992May29.194154.18364@athena.mit.edu>, larryhsu@mtl.mit.edu (Lawrence Hsu) writes:
+|> Is there a relatively simple way of wrapping paragraphs in vi?
+|> What I often want to do is wrap several short lines into fewer longer lines
+|> without having to "J" them all together and then insert carriage returns.
+
+The vi command you need is
+
+    :1,$!adjust
+
+The ! pumps the specified lines out to the standard in of the chosen program,
+catches the standard out and replac
