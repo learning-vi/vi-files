@@ -1,0 +1,856 @@
+From smr@iti.org (Stephen Riehm)
+Subject: esoteric use of vi.. can some1 give me the right syntax??
+Date: 17 Jul 92 11:04:41 GMT
+Status: RO
+
+
+I remember that it is possible to put vi/ex initialisation strings into
+the top or bottom 5 lines of a text file, and that vi would use those
+after reading the .exrc file etc. I want to use this because normally
+I have wrapmargin turned on, but in one or two files I want to turn it
+off....  so this would be a really neat feature to use. My problem is
+that I can't find the reference which describes this feature, and I have
+forgotten the format.
+
+from memory it was something like:
+    --dummy file--
+    #!/bin/sh
+    # ex:set wm=0 ai ic
+    #
+    # this file will have no wrapping, auto-indenting and ignore case
+    # set whenever being edited by vi or ex
+    etc.
+
+If anyone who knows this format could send it to me, I would be most
+grateful!
+
+ADVthAnxNCE
+
+-----------------------------------------------------------------
+Stephen Riehm				   smr@pki-nbg.philips.de
+not in any way talking on behalf of:
+Philips Kommunikations Industrie	  Phone: +49 911 526 2975
+8500 Nuremberg, Germany			    Fax: +49 911 526 2095
+I come from the land down under, where women glow and men chunder
+
+
+From smr@iti.org (Stephen Riehm)
+Subject: esoteric use of vi.. can some1 give me the right syntax??
+Date: 17 Jul 92 11:04:41 GMT
+Status: RO
+
+
+I remember that it is possible to put vi/ex initialisation strings into
+the top or bottom 5 lines of a text file, and that vi would use those
+after reading the .exrc file etc. I want to use this because normally
+I have wrapmargin turned on, but in one or two files I want to turn it
+off....  so this would be a really neat feature to use. My problem is
+that I can't find the reference which describes this feature, and I have
+forgotten the format.
+
+from memory it was something like:
+    --dummy file--
+    #!/bin/sh
+    # ex:set wm=0 ai ic
+    #
+    # this file will have no wrapping, auto-indenting and ignore case
+    # set whenever being edited by vi or ex
+    etc.
+
+If anyone who knows this format could send it to me, I would be most
+grateful!
+
+ADVthAnxNCE
+
+-----------------------------------------------------------------
+Stephen Riehm				   smr@pki-nbg.philips.de
+not in any way talking on behalf of:
+Philips Kommunikations Industrie	  Phone: +49 911 526 2975
+8500 Nuremberg, Germany			    Fax: +49 911 526 2095
+I come from the land down under, where women glow and men chunder
+
+
+From wja@iclbra.UUCP (Wayne Alston)
+Subject: fun bug in vi
+Date: 23 May 85 06:52:04 GMT
+Date-Received: 25 May 85 03:14:12 GMT
+Xpath: stc stc-a
+Status: RO
+
+
+An undocumented feature in vi allows a valid command in the file being 
+'edited' of the form
+
+        ...ex:{command}:
+or
+        ...vi:{command}:
+
+to be actioned before interactive editing is allowed.  However, the bug also 
+permits the variants ei and vx. The code reads:-
+
+        if (beg[-2] != 'e' && beg[-2] != 'v') return;
+        if (beg[-1] != 'x' && beg[-1] != 'i') return;
+
+in routine checkmodeline().
+
+The bug was discovered by trying to install a user with the initials 'jei' into
+/etc/passwd.
+
+Note that the above structure need not be at the beginning of the file.
+Try vi'ing a file containing ei:x: .
+
+Wayne Alston
+..!reading!iclbra!wja
+End of article 104 (of 113)--what next? [npq] 
+
+
+From wcs@ho95b.UUCP (Bill Stewart)
+Subject: Re: fun bug in vi
+Date: 24 May 85 23:28:34 GMT
+Date-Received: 25 May 85 06:04:15 GMT
+Status: O
+
+Wayne Allston at ICL had some comments about the "vi-startup-mode" feature:
+        1)  It's undocumented
+        2)  It also accepts ei: and vx: in addition to ex: and vi:
+        3)  It's more of a misfeature than a feature (paraphrased.)
+
+Well, 2) is clearly a bug, and "somebody" ought to fix it.   I just checked
+the source for version 3.9, and the offending lines of code are still there
+in checkmodeline().
+
+However, the startup mode is not undocumented, and it's not a misfeature.
+Admittedly, the documentation isn't in the manual page, it's in the file
+vax/ex.news in the source directory, but this applies to any features added
+since the vi 3.5 version came out.  (Hope you've got source! :~)
+
+Whether it's a good feature is somewhat of a religious argument, but I like
+it.  However, it would be nice to have a modelines/nomodelines option that
+you could set in $EXINIT, to make it safer to edit important files, or other
+files where the magic sequences might occur.
+-- 
+                        Bill Stewart    1-201-949-0705
+                        AT&T Bell Labs, Room 4K-435, Holmdel NJ
+                        {ihnp4,allegra,cbosgd,vax135}!ho95c!wcs
+End of article 105 (of 113)--what next? [npq] 
+
+From mark@cbosgd.UUCP (Mark Horton)
+Subject: Re: fun bug in vi
+Date: 25 May 85 05:13:59 GMT
+Date-Received: 25 May 85 12:43:54 GMT
+Status: O
+
+This problem is well known - it came out about a year ago.
+
+It has been fixed in vi 3.10.  The syntax is now something
+that's unlikely to show up by accident in text files, and
+very few commands are allowed in a mode line.  There
+are explicit checks to prevent ! commands, too.
+
+3.10 will probably first be released in System V Release 3.
+
+        Mark
+End of article 106 (of 113)--what next? [npq] 
+
+From guy@sun.uucp (Guy Harris)
+Subject: Re: fun bug in vi
+Date: 25 May 85 19:27:22 GMT
+Date-Received: 27 May 85 01:30:58 GMT
+Status: O
+
+> An undocumented feature in vi allows a valid command in the file being 
+> 'edited' of the form
+> 
+>       ...ex:{command}:
+> or
+>       ...vi:{command}:
+> 
+> to be actioned before interactive editing is allowed.  However, the bug
+> also permits the variants ei and vx.
+
+The feature(?) and the bug are in ex/vi 3.7 as well, which comes with 4.2BSD.
+
+> The bug was discovered by trying to install a user with the initials 'jei'
+> into /etc/passwd.
+
+The fact that mode-line processing can't be turned off is, arguably, a bug
+(the same thing may have bitten us here; "vi" acted strangely when editing
+/etc/passwd, and I think there was an entry that looked like a mode line).
+Somebody posted some changes to "ex" (which apply both the 4.2BSD's 3.7 and
+System V Release 2's 3.9) which added a flag "modelines" which, when on,
+enabled mode-line processing; the default was to disable mode-line
+processing.
+
+        Guy Harris
+End of article 107 (of 113)--what next? [npq] 
+From wcs@ho95b.UUCP (Bill Stewart)
+Subject: Re: fun bug in vi
+Date: 24 May 85 23:28:34 GMT
+Date-Received: 25 May 85 06:04:15 GMT
+
+Wayne Allston at ICL had some comments about the "vi-startup-mode" feature:
+        1)  It's undocumented
+        2)  It also accepts ei: and vx: in addition to ex: and vi:
+        3)  It's more of a misfeature than a feature (paraphrased.)
+
+Well, 2) is clearly a bug, and "somebody" ought to fix it.   I just checked
+the source for version 3.9, and the offending lines of code are still there
+in checkmodeline().
+
+However, the startup mode is not undocumented, and it's not a misfeature.
+Admittedly, the documentation isn't in the manual page, it's in the file
+vax/ex.news in the source directory, but this applies to any features added
+since the vi 3.5 version came out.  (Hope you've got source! :~)
+
+Whether it's a good feature is somewhat of a religious argument, but I like
+it.  However, it would be nice to have a modelines/nomodelines option that
+you could set in $EXINIT, to make it safer to edit important files, or other
+files where the magic sequences might occur.
+-- 
+                        Bill Stewart    1-201-949-0705
+                        AT&T Bell Labs, Room 4K-435, Holmdel NJ
+                        {ihnp4,allegra,cbosgd,vax135}!ho95c!wcs
+End of article 105 (of 113)--what next? [npq] 
+
+From mark@cbosgd.UUCP (Mark Horton)
+Subject: Re: fun bug in vi
+Date: 25 May 85 05:13:59 GMT
+Date-Received: 25 May 85 12:43:54 GMT
+Status: O
+
+This problem is well known - it came out about a year ago.
+
+It has been fixed in vi 3.10.  The syntax is now something
+that's unlikely to show up by accident in text files, and
+very few commands are allowed in a mode line.  There
+are explicit checks to prevent ! commands, too.
+
+3.10 will probably first be released in System V Release 3.
+
+        Mark
+End of article 106 (of 113)--what next? [npq] 
+
+From guy@sun.uucp (Guy Harris)
+Subject: Re: fun bug in vi
+Date: 25 May 85 19:27:22 GMT
+Date-Received: 27 May 85 01:30:58 GMT
+Status: O
+
+> An undocumented feature in vi allows a valid command in the file being 
+> 'edited' of the form
+> 
+>       ...ex:{command}:
+> or
+>       ...vi:{command}:
+> 
+> to be actioned before interactive editing is allowed.  However, the bug
+> also permits the variants ei and vx.
+
+The feature(?) and the bug are in ex/vi 3.7 as well, which comes with 4.2BSD.
+
+> The bug was discovered by trying to install a user with the initials 'jei'
+> into /etc/passwd.
+
+The fact that mode-line processing can't be turned off is, arguably, a bug
+(the same thing may have bitten us here; "vi" acted strangely when editing
+/etc/passwd, and I think there was an entry that looked like a mode line).
+Somebody posted some changes to "ex" (which apply both the 4.2BSD's 3.7 and
+System V Release 2's 3.9) which added a flag "modelines" which, when on,
+enabled mode-line processing; the default was to disable mode-line
+processing.
+
+        Guy Harris
+End of article 107 (of 113)--what next? [npq] 
+From honey@down.FUN (Peter Honeyman)
+Subject: Re: fun bug in vi
+Date: 27 May 85 23:20:06 GMT
+Date-Received: 28 May 85 11:59:52 GMT
+
+the fact that the modelines search is for the pattern [ev][xi]: rather
+than for (ex|vi): aggravates the problem.
+        peter
+End of article 109 (of 113)--what next? [npq] 
+From dylan@ibmpcug.co.uk (Matthew Farwell)
+Subject: Re: Another VI Question (.exrc file)
+Date: Tue, 02 Jun 1992 15:03:23 GMT
+
+In article <1992Jun2.075533.4112@ericsson.se> etxmesa@eos.ericsson.se (Michael Salmon) writes:
+>In article <1992Jun1.151852.21819@b15.b15.ingr.com>, smw@wikki.b15.ingr.com (mike wixson) writes:
+>|>  Since the subject of VI has come up, I've also got a question. I am trying
+>|> to find some information about the .exrc file, and the man pages for vi
+>|> and ex do not mention very much about it. Can someone direct me to a source
+>|> that will explain the what can and cannot be done in the .exrc file?
+>|> For example, one thing in that I would like to do is have a command called
+>|> ":wn" that would replace ":w" and ":n", but I haven't figured out how to
+>|> do this (or if it is even possible).
+>:n in fact implies :w (at least on SunOS 4.1.1).  I personally map \n
+>and \w to :n^M and :w^J respectively.  If you are on a Sun system then I
+>suggest that you look in the SunOS documentation under Editing Files.
+
+This is only true if autowrite(aw) is set.
+
+Followups to comp.editors.
+
+Dylan.
+-- 
+It is no coincidence that in no known language does the phrase 'As
+pretty as an Airport' appear -- Douglas Adams
+
+From smw@wikki.b15.ingr.com (mike wixson)
+Subject: Another VI Question (.exrc file)
+Reply-To: smw@wikki.b15.ingr.com
+Date: Mon, 1 Jun 92 15:18:52 GMT
+Status: O
+
+ Since the subject of VI has come up, I've also got a question. I am trying
+to find some information about the .exrc file, and the man pages for vi
+and ex do not mention very much about it. Can someone direct me to a source
+that will explain the what can and cannot be done in the .exrc file?
+
+For example, one thing in that I would like to do is have a command called
+":wn" that would replace ":w" and ":n", but I haven't figured out how to
+do this (or if it is even possible).
+
+Thanks!
+   ------------------------------------------------------------
+  |   _          _              Mike Wixson                    |
+  |  ' )_ _     ' )             wixson@infonode.ingr.com       |
+  |   /  )  )    /  /  /        ...uunet!ingr!b15!wikki!smw    |
+  |  /  /  /    /  /  /         Intergraph 730-1306            |
+  | /  /  / *  (__(__/ *        "Life's a bitch and then       |
+  |                              you d
+Memory fault(coredump)
+$
+
+
+From etxmesa@eos.ericsson.se (Michael Salmon)
+Subject: Re: Another VI Question (.exrc file)
+Reply-To: etxmesa@eos.ericsson.se (Michael Salmon)
+Date: Tue, 2 Jun 1992 07:55:33 GMT
+Status: O
+
+In article <1992Jun1.151852.21819@b15.b15.ingr.com>, smw@wikki.b15.ingr.com (mike wixson) writes:
+|>  Since the subject of VI has come up, I've also got a question. I am trying
+|> to find some information about the .exrc file, and the man pages for vi
+|> and ex do not mention very much about it. Can someone direct me to a source
+|> that will explain the what can and cannot be done in the .exrc file?
+|> 
+|> For example, one thing in that I would like to do is have a command called
+|> ":wn" that would replace ":w" and ":n", but I haven't figured out how to
+|> do this (or if it is even possible).
+
+:n in fact implies :w (at least on SunOS 4.1.1). I personally map \n and \w to :n^M
+and :w^J respectively. If you are on a Sun system then I suggest that you look in
+the SunOS documentation under Editing Files.
+
+-- 
+
+Michael Salmon
+
+#include	<standard.disclaimer>
+#include	<witty.saying>
+#include	<fancy.pseudo.graphics>
+
+Ericsson Telecom AB
+Stockholm
+
+
+
+From bill@Celestial.COM (Bill Campbell)
+Subject: Re: Another VI Question (.exrc file)
+Date: 2 Jun 92 16:21:09 GMT
+Status: O
+
+In <1992Jun1.151852.21819@b15.b15.ingr.com> smw@wikki.b15.ingr.com (mike wixson) writes:
+
+:......
+:For example, one thing in that I would like to do is have a command called
+:":wn" that would replace ":w" and ":n", but I haven't figured out how to
+:do this (or if it is even possible).
+
+This one is simple.  Use ':set aw' to set autowrite on.  Then
+when you do :n it will automatically write out the current file
+if it's been changed.  Autowrite also saves the file any time you
+do a shell escape (which for me seems to be about every 30
+seconds or so :-) making sure I don't lose data unless I do
+something really stupid.
+
+Bill
+-- 
+INTERNET:  bill@Celestial.COM   Bill Campbell; Celestial Software
+UUCP:   ...!thebes!camco!bill   6641 East Mercer Way
+             uunet!camco!bill   Mercer Island, WA 98040; (206) 947-5591
+SPEED COSTS MONEY -- HOW FAST DO YOU WANT TO GO?
+
+
+From helen@bruno.cs.colorado.edu (Helen Wong)
+Subject: .exrc
+Date: Sat, 6 Jun 1992 07:03:46 GMT
+Status: O
+
+If anyone out there can tell me where I can
+find a manual on .exrc?  man -k exrc or rc
+does not help much.  I would really like
+to set up my .exrc file ( dont know how ).
+
+Thanks,
+Helen - 
+
+
+From smazu@ameris.ameritech.com (Steven P. Mazurek)
+Subject: Re: .exrc
+Date: Mon, 8 Jun 1992 03:30:50 GMT
+Status: O
+
+helen@bruno.cs.colorado.edu (Helen Wong) writes:
+
+>If anyone out there can tell me where I can
+>find a manual on .exrc?  man -k exrc or rc
+>does not help much.  I would really like
+>to set up my .exrc file ( dont know how ).
+
+".exrc" is NOT a command, but an environment control file for the
+"EX" command. If you look in the manual pages for "EX" you should
+be able to construct your .exrc file. For example, if you wish
+your tab-stops to be four instead of eight every time you use
+"EX" or "VI", you'd place the line:
+
+		set ts=4
+
+in the .exrc file.
+
+Hope this helps ...
+
+
+-- 
+Steven P. Mazurek             | Email : {...,uunet,bcr,ohumc}!ameris!smazu
+Ameritech Services            |         smazu@ameris.center.il.ameritech.com
+Hoffman Estates, IL USA 60196 | Phone : (708) 248-5075
+
+
+From francis@monod.biol.mcgill.ca (Francis Ouellette)
+Subject: Re: .exrc
+Date: 8 Jun 92 04:50:22 GMT
+Reply-To: francis@monod.biol.mcgill.ca
+Status: O
+
+helen@bruno.cs.colorado.edu (Helen Wong) writes:
+>
+>>If anyone out there can tell me where I can
+>>find a manual on .exrc?  man -k exrc or rc
+>>does not help much.  I would really like
+>>to set up my .exrc file ( dont know how ).
+
+ smazu@ameris.ameritech.com (Steven P. Mazurek) replies:
+
+>
+>".exrc" is NOT a command, but an environment control file for the
+>"EX" command. If you look in the manual pages for "EX" you should
+>be able to construct your .exrc file. For example, if you wish
+
+another place to look is in the very well written "learning
+the Vi editor" from our favorite Unix publisher, O'Reilley and 
+Associates, written by Linda Lamb.  You will find all you need
+your .exrc file in there.
+
+regards,
+
+francis
+
+
+---
+| B.F. Francis Ouellette  
+| manager, yeast chromosome I project
+| dept of biology, McGill university, Montreal, Qc, Canada
+| francis@monod.biol.mcgill.ca
+
+
+From buboo@alf.uib.no (Ove Ruben R Olsen)
+Subject: Re: .exrc
+Date: Mon, 8 Jun 92 20:44:36 GMT
+Status: O
+
+[... Followup-To: comp.editors where such a question belongs ... ]
+
+Helen Wong writes:
+>If anyone out there can tell me where I can
+>find a manual on .exrc?  man -k exrc or rc
+>does not help much.  I would really like
+>to set up my .exrc file ( dont know how ).
+
+You should check out your nearest VI/EX archive and get some VI documents.
+
+>From one of the INDEX files at the VI/EX archives around the world:
+
+Documentation on VI (main directory):
+
+ex.reference.Z      EX Reference Manual. UCB-dist. A Must.
+vi.apwh.ms.Z        VI Command & Function Reference. UCB-dist.
+vi.chars.Z          Apendix: character functions. UCB-dist. A Must.
+vi.intro.Z          Introduction on Display Editing with VI. UCB-dist. A Must.
+vi.reference.Z      VI reference. Version 7. A Must.
+vi.summary.Z        VI / EX Quick reference. UCB-dist.
+
+
+and from the macros/ directory:
+(Indeed a good place to look if you want to find things to put in your
+ $HOME/.exrc file)
+
+exrc.ach           - "The Super .exrc File" compiled by Anthony C Howe.
+exrc.brp           - A nice exrc file from Bill "Rock" Petro.
+generals           - Some general macros.
+generals.2         - More general macros.
+jl.ex              - Some 'beginer' macros.
+
+
+There are exstensive INDEX files both in the 'main' directory and in the
+macros/ directory. 
+
+At the moment there are 137 files in the archives dealing with everyting
+from novice introductory VI-courses to a full flegded EMACS emulator.
+
+
+The VI/EX archives can be found at:
+
+Europe:
+   Main site:     alf.uib.no (129.177.30.3)
+   Filearea:      pub/lpf/misc
+   Peak hours:    07.00 am GMT to 03.00 pm GMT 
+
+Japan:
+   Mirror site:   utsun.s.u-tokyo.ac.jp (133.11.11.11) 
+   Filearea:      misc/vi
+   Peak hours:    01.00 am GMT to 09.00 am GMT
+
+USA, Canada and Mexico: 
+   Mirror site:   cs.uwp.edu (131.210.1.4)
+   Filearea:      /pub/vi
+   Peak hours:    None.            
+
+Australia, NZ and the rest Down Under:
+   Main site:     monu6.cc.monash.edu.au (130.194.1.106)
+   Filearea:      /pub/Vi
+   Peak hours:    Not relevent
+
+
+For more information about the files at the archives and the archives 
+itself, please read one of the FAQ for Comp.Editors.
+If you are in a hurry you may fetch the INDEX file.
+
+If you need more information, you are welcome to mail Ove.R.Olsen@uib.no.
+
+\Ruben.
+
+
+
+
+-- 
+    Ove Ruben R Olsen, Professional VI user. EMAIL: Ove.R.Olsen@ubb.uib.no 
+  Maintaining the Largest  VI/EX-STUFF Archive in the WORLD (alf.uib.no) and 
+the Comp.Editors FAQ file. If you have information about editing, new editors,  
+  please get in touch with me. This does not apply to EMACS type of editors.
+
+
+From spencer@burst.Princeton.EDU (S. Spencer Sun)
+Subject: Re: .exrc
+Reply-To: spencer@phoenix.princeton.edu (S. Spencer Sun)
+Date: Tue, 9 Jun 1992 01:56:35 GMT
+Status: O
+
+In article <1992Jun8.033050.18825@ameris.ameritech.com>, smazu@ameris.ameritech.com (Steven P. Mazurek) writes:
+>helen@bruno.cs.colorado.edu (Helen Wong) writes:
+> [reformatted to take up less space --ss]
+>>If anyone out there can tell me where I can find a manual on .exrc?  man -k
+>>exrc or rc does not help much.  I would really like to set up my .exrc file
+>>( dont know how ).
+>
+>".exrc" is NOT a command, but an environment control file for the
+>"EX" command. If you look in the manual pages for "EX" you should
+>be able to construct your .exrc file. For example, if you wish
+>your tab-stops to be four instead of eight every time you use
+>"EX" or "VI", you'd place the line:
+>
+>		set ts=4
+>
+>in the .exrc file.
+
+For clarity's sake, just because something is not a command does not
+mean you won't find it in the man pages with an apropos.  Also, our man
+pages (although they may have diddled with them) for ex(1) and vi(1) do
+not mention how to set up a .exrc file at all.
+
+The printed version of the Sun manuals should have a booklet called
+"Editing Files" or some such which is where I found all that I wanted to
+know about .exrc.
+----------- The opinions expressed in this article are solely mine. -----------
+<Insert lame attempt at disclaimer humor>
+sss/PU'94 Dept of CS (spencer@phoenix.princeton.edu)/JvNCnet (spencer@jvnc.net)
+"The subtle, truly debilitating manifestations of a degenerate society are
+twofold.  First, the ruling class no longer cares for the proletariat.
+Second, the proletariat no longer cares."
+
+
+
+From hamjavar@carina.unm.edu (Farid Hamjavar)
+Subject: OK from VI, not from .exrc !!!
+Date: Fri, 18 Sep 92 19:58:21 GMT
+
+
+
+Hello Everyone :
+
+
+I have the following in my .exrc  ($home or any other directory) :
+
+
+ab _f @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+map s G  :r ~hamjavar/.sig 
+map v dwelp
+map - 
+set sm
+
+
+
+
+Strange thing is that none of these stuff in .exrc are recognized! They all
+work fine when I am in session with VI, but not from .exrc!
+
+
+
+ThankS
+Farid Hamjavar
+hamjavar@carina.unm.edu
+
+
+From martelli@cadlab.sublink.org (Alex Martelli)
+Subject: Re: vi options
+Date: 2 Oct 92 11:03:42 GMT
+
+vilva@madras.b23b.ingr.com (Vilva Natarajan) writes:
+	...
+:    From inside vi, a ":r!<cmd>" reads in the output of the
+:    shell command into the file. Is there a way to do this
+:    on the command line? I tried the -c option as follows
+:	
+:	vi -c ":r\!pwd" test
+:
+:    but the command output never shows up in the file.
+:    Any help would be appreciated.
+
+    vi +":r !pwd" test  
+
+will work IF file test already exists, but NOT if the file does
+not exist beforehand [as once again vi fails the test of least
+astonishment...:-(].  Use something like:
+
+    touch test;vi -c ":r !pwd" test
+
+to work in either case (the ! must be escaped only in csh and
+workalikes, not in ksh and its ilk, so I refuse to escape it!-).
+-- 
+Email: martelli@cadlab.sublink.org                   Phone: ++39 (51) 6130360
+CAD.LAB s.p.a., v. Ronzani 7/29, Casalecchio, Italia   Fax: ++39 (51) 6130294 
+
+
+From pckizer@tamsun.tamu.edu (Philip Kizer)
+Subject: Re: Need help with v -c option
+Date: 27 Jan 1993 22:43:50 -0600
+
+
+Once, westes@netcom.com (Will Estes) writes:
+>Also, while I'm here, can someone tell me how do you mark a line
+>in .exrc as a comment?
+
+
+The double quote character: '"'.  Like in this snippet from my .exrc:
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Insert nroff macro commands before the current para to do full justification.
+" Leaves cursor in replace mode to change number of columns.
+map \p j{wO.ad b.ll 80.pl 1kR
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Pipe the current document through ispell.
+" Current documant must already be named. Forces a write of the file.
+map \s :w!:!ispell %:e %
+
+
+-pc
+
+____________________________________________________________ Philip Kizer ___
+Texas A&M Unix Workstation Group ( 409 862-4120 )            pckizer@tamu.edu
+
+
+From hamjavar@hydra.unm.edu (Farid Hamjavar)
+Subject: vi's .exrc
+Date: 12 Mar 1993 11:31:06 -0600
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+From fuenf@aldebaran.cs.uni-sb.de (Stefan Fuenfrocken)
+hi,
+
+i'v got a problem with .exrc file: since vi looks for .exrc in $HOME and
+the local directory, my .exrc get red twice, when editing in $HOME giving me
+"Too much macro text", and leaving my macros in a very strange state :(
+
+Any way to prevent this?
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ 
+
+
+
+I had some problems with .exrc myself a while back ....
+
+Some kind soul suggested that I should get rid of anything related
+to vi's initialization  in  my .login (e.g. env var such as setenv EXINIT)
+
+
+Now I have only one .exrc  ~/.exrc and that's it.
+No matter where I am, this ~/.exrc will be used.
+
+The following , I have not done yet (there was no need) :
+You can localize/customize the setting that I just described by
+having local .exrc which I am sure vi will be looking for before
+looking at anything else.....
+
+
+Farid Hamjavar
+University of New Mexico
+
+
+From nancym@stein2.u.washington.edu (Nancy McGough)
+Subject: vi +/<regexp> <filename> from a shell script
+Date: 10 Jul 1993 18:56:49 GMT
+Reply-To: nancym@u.washington.edu (Nancy McGough)
+
+>From the command line I can run 
+
+vi +/<regexp> <filename> 
+
+and have vi open <filename> with the cursor 
+at the first occurrence of <regexp>.  But
+if I try to do this from within a shell 
+script it interprets +/<regexp> as a filename.
+Does anyone know how to run this from a 
+script file?
+
+Thanks much,
+Nancy
+
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: vi +/<regexp> <filename> from a shell script
+Date: 12 Jul 1993 21:56:49 +0200
+
+In <21n3dh$lqc@news.u.washington.edu> nancym@stein2.u.washington.edu (Nancy McGough) writes:
+
+ >From the command line I can run 
+
+ >vi +/<regexp> <filename> 
+
+ >and have vi open <filename> with the cursor 
+ >at the first occurrence of <regexp>.  But
+ >if I try to do this from within a shell 
+ >script it interprets +/<regexp> as a filename.
+ >Does anyone know how to run this from a 
+ >script file?
+
+Put single quotes around the +/<regexp>, e.g.
+
+	vi '+/^[0-9]*$'	blah
+
+Do this whenever the shell is trying to expand
+something that it shouldn't expand.
+
+HansM
+
+
+From nancym@stein2.u.washington.edu (Nancy McGough)
+Subject: Re: vi +/<regexp> <filename> from a shell script
+Date: 14 Jul 1993 01:34:23 GMT
+Reply-To: nancym@u.washington.edu (Nancy McGough)
+
+hansm@wsinti06.info.win.tue.nl (Hans Mulder) writes:
+>Put single quotes around the +/<regexp>, e.g.
+>
+>	vi '+/^[0-9]*$'	blah
+>
+>Do this whenever the shell is trying to expand
+>something that it shouldn't expand.
+
+Thanks to Hans and all the people who mailed me with 
+a solution.  Some people mailed and told me they
+couldn't reproduce the problem so, fyi, here is
+the exact command I was trying to run from a script:
+
+vi +/^sequence $HOME/.nn/init
+
+Anyone know why this works from the command line
+but not from a script -- is ^ being interpreted
+in some strange way?  
+
+Just curious,
+Nancy
+
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: vi +/<regexp> <filename> from a shell script
+Date: 14 Jul 1993 16:33:05 +0200
+
+In <21vnqv$i51@news.u.washington.edu> nancym@stein2.u.washington.edu (Nancy McGough) writes:
+
+>Anyone know why this works from the command line
+>but not from a script -- is ^ being interpreted
+>in some strange way?  
+
+I'd guess that you're typing your command lines to a C shell
+(or maybe a TC shell) and running your scripts in a Bourne shell.
+Did you get a message "sequence: not found" from your script?
+When you type "sequence" on the command line, do you get
+"sequence: Command not found." instead?
+
+If that's the case, you'll have lots of problems, as there are
+many, many differences.
+
+You might consider using the Korn SHell or the Bourne Again
+SHell as your interactive shell, if available on your system.
+
+In older versions of the Bourne shell ^ is a synonym for | .
+
+HansM
+
+
+From bcr@cernapo.cern.ch (Bill Riemers)
+Subject: Re: vi +/<regexp> <filename> from a shell script
+	<21vnqv$i51@news.u.washington.edu>
+Date: Thu, 15 Jul 1993 18:49:58 GMT
+
+
+>>>>> On 14 Jul 1993 01:34:23 GMT, nancym@stein2.u.washington.edu (Nancy McGough) said:
+	Nancy> Thanks to Hans and all the people who mailed me with 
+	Nancy> a solution.  Some people mailed and told me they
+	Nancy> couldn't reproduce the problem so, fyi, here is
+	Nancy> the exact command I was trying to run from a script:
+
+	Nancy> vi +/^sequence $HOME/.nn/init
+
+	Nancy> Anyone know why this works from the command line
+	Nancy> but not from a script -- is ^ being interpreted
+	Nancy> in some strange way?  
+
+Some shells use ^ for history subsitution.  In this case you either
+need to escape the ^ with \, or you need to change the history subsitution
+character.  Also your sequence will be interpreted by the shell unless you
+enclose it in quotes.  It could be that you are using tcsh in this case
+your expression ^sequence is being intrepreted as everything not matching
+your expression.
+
+                                    Bill
+  
+--
+"Yeti!  Saw them in the London Underground twenty years ago.  Ghosts!
+A headless woman used to walk through my bedroom at midnight.  Mermaids?
+Grandpa was rescued from the Marie Celeste by one.  Vampires?  I always
+wondered where my dad went to at night.  Telepathy?  Right no
