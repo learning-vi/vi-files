@@ -1,0 +1,41 @@
+From: wyle@inf.ethz.ch (Mitchell Wyle)
+Subject: Vi macros for C programming
+Keywords: vi, C, map
+Date: 16 Nov 89 14:27:30 GMT
+
+Our comp.sources.misc archive does not go back very far.  I thought I
+saw Brandon post some vi map macros for editing C code about two years
+ago.  Was I dreaming?
+
+Could someone please mail them to me?  We don't have ftp here.  I'd
+prefer them compressed uuencoded to preserve the special chars.
+
+Also, I am interested in vi map macro code which you find useful.  I'll
+summarize if I get any "me too's."  Here are some from from Kevin Minor
+(motcid!marble!minor):
+
+map ^A o{^[o}^[O                
+ab aoo {^[o}^[O 
+ab defoo ^[0i#define
+ab inoo ^[0i#include
+ab foo for () {^[o}^[k$2hi
+ab woo while () do {^[o}^[k$5hi
+ab ifoo if () {^[o}^[k$2hi
+ab eloo else {^[o}^[O   
+ab elifoo else if () {^[o}^[k$2hi
+ab mainoo main (argc,argv) ^[oint argc;^[ochar *argv;^[o{^[o}^[O
+
+Thanks,  -Mitch (uunet!ethz!wyle)
+
+[Die Proletarier haben nichts ausser ihre Ketten zu verlieren.  Sie
+haben eine Welt zu gewinnen.  Arbeiter aller Laender vereinigt euch!]
+
+The proletarians have nothing to lose but their chains.   They have a
+world to win.  Workers of all countries unite!  Karl Marx, Friedrich
+Engels _Das_Kommunist_Manifesto_, January 30, 1888.
+
+The workers ceased to be afraid of the bosses.  It's as if they suddenly
+threw off their chains. -- a Soviet journalist, about the Donruss coal
+strike, October 19, 1989.
+
+
