@@ -1,0 +1,29 @@
+" {\O}yvind Fl{\aa}m  s039@brems.ii.uib.no
+"
+"
+map!  la 
+map! ^e {\em}i
+map! ^b {\bf}i
+map! ^t {\tt}i
+map! ^v \verb++i
+"
+map! ]i \item	
+map! ]bi \begin{itemize}\item
+map! ]ei \end{itemize}
+map! ]be \begin{enumerate}\item
+map! ]ee \end{enumerate}
+map! ]bd \begin{description}\item[
+map! ]ed \end{description}
+map! ]bc \begin{center}
+map! ]ec \end{center}
+map! [be{\samepage\begin{eqnarray}
+map! [ee\end{eqnarray}}
+map! ]s1 \section{
+map! ]s2 \subsection{
+map! ]s3 \subsubsection{
+map! ]p1 \paragraph{
+map! ]p2 \subparagraph{
+map! ]f \frac{
+map! ]o \overline{
+map! ]u \underline{
+abbr latex \documentstyle[a4]{artikkel}\begin{document}\input{tittel}\end{document}kki 
