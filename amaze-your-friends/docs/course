@@ -1,0 +1,562 @@
+
+
+
+
+
+
+
+
+                                 Gregg Wonderly
+                             Mathematics Department
+                            Oklahoma State University
+
+                                   12-NOV-1987
+
+        1  Introduction
+
+
+        Editing text consists of only  a  few  basic  operations.   These
+        operations  can  be  summarized  by  generalizations  to  be just
+        insertions  and  deletions.   Most  text  editors  provide   text
+        insertion  capabilities  by allowing the user to just type.  Text
+        deletions are then accomplished by the use of certain  non-typing
+        keystrokes which are not allowed to insert text into the document
+        being edited.   These  types  of  editors  are  typically  called
+        modeless editors, because they apparently have no special mode to
+        distinguish between inserting and deleting text  (just  different
+        keystrokes).
+
+        VI is not one of these types of editors.  VI is a  moded  editor,
+        as  it  has  a specific mode for inserting text, and another mode
+        (which makes use of the normal typing keys) which allows deleting
+        text.  Like anything different, it can take some time to get used
+        to this type of editing.  There are  some  real  benefits  to  be
+        gained  from  it.   Some  are  quite significant, an others while
+        perhaps  not  terribly  important,  are  deeply  rooted  in   the
+        progression of computers and terminals.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                          1
+
+                                     Introduction
+
+
+                                           CONTENTS
+
+                1       Introduction . . . . . . . . . . . . . . . . . . . . 1
+                2       Learning the power of VI . . . . . . . . . . . . . . 3
+                2.1       Inserting Text . . . . . . . . . . . . . . . . . . 4
+                2.2       Deleting Copying and Changing  . . . . . . . . . . 5
+                3       Single Key Movements . . . . . . . . . . . . . . . . 5
+                3.1       Sample Use of the Single Key Movements . . . . . . 7
+                3.2       Common Keystroke Combinations  . . . . . . . . . . 8
+                3.3       Glossary . . . . . . . . . . . . . . . . . . . . . 9
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                          2
+
+                                     Introduction
+
+
+             There has never really  been  a  standard  terminal  with  a
+        standard  layout  of keys (other than the QWERTY keyboard).  This
+        presents a real problem when you have several different types  of
+        terminals  that  you  use.   VI  attempts to solve the problem of
+        dealing with different keyboards by making it unnecessary to  use
+        anything but the QWERTY keyboard.
+
+        This is advantageous when a particular site has  different  types
+        of  terminals.  This was the case at the University of California
+        at Berkeley when Bill Joy first wrote  VI.   Bill  was  presented
+        with  the  task  of  writing  a  full screen editor that would be
+        usable on all of  the  terminals  that  had  been  given  to  the
+        Computer  Science  folks there.  Out of this came two things, VI,
+        and more importantly, curses which  allows  terminal  independent
+        access to windowing capabilities.  Quite an accomplishment Bill!
+
+
+        2  Learning the power of VI
+
+
+        With that out of the way, lets move on to learning VI.  There are
+        two  modes  of  operation  that  the  VI editor can be in.  It is
+        either in command mode, or in insert mode.  When you first  enter
+        the  editor, it is in command mode.  One of the very first things
+        to learn about VI is, when you are not sure, bang on  the  escape
+        key a few times until you hear a beep.  The escape key is used to
+        change modes from text insert mode to editing  command  mode,  so
+        banging  on  it  a few times will always get you to command mode,
+        when you are in insert mode.
+
+        VI allows you to perform many tasks  with  very  few  keystrokes.
+        This is good for those who get tired of typing lots of keystrokes
+        to perform editing operations.  This can be  bad  for  those  who
+        make  lots  of  typing  mistakes.   I say "can be bad" because VI
+        allows you to recover from typing mistakes by undoing  operations
+        that  insert/delete  text  into/from a document.  Operations that
+        alter a document  are  explicit  in  VI.   There  is  a  definite
+        starting point, and a definite ending point.  This is what allows
+        VI to "know" how to undo what you last did.  As long as you  only
+        make one mistake at a time, you can undo that mistake by typing a
+        'u' (for undo) keystroke while in command mode.  This is  perhaps
+        the most appreciated feature of VI.  There is another key stroke,
+        'U', which also allows you to undo mistakes.  It  will  undo  all
+        changes  made  to  the current line, providing the cursor has not
+        left that line since the changes were made.
+
+
+                                          3
+                          Learning to use VI 
+                               Learning the power of VI
+
+
+        2.1  Inserting Text
+
+
+        VI  incorporates  several  methods  of  inserting  text  into   a
+        document.   There  are  three different methods you can use while
+        you are in command mode.  Typing an 'i'  (for  insert)  keystroke
+        allows  you  to  insert characters into the document at the point
+        that the cursor is positioned.  As mentioned  above,  typing  the
+        <ESC>  (or  escape) keystroke allows you to exit (or escape) from
+        insert mode.  Due to the many different places that a person  may
+        want to insert text at, there are keystrokes other than 'i', that
+        place the editor directly into  insert  mode,  after  moving  the
+        cursor.  These are outlined below.
+
+        Insert commands
+             'i'         Allows you to insert at the current cursor
+                         position.
+
+             'I'         Allows you to begin inserting at the beginning
+                         of the line, no matter where the cursor is
+                         positioned on the current line.
+
+        Open commands
+             'o'         Allows you to begin inserting on a new, empty
+                         line that is opened for you, below the current
+                         line.
+
+             'O'         Allows you to begin inserting on a new, empty
+                         line that is opened for you, above the current
+                         line.
+
+        Append commands
+             'a'         Allows you to begin inserting after the
+                         character (append) that the cursor is
+                         positioned on.
+
+             'A'         Allows you to begin inserting at the end of the
+                         current line, no matter where the cursor is
+                         positioned on that line.
+
+        There are other commands that place you in  insert  mode.   These
+        commands are used to perform substitutions of text.  That is, the
+        deletion of old text and the insertion of  new  text,  all  in  a
+        single  operation.   These  commands will be discussed further on
+        because the are actually macros of the change command.
+
+
+
+
+
+
+
+                                          4
+                          Learning to use VI 
+                               Learning the power of VI
+
+
+        2.2  Deleting Copying and Changing
+
+
+        The next three operations  we  will  discuss  will  be  deleting,
+        copying,  and  changing.   These three will be discussed together
+        because the methods of describing the text  that  these  commands
+        operate on is identical.
+
+        There are well over 30 different ways that you  can  tell  VI  to
+        move  the  cursor  to  a  new  location  in  the document.  These
+        movements can also be used to describe sections of  the  document
+        that you wish to perform operations on.  Typically, you will type
+        a single keystroke which describes the type of operation you wish
+        to perform, e.g.  'd' to delete.  There are several commands that
+        allow you to use a normal movement command to describe a  portion
+        of  the  document  you  are editing.  These commands are outlined
+        below.
+
+             'd'         Delete text.
+             'y'         Copy text (that is, yank it into a holding
+                         area for later use).
+             'c'         Change text from one thing to another, which
+                         you will type.
+             '!'         Filter text through a program.
+             '<'         Shift a region of text to the left.
+             '>'         Shift a region of text to the right.
+
+                                    Figure 1.
+
+        The first three are the basic text operations that allow  you  to
+        alter  a  document  by deleting, copying and changing the text in
+        it.  The last three are more advanced operations that are  useful
+        and handy to have.
+
+        3  Single Key Movements
+
+
+        Following one of the commands identifying  keystrokes  listed  in
+        Figure  1,  you  must  tell  VI  what  portion of the document to
+        perform the operation on.  This is done  by  typing  a  keystroke
+        that  indicates  a  movement command.  Most of these are outlined
+        below.  The more complicated movements will  be  described  later
+        on.  Each character is surrounded by single quotes.
+
+             '`'         Move the cursor to a previously marked location
+                         in the document.
+
+             '$'         Move the cursor to the end of the current line,
+                         or if a count is specified, to the end of the
+                         (n-1)th line below the current line.
+
+
+                                          5
+                          Learning to use VI 
+                                 Single Key Movements
+
+
+             '%'         Move the cursor to the matching parenthesis,
+                         bracket or brace.
+
+             '^'         Move the cursor to the beginning of the line.
+
+             '('         Move the cursor to the beginning of the previous
+                         sentence.
+
+             ')'         Move the cursor to the beginning of the next
+                         sentence.
+
+             '-'         Move the cursor to the first non-blank character
+                         on the previous line.
+
+             '+'         Move the cursor to the first non-blank character
+                         on the next line.
+
+             'w'         Move the cursor to the beginning of the next
+                         type of character, where types are alphanumeric,
+                         punctuation, and spaces (words of this type are
+                         commonly refered to as logical words).
+
+             'W'         Move the cursor to the next space separated
+                         word (words of this type are commonly refered
+                         to as physical words).
+
+             'e'         Move the cursor to the end of the current type
+                         of character.
+
+             'E'         Move the cursor to the end of non blank
+                         characters.
+
+             't'         Move the cursor to the the character preceeding
+                         that cooresponding to the next character typed,
+                         moving forward.
+
+             'T'         Same as 't' but movement is backward.
+
+             '[['        Move the cursor to the beginning of the current
+                         section, where a section is outlined later.
+
+             ']]'        Move the cursor to the beginning of the next
+                         section, where a section is outlined later.
+
+             '{'         Move the cursor to the beginning of the current
+                         paragraph.
+
+             '}'         Move the cursor to the beginning of the next
+                         paragraph.
+
+             'f'         Move the cursor to the next occurance (find
+
+                                          6
+                          Learning to use VI 
+                                 Single Key Movements
+
+
+                         character) of the character corresponding to
+                         the next keystroke typed, moving backwards.
+
+             'F'         Same as 'f' but movement is backwards.
+
+             'G'         Move the cursor to the line specified by the
+                         numeric keys typed preceeding this key, or to
+                         the end of the document if none were typed.
+
+             'h'         Move the cursor to the left one character.
+
+             'H'         Move the cursor to the top of the Screen, as
+                         opposed to the top of the document which may
+                         not be the same.
+
+             'j'         Move the cursor to the same column of the line
+                         below the current line.
+
+             'k'         Move the cursor to the same column of the line
+                         preceeding the current line.         
+
+             'l'         Move the cursor to the right one character.         
+
+             'L'         Move the cursor to the last line on the screen,
+                         as opposed to the last line of the document
+                         which may or may not be the same.
+
+             ';'         Repeat the last 't' or 'f' command, or the last
+                         'F' or 'T' command but in the forward direction.
+
+             '''         Move the cursor to the first non-space character
+                         of the line that the the indicated marker is set
+                         on.
+
+        You probably will not adopt the immediate use  of  all  of  these
+        movements,  but  it  is  possible to gain proficency in their use
+        only by using them.
+
+        3.1  Sample Use of the Single Key Movements
+
+
+        Perhaps some sample uses of these movements will make their use a
+        little more obvious.  Typically, a VI manual resolves to give the
+        reader a list of the most common keystroke combinations,  without
+        trying  to  describe  the  real  reasoning behind the keystrokes.
+        This is part of the reason that  VI  seems  so  foreign  to  some
+        people,   they   never  discover  the  relationship  of  all  the
+        keystrokes to one another.  However, since I  have  outlined  the
+        basic relationship of the keystrokes, I feel that I can provide a
+        similar chart without causing any confusion.   The  notation  <n>
+        means that you may type one or more of the keys, 0-9, to indicate
+
+                                          7
+                          Learning to use VI 
+                                 Single Key Movements
+
+
+        a repeat count that will  cause  the  movement  indicated  to  be
+        performed  the  indicated number of times.  e.g.  5dw will delete
+        five logical words, 35dd will delete thirty five lines.
+
+        3.2  Common Keystroke Combinations
+
+
+             <n>d$   Delete (including the current character),
+                     to the end of the (n-1)th line.
+             <n>d^   Delete (excluding the current character),
+                     to the beginning of the (n-1)th line.
+             <n>dE   Delete to the end of physical words
+                     (or TO the next space or tab character).
+             <n>de   Delete to the end of logical word.
+             <n>dd   Delete lines.
+             dG      Delete from the current line to the end
+                     of the document.
+             dH      Delete from the current line to the line
+                     shown at the top of the display, inclusive.
+             <n>dh   Delete n characters to the left of the
+                     cursor, 'X' is equivalent to this.
+             <n>dj   Delete the current line, and the n lines
+                     below it.
+             <n>dk   Delete the current line, and the n lines
+                     above it.
+             <n>dl   Delete n characters to the right of the
+                     cursor, including the one under it,
+                     'x' is equivalent to this.
+             <n>db   Delete back to the beginning of the
+                     nth previous logical word.
+             <n>dB   Delete back to the beginning of the
+                     nth previous physical word.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                          8
+             3.3  Glossary
+
+
+                  logical word    A word that is made up of characters
+                                  of a common class.  The classes are
+                                  alphabetic/numeric and '_',
+                                  punctuation, and space or tab.
+
+                  Physical word   A word that is made up of non-space
+                                  and non-tab characters.  Or put
+                                  another way, words made up of
+                                  printable characters.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                          9
+                                        INDEX
+
+
+
+        Deletion, 1                         Insertion, 1
+                                            Introduction, 1
+        Escape, 3
+         
+        Glossary, 9                         Undo, 3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                       Index-1
