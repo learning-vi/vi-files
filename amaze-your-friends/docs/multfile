@@ -1,0 +1,89 @@
+From: dave@questar.QUESTAR.MN.ORG (David Becker)
+Subject: Re: VI vs. EMACS
+Date: 7 Oct 87 22:52:52 GMT
+Reply-To: dave@questar.UUCP (David Becker)
+Summary: no need to start lots of vi's
+
+I know "how to" VI tips shouldn't become the main subject of this
+group but I've seen SO many complaints about 
+
+     not being able to edit several files in one VI session 
+ and not being able yank from one file and paste into another 
+ 
+I feel obligated straighten all those EMACS lovers out plus make 
+some peoples lives easier (like that guy who starts lots of VI jobs).
+
+If just knowing this is possible is enough for you, hit n
+
+
+Preliminary little help:
+ 
+ EXINIT is an environment variable to setup vi how you like it
+ for example this is mine:
+  
+setenv EXINIT 'set wm=10 ai aw|map g :map v |map Y y$'
+
+  ASIDE to the guy(or gal) who asked about changing bindings in VI:
+     Those map things above do it. I use g like the "start recording
+     macro in EMACS" command - ^X( I believe.
+
+
+On to the real business:
+
+   editing more than one file in VI type:
+      (without starting zillions of jobs)
+
+    :set aw   (I do this with EXINIT)
+    :n file_name    
+
+    now in your new file and you want to go back do
+    :n other_name
+
+    and you'll be at the same place in 'other_name'
+
+    another way to do this if you know what you'll be editing is
+    vi file1 file2 file3 ...
+    then when your done with file1, :n will move you to the next file
+
+
+To yank from one file and paste into another:
+
+    Before yanking or deleting the section to move designate a buffer
+    for the text to go into.  There are 26 buffers possible (a-z).
+    For example to delete a line into buffer a type:
+     "add
+     or to yank in it use "ayy
+
+     Normal deletes and yanks will not affect this buffer of course.
+
+     Now change files with the :n command as described above.
+     To paste your buffer into the new file type:
+     "ap
+     To append text to a buffer use its CAPITAL name:
+      to add a line to buffer a type "Ayy
+
+I know emacs has a ring of kill buffers, how VI does this:
+
+ "1p will put your last delete, "2p will put your second to last
+ delete, etc...
+ To search through the kill buffers start with "1p then hit . and
+ buffers 2 to 9 will be pasted in successively (but without deleting
+ what the previous buffers contributed to your file).
+
+
+On the VI vs EMACS war:
+ I had to use EMACS at my previous employer and before I learned about
+ the above stuff I was torn as to which i prefered.  EMACS took awfully
+ long to startup and had ugly control sequences but had those 
+ nifty macros and buffers while vi let you(or so I thought) edit only a 
+ file at a time w/o macros but used normal keys for commands.
+
+ FLAME: A novice at either editor should comment only on the learning
+ process for their editor not what their favorite editor can do
+ which that other one can't.
+-- 
+David Becker                   Disclaimer: Could anyone hold these opinions?
+dave@questar.MN.ORG                                      % cd ~ron_raygun; pwd
+Stamp out penguin lust -- just say NO                    /dev/null
+
+
