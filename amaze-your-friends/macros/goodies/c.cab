@@ -1,0 +1,44 @@
+" I did not write this stuff myself, but it was posted some time ago
+" to the net.  Sorry, I forgot who the author was.
+"
+" This set of mappings is a stand-alone c-mode, that isn't used in my
+" c-mode.  I've never used it, though it looks pretty neat.
+"
+set timeout
+map! #/ /**//*  /**/kA
+map! #in #include <>i
+map! #de #define 	/*  */0f a
+map! #un #undef
+map! #id #ifdef 
+map! #if #if ()i
+map! #el #else
+map! #en #endif
+map! au' auto ;i
+map! br' break;
+map! ca' case : /**/	break;k0f:i
+map! ch' char ;i
+map! co' continue;
+map! de' default: /**/	break;O
+map! do' double ;i
+map! dw' do{}while();kO	
+map! ei' else if (){}kk0f(a
+map! el' else{}O	
+map! en' enum {};hi
+map! ex' extern ;i
+map! fl' float ;i
+map! fo' for (; ; ){}kk0f(a
+map! go' goto ;i
+map! if' if (){}kk0f(a
+map! in' int ;i
+map! lo' long ;i
+map! ma' main(argc, argv, environ)int argc;char *argv[], *environ[];{}O	
+map! re' return ();hi
+map! rg' register ;i
+map! sc' static ;i
+map! sh' short ;i
+map! si' sizeof ()i
+map! st' struct {};kkA
+map! sw' switch (){	case : /**/	break;}kkkk0f(a
+map! ty' typedef ;i
+map! un' union{};O	
+map! us' unsigned ;i
