@@ -1,0 +1,174 @@
+" From: Bill.Petro@Eng.Sun.COM (Bill "Rock" Petro - SunOS Product Marketing)
+" Date: Sat, 18 Jan 1992 12:56:40 PST
+" Subject: Re: Not a regular request for vi-related files.
+" Status: OR
+" 
+" In comp.editors you write:
+" 
+" >This is a iregular request on EX/VI-related stuff for inclusion in the 
+" >VI-archives around the world.
+" 
+" >If you have stuff like tutorials, macros, tips, trics et.al about VI, 
+" >please mail it to buboo@alf.uib.no for inclusion in the VI-archives
+" 
+" My .exrc file, with interesting macros.  Some are commented out because
+" of vi memory limitations.  BTW, if you know of a way around this, let me
+" know:
+" 
+" 
+" 
+" @(#)Exrc 1.1 92/01/17 SSI, Bill 'Rock' Petro 
+se autoindent autoprint autowrite noignorecase nomesg noslowopen noterse nonumber nowrapscan report=1 redraw optimize shell=/bin/csh showmode wrapmargin=8 tabstop=8 sw=4
+"
+"       META MACROS, all begin with meta-key '\' ; more later in file
+"
+map 	 \
+map \w :w
+"
+" Laziness
+map ; :
+map g 1G
+map S :%s/
+map v ~
+"
+"	INSERT COMMENTS FROM MARK M TO DOT
+map @C :'m,. s/^/# /
+map \> :'m,. s/^/> /
+"
+"	INSERT TAB FROM MARK M TO DOT
+"map @. :'m,. s/^>/	/
+"
+"	REMOVE COMMENTS FROM MARK M TO DOT
+map @U :'m,. s/^# /  /
+"
+"	SURROUND WORD WITH QUOTES
+map @" bi"ea"
+"map @_ bi_ea_
+"map @* bi*ea*
+"
+"	SHIFT LINES FROM MARK M TO DOT
+map @> :'m,. >
+"
+"	SHIFT LINES LEFT FROM MARK M TO DOT
+map @< :'m,. <
+"
+"	COUNT LINES FROM MARK (M) TO DOT
+map @# mb'my'b
+"
+"	BACKUP FILE
+map @b :!bu %
+"
+"	SHOW REFERENCE CARD
+map @H :!less ~/vidir/vi.ref
+"
+"	SHOW .EXRC FILE
+map @h :!less ~/.exrc
+"
+"	FORMATTERS
+"	Split at 72 chars
+map  o $kJ$r 073l? s$xx0
+"	Split at 72 chars
+map  J77|Bhr
+"map  J77|BBf r
+map a o $kJ$r 073l? s$xx0
+""""map a 72|?[- ]aJ
+map  {!}fmt -c}j
+map @f mz!} fmt -c'z
+map @F !G fmt -c
+"map F !$ fmt -c
+""map f :s/$/ $/$r 74|? s$xx0
+map @j !} filler
+map = J078llF r
+"
+"	@g = FIND NEXT OCCURRENCE OF CURRENT WORD
+map @g yeopI/"kdd@k
+map @i :se noai
+map @I :se ai
+"
+"	F2 = SET NOAUTOINDENT
+"map [225z @i
+"map [225z @i
+map @s !} sort
+map s !} sort -r
+map  :w
+map Q :q!
+"
+"	SET MAP FOR CURRENT LINE
+map m "dyy:@d
+"
+"	REMOVE FORWARDING HEADER
+map g }d/Fromkd1GGd{1G
+"map h EEElD}j$pkJ0cWFromkd1G
+"
+"	SUBSTITUTE MY PATHNAME FOR USR
+map @R :s^usr/local^home/diskus3/rock^
+"
+map @d :s/speedway/diskus3
+map d :%s/speedway/diskus3/gc
+"
+"	SHIFT CASE DOWN
+map v DOp:s/.*/\L&/0Dj$pkdd
+"
+"	SWAP CASE
+"map V :s/\([a-z]*\)\([A-Z]*\)/\U\1\L\2/g
+"
+"	SHIFT CASE UP
+"map @u :s/\<[A-z]/\U&/g	
+map K ~w
+"
+"	Abbreviations
+"
+ab hte the
+ab nad and
+ab stype style
+"
+"	SUBSTITUTE DEL COMMAND FOR LIST OF FILES
+map @2 :%s:.*:& &:
+"map @x :so ~/.exrc-ispell:!ispell -x %:e!
+map @x :!ispell -x -N %:e!
+map @3 :so ~/.exrc-ispell
+"
+"	NN CC DUPLICATOR
+"map @c G?^Orig-To:ma}:'at-cWCc:
+"
+"	WORD COMPLETION (Komplete, Next, Previous).
+"map!  a.bmqi?\<2h"qdt.@qyw`qPbea dwbis"qdt.@q
+"
+"	CUT AND PASTE
+"ab wt w! /tmp/viX
+"ab rt r  /tmp/viX
+"
+"	SEARCH FOR EXACT
+map   /\<
+map!  \>
+"map *x :w!:!ispell %:e!
+map @r 0O....+....1....+....2....+....3....+....4....+....5....+....6....+....7....+....8
+"
+"	Enable cursor keys in insert mode
+"
+"map! [A ka
+"map! [B ja
+"map! [C lli
+"map! [D i
+"
+"	vi macros to fold and unfold text.
+"	by Eric Bowles <bowles@is.s.u-tokyo.ac.jp>
+"
+" Commands:
+"   :<address> vfold   - fold specified range of lines.
+"   [f                 - fold current C function.
+"   [u                 - unfold current line.
+"   [n                 - go to next folded line.
+"
+""map [f j[[j!/^}/-1~/bin/vfold
+""map [m !'m~/bin/vfold
+""map [p !}~/bin/vfold
+""map [u !!~/bin/vfold 
+""map [n /^$$FOLDED:-- /
+"
+map  mh?[A-Z][A-Z]l~`h
+map!  mh?[A-Z][A-Z]l~`ha
+map + 
+map Y y$
+
+
