@@ -1,0 +1,66 @@
+From Tom Christiansen <tchrist@convex.COM>
+Subject: Re: vi: how does one deal with characters like \331 ?
+Reply-To: tchrist@convex.COM (Tom Christiansen)
+Date: Thu, 16 Jul 1992 19:25:24 GMT
+              Corp. The opinions expressed are those of the user and
+              not necessarily those of CONVEX.
+
+>From the keyboard of gordon@osiris.cso.uiuc.edu (John Gordon):
+:In vi, how do you enter a character like \331 into a search pattern?
+
+Under most implementations, you don't, since most versions can't
+edit 8-bit files anyway.
+
+--tom
+-- 
+    Tom Christiansen      tchrist@convex.com      convex!tchrist
+
+
+Emacs is a fine operating system, but I still prefer UNIX. -me
+
+
+From gordon@osiris.cso.uiuc.edu (John Gordon)
+Subject: vi: how does one deal with characters like \331 ?
+Date: 16 Jul 92 18:44:07 GMT
+
+
+	In vi, how do you enter a character like \331 into a search
+pattern?
+
+---
+John Gordon                        My incredibly witty saying has been 
+gordon@osiris.cso.uiuc.edu         Politically Corrected into oblivion.
+
+
+From wyle@synopsys.com (Mitch Wyle)
+Subject: Re: vi: how does one deal with characters like \331 ?
+Date: 20 Jul 92 17:11:52 GMT
+
+In <1992Jul16.192524.29230@news.eng.convex.com> 
+tchrist@convex.COM (Tom Christiansen) writes:
+
+>:In vi, how do you enter a character like \331 into a search pattern?
+>
+>Under most implementations, you don't, since most versions can't
+>edit 8-bit files anyway.
+
+>    Tom Christiansen      tchrist@convex.com      convex!tchrist
+
+:verssion
+Version SVR3.1
+(in sun-os) does edit 8-bit chars, 
+
+Mitch Wyle                     (415) 694 4076 (work)
+Synopsys Inc                   (408) 255 1848 (home)
+700 E. Middlefield Rd.         (415) 965 8637 (fax)
+Mountain View, CA  94043-4033  (800) 843 5669 x4076 (VoiceMail)
+
+
+From gordon@osiris (John Gordon)
+Subject: how to deal with octal characters in vi?
+Date: Sat, 11 Jul 1992 04:45:30 GMT
+
+
+	Recently, I had cause to edit a file using vi, and the file had a
+few upper-ASCII characters in it.  They show up as octal characters, i.e.
+\056, \310
