@@ -1,0 +1,215 @@
+###############################################################################
+#                                                              Version: 2.00
+#               VI ON-LINE HELP SYSTEM BASIC-VERSION
+# 
+#      Copyright (C) by Ove Ruben R Olsen (rubenro@viggo.blh.no)
+#                       All rights reserved
+# 
+# The author is NOT responsible for any damage this package may make.
+# See the file 'olh' for more information about this system.
+#
+# TO START THE ON-LINE HELP:
+#
+#   Type 'g' to go. After a little while type 'q' to exit back to your
+#   original file. Type ^H to get help while editing.
+#
+#
+# This help is aimed a starters and those who use the editor occasionaly.
+# Some key's have been remapped.
+# When you wan't to be a vi GURU, switch to the ADVANCED HELP.
+#
+###############################################################################
+
+
+
+
+
+
+
+--> 29
+###############################################################################
+# VI ON-LINE HELP SYSTEM (BASIC)   - Moving around.
+#
+#                    LEFT    RIGHT     #                             UP   DOWN
+#                                      #
+#  Character            h        l     #   Line                       k      j 
+#  Find character <c>   F<c>     f<c>  #   Beginning of line          -      +
+#  Till after char.     T<c>     t<c>  #   To line from TOP/BOTTOM    H      L 
+#  Begining of word     b        w     #   Screen                    ^B     ^F
+#  Begining of WORD     B        W     #    
+#  End of word                   e     #   Mark a place               m<a-z>   
+#  End of WORD                   E     #   Move to a marked place     '<a-z>
+#  Sentence             (        )     #   Find matching brackets     %
+#  Paragraph            {        }     #   Goto line n                nG
+#  Whole Line           0        $     #
+#  Repeat last fFtT     ,        ;     #   See also: Finding text. ^F
+#                                      #
+###############################################################################
+
+--> 49
+###############################################################################
+# VI ON-LINE HELP SYSTEM (BASIC)  - Entering text.
+#
+#  End all command bellow with <esc>                            CHANGE TO THE  
+#                                                               BEGINING   END
+#                                      #                         
+#  Append after cursor             a   #  Change word                 cb    cw
+#  Append at end of line           A   #  Change line                 c0    c$ 
+#  Insert before cursor            i   #  Chane sentence              c(    c)
+#  Insert at beginning of line     I   #  Change paragraph            c{    c}
+#  Open a new line below line      o   #  
+#  Open a new line above line      O   #   
+#  Put a buffer bellow line        p   #  IN COMMAND MODE: 
+#  Put a buffer above line         P   #     Join lines               J  
+#  Replace characters              r   #     Change case              ~
+#  Overite the rest of line        R   #     Repeat last command      .
+#  Substitue characters            s   #    
+#  Substitue the rest of line      S   # 
+###############################################################################
+--> 69
+###############################################################################
+# VI ON-LINE HELP SYSTEM (BASIC)   - Deleting text.
+#                                                               DELETE TO THE
+#                                                               BEGINING   END
+#
+#   Delete char after cursor     x     #   Delete word                db    dw
+#   Delete char before cursor    X     #   Delete line                d0    d$
+#   Delete lines                 dd    #   Delete sentence            d(    d)
+#   Delete to rest of line       D     #   Delete paragrapth          d{    d}
+#   Repeat last command          .     #  
+#                                      #
+###############################################################################
+
+
+
+
+
+
+
+--> 89
+###############################################################################
+# VI ON-LINE HELP SYSTEM (BASIC)   - Finding and Replaceing text.
+#
+#   Search a string forwards     /string
+#   Search a string backwards    ?string
+#   Repeat last /,?              n
+#   Opposite to n                N
+#   
+#   Search and substitue:        :x,y s/SEARCH/REPLACE/g
+#      
+#      Where x and y are fileadresses, and the string SEARCH will be
+#      replaced with REPLACE.
+#
+#      EXAMPLE:  replace all 'Moveing' with 'Moving' in the current file:
+#                :1,$ s/Moveing/Moving
+#
+###############################################################################
+
+
+--> 109
+###############################################################################
+# VI ON-LINE HELP SYSTEM (BASIC)   - Yanking text.
+#
+#                        YANK TO THE
+#                       BEGINING  END
+#
+#  Yank word                  yb   ye  #   Mark cursor possition        m<a-z>
+#  Yank line                  y0   y$  #   Find marked possition        '<a-z>
+#  Yank sentence              y(   y)  #   Yank lines                   yy
+#  Yank paragraph             y{   y}  #   Yank current line            Y
+#                                      #   Put yanked text              p 
+#
+###############################################################################
+
+
+
+  
+
+
+--> 129
+###############################################################################
+# VI ON-LINE HELP SYSTEM (BASIC)   - Undoing changes.
+#
+#   Undo latest change                u
+#   Undo all changes on a line        U
+#   Restart editing current file      :e!
+#   Quit vi without writing           :q!
+#
+###############################################################################
+
+
+
+
+
+
+
+
+
+
+--> 149
+###############################################################################
+# VI ON-LINE HELP SYSTEM (BASIC)   - File commands.   
+#
+#  Quit vi unless change         :q      #  Next file                    :n
+#  Quit vi without saving        :q!     #  Rewind filelist              :rew
+#  Write file                    :w      #  Rewind filelist w/o saving   :rew!
+#  Write to file <fn>            :w <fn> #
+#  Overwrite file <fn>           :w <fn> # 
+#  Write and quit                :wq     # 
+#  Stronger write and quit       :wq!    #
+#  Same as :wq  and  wq!         :x  :x! #
+#  Edit alternate file           :e <fn> # 
+#                                        #
+###############################################################################
+
+
+
+
+
+--> 169
+###############################################################################
+# VI ON-LINE HELP SYSTEM (BASIC)   - Miscanselous info.
+#
+#   Some of these commands may not work when you have this help system.
+#
+#  Save and quit vi (:wq!)        ZZ   #   Scroll downwards          ^D
+#  Display status line (:f)       ^G   #   Scroll upwards            ^U
+#  Refresh screen                 ^L   #   Start a shell             :sh
+#  Expose more lines at bottom    ^E   #   Pass file-adresses to a 
+#  Expose more lines at top       ^Y   #   external program <prg>    :x,y!<prg>
+#  Switch to ex mode in vi         Q   #   Import output from <prg>  !!<prg>
+#  Switch to vi mode in ex       :vi   #
+#
+###############################################################################
+
+
+
+
+
+--> 189
+###############################################################################
+#                                                              Version: 2.00
+#                VI ON-LINE HELP SYSTEM BASIC-VERSION
+# 
+#      Copyright (C) by Ove Ruben R Olsen (rubenro@viggo.blh.no)
+# 
+# The author is NOT responsible for any damage this package may make.
+# 
+# USAGE:
+#   To get help press the key for desired help. Eg. CTRL-H will give you
+#   this helpscreen. To quit the man-page press q.
+# 
+# HELP-PAGES: 
+#
+#  ^H - This page.                 ^R - Remebering text (Yanking).
+#  ^A - Moving around.             ^T - Finding and replace text.
+#  ^E - Entering text.             ^O - Miscanselous info.
+#  ^N - Deleting text.             ^X - File commands. 
+#  ^U - Undoing changes. 
+# 
+#   Most vee-eye commands may take a numeric argument prefixed. Eg you may
+#   put a postivie interger in from of it.
+##############################################################################
+
+
+
