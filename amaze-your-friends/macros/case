@@ -1,0 +1,48 @@
+" From: bdewbank@ihlpb.ATT.COM (Ewbank)
+" Subject: re: Case Reversing Macros in vi
+" Date: 9 Sep 88 19:07:52 GMT
+" 
+" Hi Again --
+" 
+" Several people have provided corrections to my case conversion macro.  In order
+" that a correct version be available, I am reposting with the corrected version
+" of the macros.  They are:
+" ----------------------------------------
+" map	^C	: ^W -- reverse the case of the current word
+" map	^C	: ^T -- reverse  the case of the current line.
+" map	^C	: a more elegant definition for ^T is
+" map	^C	: 	!!tr '[a-z][A-Z]' '[A-Z][a-z]'^M
+" map	^C	: but this trashes the screen display sometimes
+map  0y$Pa-:s/./\~/g"0zy$dd@z
+map  lBiEa-I ^d0-3J
+" ----------------------------------------
+" Before :so'ing the above, convert the following characters:
+"
+" ######
+" #
+" # This have been done by the ARCHIVE MAINTAINER
+" #
+" ###### 
+"         ^ C	==>  <cntl> C	[or these lines can be discarded]
+"         ^ M	==>  <cntl> M
+"         ^ T	==>  <cntl> T
+"         ^ W	==>  <cntl> W
+"         ^ [	==>  <esc>
+" NOTE: ^d **really** is a carat (^) followed by a lowercase d.
+" 
+" The ^W macro will reverse the case of the current word (the word that contains
+" the cursor).  The ^T macro will reverse the case of the current line.
+" 
+" Thanks to all of the people who sent me suggestions and bug reports.  I hope
+" that these two macros work better.
+" 
+" The alternate definition of the ^T macro [using tr(1)] causes vi to get
+" confused when the operation is done in the first line of a file that is less
+" than about 20 lines long.  The contents of the file is correctly translated,
+" but the screen is corrupted with duplicate copies of the last few lines of the
+" file.
+" 
+" A detailed rundown of the operations of the macros is available on request.
+" -- 
+" Bryan Ewbank, AT&T Bell Labs, bdewbank@ihlpb.ATT.COM
+" === the opinions included herein are mine, not my employer's ===
