@@ -1,0 +1,226 @@
+From david@cats.ucsc.edu (David Wright)
+Subject: Re: Transferring lines between files in VI
+Date: 8 Aug 92 03:56:57 GMT
+
+
+In article <1683CE217.S947460@UMSLVMA.UMSL.EDU> S947460@UMSLVMA.UMSL.EDU writes:
+|How can I transfer a few lines of text from one file to another
+|using VI ?
+|I tried yy , :e another file and then p, but it seems that
+|yank/paste buffer is not preserved when I do this.
+
+This is an easy one. 
+
+If you have set number on, you can give the command:
+
+:4,54 w>> otherfile
+
+
+A more intuitive way is to yank into a named register. This will be 
+preserved when you 
+
+:e otherfile
+
+you can put it when you get to that file.
+
+I use a macro that puts cut or pasted text into the register a, with the
+command [ (Cut) or ] (delete). I then :e otherfile and use  to put it:
+
+map  "ap
+map [ "ay'a 
+map ] "ad'a
+-- 
+   |^^^^^^|      _______________________________________________________
+   |      |      |"There is nothing in the marginal conditions that    | 
+   |      |      | distinguish a mountain from a mole hill"            |
+   | (o)(o)      O         Kenneth Boulding                            | 
+   @      _)    o|_____________________________________________________|  
+    |  ____\ o o
+    |     /   
+   /     \                              All comments  are mine---(David Wright) 
+
+
+From hc05@rexago8.uucp (Beirne Konarski)
+Subject: Re: Transferring lines between files in VI
+Date: Sat, 8 Aug 1992 12:32:36 GMT
+
+S947460@UMSLVMA.UMSL.EDU writes:
+
+>How can I transfer a few lines of text from one file to another
+>using VI ?
+>I tried yy , :e another file and then p, but it seems that
+>yank/paste buffer is not preserved when I do this.
+
+Try
+
+"ayy
+:e other-file
+"ap
+
+The buffer holding the last action is cleared when a file is changed, but named
+buffers are not.
+-- 
+-------------------------------------------------------------------------------
+Beirne Konarski			| Reading maketh a full man, conference a
+...uunet!rexago8!hc05		| ready man, and writing an exact man.
+hc05%rexago8@uunet		|	-- Francis Bacon
+
+
+From S947460@UMSLVMA.UMSL.EDU
+Subject: Transferring lines between files in VI
+Date: 7 Aug 92 21:04:38 GMT
+
+How can I transfer a few lines of text from one file to another
+using VI ?
+I tried yy , :e another file and then p, but it seems that
+yank/paste buffer is not preserved when I do this.
+
+
+From wyle@synopsys.com (Mitch Wyle)
+Subject: Re: Transferring lines between files in VI
+Date: 10 Aug 92 21:14:49 GMT
+
+
+If you know that you want to copy all lines between parenthesis
+or braces or brackets, you don't have to count lines; you
+can use the % match command.
+
+
+>Yanked text is not accessible across the files. But if you yank in the 
+>named registers,  you can use them across the files.
+>
+>try,
+>
+>"a10yy      : "a for using named register a, you can use a thr z registers,
+>            : and say you want to yank 10 lines,
+>
+
+"ay%
+
+to grab the text.
+
+
+If the entity is a paragraph, then
+
+"ay}
+
+will yank to the end of the paragraph boundary.
+
+It is almost never necessary to count lines.  Getting in the habit of moving
+and yanking using objects like sections, sentences, next close-parenthesis
+etc. is useful.
+
+
+>then goto the other file by 
+>
+>:e other_file
+>
+>and
+>put the yanked contents before a current line as
+>
+>"aP
+>
+>hope it helps,
+>
+>nitin
+
+>Nitin Kaulavkar, <nitin@cse.iitb.ernet.in>				
+>Dept of Computer Science & Engg,IIT, Bombay 400 076.				
+
+
+Mitch Wyle                     (415) 694 4076 (work)
+Synopsys Inc                   (408) 263 3063 (home)
+700 E. Middlefield Rd.         (415) 965 8637 (fax)
+Mountain View, CA  94043-4033  (800) 843 5669 x4076 (voice)
+wyle@synopsys.com              (415) 807 6632 (pager)
+
+
+From david@cats.ucsc.edu (David Wright)
+Subject: Re: Transferring lines between files in VI
+Date: 8 Aug 92 03:56:57 GMT
+
+
+In article <1683CE217.S947460@UMSLVMA.UMSL.EDU> S947460@UMSLVMA.UMSL.EDU writes:
+|How can I transfer a few lines of text from one file to another
+|using VI ?
+|I tried yy , :e another file and then p, but it seems that
+|yank/paste buffer is not preserved when I do this.
+
+This is an easy one. 
+
+If you have set number on, you can give the command:
+
+:4,54 w>> otherfile
+
+
+A more intuitive way is to yank into a named register. This will be 
+preserved when you 
+
+:e otherfile
+
+you can put it when you get to that file.
+
+I use a macro that puts cut or pasted text into the register a, with the
+command [ (Cut) or ] (delete). I then :e otherfile and use  to put it:
+
+map  "ap
+map [ "ay'a 
+map ] "ad'a
+-- 
+   |^^^^^^|      _______________________________________________________
+   |      |      |"There is nothing in the marginal conditions that    | 
+   |      |      | distinguish a mountain from a mole hill"            |
+   | (o)(o)      O         Kenneth Boulding                            | 
+   @      _)    o|_____________________________________________________|  
+    |  ____\ o o
+    |     /   
+   /     \                              All comments  are mine---(David Wright) 
+
+
+From nitin@kailash.arjun (Nitin Kaulavkar)
+Subject: Re: Transferring lines between files in VI
+Date: Sun, 9 Aug 1992 09:37:59 GMT
+
+In article <1683CE217.S947460@UMSLVMA.UMSL.EDU> S947460@UMSLVMA.UMSL.EDU writes:
+
+   From: S947460@UMSLVMA.UMSL.EDU
+   Newsgroups: comp.editors
+   Date: 7 Aug 92 21:04:38 GMT
+   Sender: root@parsifal.umkc.edu (Parsifal Administration)
+   Organization: UM ST. LOUIS
+   Lines: 4
+
+   How can I transfer a few lines of text from one file to another
+   using VI ?
+   I tried yy , :e another file and then p, but it seems that
+   yank/paste buffer is not preserved when I do this.
+
+
+Yanked text is not accessible across the files. But if you yank in the 
+named registers,  you can use them across the files.
+
+try,
+
+"a10yy      : "a for using named register a, you can use a thr z registers,
+            : and say you want to yank 10 lines,
+
+then goto the other file by 
+
+:e other_file
+
+and
+put the yanked contents before a current line as
+
+"aP
+
+For more details, read about the named registers. You can do a lot of 
+intersting stuff with them
+
+hope it helps,
+
+nitin
+
+
+--
+Nitin Kaulavkar, <nitin@cse.iitb.ernet.in>				
+Dept of Computer Scien
