@@ -1,0 +1,108 @@
+#!/bin/sh
+#
+# $Id: remark,v 1.9 1991/09/28 00:39:06 vogel Exp $
+#
+# NAME:
+#	remark
+#
+# SYNOPSIS:
+#	remark [files]
+#
+# DESCRIPTION:
+#	"remark" sets up VI to edit a diary or log file.  The file edited
+#	by default is "README" in the current directory.
+#
+#	The following VI settings are used:
+#
+#		autoindent
+#		autowrite
+#		edcompatible
+#		noremap
+#		redraw
+#		timeout
+#		writeany
+#
+#	The wrap margin is set to 2, and the default shell is /bin/sh
+#	for speed.
+#
+#	The following keys are mapped:
+#	
+#	` (grave) -------->	D (delete to end of line)
+#	; (semicolon)		>> (indent one tab space right)
+#	= (equals)		<< (indent one tab space left)
+#	, (comma)		turns line numbering off
+#	. (period)		turns line numbering on (you may want to
+#					change this)
+#	g			Control-Z (suspend)
+#	q			z. (puts current line in middle of screen)
+#
+#	The 'E' key is mapped to read in a file which contains a ruler
+#	that looks something like this:
+#
+#	T	T	T	T	T	T	T	T
+#|...*....1....*....2....*....3....*....4....*....5....*....6....*....7....*...
+#
+#	The 'v' key is mapped to create a new time-stamped entry in the
+#	diary or log file.  This entry contains the current date, the current
+#	time, and the current username (taken from the USER environment
+#	variable).  Two blank lines are inserted above the entry, and one
+#	blank line is inserted below it.
+#
+#	The phrase ti' ("ti" followed by a single quote) is replaced while
+#	in insert mode; it will be replaced by the current system time.
+#
+# OPTIONS:
+#	None
+#
+# AUTHOR:
+#	Karl Vogel
+# 
+# BUGS:
+#	None noticed yet.
+#
+# HISTORY:
+#	$Log: remark,v $
+# Revision 1.9  1991/09/28  00:39:06  vogel
+# 1.  Inserted a modern comment header.
+# 2.  Tightened things up a bit.
+#
+#
+
+PATH=/usr/ucb:/bin:/usr/bin:/usr/local
+export PATH
+
+case "$#"
+in
+	0)	FILE=README ;;
+	*)	FILE=$1 ;;
+esac
+
+EXINIT="set edcompatible\
+| set autoindent\
+| set autowrite\
+| set noremap\
+| set redraw\
+| set timeout\
+| set wm=2\
+| set writeany\
+| set shell=/bin/sh\
+| map \`    D\
+| map ;	    >>\
+| map =	    <<\
+| map ,	    :set nonumber\
+| map .	    :set number\
+| map g	    \
+| map E	    :r /d/cdc/vogel/etc/help/vi.scan\
+| map q	    z.\
+| map v	    ok:r!echo \`att date\` \$USEROjj\
+| map!  ti' :r!att datekJ28la\
+"
+export EXINIT
+
+if [ ! -r "$FILE" ]
+then
+	echo `att date` $USER		>	$FILE
+	echo " "			>>	$FILE
+fi
+
+exec /usr/ucb/vi + $FILE
