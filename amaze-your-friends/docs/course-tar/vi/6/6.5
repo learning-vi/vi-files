@@ -1,0 +1,36 @@
+
+
+
+
+
+
+
+
+
+
+
+			Shell Escapes
+
+
+
+
+
+
+
+
+
+
+		o  :sh
+
+		o  :!sh
+
+		o  :1,5!fmt
+
+		Both ":sh" and ":!sh" will let you escape to the
+		command processor.  When the shell is exited, control
+		passes back to vi.  The form ":1,5!program" will
+		execute a program with lines 1 through 5 being used as
+		the standard input for the program.  The output of the
+		program will replace lines 1 through 5 in the file.
+
+
