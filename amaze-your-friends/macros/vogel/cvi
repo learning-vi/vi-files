@@ -1,0 +1,99 @@
+#!/bin/sh
+#
+# $Id: cvi,v 1.10 1991/10/07 21:03:10 vogel Exp $
+#
+# NAME:
+#	cvi
+#
+# SYNOPSIS:
+#	cvi [VI options] [file ...]
+#
+# DESCRIPTION:
+#	"cvi" sets up some macros to assist with C programming with VI.
+#
+# OPTIONS:
+#	Accepts any legitimate VI options and/or arguments.
+#
+# AUTHOR:
+#	Originally printed in UnixWorld by David Brin (I think)
+#	Modified by Karl Vogel
+# 
+# BUGS:
+#       Note for Televideo terminal users:  the control sequence
+#       "<escape>o" will shut off your screen, so in this shell
+#       script the sequence has been replaced with "<escape>ho".
+#
+# HISTORY:
+#	$Log: cvi,v $
+# Revision 1.10  1991/10/07  21:03:10  vogel
+# 1.  Modified authorship.
+#
+# Revision 1.9  1991/10/07  20:57:52  vogel
+# 1.  Reformatted comments.
+# 2.  Added redraw setting.
+#
+#
+ 
+EXINIT="set autowrite\
+| set autoindent\
+| set edcompatible\
+| set noremap\
+| set redraw\
+| set timeout\
+| set wm=2\
+| set writeany\
+| set shell=/bin/sh\
+| map \`    D\
+| map ;     >>\
+| map =     <<\
+| map ,     :set nonumber\
+| map .     :set number\
+| map [     oi/* *	*/kkA\
+| map g     \
+| map E     :r /d/cdc/vogel/etc/help/vi.scan\
+| map V     I/*	A	*/\
+| map K     ^xxx\$hhxxx\
+| map q     z.\
+| map v     :r!mkrcsh %dddd\
+| map! ''   Ai *	\
+| map! ['   i/* *	*/kA\
+| map! #in  #include	<>i\
+| map! #st  #include	<stdio.h>\
+| map! #ct  #include	<ctype.h>\
+| map! #de  #define		\
+| map! F*   FILE	*	\
+| map! au'  auto	\
+| map! br'  break;\
+| map! ca'  case :i\
+| map! ch'  char	\
+| map! co'  continue;\
+| map! de'  default:\
+| map! do'  double	\
+| map! dw'  do{}while ();kO	\
+| map! ei'  else if (){}kk\$i\
+| map! el'  else{}O	\
+| map! em'  ErrorMsg (__FILE__, __LINE__, \
+| map! ex'  extern	\
+| map! fl'  float	\
+| map! fo'  for (){}kk\$i\
+| map! go'  goto ;i\
+| map! if'  if (){}kk\$i\
+| map! in'  int	\
+| map! lo'  long	\
+| map! ma'  main		(argc, argv)int		argc;char	**	argv;{}O\
+| map! re'  return ();hi\
+| map! rg'  register	\
+| map! sc'  static	\
+| map! sh'  short	\
+| map! si'  sizeof ()i\
+| map! st'  struct	{};kkA\
+| map! sw'  switch (){}kk\$i\
+| map! ty'  typedef	\
+| map! un'  union{}O	\
+| map! us'  unsigned	\
+| map! wh'  while (){}kk\$i\
+"
+
+PS1="(sh-vi) "
+export EXINIT PS1
+exec vi $*
