@@ -1,0 +1,72 @@
+Article 439 of comp.bugs.4bsd:
+Path: chemabs!osu-cis!cbosgd!ihnp4!homxb!whuts!mtune!rutgers!husc6!ut-sally!ut-ngp!clyde
+From: clyde@ut-ngp.UUCP (Head UNIX Hacquer)
+Newsgroups: comp.bugs.4bsd
+Subject: Bug in 4.{2,3}BSD 'vi'
+Message-ID: <6329@ut-ngp.UUCP>
+Date: 21 Sep 87 21:01:52 GMT
+Organization: Moose & Squirrel Software
+Lines: 59
+Keywords: Funny bits and '!' escapes with '%'
+
+Index:	/usr/src/ucb/ex/ex_unix.c 4.3BSD
+
+Description:
+	Running 'ex' on Encore UMAX 4.2, the '%' and '#' constructs
+	fail in '!' escapes.
+
+	The problem is that when a '%' or '#' is expanded, the 'QUOTE'
+	attribute (the 0x80 bit) is set in each character for
+	pretty-printing purposes.  This string (with high bits on for most
+	characters) is passed to the shell unchanged and havoc ensuses.
+
+	This does not fail on 4.2 or 4.3 (or ports) because the kernel
+	strips out the 0x80 bit when doing pathname tranlation in namei().
+
+	The UMAX file system code is NOT a direct port of the 4.2
+	code, having the 0x80 bit set causes an error.  In fact, the shell
+	does some other strangeness with this string, so it never
+	reaches the kernel.
+
+Repeat-By:
+	Edit a file with 'ex' under UMAX 4.2 and do ":!ls -l %' - something
+	will go wrong.
+Fix:
+	One fix would be to change the kernel, but my sensibilities
+	say that UMAX is doing the right thing in rejecting path names with
+	high bits set, and that 'ex' is doing the wrong thing by passing them.
+
+	So here is my fix to 'ex' to remove the QUOTE bit from the unix
+	command buffer.
+
+*** ex_unix.r.1.0.c	Mon Sep 21 14:13:04 1987
+--- ex_unix.c	Mon Sep 21 12:01:04 1987
+***************
+*** 122,127
+  			putnl();
+  		flush();
+  	}
+  }
+  
+  /*
+
+--- 122,133 -----
+  			putnl();
+  		flush();
+  	}
++ 	/*
++ 	 * Remove QUOTE bit from uxb - works fine for printing,
++ 	 * works lousy for everybody else
++ 	 */
++ 	for (up = uxb; *up; up++)
++ 		*up = *up & ~QUOTE;
+  }
+  
+  /*
+-- 
+Shouter-To-Dead-Parrots @ Univ. of Texas Computation Center; Austin, Texas  
+	clyde@ngp.utexas.edu; ...!ut-sally!ut-ngp!clyde
+"It's a sort of a threat, you see.  I've never been very good at them
+myself, but I've told they can be very effective."
+
+
