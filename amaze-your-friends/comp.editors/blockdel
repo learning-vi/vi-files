@@ -1,0 +1,63 @@
+From jafo@miranda.accum.com (Sean Reifschneider)
+Subject: Re: vi - deleting a block of text
+Date: Sat, 29 May 1993 00:50:39 GMT
+
+In article <1993May28.033037.18425@trl.oz.au> soh@tmp_ip_003.trl.OZ.AU (Soh Kam Hung) writes:
+>mimit@benji.Eng.Sun.COM (Mimi Tam) writes:
+>>What is the easiest way in vi to delete a block of text without knowing
+>>the line numbers and without knowing how many lines are in the block?
+>
+>Note: <X> is the name of the mark, a letter in a-z.
+
+That's what I usually do.  The other option of course is if you're using elvis,
+you can go to the place you want to start the block, type 'v', and it does
+reverse marking.  You can then move around using the movement keys and type
+a command at the end of the block.  I prefer ma, d'a myself.
+
+Sean
+-- 
+"Love is a lot like war...  Easy to start but hard to finish."
+Sean Reifschneider, Supreme hack
+jafo@accum.com
+
+
+
+
+From mimit@benji.Eng.Sun.COM (Mimi Tam)
+Subject: vi - deleting a block of text
+Date: 27 May 1993 20:25:59 GMT
+Reply-To: mimit@benji.Eng.Sun.COM
+
+
+What is the easiest way in vi to delete a block of text without knowing
+the line numbers and without knowing how many lines are in the block?
+
+Thanks.
+
+-Mimi Tam-
+
+
+From soh@tmp_ip_003.trl.OZ.AU (Soh Kam Hung)
+Subject: Re: vi - deleting a block of text
+Date: Fri, 28 May 1993 03:30:37 GMT
+
+mimit@benji.Eng.Sun.COM (Mimi Tam) writes:
+>What is the easiest way in vi to delete a block of text without knowing
+>the line numbers and without knowing how many lines are in the block?
+
+Note: <X> is the name of the mark, a letter in a-z.
+
+1. Move the cursor to the start of the required block of text.  Type
+m<X> to store the cursor position in mark <a>.
+
+2. Move the cursor to the end of the block.  Type:
+
+   d'<X> - delete to the line containing the mark.
+or d`<X> - delete to the character at the mark.
+
+Regards,
+
+--
+Soh Kam Hung, Network Management Research,     | h.soh@trl.oz.au
+TRL, POB 249 Clayton, Victoria
+
