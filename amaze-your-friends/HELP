@@ -1,0 +1,162 @@
+
+       HELP ON USING THE MAIL INTERFACE AT VI/EX ARCHIVE alf.uib.no
+       ************************************************************
+
+ BEWARE: If you have anon. ftp capability, please use that instead of
+         this mailserver (see below).
+
+ VI/EX Archive alf.uib.no, and its mirrors have the most complete, and
+ the biggest publically available archive containing VI/EX stuff.
+
+ To access the mailer, just send a mail message to ruben@uib.no.
+ You have two ways of fetching files:
+    1) Single file.
+    2) Multiple files.
+
+
+ Single file request
+ ~~~~~~~~~~~~~~~~~~~
+ In the Subject field in your header of your message you simply put 
+ GET <filename>.
+
+ Example of a simple request to get the INDEX file:
+
+ unix%                              or:
+ unix% mail ruben@uib.no          To: ruben@uib.no
+ Subject: GET INDEX               Subject: GET INDEX
+ .
+ unix%
+
+
+ Multiple file request
+ ~~~~~~~~~~~~~~~~~~~~~
+ In the Subject field in your header put MULTIGET or MGET.
+ Then in your message you put several GET <filename>.
+
+ Example of a multiple file request:
+
+ unix%                              or:
+ unix% mail ruben@uib.no          To: ruben@uib.no
+ Subject: MULTIGET                Subject: MULTIGET
+
+ GET INDEX                        GET INDEX
+ GET HELP                         GET HELP
+ GET macros/ctags.Z               GET macros/ctags.Z
+ .
+ unix%
+
+ 
+ The old Mailserver did send a Control File for each file requested. This
+ is not so anymore. Now the Controll information will be embedded into the
+ message itself.
+
+ DO NOT request the whole archive! If you request the whole archive all 
+ at one time I will report you to your site admin. There is a limit of
+ 10 files in a MULTIGET.
+ If you do want the whole archive, please contact me first and we will
+ work out something.
+
+ Before fetching a file, think: "Do I realy need this file, or is it just
+ 'nice to have it' ?"
+
+ Most files will be run thru uuencode (1) before mailng, even textfiles.
+ To extract a requested file, use the command uudecode (1).
+
+ If you do not get a reply within a reasonable time, please do not send
+ another request for the file(s). 
+
+ Please report any problems or question to ruben@uib.no. But remeber to
+ never put "GET" or "MGET" or "MULTIGET" in the Subject of the message.
+ Rather put in "Mailserver problem", if I'm online I will get a imediate 
+ notification that such message is in my mail-bucket. 
+ A lot of my mail are simply put into the bucket without imediate action.
+
+ FTP:
+   Remeber that those who allow anon-ftp are very kind. Please do not
+   misuse or abuse this privilege.
+   Think twice before downloading, esp if you are a long-distance ftp' er.
+
+   If you are going to use FTP, use the site that is the closest to you
+   counting NET-VICE. If you don't know what I'm talking about, please 
+   ask someone who does (like  your system administrator).
+
+   IF YOU HAVE FTP-ACCESS, DO *NOT* USE THE MAILSERVER. Not even if you
+   temporarily cannot reach alf.uib.no or its mirrors.
+   The mirroring sites are always promptly updated.
+
+   Why YOU shold use the site closest to you NET-VICE:
+ 	- Faster access.
+ 	- Reducing the net load.
+ 	- Keeping the site on the net. 
+
+   The main archive is in Bergen, Norway, EUROPE. 
+   alf.uib.no is mirrored at sites around the world. If you find a
+   site nearer to you than alf.uib.no, please use that site. 
+   The mirroing sites are ALWAYS updated.
+
+   Please do NOT use ftp to the sites during peak hours at the various 
+   locations. Please respect this because if there is too much ftp'ing 
+   going on in prime time to the various places, the ftp site may have to 
+   shut down.  NONE OF US WOULD WANT THAT, WOULD WE ?
+
+   The following sites contains the VI/EX archives:
+
+   European users:
+      Main site:     alf.uib.no (129.177.30.3)
+      Filearea:      pub/vi
+      Maintainer:    Ove Ruben R Olsen (buboo@alf.uib.no)
+      Location:      Bergen, Norway, EUROPE.
+      Peak hours:    07.00 am GMT to 03.00 pm GMT 
+
+   Japanese users:
+      Mirror site:   utsun.s.u-tokyo.ac.jp (133.11.11.11) 
+      Filearea:      misc/vi
+      Maintainer:    Eric E. Bowles (bowles@utsun.s.u-tokyo.ac.jp)
+      Location:      Tokyo, Japan, ASIA.
+      Peak hours:    01.00 am GMT to 09.00 am GMT
+
+   USA, Canada and Mexican users: 
+      Mirror site:   cs.uwp.edu (131.210.1.4)
+      Filearea:      /pub/vi
+      Maintainer:    Dave Datta (datta@cs.uwp.edu)
+      Location:      Kenosha, Wisconsin, U.S.A.
+      Peak hours:    None.            
+
+      Mirror site:   ftp.uu.net (192.48.96.9)
+      Filearea:      /pub/text-processing/vi
+      Maintainer:    archive@uunet.uu.net
+      Location:      Falls Church, Virginia, U.S.A.
+      Peak hours:    None.
+
+
+  Australia, NZ and the rest Down Under:
+      Main site:     monu6.cc.monash.edu.au (130.194.1.106)
+      Filearea:      /pub/vi
+      Maintainer:    Steve Balogh (steve@monash.edu.au)
+      Location:      Melbourne, AUSTRALIA.
+      Peak hours:    Not relevent
+
+
+  This site is listed here for convinience to those who do not have
+  an Inet link, but do subscribe to GEnie. 
+   GEnie (General Electric Network for Information Exchange):
+      Mirror site:   Ultimate archive
+      Filearea:      GEnie Unix RoundTable, library 11: Editors
+      Maintainer:    GEnie mail=GARS 
+      Location:      Rockville, Maryland, U.S.A.
+      Peak hours:    Available 24 hours but connect charges are reduced
+                     from 1800 until 0800 local connect time (international 
+		     connect subject to PDN tarriffs)
+      Add. info.:    Maint. may be contacted at (01) 501-227-7817
+                     Gary Smith / P. O. Drawer 7680 / Little Rock, AR 72217
+    
+ CONTRIBUTION:
+   If you have stuff about ex/vi, macros, tips and tricks, please email it to 
+   ruben@uib.no or inclusion in this archive.
+
+
+ Regards,
+
+ Ove Ruben R Olsen
+ VI/EX Archive maintainer.
+
