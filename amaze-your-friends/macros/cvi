@@ -1,0 +1,104 @@
+#!/bin/sh
+#
+# From: Bo Thide' <bt@irfu.se>
+# Subject: C syntax sensitive vi macros
+# Date: Fri, 15 Nov 91 10:47:48 MET
+# 
+# Below is a shar to use "vi" with a set of macros, invoked by the command "cvi",
+# to turn it into a C editor.  Usage: Type "ma'" etc  in input mode for automatic
+# insertion.
+# 
+# These macros were developed in HP-UX.  Some old "vi"s may not like everything.
+# 
+# Bo
+# 
+#!/bin/sh
+# This is a shell archive (produced by shar 3.53)
+# To extract the files from this archive, save it to a file, remove
+# everything above the "!/bin/sh" line above, and type "sh file_name".
+#
+# made 11/15/1991 09:37 UTC by bt@hybrid.irfu.se
+# Source directory /users/bt
+#
+# existing files will NOT be overwritten unless -c is specified
+#
+# This shar contains:
+# length  mode       name
+# ------ ---------- ------------------------------------------
+#   1323 -rwxr-xr-x bin/cvi
+#
+# ============= bin/cvi ==============
+if test ! -d 'bin'; then
+    echo 'x - creating directory bin'
+    mkdir 'bin'
+fi
+if test -f 'bin/cvi' -a X"$1" != X"-c"; then
+	echo 'x - skipping bin/cvi (File already exists)'
+else
+echo 'x - extracting bin/cvi (Text)'
+sed 's/^X//' << 'SHAR_EOF' > 'bin/cvi' &&
+EXINIT="$EXINIT\
+|set timeout timeoutlen=400\
+|map  /!cc\"cy$\`\`:@c\
+|map! #/ /**//*  /**/kA\
+|map! #in #include <.h>2hi\
+|map! #de #define 	/*  */2hi\
+|map! #un #undef\
+|map! #id #ifdef \
+|map! #if #if ()i\
+|map! #el #else\
+|map! #en #endif\
+|map! au' auto ;i\
+|map! br' break;\
+|map! ca' case : /**/	break;k0f:i\
+|map! ch' char ;i\
+|map! co' continue;\
+|map! de' default: /**/	break;O\
+|map! do' double ;i\
+|map! dw' do{}while();kO	\
+|map! ei' else if (){}kk0f(a\
+|map! el' else{}O	\
+|map! en' enum {};hi\
+|map! ex' extern ;i\
+|map! fl' float ;i\
+|map! fo' for (; ; ){}kk0f(a\
+|map! go' goto ;i\
+|map! if' if (){}kk0f(a\
+|map! in' int ;i\
+|map! lo' long ;i\
+|map! ma' main(argc, argv, environ)int argc;char *argv[], *environ[];{}O	\
+|map! pf' printf (\"\n\");hhhhi\
+|map! re' return ();hi\
+|map! rg' register ;i\
+|map! sc' static ;i\
+|map! sh' short ;i\
+|map! si' sizeof ()i\
+|map! sf' scanf (\"\n\");hhhhi\
+|map! st' struct {};kkA\
+|map! sw' switch (){	case : /**/	break;}kkkk0f(a\
+|map! ty' typedef ;i\
+|map! un' union{};O	\
+|map! us' unsigned ;i\
+|map! vo' void ;i\
+|map! wh' while (){}kk0f(a\
+"
+X
+case `basename $0` in
+X	cvi) NAME=vi
+X	     ;;
+X	cview) NAME=view
+X	     ;;
+X	cvedit) NAME=vedit
+X	     ;;
+esac
+export EXINIT
+exec /usr/bin/$NAME $*
+SHAR_EOF
+chmod 0755 bin/cvi ||
+echo 'restore of bin/cvi failed'
+Wc_c="`wc -c < 'bin/cvi'`"
+test 1323 -eq "$Wc_c" ||
+	echo 'bin/cvi: original size 1323, current size' "$Wc_c"
+fi
+exit 0
+
