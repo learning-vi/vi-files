@@ -1,0 +1,50 @@
+From hjiwa@gruc19.nor.chevron.com (Jeff Wang)
+Subject: Re: nth occurance of a string
+Date: 9 Jun 93 17:27:41 GMT
+
+gaspar@angelo.amd.com (Harand Gaspar) writes:
+|>   How does one find the nth occurance of a string or regualr expression
+|> in a file using vi?
+
+Try this keymap :-) 
+
+"? v         - Find the nth occurrence of the pattern on the current line.
+"?               Enter pattern to search (can use regular expressions) on a new
+"?               line, then enter number (>1 but no more than 60 occurrences)
+"?               followed by \f in command mode to look for the pattern's nth
+"?               occurrence.  nowrapscan must be set.  If a mistake was made in
+"?               the pattern that was requested, u undo to bring back pattern.
+map v I@x^[a^M^M/^[:mo---^M"xddf@imz`add`z^["yddma@yk
+
+where ^[ are quoted <Escape> keys and ^M are quoted <Return> keys.
+
+   Pressing the mapped key <v> (or whatever you map it to) will find the nth
+occurrence of the pattern on the current line.  For example, if you want to go
+the 30 occurrence of the pattern "Due Date", enter "Due Date" on a new line.
+Then, press <3> <0> <v> without pausing.  The pattern will be deleted and you
+will be brought down to the 30th occurrence of "Due Date", if it exists.  If you
+press <u> to undo at this point, you will be returned back up to the pattern,
+where you may make changes if desired.  Note that the counting of the number of
+occurrences begins at the point after the pattern is typed, not from the first
+line in the file.  To find nth occurrence from the start of the file, enter the
+pattern on line 1.  The keymap has a limit of finding up to the 60th occurrence
+of a pattern on the version of vi I am using before it chokes with the error
+message "Register too long to fit in memory".  Your vi might allow more; if your
+vi also has this limit and you need to count more finds (say...the 200th
+occurrence), you could first find the 60th and then open up a new line, type the
+pattern again on the new line, and execute the keymap again to bring you down to
+the 120th occurrence, etc, etc.  You must also "set nowrapscan" or else the
+keymap will wrap around the end of file and keep counting.  If you enter a
+number that is greater than the actual number of occurrences, the keymap will
+bring you down to the last pattern that it found, but you will see the usual
+"Address search hit BOTTOM without matching pattern".
+   Regular expressions can also be used.  If you type "[Th]he   /" on a new
+line, it will find and count all occurrences of "The" or "the" only if the
+word is followed by 3 spaces.  If you type \<[Dd]ate\> on the line and then
+enter <4><5><v>, it will find the 45th occurrence of "Date" or "date" (only if
+it is an entire word), and skip past "dated", "Dates", etc.   Basically, any
+valid vi search string can be used; the keymap just slaps a "/" in front of it
+and executes the find command "n" number of times.
+
+ #====}==) #===(==}  #====}==) #===(==}  {==)===# (=={====#  {==)===# (=={====#
+>> Jeff Wang                             Net   : hjiwa@gruc19.
