@@ -1,0 +1,115 @@
+                        Unix vi Reference Card
+
+	  arrow keys move cursor      ^n,^p,<SP>,<BS> same as arrows
+<ESC>     escape from text entry      ^g     tell what is going on
+: 	  give ex command	      ZZ     write and quit 
+<CR>	  start of next line	      -      start of previous line
+
+^b        go back one page	      ^u     scroll back 1/2 page
+^f	  go forward one page  	      ^d     scroll forward 1/2 page
+					       or end indent
+^e	  scroll down one line        ^y     scroll up one line
+H	  home screen line	      L      last screen line
+
+x	  delete character	      r      replace char with next 
+					       typed 
+a	  append after cursor         A      append after line
+i	  insert before cursor        I      insert before line
+p	  put before cursor	      P      put before line
+u	  undo changes  	      U      undo changes in this 
+					       line only
+c obj	  change object to following text
+
+
+                      Object defining characters
+
+w	  forward one word	      W      forward, ignore punctuation
+b         backward one word	      B	     backward, ignore punc.
+e         end of current word         <CR>,- as above
+
+
+                       Characters using buffers
+
+d obj	  delete object	      dd     delete line
+y obj      yanks object	      yy     yank line
+p	  place what is in buffer
+"         select buffer
+
+NOTE:  There are 26 buffers, each corresponding to a letter of the
+       alphabet. To refer to a specific buffer type "<letter> e.g. "a
+       refers to buffer a.  Therefore "add would delete the line that
+       cursor is on and place it into buffer a.  To place the deleted
+       line elsewhere, position cursor and type "ap.
+
+       In order to delete or yank a section of text, you must place a
+       mark to where the deletion/yank is to stop.  This is done by
+       typing: m<letter> (do not use the same buffer to place a mark
+       and store text). To return to that location, type `<letter>.
+       When deleting or yanking to a mark, say b, position the
+       cursor at the beginning of the desired text, and type "ad`b.
+       This deletes the text from cursor until mark b, and places it
+       in buffer a.  "ad'b will delete until the end of the line in
+       which mark b is (note difference in ` and ').
+
+
+
+                            Search
+
+/text<CR> search forward for text     ?text<CR> search backward
+n	  next occurance	      N         next occurance in 
+						  opposite direction
+
+                        Miscellaneous
+
+J     adjoin current line to line above
+!!    place results of command into file i.e. !!cat it.p will place
+           the list of it.p in your file.
+
+
+
+
+
+                        Unix ex Reference Card
+
+
+  n      set pointer to line n
+  n,n    specify a range of lines for next command
+  $      used to indicate last line in file
+  .      print current line or end insertion
+
+  p      print specified lines
+  p#     print specified lines with line numbers
+  a      append lines after this line; end insertion with "."
+  i      insert lines after this line; end insertion with "."
+  d      delete specified lines
+  u      undo last deletion or substitution
+  c      change (i.e. replace) specified lines to new text
+  ya     yank specified lines into buffer
+  pu     lines from buffer before this one
+  w      write current text to file
+  q      quit edit
+  q!     forces quit without write
+  wq     write and quit
+  vi     enter vi editor
+  se     display settings; refer to manual for details
+
+
+  /text/		search for text
+  //			search for next occurrence
+  s/oldtext/newtext/	substitute newtext for oldtext in 
+			    specified lines
+  n1,n2copy3		copy lines n1-n2 to after n3
+  global/pattern/cmds	search file for pattern and do cmds on those 
+			    lines.
+
+  set nu			insert line numbers
+  set nonu		remove line numbers
+
+
+-- 
+           "...nothing kills that does not know ye."
+                  -Meg Davis, `The Elf Glade' 
+UUCP: ihnp4!gargoyle!sphinx!d757       d757@sphinx.uchicago.edu    
+      Lawrence Lerner    University of Chicago Computation Center   
+
+
