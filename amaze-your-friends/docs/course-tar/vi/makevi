@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+#      this will compile all lessons and put into file called course
+#
+
+
+if test -f vi
+ 	then mv vi vi.old
+fi
+	
+DIR="head 1 2 3 4 5 6 "
+for name in ${DIR}
+do
+	cd ${name}
+	cat ${name}.* > ${name}
+	cat ${name} >> ../vi
+	rm ${name}
+	cd ..
+done
+ 
+cp vi ../vi.txt			# put at top level
