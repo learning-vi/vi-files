@@ -1,0 +1,35 @@
+":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+"
+" @(#)lvi.unm 1.1 Vi macros 88/01/25 23:20:35 
+"
+" This is a set of macros for 'lvi', a tutorial
+" for the totally unexperienced vi(1) learner.
+"
+":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+"
+" Author:
+"
+"   Bo Thide'
+"   Swedish Institute of Space Physics
+"   S-755 90 Uppsala, Sweden
+"   UUCP: ...enea!kuling!irfu!bt
+"
+":::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+"
+:se noreadonly aw
+:unm 
+:map  :rew:"Hit <CTRL>a for assistance.
+:unm J
+:unm Q
+:unm V
+:unm !
+:unm .
+:unm <
+:unm >
+:unm ~
+:unm 
+:unm 
+:unm 
+:map  :"Enter <CTRL>a for assistance+
+:map  :!clear;more /usr/local/lib/vi/vi.help
+:map!  :!clear;more /usr/local/lib/vi/vi.helpa
