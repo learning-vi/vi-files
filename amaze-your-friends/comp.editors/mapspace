@@ -1,0 +1,277 @@
+From buboo@alf.uib.no (Ove Ruben R Olsen)
+Subject: Re: mapping space bar
+Date: Tue, 26 Jan 93 07:35:56 GMT
+
+Michael Doob writes:
+>Is it possible to use the map command to remap the space bar? If so, what's
+>the right syntax. Things like ^V<space> won't do the job.
+
+Yes it will, just use more ^V's.
+
+Type this:    :map ^V^V^V   ^V^F
+See this:     :map ^V   ^F
+
+[NOTE: This is untested, but it seems to work]
+
+You may or may not have troubble with the ~ command.
+
+\Ruben.
+
+-- 
+        Ove Ruben R Olsen a Gnarfer and VI user. EMAIL: ruben@uib.no. 
+     Maintaining the EX/VI-archive and a couple of the Comp.Editors FAQs.
+    People that are ignorant tend to live a frustrated life, at least when 
+     it comes to editing - But I do belive this is a general rule in life
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: mapping space bar
+Date: Tue, 26 Jan 1993 10:47:24 GMT
+
+In <C1F8AD.HF9@ccu.umanitoba.ca> mdoob@ccu.umanitoba.ca (Michael Doob) writes:
+
+>Is it possible to use the map command to remap the space bar? If so, what's
+>the right syntax. Things like ^V<space> won't do the job.
+
+In the version I use, SVR3.1, it is possible, and takes *two* ^Vs.
+
+Unfortunately, a number of other command is implemented as if they
+were mapped to a combination using space, e.g. `s' is mapped to `c '.
+Mapping the space bar messes up `s' and other commands.
+
+It would have been nice if the author of vi had used `l' instead.
+It would have been even nicer if user-level maps didn't disturb the
+builtin ones, of course.
+
+While we're at it, two years ago Chris Torek posted an article in this
+group in which he mentioned that one should not map any of "ailru\_ $".
+I can understand most of these, but I have two questions:
+(1) What does `\' do?
+(2) Which command do I mess up when I map `u'?
+
+--
+HansM
+
+
+From alien@boi.hp.com (Tom von Alten)
+Subject: Re: mapping space bar
+Date: Tue, 26 Jan 1993 18:58:50 GMT
+
+Hans Mulder (hansm@cs.kun.nl) wrote:
+: (1) What does `\' do?
+
+Escapes the following character...  from what, and under what circumstances
+escapes me (ouch! :-) at the moment.
+
+: (2) Which command do I mess up when I map `u'?
+
+UNDO! UNDO! UNDO!
+_____________
+Tom von Alten           email: alien@boi.hp.com
+                        Hewlett-Packard Disk Memory Division
+
+
+From dattier@orac.holonet.net (DWT)
+Subject: Re: mapping space bar
+Date: Thu, 28 Jan 1993 04:30:13 GMT
+
+In article <1993Jan27.214031.3457@bcars6a8.bnr.ca> djf@bnr.ca asks, among
+other things to which I have no answers, this one question to which I do:
+
+>BTW:
+> - is there a way to pipe just *1* line through a filter?  I find things like
+>!jsome_command<return>
+>always send two lines.
+
+!!command              or
+!_command              or
+:.!command
+
+>Also, is there an easy way to have *add* filtered
+>output rather than have it replace the input?
+
+Hmm.  One could always duplicate the text to be filtered and then filter only
+the second copy of it.  Say it's a single line: yyp to duplicate it; the
+cursor will then be on the lower of the two identical lines, so !!command to
+filter it, leaving theFrom rouben@math9.math.umbc.edu (Rouben Rostamian)
+Subject: Re: Can I map spacebar in vi?
+Date: 9 May 92 00:23:58 GMT
+
+In article <1992May8.142618@bwdla30.bnr.ca> djf@bnr.ca writes:
+>Title pretty  well sums it up.  I would like space to scroll forward a
+>screen, like in more (or less), since I can just as easily move forward
+>a character using 'l'.
+>
+>I've tried ^V and \, no luck.  Any suggestions?
+
+The following works in ultrix's vi:
+
+:map ^V  ^V^F
+
+        ^
+	|____ more that one space here
+
+--
+
+
+@map vi.tab2space
+From filbo@deeptht.santa-cruz.ca.us (Bela Lubkin)
+Subject: Re: want spaces not tab chars in vi
+Date: 10 May 92 20:06:13 GMT
+
+Nick Hounsome wrote:
+
+>From article <1992May7.025815.529@tamsun.tamu.edu>, by dlb5404@tamsun.tamu.edu (Daryl Biberdorf):
+>> When I use vi on a Sun 4 under SunOs (er, Solaris, whatever) 4.x with
+>> autoindent ON, the editor seems to use tabs to get the cursor under
+>> the first character of the previous line.  Well, this is fine if I'm
+>> the only one who edits the file, but my Emacs-using partner is going
+>> nuts because code that I've edited looks positively screwy on her
+>> display.
+>> 
+>> Is there any way to make vi use spaces instead of tab characters when
+>> it is using autoindent?  I can't find it in the manual.
+
+>Don't give in to her!!
+>
+>If everyone sticks to the normal convention of all terminals that I know of,
+>i.e. tab stops every eight spaces then there is never any conflict.
+>Some people feel the need get their editor to treat tabs as smaller for
+>display purposes because their editors are not as good as vi (in vi you
+>can set shiftwidth and it will use the minimum number of spaces and tabs
+>t indent to where you want to be.
+
+My, that was certainly a useful answer.
+
+I have the same question as the original poster, and I'd appreciate an
+answer, not an attack.  In my case, the text being edited is often a
+mail message or news article which will likely be replied to by people
+who use the "> "-in-left-column quoting convention.  Text which contains
+tabs does not indent well by this convention, whether or not everyone
+"sticks to the normal convention" of 8-position tab stops.
+
+I'm in the habit of piping things through a tab remover before sending
+mail, but it's a habit I'd rather lose.
+
+However, and this is more directed at the original poster: I checked
+the vi source myself.  It does this in function genindent().  The
+algorithm is, insert tabs, each one generating <tabstop> amount of
+whitespace, until one of those would be too much.  Then generate
+spaces.
+
+Therefore, if you :set tabstop=1000, you'll generate spaces when you
+autoindent.  However, if you manually enter a tab, or edit a file
+containing tabs, it'll try to display them as 1000 blank spaces each!)
+
+You could undoubtably modify one of the vi clones not to do this your
+way, if it doesn't already.
+
+Bela Lubkin  * *  //  filbo@deeptht.santa-cruz.ca.us    ZURC ATNAS morf EVIL!
+     @     * *   //  belal@sco.com   uunet!sco!belal  uunet!sco!deeptht!filbo
+R Pentomino  * \X/  Filbo @ Pyrzqxgl +1 408-476-4633 and XBBS +1 408-476-4945
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Can I map spacebar in vi?
+Date: Mon, 11 May 1992 10:20:11 GMT
+
+In <1992May8.142618@bwdla30.bnr.ca> djf@bwdla30.bnr.ca (Duane Fowler) writes:
+
+>Title pretty  well sums it up.  I would like space to scroll forward a
+>screen, like in more (or less), since I can just as easily move forward
+>a character using 'l'.
+
+>I've tried ^V and \, no luck.  Any suggestions?
+
+Try harder, i.e. using more ^V.  If you type
+
+:map ^V^V^V   ^V^F
+
+is should echo as
+
+:map ^V   ^F
+
+and that should do the trick.
+
+Unfortunately, doing this screws up the ~ command.
+
+--
+Hope this helps,
+
+Hans Mulder		hansm@cs.kun.nl
+
+
+@map vi.tab2space
+From warnold@nomad.urich.edu (William W. Arnold)
+Subject: Re: want spaces not tab chars in vi
+Date: 11 May 92 14:27:28 GMT
+
+In <236.filbo@deeptht.santa-cruz.ca.us> filbo@deeptht.santa-cruz.ca.us (Bela Lubkin) writes:
+
+>Nick Hounsome wrote:
+>>From article <1992May7.025815.529@tamsun.tamu.edu>, by dlb5404@tamsun.tamu.edu (Daryl Biberdorf):
+>>> Is there any way to make vi use spaces instead of tab characters when
+>>> it is using autoindent?  I can't find it in the manual.
+
+[stuff removed]
+>Therefore, if you :set tabstop=1000, you'll generate spaces when you
+>autoindent.  However, if you manually enter a tab, or edit a file
+>containing tabs, it'll try to display them as 1000 blank spaces each!)
+
+This is about what I do,  with one slight addition:
+
+:map! ^I ^T
+
+those should be actual control characters, with ^V's as needed.
+
+this way, a tab is treated as an indent.  Works well.
+
+of course, you still have to untabify files that other people have worked on,
+
+:map ^I 1G!Gexpand^M
+
+in command mode, tab untabs the file. 
+
+-- 
+  -billy-     has8wwa@cabell.vcu.edu     warnold@nomad.urich.edu
+
+
+From lwv26@cas.org (Larry W. Virden)
+Subject: Re: Can I map spacebar in vi?
+Reply-To: lvirden@cas.org (Larry W. Virden)
+Date: Tue, 12 May 1992 16:45:42 GMT
+
+In article <1992May9.002358.23515@umbc3.umbc.edu> rouben@math9.math.umbc.edu (Rouben Rostamian) writes:
+:In article <1992May8.142618@bwdla30.bnr.ca> djf@bnr.ca writes:
+:>Title pretty  well sums it up.  I would like space to scroll forward a
+:>screen, like in more (or less), since I can just as easily move forward
+:>a character using 'l'.
+:>
+:>I've tried ^V and \, no luck.  Any suggestions?
+:
+:The following works in ultrix's vi:
+:
+::map ^V  ^V^F
+:
+:        ^
+:	|____ more that one space here
+:
+:--
+
+Note that using Sun's terminfo based vi, I had to provide TWO ^V characters
+before the first of the two blanks.  If I just put ^V and one space, then
+that turned into another of the blanks between map and the ^V^F.
+-- 
+Larry W. Virden			UUCP: osu-cis!chemabs!lvirden
+Same Mbox: BITNET: lvirden@cas  INET: lvirden@cas.org
+Personal: 674 Falls Place,   Reynoldsburg,OH 43068-1614
+America Online: lvirden
+
+
+From djf@bwdla30.bnr.ca (Duane Fowler)
+Subject: Can I map spacebar in vi? Result.
+Reply-To: djf@bnr.ca
+Date: Thu, 14 May 1992 19:47:22 GMT
+
+Thanks to everyone who replied, email or otherwise. The concensus (100%
+in fact) has been desc
