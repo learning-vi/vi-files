@@ -1,0 +1,278 @@
+From akf@awful.august.com (Andrew Fullford)
+Subject: Re: Removing blank lines in vi
+Date: Mon, 31 May 1993 04:25:36 GMT
+
+>>>does anyone know how to remove blank lines from a file using vi?.
+
+>Using
+>	:g/^$/d
+
+>should do the job.
+
+This is splitting hairs, I know, but the original poster said "blank"
+lines:
+
+	:g/^[ ^I]*$/d
+
+(that's "space tab").
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: ddn.n.n.n.n. (oops, one too many) u (was: Removing blank lines in vi)
+Date: 1 Jun 1993 21:21:27 +0200
+
+In <1ufv9eINNb1o@uwm.edu> markh@csd4.csd.uwm.edu (Mark) writes:
+>Maybe I wasn't totaly clear, in which case I'm sorry.  The question is, how
+>do you automate this in vi: n.n.n.n.n. (until n fails)?
+
+If you like to live dangerously, type:
+
+:map q n.qm
+
+This makes typing q do what you asked (n.n.n.n.n. until n fails).
+And yes, typing u afterwards will ondo the last one.
+
+I usually :w before I do this, and :unmap q when I'm done, just in case.
+
+You might like to know about :set nowrapscan, which stops searches at
+both ends of the buffer, which can be useful if you do things like this.
+
+The sole purpose of the m at the end of the :map is to stop vi from
+saying "No tail recursion".  I don't understand why tail recursion
+is not allowed, while general recursion is.
+
+HansM
+
+
+From dattier@genesis.MCS.COM (DWT)
+Subject: Re: Removing blank lines in vi
+Date: 27 May 1993 14:14:18 -0500
+Reply-To: dattier@genesis.mcs.com (DWT)
+
+dberg@informix.com (David I. Berg) wrote in <dberg.738516173@puma> as others
+have written in other articles:
+
+|     :g/^$/d 
+| 	
+| will do the trick.
+
+:v/./d   will do it with fewer characters and less shifting.
+
+David W. Tamkin   Box 59297   Northtown Station, Illinois  60659-0297
+dattier@genesis.mcs.com   CompuServe: 73720,1570   MCI Mail: 426-1818
+
+
+From lau@auriga.rose.brandeis.edu (frankie t. k. lau)
+Subject: Re: Removing blank lines in vi  < the surest way >
+Date: Thu, 27 May 1993 20:14:25 GMT
+
+tgcpwd@rwc.urc.tue.nl (Wim van Dorst/Prof. Penninger) writes:
+
+>In article <1993May27.090951.65821@qut.edu.au> meilak@qut.edu.au writes:
+>>does anyone know how to remove blank lines from a file using vi?.
+>>locating empty lines can be done with 
+>>	:s/^$/
+>>the hard part is removing them!
+
+>	:%g/^$/d
+
+
+	From my belived book Unix in a Nutshell by O'Reilly.
+
+	:g/^[  ]*$/d
+             ^^
+             /\
+       space    tab
+
+	this way, you can get rid of blank lines with or
+without hidden space(s) and tab(s).
+
+-Frankie
+
+
+From gibson@netcom.com (Bob Gibson)
+Subject: Re: multiple blank lines -> one blank line
+Date: Thu, 15 Jul 1993 18:53:48 GMT
+
+cat -S filename >newfilename
+-- 
+#include <disclaim.std>     /* I admit nothing! */
+Bob Gibson -- gibson@netcom.com
+
+
+From dattier@genesis.MCS.COM (David W. Tamkin)
+Subject: Re: multiple blank lines -> one blank line
+Date: 15 Jul 1993 14:24:29 -0500
+Reply-To: dattier@genesis.mcs.com (DWT)
+
+nancym@u.washington.edu (Nancy McGough) wrote in
+<223t68$hpf@news.u.washington.edu>:
+
+| I know I've seen this discussed before but I can't
+| find the old messages.  I'd like to know how to
+| convert multiple blank lines to one blank line
+| using sed and using vi.  Also, is there a unix
+| command like grep with a flag that will do this?
+
+If you have Berkeley cat, cat -s will do it.  I've read that less -s does
+the same thing but I've never seen a version of less where it worked.
+
+NOTE that in SysV cat, the -s option means something else entirely.
+
+sed '/./,/^$/!d' will do it, but if you're using a csh-based shell,
+be sure to escape the exclamation point.  That has different results
+from BSD cat -s if there are blank lines at the top; I'll go into further
+detail on that if anyone is interested.
+
+vi cannot do it with native vi or ex commands as far as I know because it
+requires examining more than one line of text at a time, but it can with a
+shell escape.
+
+David W. Tamkin   Box 59297   Northtown Station, Illinois  60659-0297
+dattier@genesis.mcs.com   CompuServe: 73720,1570   MCI Mail: 426-1818
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: multiple blank lines -> one blank line
+Date: 16 Jul 1993 19:39:20 +0200
+
+In <224atd$s09@genesis.MCS.COM> dattier@genesis.MCS.COM (David W. Tamkin) writes:
+>nancym@u.washington.edu (Nancy McGough) wrote in
+><223t68$hpf@news.u.washington.edu>:
+
+>| I know I've seen this discussed before but I can't
+>| find the old messages.  I'd like to know how to
+>| convert multiple blank lines to one blank line
+>| using sed and using vi.  Also, is there a unix
+>| command like grep with a flag that will do this?
+
+>If you have Berkeley cat, cat -s will do it.
+>NOTE that in SysV cat, the -s option means something else entirely.
+
+>vi cannot do it with native vi or ex commands as far as I know because it
+>requires examining more than one line of text at a time, but it can with a
+>shell escape.
+
+There is a native ex mode command to do it:
+
+:g/^$/.,/./-j
+
+, or, if you regard lines with only spaces and tabs as blank:
+
+:g/^[ 	]*$/.,/[^ 	]/-j
+
+The ^[ is really a ^ and a [, not an escape; between the [] are a
+space and a tab.
+
+HansM
+
+
+From dattier@genesis.MCS.COM (David W. Tamkin)
+Subject: Re: multiple blank lines -> one blank line
+Date: 16 Jul 1993 13:40:56 -0500
+Reply-To: dattier@genesis.mcs.com (DWT)
+
+hansm@wsinti06.info.win.tue.nl (Hans Mulder) wrote in
+<226p48$al7@wsinti06.info.win.tue.nl>:
+
+| There is a native ex mode command to do it:
+| 
+| :g/^$/.,/./-j
+| 
+| , or, if you regard lines with only spaces and tabs as blank:
+| 
+| :g/^[ 	]*$/.,/[^ 	]/-j
+| 
+| The ^[ is really a ^ and a [, not an escape; between the [] are a
+| space and a tab.
+
+Thanks for the suggestion, Hans.  It works well except at the bottom of the
+document.  Then, with wrapscan on, the ".,/./" search causes an "Addr 1 >
+Addr 2" error; with wrapscan off, it causes a "no match to bottom" error. 
+Either way, extra blank lines at the foot remain unchanged by the command;
+one can remove them by hand.
+
+It's a good alternative in a situation where you cannot (or don't want to)
+escape to a shell.
+
+David W. Tamkin   Box 59297   Northtown Station, Illinois  60659-0297
+dattier@genesis.mcs.com   CompuServe: 73720,157From david@cats.ucsc.edu (David Michael Wright)
+From: david@cats.ucsc.edu (David Michael Wright)
+Newsgroups: comp.editors
+Subject: Removing Blank lines
+Date: 19 Dec 1993 09:20:18 GMT
+Organization: University of California; Santa Cruz
+Lines: 23
+
+
+
+ have a quote from David Tamkin that explains how to remove blank lines:
+sed '/./,/^$/!d'
+
+If the lines are not truly empty but contain some spaces or tabs, cat -s
+won't help either.  This will, though:
+
+sed 's/[ 	]*$//
+     /./,/^$/!d'
+
+where the brackets enclose a space and a tab.
+
+I am not sure, however, to apply this to my file. I tried !}sed ...
+and %sed -c and so on, but it did not work. (Am running on System V
+unix)
+-- 
+"There is nothing in the marginal conditions that     
+    distinguish a mountain from a mole hill"            
+                      Kenneth Boulding                             
+
+					All comments  are mine---(David Wright) 
+						david@cats.ucsc.edu.
+
+From dattier@genesis.Mcs.Com (David W. Tamkin)
+From: dattier@genesis.Mcs.Com (David W. Tamkin)
+Newsgroups: comp.editors
+Subject: Re: Removing Blank lines
+Date: 19 Dec 1993 03:31:41 -0600
+Organization: Contributor Account on MCSNet, Chicago, Illinois  60657
+Lines: 39
+
+david@cats.ucsc.edu (David Michael Wright) wrote in
+<2f16ci$4kv@darkstar.ucsc.edu>:
+
+|  have a quote from David Tamkin that explains how to remove blank lines:
+| sed '/./,/^$/!d'
+
+Actually, that was to squeeze successive multiple empty lines into one at
+a time.
+
+| If the lines are not truly empty but contain some spaces or tabs, cat -s
+| won't help either.  This will, though:
+| 
+| sed 's/[ 	]*$//
+|      /./,/^$/!d'
+| 
+| where the brackets enclose a space and a tab.
+
+True.
+
+| I am not sure, however, to apply this to my file. I tried !}sed ...
+| and %sed -c and so on, but it did not work. (Am running on System V
+| unix)
+
+You mean within vi if you don't have BSD cat or GNU cat?
+
+You cannot embed newlines, no matter what, in a shell command at the colon
+prompt in vi or ex.  But there are at least two ways around it:
+
+First method: put the sed commands into a sedfile; say you've named it
+$HOME/sedfiles/squeeze.  Then 
+
+:%!sed -f $HOME/sedfiles/squeeze
+
+Second method: use sed's -e option to string the commands, like this:
+
+:%!sed -e 's/[ 	]*$//' -e '/./,/^$/!d'
+
+David W. Tamkin  P. O. Box 3284  Skokie, Illinois  60076-6284
+dattier@mcs.com   CompuServe: 73720,1570   MCI Mail: 426-1818
+
