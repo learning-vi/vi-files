@@ -1,0 +1,950 @@
+From tab@ibmpcug.co.uk (Andrew Beattie)
+Subject: regular expression puzzle
+Date: 2 Mar 92 18:14:01 GMT
+
+I want to be able to take this input:
+-----------------------------------------------------------------------------
+some text [delete_this_bit       ] some more text
+-----------------------------------------------------------------------------
+and change it to this:
+-----------------------------------------------------------------------------
+some text [                      ] some more text
+-----------------------------------------------------------------------------
+By specifying that I want to replace all the characters within the "[]"
+delimeters with spaces.  Can it be done in one shot with a regular
+expression?  I am currently doing it one character at a time, thus:
+-----------------------------------------------------------------------------
+sed '
+:again
+s/\(\[ *\)[a-zA-Z_0-9]/\1 /
+t again
+'
+-----------------------------------------------------------------------------
+but surely there must be a neater way?
+
+Andrew
+-- 
+
+
+From gummitch@techbook.com (Jeff Frane)
+Subject: vi question--scrambled long lines
+Summary: How to deal with over-long lines?
+Keywords: vi
+Date: 2 Mar 92 18:33:11 GMT
+
+Two questions, really.
+
+1   Does anyone have any good vi documentation they can e-mail me? I
+have no way of retrieving anything by ftp.
+
+2   What can I do about lines that get mangled when I attempt to reply,
+either to e-mail or to a posting. These seem to occur when the original
+writers are working on a wide terminal. The resulting lines get chopped
+off, or worse, the terminal here starts writing lines way over on the
+right margin.
+
+--Jeff Frane
+
+-- 
+gummitch@techbook.COM  Public Access UNIX at (503) 644-8135 (1200/2400) 
+"You must allow that drunkenness, which is equally destructive to body
+and mind, is a fine pleasure." Lord Chesterfield, writing to his son
+
+
+From jtwiss@isis.cs.du.edu (Justin Twiss)
+Subject: Vi query
+Summary: Help with a VI Search command
+Keywords: vi search vowels
+Date: 29 Feb 92 14:28:22 GMT
+
+
+Greetings one and all...  
+
+Just a quick question, one of my lecturers at tech has set me a smalkl
+task that I'm having a bit pof a problem with...
+
+Using VI's search commandss, create a serarch line that would only
+locate words that started and ended with a vowel....
+
+I've spent three weeks on this and have just about given up in disgust..
+
+Any ideas?
+
+
+Justin...
+jtwiss@isis.cs.du.edu      
+
+
+From fitz@mml0.meche.rpi.edu (Brian Fitzgerald)
+Subject: Re: Vi query
+Keywords: vi search vowels
+Date: Sun, 1 Mar 1992 06:14:44 GMT
+
+Justin Twiss writes:
+
+>Using VI's search commands, create a search line that would only
+>locate words that started and ended with a vowel....
+
+Try
+
+/\<[aeiouAEIOU][^ tab]*[aeiouAEIOU]\>		or,
+/\<[aeiouAEIOU][a-zA-Z']*[aeiouAEIOU]\>
+
+See ed(1).  Adjust the middle [] to suit.  Fails for single letter
+words like "a" or "I".  Sorry.
+
+Brian
+
+
+From krm@pri-mu.prime.com (Martin {martlbub} Kraegeloh)
+Newsgroups: comp.unix.questions
+Subject: Re: vi query
+Date: 2 Mar 92 22:17:21 GMT
+
+> Justin Twiss (<jtwiss@isis.cs.du.edu>) asks:
+> 
+> Using VI's search commands, create a search line that would only
+> locate words that started and ended with a vowel....
+> 
+
+vi's regular expressions match start and end of word with \< and \> .
+
+a word (let's say a string without tabs and blanks) starting and ending
+with a vowel is
+/\<[aeiou][^ ^I]*[aeiou]\>/
+
+should w instead of W (in vi's syntax) be matched, use
+/\<[aeiou][A-Za-z0-9_]*[aeiou]\>/
+
+Regards
+Martin
+
+
+From ricky@FibHaifa.com (Ricardo Marek)
+Subject: `vi' without `stty crt -tabs' gets crazy (Help!)
+Date: 2 Mar 92 16:56:49 GMT
+
+
+In our site, there are a few users that still use `vi' as default editor.
+But.. then, the user needs to run `stty crt -tabs' after he got login, so
+`vi' doesn't get @#$%.
+
+I know that the solution may be, using, `tset' command, but I didn't get
+the correct results..
+
+Any hints will be helpfull and apreciated.
+(Please answer via e-mail, or posting to comp.sys.sun.*)
+
+--- Ricky
+-- 
+Ricardo (Ricky) Marek (System Mng.)
+Fibronics Ltd., Matam Industrial Park, Haifa 31905, ISRAEL
+phones: +972-4-313690/670            Fax: +972-4-550550
+e-mail: ricky@FibHaifa.com   or  ricky@fibronics.UUCP
+
+
+From davis@shasta.bu.edu ("John E. Davis")
+Subject: Tabs and Blanks: an experiment
+Date: 2 Mar 92 23:27:55 GMT
+Reply-To: davis@amy.tch.harvard.edu (John E. Davis)
+
+There has been alot of discussion about tabs vs spaces.  Here I present an a
+numerical argument in favor of 8 column tabs.  But first, let me throw in a
+subjective statement.
+
+First of all, there seems to be almost universal agreement that tabs should be
+eight columns.  Most devices assume this.  Right or wrong this is the way it
+is.  Of course the good ones allow the user to specify what the tabs are.
+Usually there is a command to set up tabs to 8 columns automatically.  I have
+never seen one with an option of 4 column tabs.  So it seems to be a good idea
+to stick with 8 column tabs. Many people prefer 4 column tabs for indentation
+purposes.  In my opinion, this is an editor limitation.  A good editor will
+indent the proper amount for you--- the tab key is usually bound to the indent
+command.
+
+The only real argument that one can make about tab size is based on the
+resulting file size.  If four column tabs produce a smaller file size than
+eight column, then I'd say that we should adopt 4 column tabs.  I propose a
+method to find out:
+
+let t be the tab size (4,8 or whatever).
+let d be the indentation of the line that one produces by using tabs and
+spaces.
+
+Obviously, the number of tabs and spaces, n,  for a given indentation, d, is
+given by:
+
+                         n(d,t) = d - (d/t) * (t - 1)
+
+Here I am using integer arithmetic.  Now suppose that the probability of an
+indentation d is p(d).  Then the average number of tabs and spaces <n> for an
+arbitrary line is given by:
+
+                       <n(t)> = sum_d { p(d) * n(d,t) }
+
+This gives the average number of tabs and spaces for a given tab size t.  Thus
+one only minimize this with respect to t to determine the optimal tab size.
+The only undetermined quantity is the probability distribution p(d).  One can
+get some idea of what ths is by examing many files and constructiong the
+distribution.  This will also depend on the indentation used by the person and
+on what one calls the tab size.  In the following, I consider equal
+probalities. That is I take p(d) a constant.
+
+Then consider the program:
+#include <stdio.h>
+
+main()
+{
+    int sum, i, t, n;
+
+    t = 1;
+    while (t < 50)
+      {
+          sum = 0;
+          for (i = 1; i < 80; i++)
+            {
+                n = i / t;
+                sum += i - n * (t - 1);
+            }
+          printf("%d %d\n", t, sum);
+          t++;
+      }
+}
+
+with the output
+1 3160
+2 1600
+3 1106
+4 880
+5 760
+6 690
+7 652
+8 640
+9 632      <-------- optimal choice
+10 640
+11 640
+12 652
+13 676
+14 690
+15 710
+16 760
+17 760
+18 780
+19 820
+20 880
+21 880
+22 892
+23 916
+24 952
+25 1000
+  .
+  .
+  .
+47 1642
+48 1656
+49 1672
+
+So as you can see, the optimal amount for equal probabilities is at t = 9.
+
+--John
+davis@amy.tch.harvard.edu
+
+
+From davis@shasta.bu.edu ("John E. Davis")
+Newsgroups: comp.editors
+Subject: Re: Tabs and Blanks: an experiment
+Date: 3 Mar 92 00:46:29 GMT
+Reply-To: davis@amy.tch.harvard.edu (John E. Davis)
+
+
+In the previous article, I wrote a program for which I assummed equal
+probabilities.   This is not really true.  I really assumed that
+
+p(d) = const != 0 for d < 80 and 0 otherwise
+
+Here the cutoff was 80.  Making the cutoff bigger will give greater tab sizes
+and making it less will produce smaller ones.
+
+It seems difficult to calculate p(d).  As I said earlier, it depends on what
+one chooses for the tab size.  This is just another reason for conformance to
+a standard.
+
+Still, I find it interesting if someone writes a sed, awk or whatever script
+that calculates p(d) for a large number of files using 8 column tabs with the
+assumption that this is most common.
+
+In fact we can play the same game as earlier:
+
+Take a poll to find the probability q(t) that one uses tab size t.  It will
+most likely be peaked at 8 with a small bump at 4.  Then fold this probability
+into the calculation of p(d).  That is, calculate p(d;t) using tab size t by
+examing a ton of files with the above script.  Then define
+
+                        p(d) = sum_t { p(d;t) * q(t) }
+
+and use the result in the calculation of the previous article.
+                        
+--John
+davis@amy.tch.harvard.edu
+
+
+From peter@ferranti.com (peter da silva)
+Subject: Re: Tabs and Blanks
+Organization: Xenix Support, FICC
+Date: Fri, 28 Feb 1992 18:59:48 GMT
+
+In article <3200@ecicrl.ocunix.on.ca> clewis@ferret.ocunix.on.ca (Chris Lewis) writes:
+> What's wrong with this is that it rules out coding styles that use
+> indentation that's not always constant. [...]
+
+> 	if ((blah blah.....) +
+> 	    (blah blah blah) -
+> 	    ....
+>            )
+
+Ah, but I *use* that sort of thing, and I still use the "tab indent adjust
+tabstops" trick as well. The point is, this isn't a new block so I don't want
+to treat it as an indent.
+
+> You can't use pure tabs for this.  In fact, you can't adjust tab width
+> at all without losing the logical layout.
+
+Somehow that never seems to be a problem in practice.
+-- 
+-- Peter da Silva,  Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
+From peter@ferranti.com (peter da silva)
+Newsgroups: comp.editors
+Subject: Re: Tabs and Blanks: an experiment
+Date: Tue, 3 Mar 1992 18:01:27 GMT
+
+In article <DAVIS.92Mar2182755@shasta.bu.edu> davis@amy.tch.harvard.edu (John E. Davis) writes:
+> The only real argument that one can make about tab size is based on the
+> resulting file size.
+
+That's just plain not true. Se previous discussions about dynamically changing
+tab sizes for details.
+-- 
+-- Peter da Silva,  Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
+From einari@rhi.hi.is (Einar Indridason)
+Subject: Re: Tabs and Blanks
+Date: 6 Mar 92 09:55:41 GMT
+
+In <1992Feb27.100149.20048@uwasa.fi> ts@uwasa.fi (Timo Salmi) writes:
+
+>In article <1992Feb26.005954.4468@monu6.cc.monash.edu.au> steve@monu6.cc.monash.edu.au (Steve Balogh (+61 3 565 4747)) writes:
+>>The FIRST thing I do when I obtain some "new" source code is to replace all
+>>tabs with spaces. I HATE TABS in source code. They seem to make editing and
+>>reformating much harder than it needs to be.
+
+>So do I.  If you are using a PC you might be interested in
+
+
+Humm.  This seems to be turning to a (dare I mention it?) Holy war?
+
+My philosofi in this matter is to try to be consistent in indention style.
+I sometimes get a source that is indented in a very wierd way.  Most of the
+time, it is better to follow the current indention style, whether it uses
+spaces or tabs, rather than fix the whole source to fit your own 
+indention style.
+
+However, in my own source I use tabs for indenting (no email flames about
+that, please)
+
+I can adjust the tabsize to a number I like.  I usually keep the tab set at
+8, but sometimes I set it to 4.
+
+I find it a good indicator that a program needs re-structuring, if a line
+goes beond the ~40th column, with a tabsize of 8.
+
+
+Humm.  And while I'm writing this, I have one question:
+When is the next version of elvis to appear?  (And how many bugs will
+remain :-)
+
+
+--
+Internet:    einari@rhi.hi.is        |   "Just give me my command line and drag
+UUCP:    ..!mcsun!isgate!rhi!einari  |   the GUIs to the waste basket!!!!"
+
+Surgeon Generals warning:  Masking the 8th bit can seriously damage your brain!!
+
+
+From hartman@ulogic.UUCP (Richard M. Hartman)
+Subject: Re: Tabs and Blanks
+Date: 7 Mar 92 00:10:26 GMT
+
+In article <1992Feb26.005954.4468@monu6.cc.monash.edu.au> steve@monu6.cc.monash.edu.au (Steve Balogh (+61 3 565 4747)) writes:
+>In article <3157@ecicrl.ocunix.on.ca> clewis@ferret.ocunix.on.ca (Chris Lewis) writes:
+>> Futzing around with non-8 tab widths is a fools game.  It can
+>> turn mild-mannered system integrators into screaming maniacs.
+>> (Speaking as one who has screamed more than once ;-)
+>
+>The FIRST thing I do when I obtain some "new" source code is to replace all
+>tabs with spaces. I HATE TABS in source code. They seem to make editing and
+>reformating much harder than it needs to be.
+>
+>Anyway it works for me. :)
+>
+>Steve
+>
+
+I am suprised at all of you.  One of the first sets of utility
+programs I ever wrote are called "tabex" and "retab".  The tabex
+expands all tabs found in a file into the correct number of spaces.
+(Taking into account nasty little things like space-tab combinations,
+I actually count the columns & calculate tab-stops instead of doing
+a simple substitution).  "Retab" does just the opposite.  Converting
+all spaces possible into tabs using the spacing given.  With these
+two programs it is a simple matter to convert text from any tabbing
+convention to the one you like (and back).  All this fuss over nothing!
+
+
+
+		-Richard Hartman
+		hartman@uLogic.COM
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+Extensive studies have shown that 93% of all statistics are meaningless.
+
+
+From gummitch@techbook.com (Jeff Frane)
+Subject: vi question--scrambled long lines
+Summary: How to deal with over-long lines?
+Keywords: vi
+Date: 2 Mar 92 18:33:11 GMT
+
+Two questions, really.
+
+1   Does anyone have any good vi documentation they can e-mail me? I
+have no way of retrieving anything by ftp.
+
+2   What can I do about lines that get mangled when I attempt to reply,
+either to e-mail or to a posting. These seem to occur when the original
+writers are working on a wide terminal. The resulting lines get chopped
+off, or worse, the terminal here starts writing lines way over on the
+right margin.
+
+--Jeff Frane
+
+-- 
+gummitch@techbook.COM  Public Access UNIX at (503) 644-8135 (1200/2400) 
+"You must allow that drunkenness, which is equally destructive to body
+and mind, is a fine pleasure." Lord Chesterfield, writing to his son
+
+
+From vic@class.gsfc.nasa.gov (Vic Ryan)
+Subject: Re: Tabs and Blanks
+Date: Sat, 7 Mar 1992 11:45:28 GMT
+
+hartman@ulogic.UUCP (Richard M. Hartman) writes:
+
+>In article <1992Feb26.005954.4468@monu6.cc.monash.edu.au> steve@monu6.cc.monash.edu.au (Steve Balogh (+61 3 565 4747)) writes:
+>>In article <3157@ecicrl.ocunix.on.ca> clewis@ferret.ocunix.on.ca (Chris Lewis) writes:
+>>> Futzing around with non-8 tab widths is a fools game.  It can
+>>> turn mild-mannered system integrators into screaming maniacs.
+>>> (Speaking as one who has screamed more than once ;-)
+>>
+>>The FIRST thing I do when I obtain some "new" source code is to replace all
+>>tabs with spaces. I HATE TABS in source code. They seem to make editing and
+>>reformating much harder than it needs to be.
+>>
+>>Anyway it works for me. :)
+>>
+>>Steve
+>>
+
+>I am suprised at all of you.  One of the first sets of utility
+>programs I ever wrote are called "tabex" and "retab".  The tabex
+>expands all tabs found in a file into the correct number of spaces.
+>(Taking into account nasty little things like space-tab combinations,
+>I actually count the columns & calculate tab-stops instead of doing
+>a simple substitution).  "Retab" does just the opposite.  Converting
+>all spaces possible into tabs using the spacing given.  With these
+>two programs it is a simple matter to convert text from any tabbing
+>convention to the one you like (and back).  All this fuss over nothing!
+
+GREAT....!!!! Where does one get these wonderful utilties ?????
+---------------------------------------------------------------
+Thanks, Vic
+
+
+From peter@ferranti.com (peter da silva)
+Newsgroups: comp.editors
+Subject: Re: Tabs and Blanks
+Date: 9 Mar 92 19:13:47 GMT
+
+In article <26@ulogic.UUCP> hartman@ulogic.UUCP (Richard M. Hartman) writes:
+> With these
+> two programs it is a simple matter to convert text from any tabbing
+> convention to the one you like (and back).  All this fuss over nothing!
+
+OK, I'll check a file out of SCCS, convert it to my tab format, edit it,
+and check it back in. You do the same. Let's see how quickly we can run out
+of disk space.
+-- 
+-- Peter da Silva,  Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
+From Marc_North@mindlink.bc.ca (Marc North)
+Subject: Re: VI Limitations
+Date: 10 Mar 92 17:45:53 GMT
+
+> Rich Thompson writes:
+> 
+>    Yesterday when I was editing a file using VI, I  was given an error
+>    saying  the line I was using  was too long.  Is there anyway to get
+>    around this?  The line  I was  editing needed to  be extremely long
+>    and I ended  up having to use emacs  for  that  particular file.
+
+
+Well, to the best of my knowledge, there isn't.
+
+If you want, I can send you a program that will chop all overly long lines to a
+nice, respectible 77 characters. It's not great on formatting, but it does take
+tabs equal to eight spaces into consideration. Email me and I will send.
+
+Marc
+
+
+--
+Marc North  --  ULYSSES Systems Corporation  (USC)
+
+
+From wuth@imhfhp16.epfl.ch (WUTHRICH Serge IMHEF DME EPFL)
+Subject: vi with X-window features
+Date: 11 Mar 92 12:14:46 GMT
+
+
+Has somebody seen a verion of vi with full X-window extension like
+use of the mouse to cut/paste/delete/scroll/etc. ?
+
+Thanks,
+Serge
+
+-----
+S.Wuthrich
+wuth@dme.epfl.ch
+
+
+From steve@monu6.cc.monash.edu.au (Steve Balogh (+61 3 565 4747))
+Newsgroups: comp.editors
+Subject: Re: Tabs and Blanks
+Date: 12 Mar 92 01:52:13 GMT
+
+In article <1992Feb26.005954.4468@monu6.cc.monash.edu.au> steve@monu6.cc.monash.edu.au (Steve Balogh (+61 3 565 4747)) writes:
+>
+>The FIRST thing I do when I obtain some "new" source code is to replace all
+>tabs with spaces. I HATE TABS in source code. They seem to make editing and
+>reformating much harder than it needs to be.
+>
+
+I suppose I should be fair and say that there are other reasons that I "fix up"
+source code in this manner. Yes, I do remove TABS, but I also change other
+aspects of the program layout such as the placing of { and } characters, the
+spacing between items on a line, and so on. I also add many comments as I
+discover what particular sections of code do.
+
+I find that by going through a program in such a way gives me a better idea of
+how it works. I suppose it is similar to taking notes during lectures by helping
+you remember the facts. Anyway, it works for me.
+
+Steve
+
+----_--_-_-_--_-__-_------_-__---_-___-_----_-____-_-_--__-_--_--___-_-_-_--__-_
+Steve Balogh  VK3YMY   (Maths G.14)   | steve@monu6.cc.monash.edu.au
+Monash University, Clayton Campus     |      37 54'38.8"S  145 07'47.1"E ...ICBM
+Wellington Road, Clayton.  	      |      +61 3 565 4747 Voice (Office)
+Melbourne, AUSTRALIA. 3168	      |      +61 3 565 4746 Fax
+
+
+From gregm@otc.otca.oz.au (Greg McFarlane)
+Newsgroups: comp.editors
+Subject: Using the vi -c command line option
+Date: 12 Mar 92 23:54:11 GMT
+
+On my system, the command:
+	vi -c ":set ic" -c /greg file
+
+does not work. I expected it to set the ignorecase flag and then edit "file"
+stopping at the first occurrence of [Gg][Rr][Ee][Gg]. However, the :set command
+seems to be ignored. The following commands work as expected:
+	vi -c ":set ic" file
+	vi -c /greg file
+
+Any suggestions as to what I am doing wrong?
+
+I am using a Sparc, SunOS 4.1.
+
+Greg
+
+-- 
+
+                   ACSnet:  gregm@otc.otca.oz.au
+Greg McFarlane       UUCP:  {uunet,mcvax}!otc.otca.oz.au!gregm
+|||| OTC ||         Snail:  OTC R&D GPO Box 7000, Sydney 2001, Australia
+                    Phone:  +61 2 287 3139    Fax: +61 2 287 3299
+
+
+From heroux@cemmva.cem.msu.edu (Brett J. Heroux)
+Subject: re: vi command line thing
+Date: 13 Mar 92 05:17:36 GMT
+Lines: 7
+
+Multiple comands on the command line, hmmm. I tried
+
+vi ":set ic | /see" tfile
+
+and the editor started up at a line containg "sEE" in tfile.
+
+Brett Heroux					heroux@titan.cem.msu.edu
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Using the vi -c command line option
+Date: 13 Mar 92 14:26:17 GMT
+
+In <5231@otc.otca.oz> gregm@otc.otca.oz.au (Greg McFarlane) writes:
+
+>On my system, the command:
+>	vi -c ":set ic" -c /greg file
+
+>does not work. I expected it to set the ignorecase flag and then edit "file"
+>stopping at the first occurrence of [Gg][Rr][Ee][Gg]. However, the :set command
+>seems to be ignored. The following commands work as expected:
+>	vi -c ":set ic" file
+>	vi -c /greg file
+
+You're trying to pass two commands via the -c interface, and it accepts
+only one.  You should combine the commands using the '|' separator instead:
+
+	vi -c ":set ic | /greg" file
+
+Notes:
+1. The ':' is optional.
+2. You can abbreviate "-c " to "+", i.e.
+	vi +"set ic|/greg" file
+also works.
+
+3. The default is "-c 1", i.e. start at the top of the buffer, rather
+than at the bottom (the ex default).  Using an explicit "-c" or "+" on
+the command line overrules the default.  As a result the search starts
+at the last line.  That's OK for a forward search, but
+	vi +"set ic|?greg" file
+would overlook an occurrance of "Greg" on the last line.
+
+You've probably noticed that 
+	vi -c ":set ic" file
+starts at the last line.  Use
+	vi -c ":set ic | 1" file
+or
+	vi +"set ic|1" file
+if you prefer to start at the top.
+
+--
+Hope this helps,
+
+Hans Mulder		hansm@cs.kun.nl
+
+
+From ant@mks.com (Anthony Howe)
+Subject: Re: Using the vi -c command line option
+Date: Fri, 13 Mar 1992 23:05:23 GMT
+
+hansm@cs.kun.nl (Hans Mulder) writes:
+[....]
+>
+>Notes:
+>1. The ':' is optional.
+>2. You can abbreviate "-c " to "+", i.e.
+>	vi +"set ic|/greg" file
+
+Note that the +command option is obsolescent in POSIX.2a.  To me that
+means +command may disappear at some point in the future.  If you're not
+in the habit now of using +, stick with -c so that when you move to
+systems with POSIX conforming VI, you don't get caught by a vendor who
+decided to drop obsolescent forms.
+
+>also works.
+[...]
+-- 
+ant@mks.com                                                   Anthony C Howe 
+Mortice Kern Systems Inc. 35 King St. N., Waterloo, Ontario, Canada, N2J 6W9
+"Congratulations, you've reached 10cm dilation. You may now give birth." - Worf
+
+
+From sid@knoblake.sybase.com (sid cowles)
+Newsgroups: comp.editors
+Subject: Re: Using the vi -c command line option
+Date: 15 Mar 92 18:00:45 GMT
+
+In article <5231@otc.otca.oz>, gregm@otc.otca.oz.au (Greg McFarlane) writes:
+|> On my system, the command:
+|> 	vi -c ":set ic" -c /greg file
+|> 
+|> does not work. I expected it to set the ignorecase flag and then edit "file"
+|> stopping at the first occurrence of [Gg][Rr][Ee][Gg].
+...
+|>
+|> Any suggestions as to what I am doing wrong?
+|>
+|> I am using a Sparc, SunOS 4.1.
+
+
+the following places the cursor on the first line with the searched for
+regexp:  vi -c ":set ic|/greg" file
+where the vertical bar is used to separate the two commands.
+
+sid cowles  
+voice: +1-510-596-3971
+internet:                uucp:
+sid@sybase.com           {pacbell,sun,{uunet,ucbvax}!mtxinu}!sybase!sid
+scowles@llnl.gov         {backbone}!lll-winken!humpty!scowles
+
+
+From Marc_North@mindlink.bc.ca (Marc North)
+Subject: Re: VI Limitations
+Date: 10 Mar 92 17:45:53 GMT
+
+> Rich Thompson writes:
+> 
+>    Yesterday when I was editing a file using VI, I  was given an error
+>    saying  the line I was using  was too long.  Is there anyway to get
+>    around this?  The line  I was  editing needed to  be extremely long
+>    and I ended  up having to use emacs  for  that  particular file.
+
+
+Well, to the best of my knowledge, there isn't.
+
+If you want, I can send you a program that will chop all overly long lines to a
+nice, respectible 77 characters. It's not great on formatting, but it does take
+tabs equal to eight spaces into consideration. Email me and I will send.
+
+Marc
+
+
+--
+Marc North  --  ULYSSES Systems Corporation  (USC)
+
+
+From gordon@osiris (John Gordon)
+Subject: Vi message 'Where are you?' from !}fmt command - huh?
+Keywords: vi,where,are,you
+Date: 18 Mar 92 15:32:05 GMT
+
+
+	We have a user who, when she does a !}fmt command in vi, gets the text
+'Where are you?' entered into her document.  She says that it just started
+happening recently.  I saw it happen, and checked her path, aliases, and did
+a 'strings' on vi and fmt, but no luck.  Anyone out there have an idea?
+She is working on a Sun SPARC workstation.
+
+John Gordon
+gordon@osiris.cso.uiuc.edu
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Vi message 'Where are you?' from !}fmt command - huh?
+Keywords: vi,where,are,you
+Date: 18 Mar 92 19:07:27 GMT
+
+In <1992Mar18.153205.24581@ux1.cso.uiuc.edu> gordon@osiris (John Gordon) writes:
+>	We have a user who, when she does a !}fmt command in vi, gets the text
+>'Where are you?' entered into her document.  She says that it just started
+>happening recently.  I saw it happen, and checked her path, aliases, and did
+>a 'strings' on vi and fmt, but no luck.  Anyone out there have an idea?
+
+She recently put
+
+	biff y
+
+in the wrong part of her ~/.cshrc file.  It should have been between the lines
+
+	if ($?prompt) then
+	
+and
+
+	endif
+
+and it isn't.  If her .login gets sourced when she logs in, she should move
+it there, otherwise should put it between those lines.  Or, if there aren't
+any such lines, she could abbreviate it
+
+	if ($?prompt) biff y
+
+or if she uses a shell with a sane syntax, she would say
+
+	if [ $# = 0 ]
+	then biff y
+	fi
+
+or
+	if [ $# = 0 ]; then biff y; fi
+
+in the file that she put the "biff y" in.
+
+--
+Hans Mulder		hansm@cs.kun.nl
+
+
+From shj@login.dkuug.dk (Stig Jacobsen)
+Subject: Re: vi puzzler ..
+Date: 22 Mar 92 13:43:08 GMT
+
+sriram@alka.tcs.com (Sriram Srinivasah) writes:
+
+>If I am editing file <x>.c, how do I, with one keystroke, edit file <x>.h ?
+>Is there some way of getting the output of 'file' or '%' into a buffer ?
+
+:e `basename % .c`.h
+
+I suppose that this can be bound to a key with map, but I'm not
+familiar enough with it to tell you how.
+--
+Stig Jacobsen                                                   Born confused
+shj@login.dkuug.dk                                              Died dazed
+
+
+From dave@csd4.csd.uwm.edu (David A Rasmussen)
+Subject: vi startup in insert mode?
+Date: 21 Mar 92 17:12:11 GMT
+
+
+Um, someone last week or so posted an article, apparently not in this group
+on how to start up vi in insert mode. I didn't save the article, and now
+wanted to see how they did that.
+
+Also, if I define a macro in my joverc file, and I try to auto-execute-macro
+it, I get an error about recursion. Anyone have a suggestion for me with
+this?
+
+thx in advance.
+
+-- 
+Dave Rasmussen - Systems Programmer/Manager, UW-Milwaukee Computing Svcs Div.
+Internet:dave@uwm.edu, Uucp:uwm!dave, Bitnet:dave%uwm.edu@INTERBIT
+AT&T:414-229-5133 USmail:Box 413 EMS380,Milwaukee,WI 53201
+
+
+From sriram@alka.tcs.com (Sriram Srinivasah)
+Subject: vi puzzler ..
+Date: 21 Mar 92 18:55:40 GMT
+
+
+If I am editing file <x>.c, how do I, with one keystroke, edit file <x>.h ?
+Is there some way of getting the output of 'file' or '%' into a buffer ?
+
+Sriram
+(sriram@tcs.com)
+
+
+From brandy@tramp.Colorado.EDU (BRANDAUER CARL M)
+Subject: Re: vi puzzler ..
+Date: 22 Mar 92 18:56:13 GMT
+
+sriram@alka.tcs.com (Sriram Srinivasah) writes:
+
+
+>If I am editing file <x>.c, how do I, with one keystroke, edit file <x>.h ?
+>Is there some way of getting the output of 'file' or '%' into a buffer ?
+
+Start your editing session with:
+
+	vi <x>.c <x>.h
+
+After you have finished with <x>.c the first time, type
+
+	:n
+
+to edit <x>.h.  After the first go around, CTRL-^ will let you
+alternate between the two files.
+
+Cheers
+
+
+From shj@login.dkuug.dk (Stig Jacobsen)
+Subject: Re: vi puzzler ..
+Date: 22 Mar 92 13:43:08 GMT
+
+sriram@alka.tcs.com (Sriram Srinivasah) writes:
+
+>If I am editing file <x>.c, how do I, with one keystroke, edit file <x>.h ?
+>Is there some way of getting the output of 'file' or '%' into a buffer ?
+
+:e `basename % .c`.h
+
+I suppose that this can be bound to a key with map, but I'm not
+familiar enough with it to tell you how.
+--
+Stig Jacobsen                                                   Born confused
+shj@login.dkuug.dk                                              Died dazed
+
+
+From soh@andromeda.trl.OZ.AU (Kam Hung Soh)
+Subject: Re: vi puzzler ..
+Date: 24 Mar 92 22:35:24 GMT
+
+sriram@alka.tcs.com (Sriram Srinivasah) writes:
+
+>If I am editing file <x>.c, how do I, with one keystroke, edit file <x>.h ?
+>Is there some way of getting the output of 'file' or '%' into a buffer ?
+
+Try this macro:
+
+map CHAR :e `basename % .c`.h^M
+
+%        is the current file name.
+basename returns a string without the suffix found in the second argument.
+`...`    returns the result of some command.
+
+You can now toggle between the two files using CTRL-^.
+
+Mind you, starting vi with both filenames would be easier.  In [t]csh:
+
+$ vi x.[ch]
+
+Regards,
+
+--
+Soh, Kam Hung, Network Management Research,     |  h.soh@trl.oz.au  
+TRL, POB 249 Clayton, Victoria 3168, Australia  |  +61 3 253 6638
+
+
+From tgcpmv@rwa.urc.tue.nl (Martien Verbruggen)
+Subject: case macros in vi ?
+Keywords: case, vi, macro
+Date: 30 Mar 92 10:04:51 GMT
+
+Hello,
+
+I got some macros from an anonymous ftp-site, which should alter the
+case of a word and a line in vi. the macro for the line works allright,
+but the macro for the word ( using the macro for the line ) doesn't.
+The macro' are as follows:
+
+"	shift case down for word
+map _l mzywop0_Ldw`zPwdwjddk
+"	shift case down for line
+map _L :s/\([A-Z]*\)/\L\1/g
+
+It seems that the macro for the word went wrong at the p. When I type it
+in by hand it works allright. Can anyone help me out ?
+
+--
+Martien Verbruggen
+Eindhoven University of Technology
+The Netherlands.
+--
+Yesterday I thought I was insecure.....
+			Today I'm not so sure anymore.
+
+
