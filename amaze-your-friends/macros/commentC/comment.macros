@@ -1,0 +1,2 @@
+map! */ :so ~/.macro-offYp:s/[^\*	]/ /gA :s/  *$//gA/
+map! /* /* :so ~/.macro-ona
