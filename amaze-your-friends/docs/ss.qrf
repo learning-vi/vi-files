@@ -1,0 +1,39 @@
+From: UMASP@MAINE.MAINE.EDU
+Newsgroups: comp.editors
+Subject: Re: Anyone have a text file with all the simple VI commands?
+Date: 1 Oct 91 07:07:00 GMT
+Organization: University of Maine System
+
+
+                      SUMMARY OF VI COMMANDS
+
+CURSOR MOVING COMMANDS              ADDING TEXT COMMANDS
+SPACE .. forward one character      i ..... insert text to cursor left
+<BS> ... backward one character     a ..... add text to cursor right
+j ...... jump-down one line         o ..... open line below current line
+k ...... kick-up one line           O ..... open line above current line
+w ...... word forward
+b ...... backward-word              <BS>... erase characters in input mode
+6k ..... move down 6 lines          <ESC>.. Stop inputting text; return to
+4b ..... move back 4 words                    command level of vi
+
+DELETING COMMANDS                   WRITING AND QUITTING
+x ...... x-out character            :w<CR> ... save (write) changes
+dw ..... delete word                :q<CR> ... quit vi
+dd ..... delete entire line         :q!<CR> .. quit vi without saving the
+3x ..... delete (x-out) 3 chars                  changes made since the last
+6dw .... delete 6 words                          write command
+4dd .... delete 4 lines
+                                    SETTING vi OPTIONS
+UNDO COMMAND                        :set nu<CR> ..... line numbering on
+u ...... undo last editing change   :set nonu<CR> ... line numbering off
+u ...... redo (undo last undo)      :set smd<CR> .... show mode option on
+
+
+
+Hope this helps.
+
+George Newell
+umasp@maine.maine.edu
+
+
