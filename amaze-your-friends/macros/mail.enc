@@ -1,0 +1,108 @@
+X400-Originator: wyle@orion.inf.ethz.ch
+From: wyle <wyle@inf.ethz.ch>
+To: "Ove.R.Olsen" <Ove.R.Olsen@uib.no>
+Subject: Re: VI-stuff.
+
+Hi,
+
+Meanwhile, here are some scripts so you won't be too angry at me:
+
+
+The ecrypt program:
+
+#! /bin/sh
+
+case $# in
+  0 ) compress -c | des -e | uuencode version.3 ;;
+  1 ) compress -c | des -e -k $1 | uuencode version.3 ;;
+  * ) echo $USAGE ; exit 1 ;;
+esac
+
+
+
+
+
+The dcrypt program:
+
+#!/bin/sh
+
+# dcrypt    De-crypt a uuencoded, compressed msg
+
+tname=/tmp/dc_$$
+oname=/tmp/dc_$$.x
+
+trap "/bin/rm -f $tname $oname ; exit 1"  1 2 3 6 7 8 13 14 15 16 18 19
+
+argv=$#
+key=$1
+
+cat - > $tname
+
+version=`egrep -e "^begin" < $tname`
+set $version
+version=$3
+
+sed '1,$s;'$version';'$oname';' < $tname | uudecode
+
+case $version in
+  version.1 )
+    crypt $key < $oname ;;
+  version.2 )
+    crypt $key < $oname | uncompress -c ;;
+  version.3 )
+    case $argv in
+      0)  des -d < $oname | uncompress -c ;;
+      *)  des -d -k $key < $oname | uncompress -c ;;
+    esac ;;
+esac
+/bin/rm -f $tname $oname
+
+
+
+
+And the vi macros to use these programs:
+
+After composing a mail message using vi, I use a macro to pass the body
+of the message through the ecrypt script.  The first vi macro in figure 2
+is for encrypting.  When this macro is active, typing ``;ec'' while editing
+a mail message in vi will send the body of the message (without the message
+header) through the ecrypt script.  First it jumps to the top of the text
+buffer and searches for a blank line.  This step skips the mail header at
+the top of the message.  Then it prepares to pipe the message through the
+ecrypt script, but allows you to type an encryption key if you want.
+
+Note that there is a trailing space after the !ecrypt in this macro.  I
+usually type in the encryption key, then immediately type return.
+However, typing return without entering the key allows des to prompt
+for the key; this latter usage is more secure because the clear text of
+the key never appears on your screen (or in memory).
+
+------------------------------------------------------------------------
+map ;ec 1G/^$^Mj:.,$!ecrypt
+map ;dcr :%s/^>//^M1G/^begin^M:.,$!dcrypt
+map ;dc 1G/^begin^M:.,$!dcrypt
+
+Figure 2.  Vi macros for ecrypt and dcrypt
+------------------------------------------------------------------------
+
+The second macro assumes that you are editing a reply to an encrypted
+message and strips off the ``>'' quoting character that some mailers
+add when creating a reply.  My mailer, m6, is configured for this
+message quoting scheme.  After stripping the quotation characters, the
+macro goes to the top of the buffer and searches for the text ``begin''
+at the begining of a line.  This key word signals the begining of the
+uuencoded body of the message, and the script pipes this text into the
+dcrypt program.
+
+Once again, the script pauses after entering the dcrypt command,
+allowing you to enter the decryption key.  If no key is entered, i.e.
+you just hit the return key, des will prompt you for a key. This method
+makes the decryption process somewhat more secure.
+
+The last macro does not assume the text is quoted but otherwise
+prepares it for dcrypt and works just like the ``;dcr'' macro.
+
+
+
+-Mitch
+
