@@ -1,0 +1,34 @@
+From g88m0396@alpha.ru.ac.za (Jon-Dean Mountjoy)
+Subject: Grab current Filename in VI?
+Date: Mon, 28 Jun 1993 17:54:07 GMT
+
+Hello
+
+I want to be able to grab the current filename that I am editing,
+so that (in a macro), I can say, LaTeX the CURRENT file,
+or Ispell the CURRENT file.  Something like
+map lat :!latex $$
+where $$ is the current file that VI is editing.
+
+Thanks
+
+Jon-Dean
+
+--
+-------------------------------------------------------------------------------
+     Jon-Dean Mountjoy        csjm@beta.ru.ac.za         Rhodes University
+			The views herein are my own
+		      and not those of the institution
+
+
+From hrjoist@immd4.informatik.uni-erlangen.de (Holger Joist)
+Subject: Re: Grab current Filename in VI?
+Date: Mon, 28 Jun 1993 19:01:04 GMT
+
+g88m0396@alpha.ru.ac.za (Jon-Dean Mountjoy) writes:
+
+>I want to be able to grab the current filename that I am editing,
+>so that (in a macro), I can say, LaTeX the CURRENT file,
+>or Ispell the CURRENT file.  Something like
+>map lat :!latex $$
+>where $$ is the current
