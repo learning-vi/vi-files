@@ -1,0 +1,25 @@
+"                       VI ON-LINE HELP SYSTEM 
+"                       """"""""""""""""""""""
+"      Copyright (C) by Ove Ruben R Olsen (rubenro@viggo.blh.no)
+"                       All rights reserved
+" 
+" The author is NOT responsible for any damage this package may make.
+"
+" See file README for more info.
+"
+"
+" Unmap the temporary mappings.
+" remap q
+" remap g 
+"
+unmap O
+unmap U
+unmap W
+unmap A
+unmap E
+unmap D
+unmap F
+unmap R
+unmap X
+map g 'h
+map q :rew:map q u'h
