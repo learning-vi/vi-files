@@ -1,0 +1,104 @@
+From watts@cs.scarolina.edu (Chris Watts)
+Subject: VI:  Repeating a command.
+Date: 20 Jul 93 16:00:04 GMT
+
+Please tell there is a way in VI to do this!  Let's say I want to move
+lines 30 - 50 back 3 spaces. How would I do this.  Or another question
+is if I perform an operation on one line, how can I perform the same
+operation on multiple lines.  Thanks.
+				Chris Watts
+-------------------------------------------------------------------------------
+watts@cs.scarolina.edu
+
+
+From lange@obelix.pcs.dec.com (Ralf Lange Digital-PCS GmbH)
+Subject: Re: VI:  Repeating a command.
+Reply-To: lange@obelix.pcs.dec.com (Ralf Lange Digital-PCS GmbH)
+Date: Wed, 21 Jul 1993 06:08:36 GMT
+
+
+move back lines 30 - 50 3 spaces:
+:30,50!expand
+:30,50s/^   //
+
+the first command changes all tab characters to spaces.
+The second command kills 3 spaces from the beginning
+of every line. If your tab is set to three there is an
+easier way:
+type '30G' in command mode to goto line 30 and then '21<<'
+to shift the current and the next 20 lines to the left.
+An alternative would be:
+:20,30<<
+
+to perform the same operation on multiple lines:
+
+this depends on what you did to change the first line.
+If you used the substitute command, just give another
+line range to perform the same substitution to other lines.
+
+EXAMPLE:
+:s/.*/\L&/
+
+changes the current line to lower case characters.
+
+Then
+:20,50s
+:'a,.s
+:/Hi there/,$s
+will do the same substitution from
+line 20 to line 50
+mark 'a' up to the current line
+the next occurence of 'Hi there' to the end of the file.
+
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: VI: Repeating a command.
+Date: 21 Jul 1993 14:29:47 +0200
+
+In <watts.743184004@walnut.cs.scarolina.edu> watts@cs.scarolina.edu (Chris Watts) writes:
+
+>Please tell there is a way in VI to do this!  Let's say I want to move
+>lines 30 - 50 back 3 spaces. How would I do this.
+
+If those lines all begin with spaces (not tabs), then
+
+:30,50s/^   /
+
+would do the trick.  If you've :set shiftwidth=3, then
+
+:30,50<
+
+would work even if there are tabs.  In practice, you'd be more likely
+to use something like 21<< or <% or <50G or <]] or <`x or whatever.
+
+>Or another question
+>is if I perform an operation on one line, how can I perform the same
+>operation on multiple lines.
+
+If it's a single vi mode command, then typing a period (.) performs the
+same operation on the current cursor position.
+
+If it's a :s/// command, then ampersand (&) does the same substitution
+on the current line.  There's also :30,50& to do the substitution on
+those lines (and there's :30,50&g if you want to change all occurrences
+of your pattern, rather than only the leftmost one).
+
+There's also :g/pattern/ex-mode-commands to do some ex mode commands on
+selected lines.
+
+Or you could create a macro, by typing :map v vi-mode-commands.
+
+It depends.
+
+HansM
+
+
+From carlj@cyclone.bt.co.uk (Carl Johnson)
+Subject: Re: VI:  Repeating a command.
+Date: 21 Jul 1993 08:19:22 GMT
+Reply-To: carlj@cyclone.bt.co.uk
+
+
+Chris Watts (watts@cs.scarolina.edu) wrote:
+: Please tell there is a way in VI to do th
