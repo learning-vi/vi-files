@@ -1,0 +1,28 @@
+The 'lvi'  package  is for those who have no  experience  in
+editing  with  vi(1)  and who may have  used an  editor/word
+processor only once or twice before.
+
+For those who are more familiar with screen  editors,  'lvi'
+may be very boring.  Possibly, 'nvi' is a better choice.
+
+'Lvi' relies entirely on internal  capabilities in vi(1) and
+is  therefore  quite  slow and  cannot  cope with a user who
+types at a high  speed.  On the other  hand, if you type one
+vi(1)  command  at a time and study the  various  texts that
+appear on your screen and try the  examples  given there you
+may gain a certain  degree of proficiency  in a rather short
+time.  'Lvi' uses such  things as tags files and macros  and
+may perhaps in itself be studied as a rather straightforward
+example of the power of vi(1).
+
+In its  original  form  'lvi'  presupposes  that  the  files
+'lvi.map',   'lvi.unm',   and   'vi.help'   are   moved   to
+/usr/local/lib/vi  and that the other  'lvi.*' files and the
+tags file 'LVI' are moved to /usr/local/lib/vi/tags.  If you
+have  another  preference  of where the files should be kept
+you have to edit 'lvi', 'lvi.map', and 'lvi.unmap' where, by
+necessity, absolute file addresses have been hard-coded in.
+
+
+>>> Bo Thide', Swedish Institute of Space Physics, S-755 90 Uppsala, Sweden <<<
+Phone: (+46) 18-300020. Telex: 76036 (IRFUPP S). UUCP: ...enea!kuling!irfu!bt
