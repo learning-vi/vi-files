@@ -1,0 +1,47 @@
+From: lee@sq.sq.com (Liam R. E. Quin)
+Subject: Re: word completion macro for vi
+Date: 21 Jun 90 17:22:00 GMT
+
+bowles@is.s.u-tokyo.ac.jp (Eric E. Bowles) writes:
+>[...], here's a rudimentary word completion macro for vi that I wrote a while
+>ago.
+Neat.
+
+Also, if you change the dws at the end of each line to dwbii^["zdt.x@z then
+vi will think you just typed the word completed, so you can change it with
+the delete key of control-w.
+
+Should you do this, be warned that it will make your .exrc look like it's
+full of line noise :-)
+
+Lee
+-- 
+Liam R. E. Quin,  lee@sq.com, {utai,utzoo}!sq!lee,  SoftQuad Inc., Toronto
+``I never imagined that to be a deity, a world,		David Brin, _Earth_,
+  would mean finding so many things . . . amusing.''	p. 570
+
+
+From: sjoerd@cwi.nl (Sjoerd Mullender)
+Subject: Re: word completion macro for vi
+Date: 22 Jun 90 07:46:22 GMT
+
+lee@sq.sq.com (Liam R. E. Quin) writes:
+
+>bowles@is.s.u-tokyo.ac.jp (Eric E. Bowles) writes:
+>>[...], here's a rudimentary word completion macro for vi that I wrote a while
+>>ago.
+>Neat.
+
+>Also, if you change the dws at the end of each line to dwbii^["zdt.x@z then
+>vi will think you just typed the word completed, so you can change it with
+>the delete key of control-w.
+
+It is better to change the change to dwbia^["zdt.x@z then the character
+in front of the completed word stays there and doesn't get moved to the end
+of the word.
+I like the macros, they are really neat.
+--
+Sjoerd Mullender		Center for Mathematics and Computer Science
+sjoerd@cwi.nl			Amsterdam, Netherlands
+
+
