@@ -1,0 +1,138 @@
+From: martin@mwtech.UUCP (Martin Weitzel)
+Newsgroups: comp.unix.questions
+Subject: Re: Better editor than vi
+Date: 23 Jun 92 15:47:20 GMT
+Reply-To: martin@mwtech.UUCP (Martin Weitzel)
+Organization: MIKROS Systemware, Darmstadt/W-Germany
+Lines: 128
+
+In article <1992Jun22.135905.25358@bnr.ca> Reg Foulkes writes:
+>In article <28.31511@incc.com> jerry@incc.com (Jerry Rocteur) writes:
+>
+>>vi is the most powerful text editor I know, I have tried quite a few
+>>but I have never found anything that lures me away.
+
+True, for me too.
+
+>  I like vi, but there are some limitations.
+
+I assume there are less limitations as you thing, as "vi" is as powerful
+as the whole set of UNIX commands, since you can pipe any part of the edit
+buffer through any (sequence) of unix commands.
+
+One way to do this is with the '!', entered from command mode.  The
+cursor should be at the starting (or ending) line of the portion of
+text you want to edit.  Let a move that brings you to the end (or
+start) of the portion of text follow the '!' and a "vi" prompts with
+a '!' in the bottom line for a UNIX command to execute.
+
+If the moves or the command to execute is not trivial, you can enter
+the whole sequence
+
+	<move-to-start>!<move-to-end><command-to-execute>
+
+as an ordinary line of text, delete it into a named buffer, and execute
+it with the '@'-command.  E.g. you have entered a table of values.  The
+end of each line contains a numeric field and you want a running sum as
+additional item in every line.  The table looks as follows:
+
+	this is the first line    150
+	this is the second line	  20
+	this is the third line    33
+
+After te table there is an empty line.  What you want is
+
+	this is the first line    150	150
+	this is the second line	  20	170
+	this is the third line    33	203
+
+The required operations are quite simple for awk, so you go ahead and
+insert the following line right before the table
+
+	!/^$awk '{sum += $NR; print $0, sum}'
+	    ^^-- entered as CTRL-V followed by CTRL-M
+
+then type "xdd@x (you also have to type the double quotes!) to delete
+the line into buffer x and then execute this buffer.  Of course, the
+above command was erroneous, you meant NF instead of NR and probably
+you want a <TAB> inserted before sum.  Now you first undo your changes
+(u-command), then insert the command line ("xP) edit it as desired and
+repeat the procedure with "xdd@x.
+
+If a more complex awk-script, a shell procedure or whatever is the
+easiest way to specify your editing operation, I prefer another
+approach.  Enter the whole program as ordinary text just before the
+region of text to change in the following way (my example uses awk):
+
+awk <<+++ '
+	# arbitrary complex awk program
+'
+	lines of data 
+	you want to edit
++++
+^^^---- insert this pattern after the text you want to run through the
+	awk-program or script.      
+
+Then use :?+++?,/+++/!sh<RETURN> while the cursor is anywhere between the
+first line of the awk-program and the last line of the data to edit. (The
+sequence can well be mapped on a single key, if you find it too hard to
+type).  If the change is not what you wanted, you can undo it and edit
+the part that carries out the operations.
+
+A slightly modified approach can be used if large parts of the text
+you have to type in is more or less systematic.  Assume you write a
+C-program and there you want to initialize a table with the first 100
+squares.  I would do it as follows:
+
+	int squares[100] = {
+	awk 'END { for (i = 1; i <= 100; ++i) print i*i, "," }'
+	};
+
+After going back to the line containing "awk", the command :.!sh
+executes the awk-program and inserts its output into the edit buffer.
+If the script extends over several lines, here's another nice trick:
+Place the cursor on the final closing brace (you are normally near
+this place after having typed the script), then type !%sh<RETURN>.
+The move that must follow the '!'-command is the '%', which moves to
+the matching opening brace that is found in the line with the
+awk-command.  (Of course this trick works only with awk-programs
+as the above that contain no more than one sequential block, though
+nested blocks are handled well.)
+
+>For example try to 
+>do global modifications on character locations in a file. For example
+>try to replace (globally) the 8th character in every string with a 
+>"|" even if this is a blank.
+>  In xedit (I know it's a pig) this is a snap. Just zone your file 
+>to look a just the eight character.
+>  Vi is mainly concerned with editing lines. Character positions (columns)
+>aren't managed.
+
+I hope to have shown that "vi" is not restricted in any way as it's so
+easy to interface with all the other UNIX tools.  I think "vi" just
+follows one of the best traditions of UNIX: Provide ways to combine
+small basic tools rather then huge monolithic programs!
+
+I believe "vi"+all-the-UNIX-tools can not easily be beaten.  (O.K., if
+an editor provides similar easy ways to interface with the UNIX tools,
+it's not *less* powerful than "vi".  But to provide internal editor
+commands to do things you can easily do with external UNIX tools
+seems pointless and has even a serious disadvantage: If you learn to
+use special editors commands you gather knowledge only useful for
+this editor.  If you learn about the UNIX tools you gather knowledge
+that you can also apply when working outside the editor.)
+
+BTW: Spell-checking this article from within "vi" took me only a few
+keystrokes with the key-mapping I've specified in my ".exrc" and a
+small shell script to interface with UNIX spell.  One key press throws
+me into the list of misspelled words, another key throws me back
+right onto the misspelled word in the original text.  I can also choose
+not to correct a word because it's a special technical term that spell
+doesn't know.  The words I do not correct are automatically treated as
+addition to a list of exceptions for the next check of the text.
+Of course, there may be editors that have spell checks builtin.  "vi"
+doesn't need because it can easily interface with other commands.
+-- 
+Martin Weitzel, email: martin@mwtech.UUCP, voice: 49-(0)6151-6 56 83
+
+
