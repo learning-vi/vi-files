@@ -1,0 +1,194 @@
+From etxmesa@eos.ericsson.se (Michael Salmon)
+Subject: Re: Q: Tab size in shell
+Reply-To: etxmesa@eos.ericsson.se (Michael Salmon)
+Date: Fri, 5 Jun 1992 08:53:11 GMT
+
+In article <1992Jun5.065506.27336@nuscc.nus.sg>, ccechk@nuscc.nus.sg (Heng Kek) writes:
+|> How does one set the tab size for programs like 'cat', 'more'
+|> etc?  I edited a table using 'vi' whose tabstop setting is 2
+|> (i.e. tabstop=2).  When I 'more' the file containing the table,
+|> the format is screwed up because the tabs expand to 8 spaces or
+|> something.  
+|> 
+|> I've gone thru the man pages for 'stty' and tried some stuff but
+|> met with no success.  Anyone know how to hack this?  I'm on
+|> ULTRIX 4.2 with vt100 term.
+|> 
+|> Kek
+
+try piping your file through expand.
+
+-- 
+
+Michael Salmon
+
+#include	<standard.disclaimer>
+#include	<witty.saying>
+#include	<fancy.pseudo.graphics>
+
+Ericsson Telecom AB
+Stockholm
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: Vi question (Tab -> space)
+Date: 27 May 1993 19:38:33 +0200
+
+In <9305261905.AA23624@corte-madera.geoquest.slb.com> joshi@corte-madera.geoquest.slb.com (Mahesh Govind Joshi) writes:
+
+>Problem:-
+
+>Since each person has his tab_stop key set to his/her preference,
+>the file looks unproperly formatted when seen by a person with
+>a different tab stop setting.
+
+Solution:
+
+Teach them to leave poor tab_stop alone (i.e. at the value of 8) and to
+use shift_width to set indent amount.
+
+Use expand and unexpand to repair existing files.
+
+:map <tab> to control-T if they insist on hitting <tab> to indent.
+
+>It would be most preferable if the tab key was mapped to the space_bar
+>key.
+
+>all my guessess/tries with map failed.
+
+You probably didn't type enough control-V's.  The line should look like:
+
+:map! ^V	 ^V 
+
+To produce this, type
+
+:
+m
+a		This bit is obvious.
+p
+!
+<space>		
+control-V	This one tells vi-mode to pass the next one to ex-mode.
+control-V	This one tells ex-mode that the next character is the one
+			to be map!ped.
+<tab>		The character to be map!ped
+<space>
+control-V	Same.
+control-V	Similar.
+<space>		What it is map!ped to.
+
+If you've done this and try to do again, you'll find that the <tab> gets
+replaced by a <space> (that's what :map! is for) and you have to type
+a third control-V in the first bunch to tell vi-mode not to do that.
+
+HansM
+
+
+From rhodesia@wixer.bga.com (Felix S. Gallo)
+Subject: Re: Vi question (Tab -> space)
+Date: Fri, 28 May 1993 15:33:21 GMT
+
+jafo@miranda.accum.com (Sean Reifschneider) writes:
+>
+>I set my editor to tabstops=3, shiftwidth=3, and use a tab to indent to the
+>next stop for the code.  The only time I see problems is when somone edits
+>code with their tab stops set to 8, and uses spaces to indent.  INDENTING
+>IS WHAT TABS ARE THERE FOR.
+
+and the shift key is supposed to shift the hammer tray up so the bottom
+half of the hammers strike the paper, etc., etc.
+
+However, back to reality, tabs are nearly utterly useless.  I have
+3 printers I sometimes have to print to, and 2 of them don't allow you
+to define tabstops (!).  I've also got a fine terminal which doesn't
+like redefinition of tabstops, even though the software thinks it's
+gone and done it.  I imagine that a lot of people wouldn't mind never
+dealing with the headache of tabs ever again.
+
+><shrug>  Why don't you just set ts=100, and take off everyones tab keys?
+>I know somone who does that.
+
+much easier is
+
+:map! ^V^V^I ^V^V ^V^V 
+     ^      ^    ^    ^
+     |      |    |    |
+      \_____|____|____/
+             |
+spaces-------/
+
+and, of course, the ^ means 'control-'
+
+>Sean
+>-- 
+>"Love is a lot like war...  Easy to start but hard to finish."
+>Sean Reifschneider, Supreme hack
+>jafo@accum.com
+
+
+-- 
+----------------------------------------------------------------------------
+Felix Sebastian Gallo                              rhodesia@wixer.cactus.org
+----------------------------------------------------------------------------
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: Vi question (Tab -> space)
+Date: 1 Jun 1993 21:06:52 +0200
+
+In <1993May28.153321.5305@wixer.bga.com> rhodesia@wixer.bga.com (Felix S. Gallo) writes:
+
+>jafo@miranda.accum.com (Sean Reifschneider) writes:
+>>
+>>I set my editor to tabstops=3, shiftwidth=3, and use a tab to indent to the
+>>next stop for the code.  The only time I see problems is when somone edits
+>>code with their tab stops set to 8, and uses spaces to indent.  INDENTING
+>>IS WHAT TABS ARE THERE FOR.
+
+>and the shift key is supposed to shift the hammer tray up so the bottom
+>half of the hammers strike the paper, etc., etc.
+
+No, no, no.  The hammers are supposed to strike the ink ribbon.  :-)
+
+>><shrug>  Why don't you just set ts=100, and take off everyones tab keys?
+
+>much easier is
+
+>:map! ^V^V^I ^V^V ^V^V 
+>     ^      ^    ^    ^
+>     |      |    |    |
+>      \_____|____|____/
+>             |
+>spaces-------/
+
+>and, of course, the ^ means 'control-'
+
+This doesn't completely solve the TAB problem: the autoindent option
+and the < and > operators _generate_ TABs.  To stop vi from doing that,
+you'd have to :set ts=100.
+
+Nitpick: the third ^V^V is redundant: only the fFrom nh@cbnewsg.cb.att.com (nicholas.hounsome)
+Subject: Re: want spaces not tab chars in vi
+Date: 7 May 92 07:23:07 GMT
+
+>From article <1992May7.025815.529@tamsun.tamu.edu>, by dlb5404@tamsun.tamu.edu (Daryl Biberdorf):
+> When I use vi on a Sun 4 under SunOs (er, Solaris, whatever) 4.x with
+> autoindent ON, the editor seems to use tabs to get the cursor under
+> the first character of the previous line.  Well, this is fine if I'm
+> the only one who edits the file, but my Emacs-using partner is going
+> nuts because code that I've edited looks positively screwy on her
+> display.
+> 
+> Is there any way to make vi use spaces instead of tab characters when
+> it is using autoindent?  I can't find it in the manual.
+> 
+> Daryl
+> 
+> -- 
+> Daryl Biberdorf  N5GJM    dlb5404@rigel.tamu.edu  or  dlb5404@tamsun.tamu.edu
+>      Seen on a bumper sticker: "My kid beat up your honor student."
+
+Don't give in to her!!
+
+If everyone sticks to the normal convention of all terminals that I know of,
+i.e. tab stops every eight spaces th
