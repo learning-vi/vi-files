@@ -1,0 +1,980 @@
+From spencer@lit.Princeton.EDU (S. Spencer Sun)
+Subject: Re: A program to /* comment out */ automaticaly
+Date: 22 Oct 92 03:50:26 GMT
+Reply-To: spencer@phoenix.princeton.edu (S. Spencer Sun)
+
+This doesn't strike me as being a shell question so I've crossposted to
+c.u.misc and directed followups there.
+
+In article <guy.719701506@tdsb-s>, guy@mais.hydro.qc.ca (Guy Harel) writes:
+>I was always bothered by the tedious task of placing /*`s and */`s
+>around lines of code, and always wondered why on earth haven`t such a
+>facility ever been provided (maybe EMACS does this , I`m not sure).
+>
+>[other comments removed]
+>
+>#!/bin/csh
+>
+>exec awk '{ print "/* " $0 " */" }'
+
+Why start another process?
+
+Since you say you're using vi:
+
+1. Move to start of block you want to comment out
+2. Type  ma  (set mark a)
+3. Move to end of block you want to comment out
+4. issue
+	:'a,.s/^\(.*\)$/\/\* \1 \*\//
+
+Voila.  If you just want to do one line, just do step 4 and leave out
+the 'a,. part.  (Yes, I've tried this out just to be sure, but I may have
+made a typo.  If it doesn't work, someone will no doubt correct the typo)
+
+Don't want to memorize this, or don't want to learn what's really going on
+here so you can generalize to other useful things?  Type it once and put
+it in your .exrc.
+
+map <keystroke> <sequence>
+
+This line in $HOME/.exrc will replace <keystroke> with whatever key (if
+you want, say, ^A, you have to hit ^V^A to insert the actual control
+character) and <sequence> with the nasty-looking stuff above.
+
+All of this assumes you WANT to comment out a large block this way.  Why
+not just do this?  Guess it's a matter of preference.
+
+/*
+this is
+some code
+that I
+want
+commented
+out
+*/
+
+much easier to un-comment later, too.
+
+-----
+sss/PU'94 Dept of CS (spencer@phoenix.princeton.edu)/JvNCnet (spencer@jvnc.net)
+"I once believed in causes too / I had my pointless point of view / And life
+went on no matter who was wrong or right..."  [Billy Joel, "Angry Young Man"]
+
+
+From bill@bilver.uucp (Bill Vermillion)
+Subject: Re: A program to /* comment out */ automaticaly
+Date: Thu, 22 Oct 1992 21:11:16 GMT
+
+In article <1992Oct22.035026.25734@Princeton.EDU> spencer@phoenix.princeton.edu (S. Spencer Sun) writes:
+>This doesn't strike me as being a shell question so I've crossposted to
+>c.u.misc and directed followups there.
+
+>In article <guy.719701506@tdsb-s>, guy@mais.hydro.qc.ca (Guy Harel) writes:
+>>I was always bothered by the tedious task of placing /*`s and */`s
+>>around lines of code, and always wondered why on earth haven`t such a
+>>facility ever been provided (maybe EMACS does this , I`m not sure).
+
+>>[other comments removed]
+
+>>#!/bin/csh
+D>>
+>>exec awk '{ print "/* " $0 " */" }'
+
+>Why start another process?
+
+>Since you say you're using vi:
+
+>1. Move to start of block you want to comment out
+>2. Type  ma  (set mark a)
+>3. Move to end of block you want to comment out
+>4. issue
+>	:'a,.s/^\(.*\)$/\/\* \1 \*\//
+
+>Don't want to memorize this, or don't want to learn what's really going on
+>here so you can generalize to other useful things?  Type it once and put
+>it in your .exrc.
+
+>map <keystroke> <sequence>
+
+>This line in $HOME/.exrc will replace <keystroke> with whatever key (if
+>you want, say, ^A, you have to hit ^V^A to insert the actual control
+>character) and <sequence> with the nasty-looking stuff above.
+
+Gee - this one looks easier to type.  ;-)
+
+map ^X ^i/* ^[A */^[^
+
+
+And to comment out a line just to
+/* to anywhere in that line and type control x */
+just like that!
+-- 
+Bill Vermillion - bill@bilver.oau.org  bill.vermillion@oau.org
+                - bill@bilver.uucp 
+                - ..!{peora|ge-dab|tous|tarpit}!bilver!bill
+
+
+
+From martelli@cadlab.sublink.org (Alex Martelli)
+Subject: Re: VI??? GROSS!
+Date: 17 Nov 92 08:21:34 GMT
+
+wolff@inf.fu-berlin.de (Thomas Wolff) writes:
+
+:Most repliers to my posting seem to be that well accustomed to the fact 
+:that vi is a line editor that they didn't see my point when I wrote 
+:"arbitrary (!) block of text" (well, maybe "block" was misleading). This 
+:is not a block of lines (which is the unit of most vi operations) and 
+:since I referred to "elementary text editing tasks" I didn't mean columns 
+:either. Suppose I have the lines
+:	word1 word2 word1
+:	word3 word4 word3
+:and I need the text from "word2 " up to "word4" (assume it's a sentence) 
+:to be copied or moved elsewhere.If an editor cannot do this with a 
+:simple command sequence (and without the search trick burdening me with 
+:the task of counting the occurences of the word following my sentence 
+:within my sentence, if it can be done that way at all), I just do not 
+:call it a text editor.
+
+You don't seem to be READING the responses to your post!
+
+1. Place the cursor on the leading "w" of "word2".
+   (by any means whatsoever).
+
+2. Press: ma
+   You have thus placed the marker named a on that point.
+
+3. Place the cursor on the final "4" of "word4".
+   (again, by any means whatsoever).
+
+4. Press: mz
+   You have thus placed the marker named z on that point.
+   (note that you have 26 marks at your disposal, named a to z).
+
+5. Press: `a
+   You will move to the EXACT point of mark a, the leading w of "word2".
+   Note that this is a BACKquote, also known as GRAVE ACCENT, *NOT* an
+   apostrophe.  The apostrophe would use the mark for line-oriented
+   operation; the backquote uses it for character-stream operation.
+   If you don't like this key assignment place a "map ' `" in your
+   .exrc, and the apostrophe will start working in charstream too.
+
+6. To COPY, press: "ay`z
+   You have thus yanked the EXACT block of text you're interested in,
+   into named-buffer a.  Note that a BACKQUOTE is needed here, too,
+   before the z, unless you've mapped things to work differently.
+   (You have 26 named buffers at your disposal, named a to z).
+   (If you *already* had text inside named-buffer a, and you wanted
+   to APPEND these words to that, you could do this by pressing:
+   "Ay`z - the uppercasing of the buffer name is the trick.  By using
+   the buffername in lowercase, the previous contents of the buffer
+   are, instead, replaced).
+
+6bis. Or, to MOVE, press: "ad`z
+   You have thus *deleted* the exact block of text into the named buffer.
+
+7. Now place the cursor wherever you wanted to place the text.
+   (yet again, by any means whatsoever).
+
+8. Press: "ap
+   You have put named-buffer a's contents right after the cursorpoint.
+   Or, Press: "aP to put the same contents right BEFORE the cursorpoint.
+   Note that in either case the contents go within the textstream at
+   the cursorpoint, as they have been yanked or deleted as textstream,
+   not as whole lines.
+
+
+I don't claim this process is perfect.  No immediate visual feedback
+is available of where marks are, or what you have yanked.  The use
+of both lower and upper case for commands, which are not echoed, is
+at first confusing, although the mnemonic relationships make it
+rather commodious to use after a while (p-ut after, P-ut before;
+"a to overwrite buffer a, "A to append to it; and so on).
+
+I *DO* claim that you have flamed the vi editor, and by implication
+us, its users, WITHOUT having taken the trouble to learn it AT ALL!
+Such characterstream operation, and the backquote movement-command
+in particular, are not some sort of "exoterica", but, rather quite
+fundamental usage modes of this program!
+-- 
+Email: martelli@cadlab.sublink.org                   Phone: ++39 (51) 6130360
+CAD.LAB s.p.a., v. Ronzani 7/29, Casalecchio, Italia   Fax: ++39 (51) 6130294 
+
+
+From jxh@math.ksu.edu (James C. Hu)
+Subject: Re: Centering lines in vi
+Date: 28 Jan 1993 16:43:08 -0600
+
+pietro@nova.bellcore.com (Pietro Manzoni) writes:
+
+>Hi,
+>is there anybody who knows whether there is a :map command to center a
+>single line in VI?
+
+There is probably already a package that does this, but I'd put this in
+as an example on how to build useful simple filters for vi.  At the end
+of this post is a simple program that centers text.  Compile it and
+install it in ~/bin/center, or whatever.
+
+Then, make the following map:
+:map == !!center^M
+(the ^M represents the result of hitting CTRL-V followed by CTRL-M)
+
+Presto, you have a pseudo center "operator".  Now you can do a == to
+center a single line, or a 5== to center the next 5 lines.
+
+Enjoy.
+
+/* File:    center.c
+ * Creator: James C. Hu (sirius@matt.ksu.ksu.edu)
+ *
+ * Description:
+ *     Centers lines of input.
+ * 
+ *     Caveats are that lines cannot be longer than the specified
+ *     centering line length, if they are, then they may be truncated,
+ *     and that the default centering line length is 72.
+ *
+ * Copyright:
+ *     This program is placed into the public doman.
+ *
+ * Date Started: Thu Jan 28 15:33:44 CST 1993
+ *
+ * Change Log:
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+static int length = 72;
+static char *buf;
+static char format[10];         /* should be enough */
+
+int main(int argc, char *argv[])
+{
+  int i,n,buflen;
+  char *p;
+
+  switch(argc) {
+  case 2:
+    length = atoi(argv[1]);
+    if (length == 0) length = 72;
+  case 1:
+    break;
+  default:
+    fprintf(stderr, "usage: center [width]");
+    exit(1);
+  }
+
+  buf = malloc((length + 2) * sizeof(char));
+  while (fgets(buf, length+2, stdin) != NULL) {
+    if ((p = strrchr(buf, '\n')) != NULL) *p = '\0';
+    while (isspace(*buf)) buf++;
+    buflen = strlen(buf);
+    sprintf(format, "%%%ds\n", length/2 + (buflen+1)/2);
+    printf(format, buf);
+  }
+  return 0;
+}
+
+-- 
+James C. Hu (jxh@math.ksu.edu), 1804 Denholm Dr., Manhattan, KS 66502
+I speak for me, the whole me, and nothing but for me.  So help me me.
+
+
+From jxh@math.ksu.edu (James C. Hu)
+Subject: Re: Centering lines in vi
+Date: 29 Jan 1993 01:40:31 -0600
+
+jxh@math.ksu.edu (Me) wrotes:
+
+>There is probably already a package that does this, but I'd put this in
+>as an example on how to build useful simple filters for vi.  At the end
+>of this post is a simple program that centers text.  Compile it and
+>install it in ~/bin/center, or whatever.
+
+>Then, make the following map:
+>:map == !!center^M
+>(the ^M represents the result of hitting CTRL-V followed by CTRL-M)
+
+>Presto, you have a pseudo center "operator".  Now you can do a == to
+>center a single line, or a 5== to center the next 5 lines.
+
+Whups, major bug in my center program.  Here's a fixed version.
+
+/* File:    center.c
+ * Creator: James C. Hu (sirius@matt.ksu.ksu.edu)
+ *
+ * Description:
+ *     Centers lines of input.
+ * 
+ *     Caveats are that lines cannot be longer than the specified
+ *     centering line length, if they are, then they may be truncated,
+ *     and that the default centering line length is 72.
+ *
+ * Copyright:
+ *     This program is placed into the public doman.
+ *
+ * Date Started: Thu Jan 28 15:33:44 CST 1993
+ *
+ * Change Log:
+ *     Date: Fri Jan 29 01:36:57 CST 1993
+ *     Fixed a bug in the inner loop: buf would creep up to the end of
+ *     its allocated space.
+ * 
+ */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+static int length = 72;
+static char *buf;
+
+int main(int argc, char *argv[])
+{
+  char format[10];         /* should be enough */
+  int buflen;
+  char *p;
+
+  switch(argc) {
+  case 2:
+    length = atoi(argv[1]);
+    if (length == 0) length = 72;
+  case 1:
+    break;
+  default:
+    fprintf(stderr, "usage: center [width]");
+    exit(1);
+  }
+
+  buf = malloc((length + 2) * sizeof(char));
+  while (fgets(buf, length+2, stdin) != NULL) {
+    if ((p = strrchr(buf, '\n')) != NULL) *p = '\0';
+    p = buf;
+    while (isspace(*p)) p++;
+    buflen = strlen(p);
+    sprintf(format, "%%%ds\n", (length + buflen)/2);
+    printf(format, p);
+  }
+  return 0;
+}
+
+-- 
+James C. Hu (jxh@math.ksu.edu), 1804 Denholm Dr., Manhattan, KS 66502
+I speak for me, the whole me, and nothing but for me.  So help me me.
+
+
+From lind@eng.umd.edu (Charles A. Lind)
+Subject: vi?  CAPS --> small
+Date: 3 Feb 1993 13:29:46 GMT
+
+
+Hi,
+	Within vi is there a way to change all capital letters to small
+letters, or vice versa.  Is this possible?
+
+Thanks
+
+Charles
+lind@eng.umd.edu
+-- 
+------------------------------------------------------
+           Charles Lind -- lind@eng.umd.edu
+          Department of Aerospace Engineering
+       University of MD, College Park, MD 20742        
+
+
+From edwin@integow.integrity.nl (Edwin Koedam)
+Subject: Re: vi?  CAPS --> small
+Date: 4 Feb 93 08:10:50 GMT
+
+Charles writes:
+: 
+: Hi,
+: 	Within vi is there a way to change all capital letters to small
+: letters, or vice versa.  Is this possible?
+: 
+: Thanks
+: 
+: Charles
+: lind@eng.umd.edu
+
+To change capital letters into small ones, just use:
+
+	:%s/./\l&/g
+
+To change small letters into capital ones, just use:
+
+	:%s/./\u&/g
+
+\l& means:	Change the found character to lowercase.
+\u& means:	Change the found character to uppercase.
+
+Hope this helps
+
+Edwin
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: vi? CAPS --> small
+Date: Thu, 4 Feb 1993 12:00:02 GMT
+
+In <1kohcaINNk41@mojo.eng.umd.edu> lind@eng.umd.edu (Charles A. Lind) writes:
+>	Within vi is there a way to change all capital letters to small
+>letters, or vice versa.  Is this possible?
+
+To downcase everything:
+
+	:%s/.*/\L&
+
+To upcase everything:
+
+	:%s/.*/\U&
+
+HansM
+
+
+From jmd@bealfeirste (John Downey)
+Subject: Re: vi: Including blank line in search string?
+Date: 4 Feb 93 13:10:28 GMT
+Reply-To: jmd@muppet.bt.co.uk
+
+J R Evans (ngse18@castle.ed.ac.uk) wrote:
+
++---------
+|
+| I work on a range of different machines, mostly using vi on Unix systems,
+| for the usual reason that it's always available.  One trick which has
+| always escaped me is how to search for a string which extends over a
+| line end (indeed, this seems to be a problem for all the standard
+| Unix search utilities).  As an example of the requirement, I was 
+| looking through my mail folders for the "start of message" sequence --
+| "<blank line>From ".  Is there a solution within (generic) vi?
+|
+| Russ
+|
++---------
+
+You can't search for a pattern that crosses a line boundary; but you
+can specify a match at the beginning of a line, by typing:
+
+    /^From /
+
+(The final '/' isn't actually needed, but I've put it in to show the
+preceding space.) This will solve the particular problem you mention
+because most mail transfer agents will change a line starting with
+"From" in the body of a message to ">From" anyway.
+
+
+Regards,
+
+John Downey
+
+Work:
+    Paper mail:			MLB 1/21
+				BT Research Labs
+				Martlesham Heath, Ipswich, Suffolk, England
+    Mail:			jmd@cyclone.bt.co.uk
+    Telephone:	(UK)		0473 649626
+		(international)	+44 473 649626
+
+Home:
+    Paper mail:			55a Sutherland Sq., London SE17, England
+    Telephone:	(UK)		071 708 1299
+		(international)	+44 71 708 1299
+
+
+From jmd@bealfeirste (John Downey)
+Subject: Re: replace <character> with CR?
+Date: 4 Feb 93 14:54:14 GMT
+Reply-To: jmd@muppet.bt.co.uk
+
+Charles A. Lind (lind@eng.umd.edu) wrote:
+
++---------
+|
+| 	I have a line of words in the form:
+|
+| 		joe, pete, ron, mary, rich, nick, ted
+|
+| 	and I would like to change all the ',' to <CR> so that
+| 	I get
+|
+| 	joe
+| 	pete
+| 	ron
+| 	mary
+| 	rich
+| 	nick
+| 	ted
+|
+| I guess something of the form
+|
+| 	:1,$ s/, /<CR>/g
+|
+| is what I am looking for.
+|
+| In general I guess I am looking for the representation for <CR>,
+| <TAB>, etc.  I looked in cs.uwp.edu but I could not find this.
+|
+| Thanks
+|
+| Charles
+|
++---------
+
+In vi, type
+
+    :s/, */^M/g
+
+You have to type control-V followed by control-M to get the ^M. An
+ASCII newline is actually control-J, not control-M, but vi won't let
+you insert control-J into a command line. It's a bit illogical.
+
+In xvi, type
+
+    !!sed 's/, */\^J/g'
+
+You have to type control-V followed by control-J to get the ^J.
+
+
+Regards,
+
+John Downey
+
+Work:
+    Paper mail:			MLB 1/21
+				BT Research Labs
+				Martlesham Heath, Ipswich, Suffolk, England
+    Mail:			jmd@cyclone.bt.co.uk
+    Telephone:	(UK)		0473 649626
+		(international)	+44 473 649626
+
+Home:
+    Paper mail:			55a Sutherland Sq., London SE17, England
+    Telephone:	(UK)		071 708 1299
+		(international)	+44 71 708 1299
+
+
+From davisonj@en.ecn.purdue.edu (John M Davison)
+Subject: vi questions.  HELP!
+Date: Mon, 1 Feb 93 14:41:02 GMT
+
+        Help!  The following vi questions are plaguing me:
+
+1. Is there a way to do the equivalent of
+   :s/<tab>/<space>/g
+   without it failing (i.e. stopping the macro in progress) if no tabs are
+   found?
+
+2. Is there a way to encode the "|" character in a "map" command?  Presently,
+   when I attempt to include the "|" character in a "map" command, vi ignores
+   the "|" and everything else that follows it in the line, as if it were a
+   trailing comment delimiter.
+
+3. Is there any standard, terminal-independent way of mapping sequences
+   initiated by function keys, i.e. "<F1> k"?  (My current way of mapping these
+   sequences is on a terminal-by-terminal basis.  No mnemonics, just raw
+   sequences.)
+
+   I want to map function keys, application keypad keys, and arrow keys in vi,
+   but I don't know of any non-terminal-specific mnemonics that I can use for
+   the mappings.  Are there?  I don't see anything in the ex/vi references I've
+   looked at.
+
+   The following .exrc (see end of this article) works, but only for a
+   vt100-series terminal.  How can I make this work more universally (i.e. with
+   WYSEs and other terminals)?  Also, with an LK-201 keyboard (DEC vt2xx and
+   up), how do I specify the PF keys versus the F keys?  Is there any standard
+   way of doing it, or do people just tweak their termcap/terminfo entries as
+   they go along?
+
+4. What sequences of ASCII and non-ASCII (8-bit) characters can and cannot be
+   mapped by the "map" function?  It seems that any sequence that contains
+   either a space or a LF character, for example, cannot be mapped.
+
+5. Is there any facility in vi that allows one to map a key, in append mode, to
+   something which, unlike a macro, can invoke some user-defined algorithm
+   complete with conditional branches, loops, etc.?  I am looking for something
+   that would do the vi equivalent of mapping a key to a TPU function (for
+   those familiar with Digital Equipment Corporation's TPU).
+
+6. Is there a way to make the "autoindent" feature put in spaces instead of
+   tabs?
+
+
+        Coherent answers to any and all of these questions are appreciated!
+I'll post a summary if someone wants me to.  In the meantime, here is my .exrc
+file (if anyone is interested) and, after that, a file containing function key
+sequences for various terminals and terminal emulators:
+-------------------------------------------------------------------------------
+begin 0 .exrc.Z
+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
+8X$"9(<J!,EMTX[-?I`7*7`L+E-D$$.P0
+`
+end
+-------------------------------------------------------------------------------
+begin 0 fkeys.Z
+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
+:\(Y&N3(*21<,B1LI<90S0#@9V1Z/<90TH``P
+`
+end
+-------------------------------------------------------------------------------
+-- 
+John Davison, davisonj@ecn.purdue.edu
+"The next time you start to say, 'Purdue isn't as racist as some other places,'
+ bite your tongue.  I've lived in the South [U.S.] all my life, and I have
+ never encountered as much racism there as I have here."   -- Sumi Rebeiro
+
+
+From dp80027@data3.sbil.co.uk (David Price)
+Subject: Re: How to add blank lines in vi?
+Reply-To: dp80027@data3.sbil.co.uk
+Date: Fri, 5 Feb 93 08:27:17 GMT
+
+In article 19086@newssun.med.miami.edu, emansell@miasun.med.miami.edu (Eric A. Mansell) writes:
+>So, let's say you have a fairly long file and 
+>you want to globally add a blank line immediately 
+>before every line that begins with a ">" character.
+>
+
+Try the following:
+
+	:%s/^>/^M>/
+
+    where '^M' is generated by entering CONTROL V followed by CONTROL M and
+    '^>' is actually a caret followed by a right chevron.
+
+ 
+Cheers,
+
+    Dave P.
+
+
+
+
+
+From ciacovel@telesciences.com (Chris D Iacovelli)
+Subject: Re: replace <character> with CR?
+Date: Fri, 5 Feb 1993 15:51:23 GMT
+
+In article <1klsekINNk9k@mojo.eng.umd.edu> lind@eng.umd.edu (Charles A. Lind) writes:
+>
+>Hi,
+>	I have a line of words in the form:
+>
+>		joe, pete, ron, mary, rich, nick, ted
+>
+>	and I would like to change all the ',' to <CR> so that
+>	I get
+>
+>	joe
+>	pete
+>	ron
+>	mary
+>	rich
+>	nick
+>	ted
+>
+>I guess something of the form
+>
+>	:1,$ s/, /<CR>/g
+>
+>is what I am looking for.
+>
+>In general I guess I am looking for the representation for <CR>,
+><TAB>, etc.  I looked in cs.uwp.edu but I could not find this.
+>
+>Thanks
+>
+>Charles
+>-- 
+>------------------------------------------------------
+>           Charles Lind -- lind@eng.umd.edu
+>          Department of Aerospace Engineering
+>       University of MD, College Park, MD 20742        
+
+
+How about this:
+
+:1,$s/, /^V^M/g
+         ^^^^
+         control-v then control-m
+
+Works for me.
+
+Chris.
+
+================= VI it is not just an editor, it is a number. =================
+
+
+From zz1bb@impending.ucsd.edu (Barry Brown)
+Subject: Re: vi? CAPS --> small
+Date: 5 Feb 93 16:34:26 GMT
+
+In <1663@integow.integrity.nl> edwin@integow.integrity.nl (Edwin Koedam) writes:
+
+>Charles writes:
+>: 	Within vi is there a way to change all capital letters to small
+>: letters, or vice versa.  Is this possible?
+
+>To change capital letters into small ones, just use:
+>	:%s/./\l&/g
+>To change small letters into capital ones, just use:
+>	:%s/./\u&/g
+
+Pressing tilde (~) over a character will change its case and advance the
+cursor to the next character.  Just hold down the tilde key and swoop over a
+few sentences to change all the letters to the opposite case.
+
+-- 
+Barry E. Brown        --        \  UCSD Instructional Computing Center
+bebrown@ucsd.{edu,uucp,bitnet}   \   Anime Stuff FTP Server administrator
+Somewhere in San Diego, CA.....   \    (ftp network.ucsd.edu [132.239.254.203])
+"Stimpy, sometimes your wealth of ignorance astounds me." -- Ren
+
+
+From ciacovel@telesciences.com (Chris D Iacovelli)
+Subject: Re: Why !!
+Date: Sun, 7 Feb 1993 15:27:41 GMT
+
+In article <1993Feb4.003728.13763@dragon.acadiau.ca> 911288c@dragon.acadiau.ca (EDwin Chung) writes:
+>Dear friend,
+>
+>    I still don't find anything work for centre text
+>    in vi !!
+>    Any help ??
+>                        EDwin
+>
+
+EDwin,
+
+Try adding this to your .exrc file:
+------- snip --------
+map [c >>d0$maKV{{\q
+map K 80a 
+map V 80|D
+map {{ `a
+map \q lxd0:s/  / /g$p
+------- snip --------
+
+It works for me.
+
+cdi.
+=============================
+Christopher D. Iacovelli
+Member, Technical Staff
+TeleSciences CO Systems
+Moorestown, NJ 08057-1177 USA
+ciacovel@telesciences.com
+=============================
+
+
+From popaul@cs.mcgill.ca (Paul TERRAY)
+Subject: Re: vi? CAPS --> small
+Date: 10 Feb 93 20:36:13 GMT
+Reply-To: popaul@binkley.cs.mcgill.ca
+
+> In <1663@integow.integrity.nl> edwin@integow.integrity.nl (Edwin Koedam)  
+writes:
+> >To change small letters into capital ones, just use:
+> >	:%s/./\u&/g
+
+For more detail, \u modifier just change the first letter of the match.
+So if you want all word to begin by a upper case letter:
+:%s/[a-zA-Z]*/\u&/g
+otherwise, you can use \U modifier like
+:%s/.*/\U&/g
+will change everything to upper case.
+
+Paul
+
+
+From nh@cbnewsg.cb.att.com (nicholas.hounsome)
+Subject: Re: VI with tags stack feature
+Date: Fri, 12 Feb 1993 11:32:29 GMT
+
+>From article <1993Feb11.190457.13940@bnr.ca>, by mschee@bcarh600.bnr.ca (Michael SamChee):
+> Does any one have access or know of any version of VI for 
+> HP workstations, that has the 'tags stack' feature ?
+> 
+> ie, you can invoke tags recursively and be able to
+>     pop back to the previously invoked file.
+> 
+> Thanks very much in advance,
+> Michael.
+
+elvis has tagstack and I believe that it is supposed to work
+on HP.
+
+
+
+From watts@cs.scarolina.edu (Chris Watts)
+Subject: Changing case of a word....
+Date: 12 Feb 93 02:07:37 GMT
+
+Could anyone out there tell me how to change the case of a single word to all
+upper case or all lower case.  I would like to do this for a single word not
+all the words in the document.  I would appreciate any feedback.  Thanks.
+	
+						Chris
+
+
+From dattier@genesis.MCS.COM (DWT)
+Subject: Re: ctrl-d in vi's insert mode
+Date: 9 Mar 1993 16:04:47 -0600
+Reply-To: dattier@genesis.mcs.com (David W. Tamkin)
+
+eleleetk@nuscc.nus.sg (Teng-Kiat Lee) wrote in
+<1993Mar9.041852.13666@nuscc.nus.sg>:
+
+| I have a problem getting one of the 'standard' vi macro to
+| work. The macro works in insert mode and it is supposed to
+| give me a switch structure when I type sw'. The  (for tabbing
+| one 'sw') works but the  (for deleting one 'sw') didn't. It
+| seems like all the macros defined in the .exrc file with the
+|  didn't work as planned. Has any one any idea how this can
+| be corrected? I am quite sure I did the right macro. The macro
+| in question is given below:
+
+| map! sw' switch () {^M^Tcase : /**/^M^Tbreak;^M^D^D}
+
+| p.s: I did a manual mapping while in vi and it worked.
+
+Now there is a big clue; commands in .exrc can get rescanned and special
+characters in them may need extra escaping that they don't need if you
+define a mapping or map!pinFrom dattier@ddsw1.mcs.com (David W. Tamkin)
+Subject: Re: set nu
+Date: Fri, 29 May 1992 02:25:12 GMT
+
+[Please post follow-ups to comp.editors.]
+
+wiggins@osiris.cso.uiuc.edu (Don Wiggins) wrote in
+<Boz3sw.LK0@news.cso.uiuc.edu> in comp.unix.questions:
+
+| Haven't been able to find this anywhere.  In vi, ":set nu" numbers the lines
+| in the file.  However, I have never been able to figure out how to
+| unset this feature, short of getting out of the file and getting back in.
+
+:set nonu
+
+Here's a hint.  In vi, ":set" displays any options you have changed from the
+defaults, but ":set all" displays the current states of ALL options.  If you
+do ":set all" before ":set nu" you will see "nonumber" in the listing.  After
+":set nu," ":set" and ":set all" both include "number".  After ":set nonu,"
+":set all" has "nonumber" in it again, and "number" is gone from ":set."
+
+So if you want to know how to undo an option, look at :set all before you
+change it; then you'll see how to change it back.  Generally, if an option is
+a 
