@@ -1,0 +1,23 @@
+You have typed 'o' or 'O'.  The one you typed is now activated.
+
+o     open a new, empty line below the current line.  Type in the text
+      starting at colmun 1.  End text input with <ESC>.
+O     open a new, empty line above the current line.  Type in the text
+      starting at column 1.  End text input with <ESC>.
+
+Use this text for harmless practicing.  Undo last change with 'u'.
+
+
+
+
+
+
+
+  
+
+
+
+
+-------------------------------------------------------------------bt 88/01/25
+Type '^c' to continue editing or 'v' to visit old buffer. Type 'q' to quit.
+
