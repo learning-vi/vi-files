@@ -1,0 +1,15 @@
+" Newsgroups: comp.editors
+" From: wyle@bernina.ethz.ch (Mitchell Wyle)
+" Subject: Programming macro sets (was: Mapping keys in VI)
+" Date: Fri, 19 Jun 1992 17:51:27 GMT
+" """"""""""""""""""""""
+" vi macros for latex
+"
+" itemize (command mode)
+:map ;it a\begin{itemize}\end{itemize}ko  \item
+" itemize (insert mode)
+:map! ;it \begin{itemize}\end{itemize}ko  \item
+" emphasize word in command mode
+:map ;em i{\em lewa}
+" emphasize word in insert mode
+:map! ;em bi{\em lea}
