@@ -1,0 +1,877 @@
+
+
+
+
+
+
+                 Ex/Edit Command Summary (Version 2.0)
+
+
+
+
+     _E_x and _e_d_i_t  are  text  edi-
+  tors,  used  for  creating  and
+  modifying files of text on  the
+  UNIX  computer system.  _E_d_i_t is
+  a variant of _e_x  with  features
+  designed  to  make it less com-
+  plicated to learn and use.   In
+  terms  of  command  syntax  and
+  effect the editors  are  essen-
+  tially identical, and this com-
+  mand summary applies to both.
+     The summary is  meant  as  a
+  quick   reference   for   users
+  already acquainted with _e_d_i_t or
+  _e_x.  Fuller explanations of the
+  editors are  available  in  the
+  documents  _E_d_i_t:  _A _T_u_t_o_r_i_a_l (a
+  self-teaching introduction) and
+  the  _E_x  _R_e_f_e_r_e_n_c_e  _M_a_n_u_a_l (the
+  comprehensive reference  source
+  for both _e_d_i_t and _e_x).  Both of
+  these writeups are available in
+  the Computing Services Library.
+     In  the  examples   included
+  with  the summary, commands and
+  text entered by  the  user  are
+  printed  in boldface to distin-
+  guish   them   from   responses
+  printed by the computer.
+9  _T_h_e _E_d_i_t_o_r _B_u_f_f_e_r
+     In  order  to  perform   its
+  tasks  the  editor sets aside a
+  temporary work space, called  a
+  _b_u_f_f_e_r,   separate   from   the
+  user's permanent file.   Before
+  starting to work on an existing
+  file the editor makes a copy of
+  it  in  the buffer, leaving the
+  original untouched.  All  edit-
+  ing  changes  are  made  to the
+  buffer copy, which must then be
+  written  back  to the permanent
+  file in order to update the old
+  version.  The buffer disappears
+  at the end of the editing  ses-
+  sion.
+9  _E_d_i_t_i_n_g: _C_o_m_m_a_n_d _a_n_d _T_e_x_t _I_n_p_u_t
+  _M_o_d_e_s
+7777777777777777777777777777777777777777777777777                                         During  an  editing  session
+                                      there  are  two  usual modes of
+                                      operation:  _c_o_m_m_a_n_d  mode   and
+                                      _t_e_x_t  _i_n_p_u_t mode.  (This disre-
+                                      gards, for the moment, _o_p_e_n and
+                                      _v_i_s_u_a_l modes, discussed below.)
+                                      In  command  mode,  the  editor
+                                      issues  a  colon  prompt (:) to
+                                      show that it is ready to accept
+                                      and execute a command.  In text
+                                      input mode, on the other  hand,
+                                      there is no prompt and the edi-
+                                      tor merely accepts text  to  be
+                                      added   to  the  buffer.   Text
+                                      input mode is initiated by  the
+                                      commands  _a_p_p_e_n_d,  _i_n_s_e_r_t,  and
+                                      _c_h_a_n_g_e, and  is  terminated  by
+                                      typing  a  period  as the first
+                                      and only character on a line.
+9                                      _L_i_n_e _N_u_m_b_e_r_s _a_n_d _C_o_m_m_a_n_d _S_y_n_t_a_x
+                                         The editor  keeps  track  of
+                                      lines  of text in the buffer by
+                                      numbering  them   consecutively
+                                      starting with 1 and renumbering
+                                      as lines are added or  deleted.
+                                      At any given time the editor is
+                                      positioned  at  one  of   these
+                                      lines;  this position is called
+                                      the _c_u_r_r_e_n_t  _l_i_n_e.   Generally,
+                                      commands  that  change the con-
+                                      tents of the buffer  print  the
+                                      new  current line at the end of
+                                      their execution.
+                                         Most commands  can  be  pre-
+                                      ceded by one or two line-number
+                                      addresses  which  indicate  the
+                                      lines  to  be affected.  If one
+                                      number  is  given  the  command
+                                      operates  on that line only; if
+                                      two, on an inclusive  range  of
+                                      lines.   Commands that can take
+                                      line-number    prefixes    also
+                                      assume default prefixes if none
+                                      are given.  The default assumed
+                                      by  each command is designed to
+                                      make it convenient  to  use  in
+                                      many   instances   without  any
+                                      line-number  prefix.   For  the
+                                      most   part,   a  command  used
+
+
+9  Computing Services, U.C. Berkeley                     April 3, 1979
+
+
+
+9
+9  without a  prefix  operates  on
+  the current line, though excep-
+  tions to this  rule  should  be
+  noted.   The  _p_r_i_n_t  command by
+  itself,  for  instance,  causes
+  one  line, the current line, to
+  be printed at the terminal.
+     The summary shows the number
+  of  line  addresses that can be
+  prefixed  to  each  command  as
+  well as the defaults assumed if
+  they are omitted.  For example,
+  (.,.)  means that up to 2 line-
+  numbers may be given, and  that
+  if  none  is  given the command
+  operates on the  current  line.
+  (In  the  address  prefix nota-
+  tion,  ``.''  stands  for   the
+  current  line  and ``$'' stands
+  for  the  last  line   of   the
+  buffer.)  If  no  such notation
+  appears, no line-number  prefix
+  may be used.
+     Some commands take  trailing
+  information;   only   the  more
+  important instances of this are
+  mentioned in the summary.
+  _O_p_e_n _a_n_d _V_i_s_u_a_l _M_o_d_e_s
+     Besides  command  and   text
+  input  modes,  _e_x and _e_d_i_t pro-
+  vide  on  some  CRT   terminals
+  other  modes  of  editing, _o_p_e_n
+  and _v_i_s_u_a_l.  In these modes the
+  cursor  can be moved to indivi-
+  dual words or characters  in  a
+  line.   The commands then given
+  are  very  different  from  the
+  standard  editor commands; most
+  do not  appear  on  the  screen
+  when typed.  _A_n _I_n_t_r_o_d_u_c_t_i_o_n _t_o
+  _D_i_s_p_l_a_y _E_d_i_t_i_n_g  _w_i_t_h  _V_i  pro-
+  vides a full discussion.
+  _S_p_e_c_i_a_l _C_h_a_r_a_c_t_e_r_s
+     Some characters take on spe-
+  cial meanings when used in con-
+  text searches and  in  patterns
+  given  to  the  _s_u_b_s_t_i_t_u_t_e com-
+  mand.   For  _e_d_i_t,  these   are
+  ``^''  and  ``$'',  meaning the
+  beginning and end  of  a  line,
+  respectively.   _E_x has the fol-
+  lowing additional special char-
+  acters:
+  .     &     *     [     ]     ~
+  To use one of the special char-
+  acters  as  its  simple graphic
+  representation rather than with
+777777777777777777777777777777777777777777777777777777777                                      its special meaning, precede it
+                                      by  a   backslash   (\).    The
+                                      backslash  always has a special
+                                      meaning.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  Computing Services, U.C. Berkeley                     April 3, 1979
+
+
+
+9
+9       Name        Abbr           Description                      Examples
+
+9  (.)append        a
+7                         Begins text input mode, adding
+                         lines  to the buffer after the
+                         line specified. Appending con-
+                         tinues  until  ``.''  is typed
+                         alone at the  beginning  of  a
+                         new  line,  followed by a car-
+                         riage return. _0_a places  lines
+                         at   the   beginning   of  the
+                         buffer.
+777777777                                                          :a
+                                                          Three lines of text
+                                                          are added to the buffer
+                                                          after the current line.
+                                                          .
+                                                          :
+
+
+
+
+  (.,.)change      c
+7                         Deletes indicated line(s)  and
+                         initiates  text  input mode to
+                         replace  them  with  new  text
+                         which  follows.   New  text is
+                         terminated  the  same  way  as
+                         with _a_p_p_e_n_d.
+777777                                                          :5,6c
+                                                          Lines 5 and 6 are
+                                                          deleted and replaced by
+                                                          these three lines.
+                                                          .
+                                                          :
+
+  (.,.)copy _a_d_d_r   co
+7                         Places a copy of the specified
+                         lines after the line indicated
+                         by _a_d_d_r.  The example places a
+                         copy  of  lines  8 through 12,
+                         inclusive, after line 25.
+77777                                                          :8,12co 25
+                                                          Last line copied is printed
+                                                          :
+
+
+
+  (.,.)delete      d
+7                         Removes lines from the  buffer
+                         and  prints  the  current line
+                         after the deletion.
+777                                                          :13,15d
+                                                          New current line is printed
+                                                          :
+
+9
+
+7  edit _f_i_l_e
+  edit! _f_i_l_e
+77                 e
+                 e!
+77                          Clears the editor  buffer  and
+                          then  copies into it the named
+                          _f_i_l_e,   which   becomes    the
+                          current  file.   This is a way
+                          of  shifting  to  a  different
+                          file  without leaving the edi-
+                          tor.   The  editor  issues   a
+                          warning  message  if this com-
+                          mand  is  used  before  saving
+                          changes   made   to  the  file
+                          already in the  buffer;  using
+                          the  form  e!  overrides  this
+                          protective mechanism.
+7777777777777                                                           :e ch10
+                                                           No write since last change
+                                                           :e! ch10
+                                                           "ch10" 3 lines, 62 characters
+                                                           :
+
+
+
+
+
+
+
+
+
+  file _n_a_m_e      f
+7                          If followed by a _n_a_m_e, renames
+                          the  current file to _n_a_m_e.  If
+                          used without _n_a_m_e, prints  the
+                          name of the current file.
+7777                                                           :f ch9
+                                                           "ch9" [Modified] 3 lines ...
+                                                           :f
+                                                           "ch9" [Modified] 3 lines ...
+                                                           :
+
+  (1,$)global    g        global/_p_a_t_t_e_r_n/_c_o_m_m_a_n_d_s
+
+
+
+
+
+
+
+
+
+
+
+
+9
+9  (1,$)global!   g! or v
+7                          Searches  the  entire   buffer
+                          (unless  a  smaller  range  is
+                          specified by line-number  pre-
+                          fixes)  and  executes _c_o_m_m_a_n_d_s
+                          on every line with an  expres-
+                          sion  matching  _p_a_t_t_e_r_n.   The
+                          second    form,    abbreviated
+                          either  g! or v, executes _c_o_m-
+                          _m_a_n_d_s on  lines  that  _d_o  _n_o_t
+                          contain  the  expression  _p_a_t-
+                          _t_e_r_n.
+77777777777
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                           :g/nonsense/d
+                                                           :
+
+
+
+
+
+
+
+
+
+
+
+9
+9  (.)insert      i
+7                          Inserts  new  lines  of   text
+                          immediately  before the speci-
+                          fied   line.    Differs   from
+                          _a_p_p_e_n_d  only  in  that text is
+                          placed  before,  rather   than
+                          after, the indicated line.  In
+                          other words, 1i has  the  same
+                          effect as 0a.
+77777777                                                           :1i
+                                                           These lines of text will
+                                                           be added prior to line 1.
+                                                           .
+                                                           :
+
+
+
+
+  (.,.+1)join    j
+7                          Join lines together, adjusting
+                          white  space (spaces and tabs)
+                          as necessary.
+777                                                           :2,5j
+                                                           Resulting line is printed
+                                                           :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9
+9     Name      Abbr           Description                  Examples
+
+9  (.,.)list    l
+7                     Prints lines in a more unambi-
+                     guous  way than the _p_r_i_n_t com-
+                     mand does. The end of a  line,
+                     for  example, is marked with a
+                     ``$'',  and  tabs  printed  as
+                     ``^I''.
+777777                                                      :9l
+                                                      This is line 9$
+                                                      :
+
+
+
+
+9
+  (.,.)move _a_d_d_r   m
+7                         Moves the specified lines to a
+                         position  after the line indi-
+                         cated by _a_d_d_r.
+777                                                          :12,15m 25
+                                                          New current line is printed
+                                                          :
+
+  (.,.)number      nu
+7                         Prints each line  preceded  by
+                         its buffer line number.
+77                                                          :nu
+                                                            10  This is line 10
+                                                          :
+
+  (.)open          o
+7                         Too involved to discuss  here,
+                         but  if  you  enter  open mode
+                         accidentally,  press  the  ESC
+                         key  followed by q to get back
+                         into  normal  editor   command
+                         mode.   _E_d_i_t  is  designed  to
+                         prevent accidental use of  the
+                         open command.
+
+  preserve         pre
+7                         Saves a copy  of  the  current
+                         buffer  contents as though the
+                         system had just crashed.  This
+                         is  for  use  in  an emergency
+                         when  a  _w_r_i_t_e   command   has
+                         failed  and you don't know how
+                         else to save your work.|-
+7777777                                                          :preserve
+                                                          File preserved.
+                                                          :
+
+
+
+
+
+  (.,.)print       p     Prints the text of line(s).
+7                                                          :+2,+3p
+                                                          The second and third lines
+                                                          after the current line
+                                                          :
+
+
+
+
+7  quit
+  quit!
+77                    q
+                    q!
+77                          Ends the editing session.  You
+                          will  receive a warning if you
+                          have changed the buffer  since
+                          last  writing  its contents to
+                          the file. In  this  event  you
+                          must  either  type w to write,
+                          or type q! to  exit  from  the
+                          editor   without  saving  your
+                          changes.
+777777777                                                              :q
+                                                              No write since last change
+                                                              :q!
+                                                              %
+
+
+
+
+
+
+
+
+
+
+
+  _________________________
+  |- Seek assistance from a consultant as soon as possible  after
+
+  saving  a  file with the _p_r_e_s_e_r_v_e command, because the file is
+  saved on system storage space for only one week.
+
+9
+9  (.)read _f_i_l_e      r
+7                          Places a copy of _f_i_l_e  in  the
+                          buffer   after  the  specified
+                          line.  Address 0 is  permissi-
+                          ble  and  causes  the  copy of
+                          _f_i_l_e  to  be  placed  at   the
+                          beginning  of the buffer.  The
+                          _r_e_a_d command  does  not  erase
+                          any   text   already   in  the
+                          buffer.  If no line number  is
+                          specified,   _f_i_l_e   is  placed
+                          after the current line.
+77777777777                                                              :0r newfile
+                                                              "newfile" 5 lines, 86 characters
+                                                              :
+
+
+
+
+
+
+
+
+
+  recover _f_i_l_e      rec
+7                          Retrieves a copy of the editor
+                          buffer  after  a system crash,
+                          editor   crash,   phone   line
+                          disconnection,   or   _p_r_e_s_e_r_v_e
+                          command.
+
+  (.,.)substitute   s
+7                          substitute/_p_a_t_t_e_r_n/_r_e_p_l_a_c_e_m_e_n_t/
+                          substitute/_p_a_t_t_e_r_n/_r_e_p_l_a_c_e_m_e_n_t/gc
+                          Replaces the first  occurrence
+                          of  _p_a_t_t_e_r_n  on  a  line  with
+                          _r_e_p_l_a_c_e_m_e_n_t.   Including  a  g
+                          after  the command changes all
+                          occurrences of _p_a_t_t_e_r_n on  the
+                          line.  The c option allows the
+                          user to confirm each substitu-
+                          tion  before  it  is made; see
+                          the manual for details.
+77777777777                                                              :3p
+                                                              Line 3 contains a misstake
+                                                              :s/misstake/mistake/
+                                                              Line 3 contains a mistake
+                                                              :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9
+9        Name         Abbr           Description                         Examples
+
+9  undo               u
+7                           Reverses the changes  made  in
+                           the   buffer   by   the   last
+                           buffer-editing command.   Note
+                           that  this  example contains a
+                           notification about the  number
+                           of lines affected.
+777777                                                            :1,15d
+                                                            15 lines deleted
+                                                            new line number 1 is printed
+                                                            :u
+                                                            15 more lines in file ...
+                                                            old line number 1 is printed
+                                                            :
+
+  (1,$)write _f_i_l_e    w
+  (1,$)write! _f_i_l_e   w!
+77                           Copies data  from  the  buffer
+                           onto  a  permanent file. If no
+                           _f_i_l_e  is  named,  the  current
+                           filename is used.  The file is
+                           automatically  created  if  it
+                           does   not   yet   exist.    A
+                           response containing the number
+                           of lines and characters in the
+                           file indicates that the  write
+                           has  been  completed  success-
+                           fully.  The editor's  built-in
+                           protections  against overwrit-
+                           ing  existing  files  will  in
+                           some  circumstances  inhibit a
+                           write.  The form w! forces the
+                           write,   confirming   that  an
+                           existing   file   is   to   be
+                           overwritten.
+777777777777777777                                                            :w
+                                                            "file7" 64 lines, 1122 characters
+                                                            :w file8
+                                                            "file8" File exists ...
+                                                            :w! file8
+                                                            "file8" 64 lines, 1122 characters
+                                                            :
+
+
+
+
+
+
+
+
+
+
+
+
+9
+  (.)z _c_o_u_n_t   z
+7                     Prints a screen full  of  text
+                     starting  with  the line indi-
+                     cated; or, if _c_o_u_n_t is  speci-
+                     fied,  prints  that  number of
+                     lines.  Variants of the _z com-
+                     mand   are  described  in  the
+                     manual.
+
+  !_c_o_m_m_a_n_d
+7                     Executes the remainder of  the
+                     line  after  !  as a UNIX com-
+                     mand.  The buffer is unchanged
+                     by   this,   and   control  is
+                     returned to  the  editor  when
+                     the  execution  of  _c_o_m_m_a_n_d is
+                     complete.
+7777777                                                      :!date
+                                                      Fri Jun 9 12:15:11 PDT 1978
+                                                      !
+                                                      :
+
+
+
+
+  control-d
+7                     Prints  the  next  _s_c_r_o_l_l   of
+                     text,   normally   half  of  a
+                     screen.  See  the  manual  for
+                     details of the _s_c_r_o_l_l option.
+
+  (.+1)<cr>
+7                     An address alone followed by a
+                     carriage   return  causes  the
+                     line to be  printed.   A  car-
+                     riage  return by itself prints
+                     the line following the current
+                     line.
+777777                                                      :<cr>
+                                                      the line after the current line
+                                                      :
+
+
+
+
+99
+
+
+
+9
+9  /_p_a_t_t_e_r_n/
+7                     Searches for the next line  in
+                     which   _p_a_t_t_e_r_n   occurs   and
+                     prints it.
+777                                                      :/This pattern/
+                                                      This pattern next occurs here.
+                                                      :
+
+  //
+7                     Repeats   the   most    recent
+                     search.
+77                                                      ://
+                                                      This pattern also occurs here.
+                                                      :
+
+  ?_p_a_t_t_e_r_n?
+7                     Searches in the reverse direc-
+                     tion for _p_a_t_t_e_r_n.
+
+  ??
+7                     Repeats   the   most    recent
+                     search,  moving in the reverse
+                     direction through the buffer.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
