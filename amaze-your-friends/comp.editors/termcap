@@ -1,0 +1,327 @@
+From gerolima@Xenon.Stanford.EDU (Mark Gerolimatos)
+Subject: Termcap/VI problem...
+Date: Sun, 31 May 1992 21:00:20 GMT
+
+Try again....
+
+I am adding in a new termcap entry for some bizarre terminal I bought. Works 
+fine, except that I can't get VI (and VI only) to take the termcap entry. 
+Keeps on complaining about unknown terminal types.
+
+Just to be safe, I took a similar termcap entry, copied, and renamed all the
+name fields. Nope, VI still didn't take it.
+
+Any suggestions?
+
+-Mark
+P.S. Please resond directly, if at all possible
+
+====================================Cut Here====================================
+
+				Mark Gerolimatos
+
+gerolima@xenon.stanford.edu	"Righteousness comes ONLY from Jesus Christ...
+	@netlabs.com			...NEVER from an apron."
+						-Jack T. Chick
+
+================================================================================
+
+
+From gerolima@Xenon.Stanford.EDU (Mark Gerolimatos)
+Subject: RE: Termcap/VI problem (got it, thanks)
+Date: Mon, 1 Jun 1992 20:24:01 GMT
+
+
+Oops, forgot to mention that I am running SunOS 4.1.1
+
+Turns out that vi (as in /usr/UCB/vi) uses termINFO in SunOs. Why,
+I'll never figure out. That was the problem.
+
+Thanx to all those who helped.
+-Mark
+
+====================================Cut Here====================================
+
+				Mark Gerolimatos
+
+gerolima@xenon.stanford.edu	"Righteousness comes ONLY from Jesus Christ...
+	@netlabs.com			...NEVER from an apron."
+						-Jack T. Chick
+				"La justicia viene so'lo por Jesucristo
+					...NUNCA por un delantar."
+						-por Jack. T. Chick
+
+================================================================================
+
+
+From terry@npd.Novell.COM (Terry Lambert)
+Subject: Re: Termcap/VI problem...
+Date: 1 Jun 92 22:57:27 GMT
+
+In article <1992May31.210020.10270@CSD-NewsHost.Stanford.EDU> gerolima@Xenon.Stanford.EDU (Mark Gerolimatos) writes:
+>Try again....
+>
+>I am adding in a new termcap entry for some bizarre terminal I bought. Works 
+>fine, except that I can't get VI (and VI only) to take the termcap entry. 
+>Keeps on complaining about unknown terminal types.
+>
+>Just to be safe, I took a similar termcap entry, copied, and renamed all the
+>name fields. Nope, VI still didn't take it.
+>
+>Any suggestions?
+
+	It is nearly 100% likely that your vi uses TERMINFO, *not* TERMCAP
+as the means of determining what escape sequences to use.  This is true of
+SunOS and most SysV binary distributions.
+
+How to find out from the csh:
+
+		strings `which vi` | grep term
+	
+You'll see a message similar to one of the following::
+
+	corrupted terminfo entry
+	terminfo entry too long
+	terminfo file for "%s" terminal is not readable
+
+
+Ie: This vi was linked -ltermlib
+
+or something similar to:
+
+	incomplete termcap entry
+
+Ie: this vi was linked with -ltermcap
+
+
+To solve your problem if this is the case:
+
+	Download 'captoinfo' from your friendly neighborhood archive,
+compile it, and run it (alternately, you could learn to write terminfo
+entries).
+
+	If you can get a hold of a System V box that has the terminfo
+of interest:
+
+To get a terminfo file from an already compiled terminfo database that
+doesn't have the source around (SCO is famous for this):
+
+	System V (at least) has a command called "infocmp" which will
+dump an ASCII version of the compiled terminfo source for the terminal
+currently referred to by the TERM environment variable.
+
+
+
+				Terry Lambert
+				terry_lambert@gateway.novell.com
+				terry@icarus.weber.edu
+--
+my present or previous employers.
+
+
+From jpr@jpradley.jpr.com (Jean-Pierre Radley)
+Subject: Re: Termcap/VI problem...
+Date: Tue, 02 Jun 1992 03:56:15 GMT
+
+In article <1992May31.210020.10270@CSD-NewsHost.Stanford.EDU> gerolima@Xenon.Stanford.EDU (Mark Gerolimatos) writes:
+>I am adding in a new termcap entry for some bizarre terminal I bought. Works 
+>fine, except that I can't get VI (and VI only) to take the termcap entry. 
+>Keeps on complaining about unknown terminal types.
+>Just to be safe, I took a similar termcap entry, copied, and renamed all the
+>name fields. Nope, VI still didn't take it.
+>Any suggestions?
+
+I suggest that you provide your version of Unix when you post such a question.
+
+It is possible that your version of 'vi' knows nothing about termcap, and is
+using terminfo instead.
+
+>P.S. Please resond directly, if at all possible
+
+You post here, you read here...
+
+>====================================Cut Here====================================
+>
+>				Mark Gerolimatos
+>
+>gerolima@xenon.stanford.edu	"Righteousness comes ONLY from Jesus Christ...
+>	@netlabs.com			...NEVER from an apron."
+>						-Jack T. Chick
+>
+>================================================================================
+
+Your signature is abusively long. Not its contents, its length.
+Please recall that the news.* files suggest that 4 lines is sufficient for a
+signature block.
+-- 
+Jean-Pierre Radley   Unix in NYC   jpr@jpr.com   jpradley!jpr   CIS: 72160,1341
+
+
+From gert@greenie.gold.sub.org (Gert Doering)
+Subject: Re: Termcap/VI problem...
+Date: 2 Jun 92 14:26:35 GMT
+
+gerolima@Xenon.Stanford.EDU (Mark Gerolimatos) writes:
+
+>I am adding in a new termcap entry for some bizarre terminal I bought. Works 
+>fine, except that I can't get VI (and VI only) to take the termcap entry. 
+>Keeps on complaining about unknown terminal types.
+
+If you had told us what kind of Unix you are using, it would be easier to
+answer...
+
+Nevertheless, on many unices VI uses not termcap but terminfo.
+
+gert
+-- 
+Gert Doering | SubNet  : gert@greenie.gold.sub.org      | mailbox / uucp:
+Munich / FRG | InterNet: gdoering@physik.tu-muenchen.de | call (089)3243328
+(089)3243228 | FidoNet : gert.doering@2:246/55.4        | login bbs / nuucp
+
+
+From gert@greenie.gold.sub.org (Gert Doering)
+Subject: Re: Termcap/VI problem (got it, thanks)
+Date: 2 Jun 92 21:41:15 GMT
+
+gerolima@Xenon.Stanford.EDU (Mark Gerolimatos) writes:
+
+>Turns out that vi (as in /usr/UCB/vi) uses termINFO in SunOs. Why,
+>I'll never figure out. That was the problem.
+
+Why? Because terminfo is far superior to termcap - more features, faster
+access.
+
+gert
+-- 
+Gert Doering | SubNet  : gert@greenie.gold.sub.org      | mailbox / uucp:
+Munich / FRG | InterNet: gdoering@physik.tu-muenchen.de | call (089)3243328
+(089)3243228 | FidoNet : gert.doering@2:246/55.4        | login bbs / nuucp
+
+
+From guy@Auspex.COM (Guy Harris)
+Subject: Re: Termcap/VI problem (got it, thanks)
+Date: 4 Jun 92 23:04:19 GMT
+
+>>Turns out that vi (as in /usr/UCB/vi) uses termINFO in SunOs. Why,
+>>I'll never figure out. That was the problem.
+>
+>Why? Because terminfo is far superior to termcap - more features, faster
+>access.
+
+It may be (although you'll probably find plenty of people who don't
+think it's better; I'm pretty much neutral, so I'll let those people
+jump into the fray - preferably in "comp.unix.questions"), but it
+*wasn't* the reason.
+
+The reason was very simple:
+
+1) we wanted an 8-bit clean "vi" for SunOS 4.1, to handle character sets
+   such as ISO Latin #1;
+
+2) the SVR3.1 "vi" was already 8-bit clean;
+
+3) making the BSD "vi" 8-bit clean looked like a real chore;
+
+4) the SVR3.1 "vi" used "terminfo";
+
+5) making the SVR3.1 "vi" use "termcap" looked like a real chore;
+
+6) "vi" is such a sewer that nobody particularly wanted to undertake
+   either of those chores;
+
+so we just dropped in the SVR3.1 "vi", with some changes to make it
+build under SunOS's SV environment (which, in 4.1[.x], doesn't have
+every single library or library routine from SVR3.1; the undocumented
+"-lgen" was left out, as were AT&T's decidedly non-standard routines for
+fetching character set information for the locale - we used the routines
+from the ANSI C draft standard, instead).
+
+That also picked up a bunch of post-version-3.7 bug fixes, and various
+other features such as "showmode"; "set showmode" puts an indicator on
+the bottom line showing what mode you're in.
+
+
+From terry@npd.Novell.COM (Terry Lambert)
+Subject: Re: Termcap/VI problem (got it, thanks)
+Date: Fri, 5 Jun 1992 17:53:07 GMT
+
+In article <1992Jun02.214115.11997@greenie.gold.sub.org> gert@greenie.gold.sub.org (Gert Doering) writes:
+>gerolima@Xenon.Stanford.EDU (Mark Gerolimatos) writes:
+>
+>>Turns out that vi (as in /usr/UCB/vi) uses termINFO in SunOs. Why,
+>>I'll never figure out. That was the problem.
+>
+>Why? Because terminfo is far superior to termcap - more features, faster
+>access.
+
+Superior features like "we thought of everything, so you can't possibly need
+to extend it, so we'll use a static structure for reading the file"?
+
+Faster access depends on how you set it up.  It's perfectly acceptable to
+have your TERMCAP environment variable contain your entire termcap string;
+this means that it's already in your address space, automagically, when you
+run your app.  See 'tset' (UNIX) and 'resize' (X).
+
+If I want better than ISO (8 color) escape sequences, at least I have a way
+to get them using termcap.
+
+The other drawback to terminfo is that if you don't have 'infocmp' and you
+don't have terminfo source (many AT&T distributions left terminfo source
+out), you have to write 'infocmp' or suffer with factory bugs.  It's
+relatively easy, on the other hand, to edit /etc/termcap.  One glaring
+use for this is to set "protect" to be reverse video on a Wyse-50, and
+use it From gerolima@Xenon.Stanford.EDU (Mark Gerolimatos)
+Subject: Termcap/VI problem...
+Date: Sun, 31 May 1992 21:00:20 GMT
+
+Try again....
+
+I am adding in a new termcap entry for some bizarre terminal I bought. Works 
+fine, except that I can't get VI (and VI only) to take the termcap entry. 
+Keeps on complaining about unknown terminal types.
+
+Just to be safe, I took a similar termcap entry, copied, and renamed all the
+name fields. Nope, VI still didn't take it.
+
+Any suggestions?
+
+-Mark
+P.S. Please resond directly, if at all possible
+
+====================================Cut Here====================================
+
+				Mark Gerolimatos
+
+gerolima@xenon.stanford.edu	"Righteousness comes ONLY from Jesus Christ...
+	@netlabs.com			...NEVER from an apron."
+						-Jack T. Chick
+
+================================================================================
+
+
+From terry@npd.Novell.COM (Terry Lambert)
+Subject: Re: Termcap/VI problem...
+Date: Wed, 3 Jun 1992 16:37:22 GMT
+
+In article <1992Jun02.035615.5315@jpradley.jpr.com> jpr@jpradley.jpr.com (Jean-Pierre Radley) writes:
+>In article <1992May31.210020.10270@CSD-NewsHost.Stanford.EDU> gerolima@Xenon.Stanford.EDU (Mark Gerolimatos) writes:
+>>====================================Cut Here====================================
+>>
+>>				Mark Gerolimatos
+>>
+>>gerolima@xenon.stanford.edu	"Righteousness comes ONLY from Jesus Christ...
+>>	@netlabs.com			...NEVER from an apron."
+>>						-Jack T. Chick
+>>
+>>================================================================================
+>
+>Your signature is abusively long. Not its contents, its length.
+>Please recall that the news.* files suggest that 4 lines is sufficient for a
+>signature block.
+>-- 
+>Jean-Pierre Radley   Unix in NYC   jpr@jpr.com   jpradley!jpr   CIS: 72160,1341
+====================================Cut Here====================================
+*****Mark Gerolimatos**gerolima@xenon.stanford.edu*"Righteousness comes ONLY fro
+m Jesus Christ...**@netlabs.com***...NEVER from an apron."*******-Jack T. Chick*
+*
+====================
