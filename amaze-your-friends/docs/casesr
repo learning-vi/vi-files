@@ -1,0 +1,39 @@
+From hansm@wsinti05.info.win.tue.nl (Hans Mulder)
+From: hansm@wsinti05.info.win.tue.nl (Hans Mulder)
+Newsgroups: comp.editors
+Subject: Re: Changing case during search and replace in VI
+Date: 14 Dec 1993 21:13:31 +0100
+Organization: Eindhoven University of Technology, The Netherlands
+Lines: 30
+
+In <2eh2q5$67i@ionews.io.org> chowwi@ionews.io.org (Wing-Chi Chow) writes:
+
+>Someone posted this awhile back, but I forgot to save the
+>article :-(, so does anyone know how I can change
+>the case of characters in a search and replace under VI.
+>I think there were some commands like &U and &L.
+
+In the replacement string:
+
+  \l	changes the case of the next letter to lower case
+  \u	changes the case of the next letter to lower case
+  \L	changes case to lower case until \e or \E or end of replacement
+  \U	changes case to upper case until \e or \E or end of replacement
+
+  &	denotes the string that matched the search pattern
+  ~	denotes the previous replacement string
+
+  \1	denotes the string that matched the part of the search string
+	between the leftmost \( and the corresponding \)
+  \2	ditto for second \(
+  \3	ditto for third \(
+  :	:	:
+  :	:	:
+
+Thus :s/pattern/\U&/g changes all occurrences of "pattern" to upper case,
+
+--
+Hope this helps,
+
+HansM
+
