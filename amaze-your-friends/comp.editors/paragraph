@@ -1,0 +1,124 @@
+From kencham@myria.cs.umn.edu (Deepak "Kerd")
+Subject: Could someone explain what "paragraphs=IPLPPPQPP LIpplpipnpb" means ??
+Date: 8 Jun 92 00:32:55 GMT
+Article-I.D.: myria.kencham.707963575
+
+Hi VI-GURUs,
+
+Just wondering what that setting means ..... Could you help me ?
+
+Deepak
+--------------------------------------------------------------------------------
+Sherlock Holmes observed that ".. After you have eliminated the impossible, only
+the possible, however improbable, remains..". I, however, do not like to elimin-
+ate the impossible. And so I believe, Holmes and Watson were gays.
+--------------------------------------------------------------------------------
+Email: kencham@{cs,centi.cs}.umn.edu      Department of Gopher Science 
+Voicemail:(res)(612)339-8397		  University of Minnesota
+	  (off)(612)626-7524	   	  Minneapolis, MN 55455, USA
+--------------------------------------------------------------------------------
+--
+--------------------------------------------------------------------------------
+J.S.S.Holmes observed that ".. After you have eliminated the impossible, only 
+the possible, however improbable, remains..". I, however, do not like to elimin-
+ate the impossible. And so I believe, Holmes and Watson were gays.
+
+
+From nh@cbnewsg.cb.att.com (nicholas.hounsome)
+Subject: Re: Could someone explain what "paragraphs=IPLPPPQPP LIpplpipnpb" means ??
+Date: Tue, 9 Jun 1992 07:25:00 GMT
+
+>From article <kencham.707963575@myria>, by kencham@myria.cs.umn.edu (Deepak "Kerd"):
+> Hi VI-GURUs,
+> 
+> Just wondering what that setting means ..... Could you help me ?
+> 
+> Deepak
+> --------------------------------------------------------------------------------
+> Sherlock Holmes observed that ".. After you have eliminated the impossible, only
+> the possible, however improbable, remains..". I, however, do not like to elimin-
+> ate the impossible. And so I believe, Holmes and Watson were gays.
+> --------------------------------------------------------------------------------
+> Email: kencham@{cs,centi.cs}.umn.edu      Department of Gopher Science 
+> Voicemail:(res)(612)339-8397		  University of Minnesota
+> 	  (off)(612)626-7524	   	  Minneapolis, MN 55455, USA
+> --------------------------------------------------------------------------------
+> --
+> --------------------------------------------------------------------------------
+> J.S.S.Holmes observed that ".. After you have eliminated the impossible, only 
+> the possible, however improbable, remains..". I, however, do not like to elimin-
+> ate the impossible. And so I believe, Holmes and Watson were gays.
+
+they are (n|t)roff macros which follow a point '.' at the beginning of a line
+as in:
+.IP some stuff
+If you are not using this they are not much use. I am occasionaly forced to
+write uniplex documents which use .PA for page breaks and I sometimes set
+up paragraphs for this because uniplex is so horrible but reasonably easy
+to hack in vi. Of course for code use the paragraph commands '{' and '}'
+also recognise curly barckets at the beginning of a line which makes it
+easy to go from function to function. It realy ought to be generalised
+to a sequence of space separated stuff which might start a line.
+
+
+Nick Hounsome
+
+
+
+
+
+From eric@ils.nwu.edu (Eric Goldstein)
+Subject: Paragraphs and vi
+Date: Sun, 4 Oct 1992 02:16:32 GMT
+
+Hi! 
+
+I'm looking for a way to automatically format paragraphs using vi.
+
+I've been using vi for years, (and I love it, and I've resisted
+switching to Emacs), and all this time I've just used "J" and the
+return keys.  But I really wish there was less annoying way to do it.
+
+(At least on my system, setting the wrapmargin to greater than zero
+doesn't influence the behavior of the "J" command.)
+
+
+If it isn't clear what I mean by "formatting paragraphs", here is
+an example:
+
+------------------------------------------------------------------
+This is a sample sentence.
+This is sample sentence number two, which is longer than the others.
+This is sample sentence number three.
+This is sample sentence number four.
+
+       |
+       |     I want a way to automatically convert the above four lines 
+       |     of text into a nicely formated paragraph.
+       V 
+
+This is a sample sentence. This is sample sentence number two, which
+is longer than the others. This is sample sentence number three.  This 
+is sample sentence number four.
+
+---------------------------------------------------------------------
+
+I would greatly appreciate any help on this!
+
+                 -- Eric  (eric@ils.nwu.edu)
+
+-- 
+
+
+
+From imc@comlab.ox.ac.uk (Ian Collier)
+Subject: Re: Paragraphs and vi
+Date: 5 Oct 92 11:49:07 GMT
+X-Local-Date: Monday, 5th October 1992 at 12:48pm BST
+
+In article <1992Oct5.075455.27645@cbfsb.cb.att.com>, nh@cbnewsg.cb.att.com (nicholas.hounsome) wrote:
+>From article <1992Oct4.050951.2469@ils.nwu.edu>, by eric@ils.nwu.edu (Eric Goldstein):
+>> ------------------------------------------------------------------
+>> stty: TCGETS: Operation not supported on socket
+>> This is a sample sentence.  This is sample sentence number two, which
+>> is longer than the others.  This is sample sentence 
