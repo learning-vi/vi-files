@@ -1,0 +1,70 @@
+From: pgf@cayman.COM (Paul Fox)
+Subject: Re: Undoing, Emacs and unlimited files ... summery.
+Date: 27 Jul 92 19:51:02 GMT
+Organization: Cayman Systems Inc., Cambridge Ma
+
+nmouawad@waterloo.edu (Naji Mouawad) writes:
+: 
+	... a nice summary of undo strategies in various editors
+:
+
+Gee, if I'd known everyone was going to be so informative, I'd have replied
+to the original posting -- but better late than never:  since it's just a
+little different than the other method's described, here's how vile does
+undo:
+
+(Note this is a vi-style "one command" undo, which undoes itself -- it is
+not an "infinite" undo.)
+
+[ vile uses the linked list method of storage, with dynamically allocated
+text blocks hanging off of each line "header". ]
+
+Undo operates by keeping a stack of "changed" lines (i.e.  those affected
+by a given command), along with information (more later) as to where they
+should go if an undo is actually required.  Thus if a character is deleted
+on a line, a copy of the original line is pushed on the undo stack.  If a
+line is deleted, is simply moved to the undo stack.  If a line is inserted,
+a "tag" is pushed on the undo stack, which tells us where the corresponding
+deletion should occur at undo time.  Only the first change to a line causes a
+copy to be stacked -- at that point, the line is flagged as having been
+copied already, suppressing further copies.  Since undo is itself undoable,
+I found it easiest to keep two undo stacks -- when we do an undo, the
+changes we are now undoing are simply put onto the alternate undo stack. 
+Multiple undo commands in a row simply cause us to move from one stack of
+changes to the other (rebuilding the other each time).
+
+A certain amount of grottiness comes in because what we store as the
+information needed to put the lines back in their place are actually
+pointers to the lines in front and in back of its original location.  Since
+these pointers may be invalidated by subsequent changes during the same
+command (if, say, the line following a changed line goes away altogether),
+we need to store some pointer patches on the stack as weil, which, in
+essence, say "when you pop this, go down through the stack and change all
+instances of pointer A to pointer A', because that's its new value".  I
+didn't say it was beautiful.  I would probably do things differently if I
+were to do it now -- I knew _nothing_ about editors when I started
+converting micro-Emacs to vile.
+
+One advantage of this stack approach is that it simply accumulates all
+changes to a buffer until told to clean up the stacks.  Thus it was trivial
+to make global operations (:g/str1/s/str2/str3") and macros (like a set of
+commands executed with '@a', or via the keyboard macro-recorder) undoable
+all at once.  The first case just worked, and for the second, I simply
+delay the stack cleanup if a macro replay is in progress.
+
+Vi connosewers (sp? :-) will note that this is different than the stock vi
+approach, in that it is totally independent of the default yank buffer. 
+That is, doing an undo will not affect the contents of the yank buffer.  I
+consider this a feature.
+
+
+paul fox, pgf@cayman.com
+
+
+(yes, it's available for ftp -- at ftp.cayman.com:/pub/vile)
+
+-- 
+		paul fox, pgf@cayman.com, (617)494-1999
+		Cayman Systems, 26 Landsdowne St., Cambridge, MA 02139
+
+
