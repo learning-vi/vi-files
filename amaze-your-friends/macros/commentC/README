@@ -1,0 +1,63 @@
+From: 880139h@dragon.acadiau.ca (Rob Hutten)
+Newsgroups: comp.editors
+Subject: VI macros for multi-line C-style comments
+Date: 25 May 92 12:27:59 GMT
+Organization: Acadia University
+Lines: 281
+
+
+Here are some vi macros to allow you to make C-style comments 
+automatically a la emacs:
+
+	/*  This is a multi-line
+ 	 *  C-style comment.
+	 */
+
+After typing the opening '/*', a macro is tripped which remaps the
+return key to automatically indent the next line and properly place the
+*'s in a neat column.  The macro is shut off when the closing comment
+delimiter '*/' is typed.
+
+This is a grundgy hack- besides a couple macros in your .exrc, there
+are two files called ~/.macro-on and ~/.macro-off which contain other
+macros.  This is ugly, but I needed some macros to create others and
+I ran into trouble trying to put map commands inside map commands.
+The fix (if it can be called that) was to :so the macros.
+
+The usefullness of these macros is questionable, but they were fun to
+write :-) I use them, but less geeky people might find this a lot of
+hassle just to save a few keystrokes.
+
+Please email me if you have any problems/questions/suggestions.
+
+Here is an installation script to install the buggers.  Save the script
+and the uuencoded file in a new directory, because a few files will be
+created.  The script will copy the macro-on and macro-off files to your
+home directory and add some macros to ./.exrc.
+
+------- cut here, save as "install.macros" make it executable ----
+##
+## Extracted by the archivemaintainer.
+##
+## install.macros
+##
+------------------------------------------------------------------
+
+Here are the macro files uuencoded.  This is one butt-ugly uuencode,
+by the way...
+
+--------------- cut here, save as "comment.macros.uu" -----------------
+##
+## Extracted by the archivemaintainer.
+##
+## comment.macros
+## macro-off
+## macro-on
+##
+-- 
+Rob Hutten                            Atlantic Geoscience Centre, Dartmouth, NS
+880139h@dragon.acadiau.ca
+hutten@agcrr.bio.ns.ca                Do you have any old (50's-70's) computer
+(902) 426-7736 (w), 542-9831 (h)      equipment?  Email me.
+
+
