@@ -1,0 +1,21 @@
+    This is the top directory for the vi course.  The following
+files do:
+
+makevi	-  makes the vi course
+vi	-  the actual vi course
+vi.old	-  the old version of the course
+
+the following are the chapters:
+
+head -  Header info
+1 - introduction
+2 - navigating (moving around)
+3 - insert mode
+4 - changing & deleting text
+5 - misc
+6 - Ex mode
+
+
+	Dennis Rears drears@pica.army.mil
+
+LAST CHANGE:  29 June 1989
