@@ -1,0 +1,54 @@
+@(#)lvi.doc 1.1 Documentation 88/01/25 23:20:34
+
+
+	   LVI -- The Learner's introduction to VI
+
+                              by
+ 
+                          Bo Thide'
+              Swedish Institute of Space Physics
+                   S-755 90 Uppsala, Sweden
+        UUCP: ..enea!kuling!irfu!bt  or  bt@irfu.UUCP
+ 
+
+This is a macro package  providing a learner's  interface to
+the  vi(1)   editor   family.  You  start  by  typing   'lvi
+<filename(s)>'.  'Lvi'  will then  create a specific  EXINIT
+variable  and run  vi(1)  through  an  exec(1)  command.  If
+available,  the 'showmode'  flag will be set in vi(1).  When
+vi(1) has  started a tags file  containing  an  introductory
+text  will  be   displayed.  After  that,  just  follow  the
+instructions.
+
+'Lvi' is adaptive in the sense that the first time you enter
+a command  that in some way  might  change  the text you are
+editing you will get interactive help with the command.  You
+can even safely gain some  experience  by trying the command
+on the help text.  Any text changes introduced at this stage
+will be silently  discarded.  After this  exercise,  you are
+supposed to be familiar with the particular command and will
+not get any special help the next time you use it.  However,
+at any time you can type '^a' (<CTRL>a) to get assistance in
+form of an on-line, single-screen vi(1) help card containing
+virtually  every standard vi(1)  command.  A TeX source file
+for this help card is made  available  so you can typeset it
+and keep it in your shirt pocket.
+
+The  adaptiveness of 'lvi' has been  accomplished  by having
+all   text-changing   commands  either   ":map"ped  away  or
+":map"ped to a ":ta" command that copies in a tags file with
+help text and  examples.  Only if you use a ":"  command  is
+it possible to damage the tags file.  It does not seem to be
+possible  to ":map"  the ":"  command  itself to make  'lvi'
+completely  safe.  At least on the system (HP-UX) I used for
+developing  'lvi', such a mapping  yields the  message  "Too
+dangerous to map that".
+
+After hitting '^c' you enter into the first of the files you
+want to edit.  At the same time a help line is displayed  at
+the bottom of the screen.  This line also  appears  when you
+hit <CR> in command mode, something that unexperienced users
+tend to do now and  then.  Except  for the fact  that  '^a',
+'^c',  '<CR>',  'v', 'V', and 'q' are  mapped  to  something
+useful, 'lvi' now behaves like  standard  vi(1).  This means
+that you may in fact use 'lvi' to produce useful text files.
