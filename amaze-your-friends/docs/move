@@ -1,0 +1,159 @@
+Newsgroups: comp.unix.questions
+From: mflll@uxa.ecn.bgu.edu (Dr. Laurence Leff)
+Subject: Re: vi (cut and paste)
+Keywords: vi
+Organization: Educational Computing Network
+Date: Tue, 25 Aug 1992 03:53:49 GMT
+Lines: 149
+
+I have prepared some Helpful Hint files on common problems of moving
+text around from file to file or within a file.  Perhaps, they may  
+be helpful.  Thus, I post the three files here.  Enjoy.
+
+These were posted and made available on this machine for all to use.
+
+
+Dr. Laurence Leff  Western Illinois University, Macomb IL 61455 ||(309) 298-1315
+Stipes 447 Assistant Prof. of Computer Science ||Pager: 837-5909 FAX: 298-2302
+Moderator:  Symbolic Math List, Technical Reports List||mflll@uxa.ecn.bgu.edu 
+alt.binaries.pictures.fine-art hierarchy          ||BITNET: mflll@ecnuxa.bitnet
+______________________________________________________________________
+            How to Move Text from One File to Another in VI
+
+Frequently, a question arises, how do I move a block of text from
+file1 to somewhere  within file2.  This note will give you one way
+of performing this task using the vi editor.
+
+For example, you may have a procedure defined in file1 and you would
+like to make use of it in a program contained in file2.
+
+file1 and file2 refer to arbitrary file names.  Substitute the names
+of the source file containing the text you want to copy for "file1"
+in the instructions below and the name of the target file where
+you want to copy the stuff into "file2"
+
+This will consist of starting file1 up with vi, copying the block
+of text to a temporary file.  Then you will read the temporary file
+into the appropriate location in file2.
+
+1. Get into file1 by typing "vi file1"
+
+2. Move the cursor to the first line in the region to be copied.
+
+3. Press "ma"
+
+4. Move the cursor to the last line (bottom line) of the region to
+   be copied.
+
+5. Type the following sequence of characters
+   :'a,.w /tmp/xxx
+
+   You may use any name you want instead of xxx
+
+    The machine will display a message at bottom of screen beginning
+    with "/tmp/xxx" [New file]
+   and then tell you how many lines and chars you put in this temporary
+    file.
+
+6. Leave vi.  You can use the sequence ":wq" for this purpose.
+
+7. Now get into file2 by typing "vi file2"
+
+8. Move the cursor to the line just before you want to add the
+   text
+
+9. Type the following sequence of characters
+   :r/tmp/xxx
+
+All done!
+                    (Leff's Helpful Hint Five)
+                How to Move Text From One part of a file to another
+
+This Helpful Hint tells you how to use Vi to move some text from
+one part of a file to another.  It assumes you are familiar with the
+basics of vi, e.g., moving the cursor around.   
+
+Note that this moves text from one part of a file to another.   See
+Leff's Helpful Hint Three for information on moving information from
+one file to a different file.  (You can read this by typing 
+cat ~mflll/lhh3
+ 
+If you would like to do a "copy" of text-
+, see Leff's Helpful Hint Six.  (You can read this
+by typing
+cat ~mflll/lhh6
+
+A "copy" differs from a "move" in that after a copy, there will be
+a copy of the text in the original location of the file as well as the
+place to which you are copying the text.
+ 
+There is only a one character difference between the
+sequences of instructions to copy and to move text.
+ 
+1) Get into vi on the file.
+
+2) Move the cursor to the beginning of the text to be moved
+
+3) type "ma"
+
+4) Move the cursor the end of the text to be moved
+
+5) Type the sequence
+
+"ad'a
+
+6) Now move the cursor to the location where you want the text to be.
+Specifically, the cursor should be on the line that should be before
+the text being moved.
+
+7) Now type the sequence
+
+"ap
+
+ALL DONE!
+                    (Leff's Helpful Hint Six)
+                How to Copy Text From One part of a file to another
+
+This Helpful Hint tells you how to use Vi to copy some text from
+one part of a file to another.  It assumes you are familiar with the
+basics of vi, e.g., moving the cursor around.   
+
+Note that this copy text from one part of a file to a new location in
+the same file.
+
+See
+Leff's Helpful Hint Three for information on moving information from
+one file to a different file.  (You can read this by typing 
+cat ~mflll/lhh3
+
+If you would like to do a "move" of text--where the text is no longer
+in the old position, see Leff's Helpful Hint Five.  (You can read this
+by typing
+cat ~mflll/lhh5
+ 
+There is only a one character difference between these two
+sequences of instructions.
+ 
+1) Get into vi on the file.
+
+2) Move the cursor to the beginning of the text to be moved
+
+3) type "ma"
+
+4) Move the cursor the end of the text to be moved
+
+5) Type the sequence
+
+"ay'a
+
+6) Now move the cursor to the location where you want the text to be.
+Specifically, the cursor should be on the line that should be before
+the text being moved.
+
+7) Now type the sequence
+
+"ap
+
+ALL DONE!
+
+
