@@ -1,0 +1,10 @@
+" c.ab -- abbreviations for c-mode
+"
+ab mm main (argc, argv)int argc;char *argv[];
+ab ii int
+ab cc char
+ab rr return
+ab ee else
+ab bb break
+ab pp printf("
+ab oo \n");
