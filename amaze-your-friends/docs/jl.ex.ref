@@ -1,0 +1,66 @@
+////////////////////////////////////////////////////////////////////////
+/                  EXAMPLES VI MACROS REF. (by loo@mcc.com)            /
+////////////////////////////////////////////////////////////////////////
+
+
+////////////////////
+/ cut-paste macros /
+////////////////////
+[The command "mm" marks the starting line of a cut/copy. After proper
+marking, move the cursor to the ending line of your cut/copy. Use either
+"^W" or "W" to get the text cut/copied. The command "Y" yanks the cut/
+copied text at the cursor position. These commands work across files,
+unlike the "*y" and "p"/"P" commands.]
+
+ Command	| Meaning
+-----------------------------------------------------------------------
+ mm		| Mark the beginning of region
+ W		| Copy (to scratch) from marked line to current line
+ ^W		| Cut (to scratch) from marked line to current line
+ Y		| Yank (or paste) from scratch area
+
+//////////////
+/ commenting /
+//////////////
+
+ v		| 'C'-comment the current line
+ V		| 'C'-uncomment the current line
+ K		| Comment with '#' from marked line (good for sh etc.)
+ ^K		| Uncomment lines of '#' from mark line (") 
+
+/////////////////
+/ Miscellaneous /
+/////////////////
+
+ ^O		| Edit the alternate file
+
+/////////////////
+/ abbreviations /
+/////////////////
+[Abbreviation capability is part of vi. The user can define as many as
+he likes with the ex-command "abbr". Abbreviation works when the exact
+sequence of chars is typed in the insert mode.]
+
+[Important: Need to be in insert mode]
+
+ Abbreviation	| Expansion
+-------------------------------------------------------------------------------
+ ilv 		| "I love vi"
+ cmt 		| "/* */" and ready for inserting comment text
+ dcm 		| similar to cmt but for C-function documentation
+
+///////////////////
+/ Escape Commands /
+///////////////////
+[Escape commands capability is not documented but only implied by vi reference.
+This function might not be in some vi implementations. Using these commands
+requires fast fingering; you have to press <esc> and following by the rest
+of a command in quick succession.]
+
+ Command        | Meangin
+-------------------------------------------------------------------------------
+ <esc>ip	| Insert 'printf("  >\n");' and ready for inserting print text
+
+[Escape commands capability comes in handy when all control and function
+keys of your keyboard are defined. You can define almost unlimited escape
+commands.]
