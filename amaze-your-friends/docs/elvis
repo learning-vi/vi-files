@@ -1,0 +1,2781 @@
+Date: Mon, 11 Nov 1991 10:50:23 GMT
+From: " (Mitchell Wyle)" <wyle@orion.inf.ethz.ch>
+To: <rubenro@viggo.blh.no>
+Subject: latest elvis (1.5) documentation follows
+
+Elvis is a superset of vi, running on most OS's.  It's a bit
+slower than Unix vi on Unix but many of the features are
+well worth the differences.  It has built in numeric increments,
+built-in cc and built-in make.
+
+The latest version has fixed the macro bugs.
+
+I run it on DOS.
+
+
+Cheers,  -Mitch
+
+
+
+
+          #######
+          #        #       #    #     #     ####
+          #        #       #    #     #    #
+          #####    #       #    #     #     ####
+          #        #       #    #     #         #
+          #        #        #  #      #    #    #
+          #######  ######    ##       #     ####
+
+                    - a clone of vi/ex -
+                          version
+
+
+Author:  Steve Kirkendall
+         14407 SW Teal Blvd., Apt C
+         Beaverton, OR 97005
+
+E-Mail:  kirkenda@cs.pdx.edu
+
+Phone:   (503) 643-6980
+                          Table of contents
+
+
+          INTRODUCTION What ELVIS does, Copyright,
+          How to compile ELVIS, Overview ..................1
+
+          VISUAL MODE COMMANDS Normal interactive
+          editing, Input mode, Arrow keys, Digraphs,
+          Abbreviations, Auto-indentation .................2
+
+          COLON MODE COMMANDS Line specifiers, Text
+          entry, Cut & paste, Display text, Global
+          operations, Line editing, Undo, Configura-
+          tion & status, Multiple files, Switching
+          files, Working with a compiler, Exiting,
+          File I/O, Directory & shell, Debugging ..........3
+
+          REGULAR EXPRESSIONS Syntax, Options, Sub-
+          stitutions, Examples ............................4
+
+          OPTIONS Autoindent, Autoprint, etc.  ............5
+
+          CUT BUFFERS Putting text into a cut
+          buffer, Pasting from a cut buffer, Macros,
+          The effect of switching files ...................6
+
+          DIFFERENCES BETWEEN ELVIS AND THE REAL
+          VI/EX Extensions, Omissions .....................7
+
+          INTERNAL For programmers only, The tem-
+          porary file, Implementation of editing,
+          Marks and the cursor, Colon command
+          interpretation, Screen control, Portabil-
+          ity .............................................8
+
+          CFLAGS ..........................................9
+
+          TERMCAP ........................................10
+
+          ENVIRONMENT VARIABLES ..........................11
+
+          VERSIONS .......................................12
+
+
+     Elvis is a clone of vi/ex, the  standard  UNIX  editor.
+Elvis  supports  nearly  all  of the vi/ex commands, in both
+visual mode and colon mode.
+
+     Like vi/ex, Elvis stores most of the  text  in  a  tem-
+porary  file,  instead of RAM.  This allows it to edit files
+that are too large to fit in a single process' data space.
+
+     Elvis runs under BSD UNIX, AT&T SysV UNIX,  Minix,  MS-
+DOS,  Atari TOS, Coherent, OS9/68000 and VMS.  The next ver-
+sion is also expected to  add  OS/2,  AmigaDos,  and  MacOS.
+Contact  me  before  you  start porting it to some other OS,
+because somebody else may have already done it for you.
+
+     Elvis is freely redistributable, in either source  form
+or  executable  form.   There are no restrictions on how you
+may use it.
+
+0.1.  Compiling
+
+     See the "Versions" section of this manual for  instruc-
+tions on how to compile Elvis.
+
+     If you want to port Elvis to another O.S. or  compiler,
+then  you  should read the "Portability" part of the "Inter-
+nal" section.
+
+0.2.  Overview of Elvis
+
+     The user interface of Elvis/vi/ex is weird.  There  are
+two major command modes in Elvis, and a few text input modes
+as well.  Each command mode has a command which  allows  you
+to switch to the other mode.
+
+     You will probably use the visual command mode  most  of
+the  time.   This  is the mode that Elvis normally starts up
+in.
+
+     In visual command mode, the  entire  screen  is  filled
+with lines of text from your file.  Each keystroke is inter-
+pretted as part of a visual command.  If  you  start  typing
+text, it will not be inserted, it will be treated as part of
+a command.  To insert text, you must first give  an  "insert
+text"  command.   This  will take some getting used to.  (An
+alternative exists.  Lookup the "inputmode" option.)
+
+     The colon mode is quite different.   Elvis  displays  a
+":" character on the bottom line of the screen, as a prompt.
+You are then expected to type in a command line and hit  the
+<Return>  key.   The set of commands recognized in the colon
+mode is different from visual mode's.
+
+     Most visual mode commands are one keystroke long.   The
+following  table  lists  the  operation  performed  by  each
+keystroke, and also denotes any options or arguments that it
+accepts.   Notes  at the end of the table describe the nota-
+tion used in this table.
+
+     In addition to the keys listed  here,  your  keyboard's
+"arrow"  keys will be interpretted as the appropriate cursor
+movement commands.  The same goes for <PgUp> and <PgDn>,  if
+your  keyboard  has them.  There is a colon mode command (to
+be described later) which will allow  you  to  define  other
+keys, such as function keys.
+
+     A tip: visual command mode looks a lot like text  input
+mode.   If  you  forget  which  mode you're in, just hit the
+<Esc> key.  If Elvis beeps, then you're  in  visual  command
+mode.   If Elvis does not beep, then you were in input mode,
+but by hitting <Esc> you will have switched to  visual  com-
+mand  mode.   So, one way or another, after <Esc> Elvis will
+be ready for a command.
+
+command......description
+count..^D....scroll down <count> lines (default 1/2 screen)
+count..^E....scroll up <count> lines
+count..^H....move left, like h (MOVE)
+count..^J....move down (MOVE)
+count..^M....move to the front of the next line (MOVE)
+count..^N....move down (MOVE)
+count..^P....move up (MOVE)
+count..^U....scroll up <count> lines (default 1/2 screen)
+count..^X....move to a physical column number on the screen (MOVE) (EXT)
+count..^Y....scroll down <count> lines
+count..SPC...move right,like l (MOVE)
+count..# +...increment a number (EDIT) (EXT)
+count..%.....move to matching (){}[] or to a given % of file (MOVE) (EXT)
+count..&.....repeat the previous ":s//" command here (EDIT)
+count..(.....move backward <count> sentences (MOVE)
+count..).....move forward <count> sentences (MOVE)
+count..+.....move to the front of the next line (MOVE)
+count..,.....repeat the previous [fFtT] but in the other direction (MOVE)
+count..-.....move to the front of the preceding line (MOVE)
+count........repeat the previous "edit" command
+count..;.....repeat the previous [fFtT] cmd (MOVE)
+count..A inp.append at end of the line (EDIT)
+count..B.....move back Word (MOVE)
+count..E.....move end of Word (MOVE)
+count..F key.move leftward to a given character (MOVE)
+count..G.....move to line #<count> (default is the bottom line) (MOVE)
+count..H.....move to home row (the line at the top of the screen)
+count..I inp.insert at the front of the line (after indents) (EDIT)
+count..J.....join lines, to form one big line (EDIT)
+count..L.....move to last row (the line at the bottom of the screen)
+count..O inp.open up a new line above the current line (EDIT)
+count..S inp.change lines, like <count>cc
+count..T key.move leftward *almost* to a given character (MOVE)
+count..W.....move forward <count> Words (MOVE)
+count..X.....delete the character(s) to the left of the cursor (EDIT)
+count..Y.....yank text line(s) (copy them into a cut buffer)
+count..a inp.insert text after the cursor (EDIT)
+count..b.....move back <count> words (MOVE)
+count..e.....move forward to the end of the current word (MOVE)
+count..f key.move rightward to a given character (MOVE)
+count..h.....move left (MOVE)
+count..i inp.insert text at the cursor (EDIT)
+count..j.....move down (MOVE)
+count..k.....move up (MOVE)
+count..l.....move right (MOVE)
+count..o inp.open a new line below the current line (EDIT)
+count..r key.replace <count> chars by a given character (EDIT)
+count..s inp.replace <count> chars with text from the user (EDIT)
+count..t key.move rightward *almost* to a given character (MOVE)
+count..w.....move forward <count> words (MOVE)
+count..x.....delete the character that the cursor's on (EDIT)
+count..{.....move back <count> paragraphs (MOVE)
+count..|.....move to column <count> (the leftmost column is 1)
+count..}.....move forward <count> paragraphs (MOVE)
+count..~.....switch a character between uppercase & lowercase (EDIT)
+
+
+countMany commands may be preceded by a count.   This  is  a
+     sequence  of digits representing a decimal number.  For
+     most commands that use a count, the command is repeated
+     <count>  times.  The count is always optional, and usu-
+     ally defaults to 1.
+
+key..Some commands require two keystrokes.   The  first  key
+     always determines which command is to be executed.  The
+     second key is used as a parameter to the command.
+
+mv...Six commands (! < > c d y) operate on text between  the
+
+     cursor  and some other position.  To specify that other
+     position, you are expected to follow the command  keys-
+     troke  with a movement command.  Also, you may have the
+     command operate on the whole line that the cursor is on
+     by typing the command key a second time.
+
+inp..Many commands allow the  user  to  interactively  enter
+     text.
+
+(EXT)These commands are extensions -- the  real  vi  doesn't
+     have them.
+
+(EDIT)These commands affect text, and may be repeated by the
+     "." command.
+
+(MOVE)These commands move the cursor, and  may  be  used  to
+     specify  the  extent  of  a member of the "mv" class of
+     commands.
+
+
+0.3.  Input Mode
+
+     You can't type text into your file directly from visual
+command  mode.  Instead, you must first give a command which
+will put you into input mode.  The commands to do  this  are
+A/C/I/O/R/S/a/i/o/s.
+
+     The S/s/C/c commands temporarily place a $ at  the  end
+of the text that they are going to change.
+
+     In input mode, all keystrokes  are  inserted  into  the
+text at the cursor's position, except for the following:
+
+        ^A......insert a copy of the last input text
+        ^D......delete one indent character
+        ^H......(backspace) erase the character before the cursor
+        ^L......redraw the screen
+        ^M......(carriage return) insert a newline (^J, linefeed)
+        ^P......insert the contents of the cut buffer
+        ^R......redraw the screen, like ^L
+        ^T......insert an indent character
+        ^U......backspace to the beginning of the line
+        ^V......insert the following keystroke, even if special
+        ^W......backspace to the beginning of the current word
+        ^Z^Z....write the file & exit Elvis
+        ^[......(ESCape) exit from input mode, back to command mode
+
+
+     Also, on some systems, ^S may stop output, ^Q may  res-
+tart  output,  and  ^C  may interupt execution.  ^@ (the NUL
+character) cannot be inserted.
+
+     The R visual command puts you in overtype  mode,  which
+is  a  slightly  different  form of input mode.  In overtype
+mode, each time you insert a character, one of the old char-
+acters is deleted from the file.
+
+0.4.  Arrow keys in Input Mode
+
+     The arrow keys can be used to move the cursor in  input
+mode.   (This  is  an extension; the real Vi doesn't support
+arrow keys in input mode.) The <PgUp>, <PgDn>,  <Home>,  and
+<End>  keys  work  in  input  mode,  too.   The <Delete> key
+deletes a single character in input mode.
+
+
+     The best thing about allowing arrow  keys  to  work  in
+input  mode  is  that as long as you're in input mode, Elvis
+seems to have a fairly ordinary user interface.   With  most
+other  text editors, you are always in either insert mode or
+replace mode, and you can use the arrow keys at any time  to
+move  the  cursor.   Now,  Elvis can act like that, too.  In
+fact, with the new "inputmode"  option  and  the  "control-Z
+control-Z"  input  command,  you  may  never have to go into
+visual command mode for simple edit sessions.
+
+0.5.  Digraphs
+
+     Elvis supports digraphs as a  way  to  enter  non-ASCII
+characters.   A  digraph is a character which is composed of
+two other characters.  For example, an  apostrophe  and  the
+letter i could be defined as a digraph which is to be stored
+& displayed as an accented i.
+
+     There is no single standard for extended ASCII  charac-
+ter  sets.   Elvis  can be compiled to fill the digraph with
+values appropriate for either the IBM PC character  set,  or
+the  LATIN-1  character  set  used by X windows, or neither.
+(See the discussions of -DCS_IBMPC and  -DCS_LATIN1  in  the
+CFLAGS  section  of  this  manual.) You can view or edit the
+digraph table via the ":digraph" colon command.
+
+     Digraphs will not be recognized  until  you've  entered
+":set digraph".
+
+     To actually use a digraph  type  the  first  character,
+then  hit  <Backspace>,  and then type the second character.
+Elvis will then substitute the non-ASCII character in  their
+
+place.
+
+0.6.  Abbreviations
+
+     Elvis can expand abbreviations for you.  You define  an
+abbreviation  with  the :abbr command, and then whenever you
+type in the abbreviated form while in input mode, Elvis will
+immediately  replace  it with the long form.  COBOL program-
+mers should find this useful. :-)
+
+     Elvis doesn't perform the substitution until you type a
+non-alphanumeric  character to mark the end of the word.  If
+you type a control-V before that non-alphanumeric character,
+then Elvis will not perform the substitution.
+
+0.7.  Auto-Indent
+
+     With the ":set autoindent" option turned on, Elvis will
+automatically  insert leading whitespace at the beginning of
+each new line that you type in.  The leading  whitespace  is
+copied from the preceding line.
+
+     To add more leading  whitespace,  type  control-T.   To
+remove some whitespace, type control-D.
+
+     Elvis' autoindent mode isn't 100% compatible with vi's.
+In  Elvis, 0^D and ^^D don't work, ^U can wipeout all inden-
+
+tation, and sometimes Elvis will use a different  amount  of
+indentation than vi would.
+
+        LINES...............COMMAND...ARGUMENTS
+        [line]..............append....
+        [line][,line].......change....
+        [line][,line].......copy......line
+        [line][,line].......delete....[''x]
+        [line][,line].......global..../regexp/ command
+        [line]..............insert....
+        [line][,line].......join......
+        [line][,line].......list......
+        [line]..............mark......''x
+        [line][,line].......move......line
+        [line][,line].......number....
+        [line][,line].......print.....
+        [line]..............put.......[''x]
+        [line]..............read......file
+        [line][,line].......substitute/regexp/replacement/[p][g][c]
+        [line][,line].......to........line
+        [line][,line].......vglobal.../regexp/ command
+        [line][,line].......write[!]..[[>>]file]
+        [line][,line].......yank......[''x]
+        [line][,line].......!.........command
+        [line][,line].......<.........
+        [line][,line].......=.........
+        [line][,line].......>.........
+        [line][,line].......&.........
+
+
+     To use colon mode commands, you must switch from visual
+command  mode  to  colon command mode.  The visual mode com-
+mands to do this are ":" for a single colon command, or  "Q"
+for many colon mode commands.
+
+0.8.  Line Specifiers
+
+     Line specifiers are always optional.   The  first  line
+specifier  of  most commands usually defaults to the current
+line.  The second line specifier usually defaults to be  the
+same  as  the  first line specifier.  Exceptions are :write,
+:global, and :vglobal, which act on all lines of the file by
+default, and :!, which acts on no lines by default.
+
+     Line specifiers consist of an absolute part and a rela-
+tive  part.   The  absolute  part of a line specifier may be
+either an explicit line number, a mark, a dot to denote  the
+current  line,  a dollar sign to denote the last line of the
+file, or a forward or backward search.
+
+     An explicit line number is  simply  a  decimal  number,
+expressed as a string of digits.
+
+     A mark is typed in  as  an  apostrophe  followed  by  a
+letter.  Marks must be set before they can be used.  You can
+set a mark in visual  command  mode  by  typing  "m"  and  a
+letter,  or  you  can  set  it in colon command mode via the
+"mark" command.
+
+     A forward search is typed in as  a  regular  expression
+surrounded  by  slash  characters;  searching  begins at the
+default line.  A backward search is typed in  as  a  regular
+expression surrounded by question marks; searching begins at
+the line before the default line.
+
+     If you omit the absolute part, then the default line is
+used.
+
+     The relative part of a line specifier is typed as a "+"
+or  "-"  character followed by a decimal number.  The number
+is added to or subtracted from the absolute part of the line
+specifier to produce the final line number.
+
+     As a special case, the  %  character  may  be  used  to
+specify  all lines of the file.  It is roughly equivelent to
+saying 1,$.  This can be a handy shortcut.
+
+     Some examples:
+
+
+
+0.9.  Text Entry Commands
+
+        [line] append
+        [line][,line] change ["x]
+        [line] insert
+
+
+     The append command inserts  text  after  the  specified
+line.
+
+     The insert command inserts text  before  the  specified
+line.
+
+     The change command copies the range of lines into a cut
+buffer,  deletes  them,  and  inserts new text where the old
+text used to be.
+
+     For all of these commands, you indicate the end of  the
+text  you're  inserting  by hitting ^D or by entering a line
+which contains only a period.
+
+0.10.  Cut & Paste Commands
+
+        [line][,line] delete ["x]
+        [line][,line] yank ["x]
+        [line] put ["x]
+        [line][,line] copy line
+        [line][,line] to line
+        [line][,line] move line
+
+
+     The delete command copies the specified range of  lines
+into a cut buffer, and then deletes them.
+
+     The yank command copies the specified  range  of  lines
+into a cut buffer, but does *not* delete them.
+
+     The put command inserts text from a  cut  buffer  after
+the specified line.
+
+     The copy and to commands yank the  specified  range  of
+lines and then immediately paste them after some other line.
+
+     The move command deletes the specified range  of  lines
+and  then immediately pastes them after some other line.  If
+the destination line comes after the deleted text,  then  it
+will  be  adjusted  automatically to account for the deleted
+lines.
+
+0.11.  Display Text Commands
+
+        [line][,line] print
+        [line][,line] list
+        [line][,line] number
+
+
+     The print  command  displays  the  specified  range  of
+lines.
+
+     The  number  command  displays  the  lines,  with  line
+numbers.
+
+     The list command also displays them, but it is  careful
+to make control characters visible.
+
+0.12.  Global Operations Commands
+
+        [line][,line] global /regexp/ command
+        [line][,line] vglobal /regexp/ command
+
+
+     The global command searches through the  lines  of  the
+specified  range  (or  through the whole file if no range is
+specified) for lines that contain a  given  regular  expres-
+sion.   It  then moves the cursor to each of these lines and
+runs some other command on them.
+
+     The vglobal command is similar,  but  it  searches  for
+lines that don't contain the regular expression.
+
+0.13.  Line Editing Commands
+
+        [line][,line] join
+        [line][,line] ! program
+        [line][,line] <
+        [line][,line] >
+        [line][,line] substitute /regexp/replacement/[p][g][c]
+        [line][,line] &
+
+
+     The join command catenates all lines in  the  specified
+range  together to form one big line.  If only a single line
+is specified, then the following line is catenated onto it.
+
+     The ! command runs  an  external  filter  program,  and
+feeds the specified range of lines to it's stdin.  The lines
+are then replaced by the output of the  filter.   A  typical
+example would be ":'a,'z!sort" to sort the lines 'a,'z.
+
+     The < and > commands shift the specified range of lines
+left  or  right,  normally  by the width of 1 tab character.
+The "shiftwidth" option determines the shifting amount.
+
+     The substitute command finds the regular expression  in
+each  line,  and replaces it with the replacement text.  The
+"p" option causes the altered lines to be printed.  The  "g"
+option permits all instances of the regular expression to be
+found & replaced.  (Without "g", only the  first  occurrence
+in each line is replaced.) The "c" option asks for confirma-
+tion before each substitution.
+
+     The & command repeats the  previous  substitution  com-
+mand.   Actually, "&" is equivelent to "s//~/" with the same
+options as last time.  It  searches  for  the  last  regular
+expression  that you specified for any purpose, and replaces
+it with the the same text that was used in the previous sub-
+stitution.
+
+0.14.  Undo Command
+
+        undo
+
+
+     The undo command restores the file to the state it  was
+in before your most recent command which changed text.
+
+0.15.  Configuration & Status Commands
+
+        map[!] [key mapped_to]
+        unmap[!] key
+        abbr [word expanded_form_of_word]
+        unabbr word
+        digraph[!] [XX [Y]]
+        set [options]
+        mkexrc
+        [line] mark "x
+        visual
+        version
+        [line][,line] =
+        file [file]
+        source file
+        @ "x
+        color [when] [["light"] color] ["on" color]
+
+
+     The map command allows you to configure Elvis to recog-
+nize  your  function  keys,  and  treat  them as though they
+transmitted some other  sequence  of  characters.   Normally
+this  mapping  is done only when in the visual command mode,
+but with the [!] present it will map keys  under  input  and
+replace  modes  as well.  When this command is given with no
+arguments, it prints a table showing all mappings  currently
+in effect.  When called with two arguments, the first is the
+sequence that your function key really sends, and the second
+is  the  sequence  that you want Elvis to treat it as having
+sent.  As a special case, if the first argument is a  number
+then  Elvis  will  map  the  corresponding function key; for
+example, ":map 7 dd" will cause the <F7>  key  to  delete  a
+line.
+
+     The unmap command removes  key  definitions  that  were
+made via the map command.
+
+     The abbr command is used  to  define/list  a  table  of
+abbreviations.  The table contains both the abbreviated form
+and the fully spelled-out form.  When you're in visual input
+mode,  and  you  type  in  the  abbreviated form, Elvis will
+
+replace the abbreviated  form  with  the  fully  spelled-out
+form.   When  this  command  is called without arguments, it
+lists the table; with two or more arguments, the first argu-
+ment  is  taken as the abbreviated form, and the rest of the
+command line is the fully-spelled out form.
+
+     The unabbr command deletes entries from the abbr table.
+
+     The digraph command allows you to display  the  set  of
+digraphs  that  Elvis is using, or add/remove a digraph.  To
+list the set of digraphs, use the digraph  command  with  no
+arguments.   To  add  a digraph, you should give the digraph
+command two arguments.  The first argument is the two  ASCII
+characters  that  are to be combined; the second is the non-
+ASCII  character  that  they   represent.    The   non-ASCII
+character's most significant bit is automatically set by the
+digraph command, unless to append a ! to the  command  name.
+Removal  of a digraph is similar to adding a digraph, except
+that you should leave off the second argument.
+
+     The set command  allows  you  examine  or  set  various
+options.   With  no  arguments,  it  displays  the values of
+options that have been changed.  With  the  single  argument
+"all"  it  displays the values of all options, regardless of
+whether they've been explicitly set or not.  Otherwise,  the
+arguments are treated as options to be set.
+
+     The mkexrc command saves the current configuration to a
+file called ".exrc" in the current directory.
+
+     The mark command defines a named mark  to  refer  to  a
+specific  place in the file.  This mark may be used later to
+specify lines for other commands.
+
+     The visual command puts the editor  into  visual  mode.
+Instead of emulating ex, Elvis will start emulating vi.
+
+     The version command tells  you  that  what  version  of
+Elvis this is.
+
+     The = command tells you what line you specified, or, if
+you  specified  a range of lines, it will tell you both end-
+points and the number of lines included in the range.
+
+     The file command  tells  you  the  name  of  the  file,
+whether  it  has  been  modified, the number of lines in the
+file, and the current line number.  You can also use  it  to
+change the name of the current file.
+
+     The source command reads a sequence of colon mode  com-
+mands from a file, and interprets them.
+
+     The @ command executes the contents of a cut-buffer  as
+EX commands.
+
+     The color command only works under MS-DOS,  or  if  you
+have  an  ANSI-compatible  color terminal.  It allows you to
+set the foreground and background colors for different types
+of  text: normal, bold, italic, underlined, standout, pop-up
+menu, and visible selection.  By  default,  it  changes  the
+"normal"  colors; to change other colors, the first argument
+to the :color command should be the first letter of the type
+of  text  you want.  The syntax for the colors themselves is
+fairly intuitive.  For example, ":color light cyan on  blue"
+causes  normal  text to be displayed in light cyan on a blue
+background, and ":color b bright white" causes bold text  to
+be  displayed  in  bright  white  on a blue background.  The
+background color always defaults to the  current  background
+color  of  normal  text.   Your  first  :color  command must
+specify both the foreground and background for normal text.
+
+0.16.  Multiple File Commands
+
+        args [files]
+        next[!] [files]
+        Next[!]
+        previous[!]
+        rewind[!]
+
+
+     When you invoke Elvis from your shell's  command  line,
+any filenames that you give to Elvis as arguments are stored
+in the args list.  The args command will display this  list,
+or define a new one.
+
+     The next command switches from the current file to  the
+next  one in the args list.  You may specify a new args list
+here, too.
+
+     The Next and previous commands (they're really  aliases
+for  the  same  command) switch from the current file to the
+preceding file in the args list.
+
+     The rewind command switches from the  current  file  to
+the first file in the args list.
+
+0.17.  Switching Files
+
+        edit[!] [file]
+        tag[!] tagname
+
+
+     The edit command allows to switch from the current file
+to  some  other  file.  This has nothing to do with the args
+list, by the way.
+
+     The tag command looks up a  given  tagname  in  a  file
+called  "tags".  This tells it which file the tag is in, and
+how to find it in that file.  Elvis  then  switches  to  the
+tag's file and finds the tag.
+
+0.18.  Working with a Compiler
+
+        cc [files]
+        make [target]
+        errlist[!] [errlist]
+
+
+     The cc and  make  commands  execute  your  compiler  or
+"make"  utility  and redirect any error messages into a file
+called "errlist".  By default, cc  is  run  on  the  current
+
+file.  (You should write it before running cc.) The contents
+of the "errlist" file are then scanned for  error  messages.
+If  an  error  message is found, then the cursor is moved to
+the line where the error was detected, and  the  description
+of the error is displayed on the status line.
+
+     After you've fixed one error, the errlist command  will
+move  the cursor to the next error.  In visual command mode,
+hitting `*' will do this, too.
+
+     You can also create an "errlist" file from  outside  of
+Elvis, and use "Elvis -m" to start elvis and have the cursor
+moved to the first error.  Note that you don't need to  sup-
+ply  a  filename  with "Elvis -m" because the error messages
+always say which source file an error is in.
+
+     Note: When you use errlist repeatedly  to  fix  several
+errors  in  a  single  file,  it  will attempt to adjust the
+reported line numbers to  allow  for  lines  that  you  have
+inserted  or  deleted.   These adjustments are made with the
+assumption that you will  work  though  the  file  from  the
+beginning to the end.
+
+0.19.  Exit Commands
+
+        quit[!]
+        wq
+        xit
+
+
+
+     The quit command exits from the editor  without  saving
+your file.
+
+     The wq command writes your file out, then then exits.
+
+     The xit command is similar to the  wq  command,  except
+that  xit  won't  bother  to  write your file if you haven't
+modified it.
+
+0.20.  File I/O Commands
+
+        [line] read file
+        [line][,line] write[!] [[>>]file]
+
+
+     The read  command  gets  text  from  another  file  and
+inserts  it  after the specified line.  It can also read the
+output of a program; simply precede the program  name  by  a
+'!' and use it in place of the file name.
+
+     The write command writes the whole file, or  just  part
+of  it,  to some other file.  The !, if present, will permit
+the lines to be written even  if  you've  set  the  readonly
+option.   If  you  precede the filename by >> then the lines
+will be appended to the file.
+
+0.21.  Directory Commands
+
+        cd [directory]
+        chdir [directory]
+        shell
+
+
+     The cd and chdir commands (really  two  names  for  one
+command) switch the current working directory.
+
+     The shell command starts an interactive shell.
+
+0.22.  Debugging Commands
+
+        [line][,line] debug[!]
+        validate[!]
+
+
+     These commands are only available if you compile  Elvis
+with the -DDEBUG flag.
+
+     The debug command lists statistics for the blocks which
+contain  the specified range of lines.  If the ! is present,
+then the contents of those blocks is displayed, too.
+
+     The  validate  command  checks  certain  variables  for
+internal  consistency.   Normally it doesn't output anything
+unless it detects a problem.  With the !,  though,  it  will
+always produce *some* output.
+
+     Elvis uses regular expressions for searching  and  sub-
+stututions.   A regular expression is a text string in which
+some characters have special meanings.  This  is  much  more
+
+powerful than simple text matching.
+
+Syntax
+
+     Elvis' regexp package  treats  the  following  one-  or
+two-character  strings  (called  meta-characters) in special
+ways:
+
+
+
+     Anything else is treated as a  normal  character  which
+must match exactly.  The special strings may all be preceded
+by a backslash to force them to be treated normally.
+
+Options
+
+     Elvis has two options  which  affect  the  way  regular
+expressions  are used.  These options may be examined or set
+via the :set command.
+
+     The first option is  called  "[no]magic".   This  is  a
+boolean  option, and it is "magic" (TRUE) by default.  While
+in  magic  mode,  all  of  the  meta-characters  behave   as
+described above.  In nomagic mode, only ^ and $ retain their
+special meaning.
+
+     The second option is called "[no]ignorecase".  This  is
+a  boolean  option,  and  it  is  "noignorecase"  (FALSE) by
+default.  While in ignorecase mode, the searching  mechanism
+will  not  distinguish  between  an uppercase letter and its
+lowercase form.  In noignorecase mode, uppercase and  lower-
+case are treated as being different.
+
+     Also, the "[no]wrapscan" option affects searches.
+
+Substitutions
+
+     The :s command has at least two  arguments:  a  regular
+expression,  and  a  substitution  string.   The  text  that
+matched the regular expression is replaced by text which  is
+derived from the substitution string.
+
+     Most characters in the substitution string  are  copied
+into the text literally but a few have special meaning:
+
+
+
+     These may be preceded by a backslash to force  them  to
+be treated normally.  If "nomagic" mode is in effect, then &
+and ~ will be treated normally, and you must write  them  as
+\& and \~ for them to have special meaning.
+
+Examples
+
+     This example changes every occurence  of  "utilize"  to
+"use":
+
+          :%s/utilize/use/g
+
+     This example deletes all whitespace that occurs at  the
+end of a line anywhere in the file.  (The brackets contain a
+single space and a single tab.):
+
+          :%s/[   ]\+$//
+
+     This example converts the current line to uppercase:
+
+          :s/.*/\U&/
+
+     This example underlines  each  letter  in  the  current
+line,  by  changing it into an "underscore backspace letter"
+sequence.  (The ^H is entered as "control-V backspace".):
+
+          :s/[a-zA-Z]/_^H&/g
+
+     This example locates the last  colon  in  a  line,  and
+swaps  the  text  before  the  colon with the text after the
+colon.  The first \( \) pair is used to  delimit  the  stuff
+before  the  colon,  and  the  second pair delimit the stuff
+after.  In the substitution text, \1 and  \2  are  given  in
+reverse order, to perform the swap:
+
+          :s/\(.*\):\(.*\)/\2:\1/
+
+NAMES..............TYPE.DEFAULT.......MEANING
+autoindent, ai.....Bool.noai..........auto-indent during input
+autoprint, ap......Bool.ap............in EX, print the current line
+autotab, at........Bool.at............auto-indent allowed to use tabs?
+autowrite, aw......Bool.noaw..........auto-write when switching files
+beautify,  bf......Bool.nobf..........strip control chars from file?
+charattr, ca.......Bool.noca..........interpret \fX sequences?
+cc, cc.............Str..cc="cc -c"....name of the C compiler
+columns, co........Num..co=80.........width of the screen
+complain,com.......Bool.nocom.........complain about missing features?
+digraph, dig.......Bool.nodig.........recognize digraphs?
+directory, dir.....Str..dir="/usr/tmp"where tmp files are kept
+edcompatible, ed...Bool.noed..........remember ":s//" options
+errorbells, eb.....Bool.eb............ring bell on error
+exrc, exrc.........Bool.noexrc........read "./.exrc" file?
+exrefresh, er......Bool.er............write lines indiviually in EX
+flipcase, fc.......Str..fc="".........non-ASCII chars flipped by ~
+hideformat, hf.....Bool.hf............hide text formatter commands
+ignorecase, ic.....Bool.noic..........upper/lowercase match in search
+inputmode, im......Bool.noim..........start vi in insert mode?
+keytime, kt........Num..kt=2..........timeout for mapped key entry
+keywordprg, kp.....Str..kp="ref"......full pathname of shift-K prog
+lines, ln..........Num..ln=25.........number of lines on the screen
+list, li...........Bool.noli..........display lines in "list" mode
+magic, ma..........Bool.ma............use regular expression in search
+make, mk...........Str..mk="make".....name of the "make" program
+mesg, ms...........Bool.ms............allow messages from other users?
+modeline, ml.......Bool.noml..........are modelines processed?
+novice, nov........Bool.nonovice......set options for ease of use
+paragraphs, pa.....Str..pa="PPppIPLPQP"names of "paragraph" nroff cmd
+prompt, pr.........Bool.pr............show ':' prompt in ex mode
+readonly, ro.......Bool.noro..........prevent overwriting of orig file
+report, re.........Num..re=5..........report when 5 or more changes
+ruler, ru..........Bool.noru..........display line/column numbers
+scroll, sc.........Num..sc=12.........scroll amount for ^U and ^D
+sections, se.......Str..se="NHSHSSSEse"names of "section" nroff cmd
+shell, sh..........Str..sh="/bin/sh"..full pathname of the shell
+showmatch, sm......Bool.nosm..........show matching ()[]{}
+showmode, smd......Bool.nosmd.........say when we're in input mode
+shiftwidth, sw.....Num..sw=8..........shift amount for < and >
+sidescroll, ss.....Num..ss=8..........amount of sideways scrolling
+sync, sy...........Bool.nosy..........call sync() often
+tabstop, ts........Num..ts=8..........width of tab characters
+taglength, tl......Num..tl=0..........significant chars in tag name
+term, te...........Str..te="$TERM"....name of the termcap entry
+terse, tr..........Bool.notr..........give shorter error messages
+timeout, to........Bool.to............distinguish <esc> from <arrow>?
+vbell, vb..........Bool.vb............use visible alternative to bell
+warn, wa...........Bool.wa............warn for ! if file modified
+window, wi.........Num..wi=24.........lines to redraw after long move
+wrapmargin, wm.....Num..wm=0..........wrap long lines in input mode
+wrapscan, ws.......Bool.ws............at EOF, searches wrap to line 1
+writeany, wr.......Bool.nowr..........allow :w to clobber files
+
+
+
+
+     Options may be set or examined via  the  colon  command
+"set".   The  values of options will affect the operation of
+later commands.
+
+     For convenience, options have both a  long  descriptive
+name  and  a  short name which is easy to type.  You may use
+either name interchangably.  I like the short names, myself.
+
+
+     There are three types of options: Boolean, string,  and
+numeric.   Boolean  options are made TRUE by giving the name
+of the option as an argument to the "set" command; they  are
+made  FALSE  by  prefixing the name with "no".  For example,
+"set autoindent" makes the autoindent option TRUE, and  "set
+noautoindent"  makes  it  FALSE.   Elvis also allows boolean
+options to be toggled by prefixing the name with "neg".  So,
+":map  g  :set  neglist^M"  will cause the <g> key to alter-
+nately toggle the "list" option on and off.  (The "neg" pre-
+fix is an extension; the real vi doesn't support it.)
+
+     To change the value of a string or numeric option, pass
+the "set" command the name of the option, followed by an "="
+sign  and  the  option's  new  value.   For  example,   "set
+tabstop=8"  will  give the tabstop option a value of 8.  For
+string options, you may enclose the new value in quotes.
+
+autoindent, ai
+     During input mode, the  autoindent  option  will  cause
+     each  added line to begin with the same amount of lead-
+     ing whitespace as the line above it.   Without  autoin-
+     dent, added lines are initially empty.
+
+     NOTE: If Elvis  was  compiled  with  the  -DCOMPAT_SYSV
+flag,  then  the  "vbell" and "modeline" options are renamed
+"flash" and "modelines", respectively.
+
+autoprint, ap
+     This option only affects EX  mode.   If  the  autoprint
+     option  on,  and  either the cursor has moved to a dif-
+     ferent line or the previous command modified the  file,
+     then Elvis will print the current line.
+
+autotab, at
+     This option affects the  behaviour  of  the  autoindent
+     mode.  If autoindent is turned off, then autotab has no
+     effect.
+
+     When autotab is turned on, elvis will use a mixture  of
+     spaces and tabs to create the proper amount of indenta-
+     tion.  This is the default.
+
+     When autotab is turned off, elvis will only use  spaces
+     for  auto-indent.   Elvis  will still insert a real tab
+     character when you hit the <Tab> key, though; the auto-
+     tab option only affects automatic indentation.
+autowrite, aw
+     When you're editing one file and decide  to  switch  to
+     another  -  via  the  :tag  command,  or :next command,
+     perhaps - if your current file has been modified,  then
+     Elvis  will  normally print an error message and refuse
+     to switch.
+
+     However, if the autowrite option is on, then Elvis will
+     write the modified version of the current file and suc-
+     cessfully switch to the new file.
+
+beautify, bf
+     This option causes all control characters to be deleted
+     from  the text file, at the time when you start editing
+     it.  If you're already editing a file when you turn  on
+     the beautify option, then that file won't be affected.
+
+cc...The :cc command  runs  the  C  compiler.   This  option
+     should be set to the name of your compiler.
+
+charattr, ca
+     Many text formatting programs allow  you  to  designate
+     portions  of your text to be underlined, italicized, or
+     boldface by embedding the special strings \fU, \fI, and
+     \fB in your text.  The special string \fP marks the end
+     of underlined or boldface text.
+
+     Elvis normally treats those special strings  just  like
+
+     any other text.
+
+     However, if the charattr option is on, then Elvis  will
+     interpret  those  special strings correctly, to display
+     underlined or boldface text on the screen.  (This  only
+     works,  of  course, if your terminal can display under-
+     lined and boldface, and if the TERMCAP entry  says  how
+     to do it.)
+
+columns, co
+     This option shows how wide your screen is.
+
+complain, com
+     This option controls whether Elvis will complain  about
+     unrecognized  options  in  a ":set" command.  Normally,
+     Elvis will ignore this type  of  error,  because  Elvis
+     doesn't  support  all  of  the options that the real vi
+     supports, and I got tired of seeing a  bunch  of  error
+     messages  every  time I started Elvis with a .exrc file
+     that was meant to be used with vi.
+
+     However, you may wish to turn on this  option  if  your
+     .exrc  is  specifically intended to be used with Elvis.
+     The error messages can also be useful when you're  con-
+     verting  a  vi  .exrc file to work with Elvis -- so you
+     can determine what Elvis doesn't understand.
+     This option can be turned on from the command  line  by
+     the "-c" flag.
+
+digraph, dig
+     This option is used to  enable/disable  recognition  of
+     digraphs.   The default value is nodigraph, which means
+     that digraphs will not be recognized.
+
+directory, dir
+     Elvis stores text  in  temporary  files.   This  option
+     allows  you  to control which directory those temporary
+     files will appear in.  The default is /usr/tmp.
+
+     This option can only be set  in  a  .exrc  file;  after
+     that,  Elvis will have already started making temporary
+     files in some other directory, so it would be too late.
+
+edcompatible, ed
+     This   option   affects   the    behaviour    of    the
+     ":s/regexp/text/options"  command.   It is normally off
+     (:se noed) which causes all of the substitution options
+     to be off unless explicitly given.
+
+     However, with edcompatible on (:se ed),  the  substitu-
+     tion  command  remembers  which  options  you used last
+     time.  Those same options  will  continue  to  be  used
+     until  you change them.  In edcompatible mode, when you
+     explicitly give the name of a substitution option,  you
+     will toggle the state of that option.
+
+     This all seems very strange to me, but its  implementa-
+     tion  was  almost free when I added the ":&" command to
+     repeat the previous substitution, so there it is.
+
+errorbells, eb
+     Elvis normally rings  a  bell  when  you  do  something
+     wrong.  This option lets you disable the bell.
+
+exrc.This option specifies  whether  a  .exrc  file  in  the
+     current directory should be executed.  By default, this
+     option is off (":set noexrc") which prevents elvis from
+     executing .exrc in the current directory.  If the .exrc
+     file in your home directory turns this option on (":set
+     exrc") then the Elvis will attempt to execute the .exrc
+     file in the current directory.
+
+     This option  exist  mainly  for  security  reasons.   A
+     mean-spirited person could do something like
+     and then anybody who attempted to edit or view  a  file
+     in  the  /tmp directory would lose most of their files.
+     With the exrc option turned off, this  couldn't  happen
+     to you.
+
+exrefresh, er
+     The EX mode of Elvis writes many lines to  the  screen.
+     You can make Elvis either write each line to the screen
+     separately, or save up many lines and write them all at
+     once.
+
+     The exrefresh option is normally on, so  each  line  is
+     written to the screen separately.
+
+     You may wish to turn  the  exrefresh  option  off  (:se
+     noer)  if  the  "write"  system  call is costly on your
+     machine, or if you're using  a  windowing  environment.
+     (Windowing  environments  scroll text a lot faster when
+     you write many lines at once.)
+
+     This option has no effect in  visual  command  mode  or
+     input mode.
+
+flipcase, fc
+     The flipcase option allows you to control how the  non-
+     ASCII characters are altered by the "~" command.
+
+     The string is divided into pairs of  characters.   When
+     "~" is applied to a non-ASCII character, Elvis looks up
+     the character in the flipcase string to see which  pair
+     it's  in, and replaces it by the other character of the
+     pair.
+
+hideformat, hf
+     Many text formatters require you to embed  format  com-
+     mands  in  your  text,  on  lines that start with a "."
+     character.  Elvis normally displays  these  lines  like
+     any  other  text,  but  if the hideformat option is on,
+     then format lines are displayed as blank lines.
+
+ignorecase, ic
+     Normally, when  Elvis  searches  for  text,  it  treats
+     uppercase  letters  as  being  different  for lowercase
+     letters.
+
+     When the ignorecase option is on, uppercase and  lower-
+     case are treated as equal.
+
+inputmode, im
+     This option allows you to have Elvis start up in insert
+     mode.   You  can  still exit insert mode at any time by
+     hitting the ESC key, as usual.   Usually,  this  option
+     would be set in your ".exrc" file.
+
+keytime, kt
+     The arrow keys of most terminals send a multi-character
+     sequence.   It  takes  a  measurable amount of time for
+     these sequences to be transmitted.  The keytime  option
+     allows  you  to  control  the maximum amount of time to
+     allow for an arrow key (or  other  mapped  key)  to  be
+     received in full.
+
+     On most systems, the setting is the number of tenths of
+     a  second  to  allow between characters.  On some other
+     systems, the setting is in whole seconds.
+
+     Try to avoid  setting  keytime=1.   Most  systems  just
+     count  clock beats, so if you tried to read a character
+     shortly before a clock beat, you could allow almost  no
+     time  at  all  for  reading the characters.  For higher
+     keytime settings, the difference is less critical.
+
+     If your system's response time is poor, you might  want
+     to  increase  the  keytime.   In particular, I've found
+     that when keystrokes must be  sent  through  a  network
+     (via  X  windows,  rlogin,  or telnet, for example) the
+     keytime should be set to at least 1 second.
+
+     As a special case, you can set keytime to 0 to  disable
+     this time limit stuff altogether.  The big problem here
+     is: If your arrow keys' sequences start  with  an  ESC,
+     then every time you hit your ESC key Elvis will wait...
+     and wait...  to see if maybe that ESC was  part  of  an
+
+     arrow key's sequence.
+
+     NOTE: this option is a generalization  of  the  timeout
+     option of the real vi.
+
+keywordprg, kp
+     Elvis has a special keyword lookup feature.   You  move
+     the cursor onto a word, and hit shift-K, and Elvis uses
+     another program to look up the word and display  infor-
+     mation about it.
+
+     This option says which program gets run.
+
+     The default value of this option is "ref", which  is  a
+     program  that  looks up the definition of a function in
+     C.  It looks up the function  name  in  a  file  called
+     "refs" which is created by ctags.
+
+     You can subtitute other programs, such  as  an  English
+     dictionary  program  or  the online manual.  Elvis runs
+     the program, using the keyword as  its  only  argument.
+     The  program  should  write information to stdout.  The
+     program's exit status should  be  0,  unless  you  want
+     Elvis to print "<<< failed >>>".
+
+lines, ln
+     This option says how many lines you screen has.
+
+list, li
+     In nolist mode (the default), Elvis displays text in  a
+     "normal" manner -- with tabs expanded to an appropriate
+     number of spaces, etc.
+     However, sometimes it is useful to have tab  characters
+     displayed   differently.    In   list  mode,  tabs  are
+     displayed as "^I", and a "$" is displayed at the end of
+     each line.
+
+magic, ma
+     The search  mechanism  in  Elvis  can  accept  "regular
+     expressions"  --  strings  in  which certain characters
+     have special meaning.
+
+     The magic option is normally  on,  which  causes  these
+     characters to be treated specially.
+
+     If you turn the magic option off (:se noma),  then  all
+     characters except ^ and $ are treated literally.  ^ and
+     $ retain their special meanings regardless of the  set-
+     ting of magic.
+
+make, mk
+     The :make  command  runs  your  "make"  program.   This
+     option defines the name of your "make" program.
+
+mesg.With the  real  vi,  running  under  real  UNIX,  ":set
+     nomesg" would prevent other users from sending you mes-
+     sages.  Elvis ignores it, though.
+
+modeline, ml
+     Elvis supports modelines.  Modelines are lines near the
+     beginning  or  end  of  your  text  file  which contain
+     "ex:yowza:", where "yowza" is any EX command.  A  typi-
+     cal  "yowza"  would  be  something  like  "set  ts=4 ca
+     kp=spell".
+
+     Normally these lines are ignored, for security reasons,
+     but  if you have "set modeline" in your .exrc file then
+     "yowza" is executed.
+
+novice, nov
+     The  command  ":set  novice"  is  equivelent  to  ":set
+     nomagic report=1 showmode".
+
+paragraphs, pa
+     The { and } commands move the cursor forward  or  back-
+     ward in increments of one paragraph.  Paragraphs may be
+     separated by blank lines, or by a "dot"  command  of  a
+     text  formatter.   Different  text  formatters use dif-
+     ferent "dot" commands.  This option allows you to  con-
+     figure Elvis to work with your text formatter.
+
+     It is assumed that your formatter  uses  commands  that
+     start  with a "." character at the front of a line, and
+     then have a one- or two-character command name.
+     The value of the paragraphs option is a string in which
+     each  pair  of  characters is one possible form of your
+     text formatter's paragraph command.
+
+prompt, pr
+     If you ":set noprompt", then Elvis will no longer  emit
+     a  ':'  when  it  expects you to type in an ex command.
+     This is slightly useful if you're  using  an  astonish-
+     ingly  slow  UNIX  machine, but the rest of us can just
+     ignore this one.
+
+readonly, ro
+     Normally, Elvis will let you write  back  any  file  to
+     which  you  have  write  permission.  If you don't have
+     write permission, then you can only write  the  changed
+     version of the file to a different file.
+
+     If you set the readonly option, then Elvis will pretend
+     you  don't  have write permission to any file you edit.
+     It is useful when you really only mean to use Elvis  to
+     look  at  a file, not to change it.  This way you can't
+     change it accidentally.
+
+     This option is normally off, unless you use the  "view"
+     alias  of  Elvis.   "View" is like "vi" except that the
+     readonly option is on.
+
+report, re
+     Commands in Elvis may affect many lines.  For  commands
+     that affect a lot of lines, Elvis will output a message
+     saying what was done and how many lines were  affected.
+     This  option allows you to define what "a lot of lines"
+     means.  The default is 5, so any command which  affects
+     5 or more lines will cause a message to be shown.
+
+ruler, ru
+     This option is normally off.  If you turn it  on,  then
+     Elvis  will  constantly display the line/column numbers
+     of the cursor, at the bottom of the screen.
+
+scroll, sc
+     The ^U and ^D keys normally scroll backward or  forward
+     by half a screenful, but this is adjustable.  The value
+     of this option says how many lines  those  keys  should
+     scroll  by.   If you invoke ^U or ^D with a count argu-
+     ment (for example, "33^D") then this option's value  is
+     set to the count.
+
+sections, se
+     The [[ and ]] commands move the cursor backward or for-
+     ward  in increments of 1 section.  Sections may be del-
+     imited by a { character in column 1  (which  is  useful
+     for  C  source  code) or by means of a text formatter's
+     "dot" commands.
+     This option allows you to configure Elvis to work  with
+     your text formatter's "section" command, in exectly the
+     same way that the paragraphs option makes it work  with
+     the formatter's "paragraphs" command.
+
+shell, sh
+     When Elvis forks a shell (perhaps for the :! or  :shell
+     commands)  this is the program that is uses as a shell.
+     This is "/bin/sh" by default, unless you have  set  the
+     SHELL (or COMSPEC, for MS-DOS) environment variable, it
+     which  case  the  default  value  is  copied  from  the
+     environment.
+
+shiftwidth, sw
+     The < and > commands shift text left or right  by  some
+     uniform  number  of  columns.   The  shiftwidth  option
+     defines that "uniform number".  The default is 8.
+
+showmatch, sm
+     With showmatch set, in input mode every  time  you  hit
+     one  of  )}], Elvis will momentarily move the cursor to
+     the matching ({[.
+
+showmode, smd
+     In visual mode, it is easy to forget whether you're  in
+     the  visual  command  mode or input/replace mode.  Nor-
+     mally, the showmode option is off, and  you  haven't  a
+     clue  as  to  which  mode  you're  in.  If you turn the
+     showmode option  on,  though,  a  little  message  will
+     appear  in  the lower right-hand corner of your screen,
+     telling you which mode you're in.
+
+sidescroll, ss
+     For long lines, Elvis scrolls sideways.  (This is  dif-
+     ferent from the real vi, which wraps a single long line
+     onto several rows of the screen.)
+
+     To minimize the number of scrolls needed,  Elvis  moves
+     the  screen  sideways  by several characters at a time.
+     The value of this  option  says  how  many  characters'
+     widths to scroll at a time.
+
+     Generally, the faster your screen can be  redrawn,  the
+     lower the value you will want in this option.
+
+sync, sy
+     If the system crashes during an edit session, then most
+     of  your  work can be recovered from the temporary file
+     that Elvis uses to store changes.   However,  sometimes
+     the  OS  will not copy changes to the hard disk immedi-
+     ately, so recovery might not be possible.  The [no]sync
+     option lets you control this.
+
+     In nosync mode (which is the default, for UNIX),  Elvis
+     lets  the operating system control when data is written
+     to the disk.  This is generally faster.
+
+     In sync mode (which is the default, for MS-DOS),  Elvis
+     forces  all  changes  out to disk every time you make a
+     change.  This is generally safer, but slower.   It  can
+     also  be a rather rude thing to do on a multi-user sys-
+     tem.
+
+tabstop, ts
+     Tab characters are normally 8 characters wide, but  you
+     can change their widths by means of this option.
+
+taglength, tl
+     This option allows you to specify how  many  characters
+     of  a tag's name must match when performing tag lookup.
+     As a special case, ":set taglength=0"  means  that  all
+     characters of a tag's name must match.
+
+     Note: some configurations of Elvis don't  support  this
+     option.
+
+term, te
+     This read-only option shows the  name  of  the  termcap
+     entry that Elvis is using for your terminal.
+
+
+terse, tr
+     The real vi uses  this  option  to  select  longer  vs.
+     shorter  error  messages.   Elvis  has  only one set of
+     error messages, though, so this option has no effect.
+
+timeout, to
+     The command ":set notimeout"  is  equivelent  to  ":set
+     keytime=0",  and  ":set timeout" is equivelent to ":set
+     keytime=1".  This affects the behaviour  of  the  <Esc>
+     key.   See  the  discussion of the "keytime" option for
+     more information.
+
+vbell, vb
+     If your termcap entry describes a  visible  alternative
+     to  ringing your terminal's bell, then this option will
+     say whether the visible version gets used or not.  Nor-
+     mally it will be.
+
+     If your termcap does NOT include a visible  bell  capa-
+     bility,  then  the  vbell  option  will be off, and you
+     can't turn it on.
+
+warn, wa
+     If you have modified a file but not yet written it back
+     to  disk,  then  Elvis  will  normally  print a warning
+     before executing a ":!cmd" command.  However, in nowarn
+     mode, this warning is not given.
+
+     Elvis also normally prints a message after a successful
+     search  that  wrapped  at EOF.  The [no]warn option can
+     also disable this warning.
+
+window, wi
+     This option controls how many lines are redrawn after a
+     long move.
+
+     On fast terminals, this is usually set to the number of
+
+     rows  that  the  terminal can display, minus one.  This
+     causes the entire screen to be filled with text  around
+     the cursor.
+
+     On slow terminals, you may wish to reduce this value to
+     about  7  or  so.   That way, if you're doing something
+     like  repeatedly  hitting  'n'  to  search   for   each
+     occurrence of some string and trying to find a particu-
+     lar occurrence, then you don't need to wait as long for
+     Elvis to redraw the screen after each search.
+
+wrapmargin, wm
+     Normally (with wrapmargin=0) Elvis will let you type in
+     extremely long lines, if you wish.
+
+     However, with warpmargin set to something other that  0
+     (wrapmargin=10 is nice), Elvis will automatically cause
+     long lines to be "wrapped" on a word  break  for  lines
+     come too close to the right-hand margin.
+
+wrapscan, ws
+     Normally, when you search  for  something,  Elvis  will
+     find  it  no  matter  where  it  is in the file.  Elvis
+     starts at the cursor position,  and  searches  forward.
+     If  Elvis  hits EOF without finding what you're looking
+     for, then it wraps around to  continue  searching  from
+     line  1.   If  you  turn  off  the wrapscan option (:se
+     nows), then when Elvis hits EOF  during  a  search,  it
+     will stop and say so.
+
+writeany, wr
+     With "writeany" turned off, elvis will prevent you from
+     accidentally overwriting a file.  For example, if "foo"
+     exists then ":w foo" will fail.  If  you  turn  on  the
+     "writeany" option, then ":w foo" will work.
+
+     Regardless of the setting of "writeany",  though,  ":w!
+     foo"  will  work.   The  '!' forces the ":w" command to
+     write the file unless the operating system won't  allow
+     it.
+
+
+     When Elvis deletes text, it stores that text in  a  cut
+buffer.   This  happens  in  both  visual  mode and EX mode.
+There is no practical limit to how much text  a  cut  buffer
+can hold.
+     There are 36 cut buffers: 26 named buffers ("a  through
+"z),  9  anonymous  buffers ("1 through "9), and 1 extra cut
+buffer (".).
+
+     In EX mode, the :move and  :copy  commands  use  a  cut
+buffer to temporarily hold the text to be moved/copied.
+
+0.23.  Putting text into a Cut Buffer
+
+     In visual mode, text is copied into a cut  buffer  when
+you use the d, y, c, C, or s commands.
+
+     By default, the text goes into the "1 buffer.  The text
+that  used to be in "1 gets shifted into "2, "2 gets shifted
+into "3, and so on.  The text that used to be in "9 is lost.
+This  way,  the last 9 things you deleted are still accessi-
+ble.
+
+     You can also put the text into a  named  buffer  --  "a
+through  "z.   To do this, you should type the buffer's name
+(two keystrokes: a  double-quote  and  a  lowercase  letter)
+before  the d/y/c/C/s command.  When you do this, "1 through
+"9 are not affected by the cut.
+
+     You can append text to one of the named buffers.  To do
+this,  type  the  buffer's name in uppercase (a double-quote
+and an uppercase letter) before the d/y/c/C/s command.
+
+     The ". buffer is special.  It  isn't  affected  by  the
+d/y/c/C/s  command.   Instead,  it  stores the text that you
+typed in the last time you were in input mode.  It  is  used
+to implement the . visual command, and ^A in input mode.
+
+     In EX mode (also known as  colon  mode),  the  :delete,
+:change, and :yank commands all copy text into a cut buffer.
+Like the visual commands, these EX commands normally use the
+"1  buffer, but you can use one of the named buffers by giv-
+ing its name after the command.  For example,
+
+     :20,30y a
+
+
+will copy lines 20 through 30 into cut buffer "a.
+
+     You can't directly put text into the ". buffer, or  the
+"2 through "9 buffers.
+
+0.24.  Pasting from a Cut Buffer
+
+     There  are  two  styles  of  pasting:   line-mode   and
+character-mode.   If a cut buffer contains whole lines (from
+a command like "dd") then line-mode pasting is used;  if  it
+contains  partial  lines  (from  a  command  like "dw") then
+character-mode pasting is used.  The EX commands always  cut
+whole lines.
+
+     Character-mode pasting causes the text to  be  inserted
+into the line that the cursor is on.
+
+     Line-mode pasting inserts the text on a new line  above
+or  below the line that the cursor is on.  It doesn't affect
+the cursor's line at all.
+
+     In visual mode, the p and P commands insert text from a
+cut  buffer.   Uppercase P will insert it before the cursor,
+and lowercase p will insert it after the cursor.   Normally,
+these  commands  will  paste from the "1 buffer, but you can
+specify any other buffer to paste from.  Just type its  name
+(a double-quote and another character) before you type the P
+or p.
+
+     In EX mode, the (pu)t command pastes text after a given
+line.   To paste from a buffer other that "1, enter its name
+after the command.
+
+0.25.  Macros
+
+     The contents of a named cut buffer can be executed as a
+series of ex/vi commands.
+
+     To put the instructions into the cut buffer,  you  must
+first insert them into the file, and then delete them into a
+named cut buffer.
+
+     To execute a cut buffer's contents as EX commands,  you
+should  give  the EX command "@" and the name of the buffer.
+For example, :@z will execute "z as a series of EX commands.
+
+     To execute a cut buffer's contents as visual  commands,
+you should give the visual command "@" and the letter of the
+buffer's name.  The visual "@" command is different from the
+EX  "@"  command.   They interpret the cut buffer's contents
+differently.
+
+     The visual @ command can be rather finicky.  Each char-
+acter  in the buffer is interpretted as a keystroke.  If you
+load the instructions into the cut buffer via  a  "zdd  com-
+mand, then the newline character at the end of the line will
+be executed just like any other  character,  so  the  cursor
+would be moved down 1 line.  If you don't want the cursor to
+move down 1 line at the end of each  @z  command,  then  you
+should load the cut buffer by saying 0"zD instead.
+
+     Although cut buffers may hold any amount of text, Elvis
+can  only execute small buffers.  For EX mode, the buffer is
+limited to about 1k bytes.  For visual mode, the  buffer  is
+limited to about 80 bytes.  If a buffer is too large to exe-
+cute, an error message is displayed.
+     You can't nest @ commands.  You can't  run  @  commands
+from  your  .exrc  file,  or  any other :source file either.
+Similarly, you can't run a :source command from within an  @
+command.   Hopefully, these restrictions will be lifted in a
+later version.
+
+0.26.  The Effect of Switching Files
+
+     When Elvis first starts up, all cut buffers are  empty.
+When  you  switch to a different file (via the :n or :e com-
+mands perhaps) the  9  anonymous  cut  buffers  are  emptied
+again, but the other 27 buffers retain their text.
+
+     Elvis is not  100%  compatible  with  the  real  vi/ex.
+Elvis  has  many small extensions, some omissions, and a few
+features which  are  implemented  in  a  slightly  different
+manner.
+
+0.27.  Extensions
+
+:mk.......
+
+:mkexrc...This EX command saves the current  :set  and  :map
+          configurations in the ".exrc" file in your current
+          directory.
+
+:N........
+
+:Next.....
+
+:pre......
+
+:previous.These commands move  backwards  through  the  args
+          list.
+
+zz........In visual command mode, the (lowercase) "zz"  com-
+          mand  will  center the current line on the screen,
+          like "z=".
+
+..........The default count value for . is the same  as  the
+          previous command which . is meant to repeat.  How-
+          ever, you can supply a new count if you wish.  For
+          example, after "3dw", "." will delete 3 words, but
+          "5." will delete 5 words.
+
+".........The text which was most recently input (via a "cw"
+          command,  or  something similar) is saved in a cut
+          buffer called ". (which is a pretty hard  name  to
+          write in an English sentence).
+
+K.........In visual command mode, you can  move  the  cursor
+          onto  a word and press shift-K to have Elvis run a
+          reference program to look that word up.  This com-
+          mand  alone  is worth the price of admission!  See
+          the ctags and ref programs.
+
+#.........In visual command mode, you can  move  the  cursor
+          onto  a  number and then hit ## or #+ to increment
+          that number by 1.  To increment  it  by  a  larger
+          amount, type in the increment value before hitting
+          the initial #.  The number can also be decremented
+          or set by hitting #- or #=, respectively.
+
+input modeYou can backspace past the beginning of the line.
+
+..........The arrow keys work in input mode.
+
+..........If you type control-A,  then  the  text  that  you
+          input  last  time is inserted.  You will remain in
+          input mode, so you can backspace over part of  it,
+          or  add  more  to  it.   (This  is  sort  of  like
+          control-@ on the real vi,  except  that  control-A
+          really works.)
+
+..........Control-P will insert  the  contents  of  the  cut
+          buffer.
+
+..........Real vi can only remember up to 128 characters  of
+          input, but Elvis can remember any amount.
+
+..........The ^T and ^D keys can adjust the indent of a line
+          no  matter  where the cursor happens to be in that
+          line.
+
+..........You can save your file  and  exit  Elvis  directly
+          from input mode by hitting control-Z twice.
+
+..........Elvis supports digraphs as a  way  to  enter  non-
+          ASCII characters.
+
+:se im....
+
+:set inputmode
+          If you set this flag  in  your  .exrc  file,  then
+          Elvis  will  start  up  in  input  mode instead of
+          visual command mode.
+
+:se ca....
+
+:set charattr
+          Elvis can display  "backslash-f"  style  character
+          attributes on the screen as you edit.  The follow-
+          ing example shows the recognized atributes:
+
+               normal      \fBboldface\fR      \fIitalics\fR
+          \fUunderlined\fR normal
+
+          NOTE:  you  must   compile   Elvis   without   the
+          -DNO_CHARATTR flag for this to work.
+
+:se sy....
+
+:set sync.After a crash, you can usually recover the altered
+          form  of  the  file  from  the temporary file that
+          Elvis uses -- unless the temporary file  was  cor-
+
+          rupted.
+
+..........UNIX systems  use  a  delayed-write  cache,  which
+          means  that  when Elvis tries to write to the tem-
+          porary file, the information might still be in RAM
+          instead  of  on the disk.  A power failure at that
+          time would cause  the  in-RAM  information  to  be
+          lost.   UNIX's  sync()  call  will  force all such
+          information to disk.
+
+..........MS-DOS and Atari TOS don't write a  file's  length
+          to  disk until that file is closed.  Consequently,
+          the temporary file would appear to be 0 bytes long
+          if  power  failed  when we were editing.  To avoid
+          this problem, a sync() function has  been  written
+          which  will  close  the  temporary  file  and then
+          immediately reopen it.
+
+cursor shape
+          Elvis changes the shape of the cursor to  indicate
+          which  mode  you're in, if your terminal's termcap
+          entry includes the necessary capabilities.
+
+:se hf....
+
+:set hideformat
+          This option hides format control lines.  (They are
+          displayed on the screen as blank lines.)
+
+*.........
+
+:errlist..
+
+Elvis -m..Elvis is clever enough to parse the error messages
+          emitted  by  many compilers.  To use this feature,
+          you should collect your compiler's error  messages
+          into a file called "errlist"; Elvis will read this
+          file, determine which source file caused the error
+          messages, start editing that file, move the cursor
+          to the line where  the  error  was  detected,  and
+          display  the  error  message  on  the status line.
+          Nifty!
+
+v.........
+
+V.........In visual command mode, 'v' starts visibly select-
+          ing  characters  and  'V' starts visibly selecting
+          whole lines.  They both character  or  line  where
+
+          the  cursor is located becomes one endpoint of the
+          selection.  You can then use the  standard  cursor
+          movement  commands to move the cursor to the other
+          endpoint, and then press one of the operator  com-
+          mands  (c/d/y/</>/!/=/\).   The operator will then
+          immediately be applied to the selected text.
+
+          .ti -240u.The '\' key is a new  operator,  similar
+          in  operation to the c/d/y/</>/! operators It con-
+          jures a pop-up menu, from which you can select any
+          of  the  other  operators  plus a few other common
+          commands.
+
+=.........
+
+:se.......The '=' key is another new operator.  It is  simi-
+          lar  to  the  '!'  operator, except that while '!'
+          asks you to type in a filter  command  each  time,
+          '='  assumes  it  should  always  run  the command
+          stored in the equalprg option.
+
+n%........The '%' movement key can now  accept  an  optional
+          count.   Without  a count, the '%' key still moves
+          to a matching  parenthesis  like  it  always  did.
+          With  a count somewhere between 1 and 100, though,
+          it moves the cursor to approximately a given  per-
+          centage of the way through the file.  For example,
+          typing "50%" will move the cursor to the middle of
+          the file.
+
+0.28.  Omissions
+
+     The replace mode is a hack.  It doesn't save  the  text
+that it overwrites.
+
+     Long lines are displayed differently -- where the  real
+vi  would  wrap a long line onto several rows of the screen,
+Elvis simply displays part of the line, and  allows  you  to
+scroll the screen sideways to see the rest of it.
+
+     The ":preserve" and ":recover"  commands  are  missing.
+So  is  the  -r  flag.   I've never had a good reason to use
+":preserve", and  since  ":recover"  is  used  so  rarely  I
+decided  to  implement it as a separate program.  There's no
+need to load the recovery code into memory  every  time  you
+edit a file, I figured.
+
+     LISP support is missing.
+
+     Autoindent mode acts a little different from  the  real
+vi.   It  is  still  quite useful, but if you frequently use
+both vi and Elvis then  the  differences  may  be  annoying.
+Autoindent is gradually improving.
+     You don't need to know the material in this section  to
+use Elvis.  You only need it if you intend to modify Elvis.
+
+0.29.  The temporary file
+
+     The temporary file is divided into blocks of 1024 bytes
+each.  The functions in "blk.c" maintain a cache of the five
+most recently used blocks, to minimize file I/O.
+
+     When Elvis starts up, the file is copied into the  tem-
+porary  file  by  the function tmpstart() in "tmp.c".  Small
+amounts of extra space are inserted into the temporary  file
+to  insure  that no text lines cross block boundaries.  This
+speeds up processing and simplifies storage management.  The
+extra  space  is filled with NUL characters.  the input file
+must not contain any NULs, to avoid  confusion.   This  also
+limits lines to a length of 1023 characters or less.
+
+     The data blocks aren't necessarily stored in  sequence.
+For  example,  it  is  entirely possible that the data block
+containing the first lines of text will be stored after  the
+block containing the last lines of text.
+
+     In RAM, Elvis maintains two lists: one  that  describes
+the  "proper"  order  of  the  disk blocks, and another that
+records the line number of the  last  line  in  each  block.
+When  Elvis  needs  to  fetch  a given line of text, it uses
+these tables to locate the data block  which  contains  that
+line.
+
+     Before each change is made to the file, these lists are
+
+copied.  The copies can be used to "undo" the change.  Also,
+the first list -- the one that  lists  the  data  blocks  in
+their  proper order -- is written to the first data block of
+the temp file.  This list can be used during file recovery.
+
+     When blocks are altered, they are rewritten to  a  dif-
+ferent  block  in  the  file,  and the order list is updated
+accordingly.  The original block is  left  intact,  so  that
+"undo"  can  be  performed  easily.   Elvis  will eventually
+reclaim the original block, when it is no longer needed.
+
+0.30.  Implementation of Editing
+
+     There are three basic operations which affect text:
+
+        o+ delete text...- delete(from, to)
+        o+ add text......- add(at, text)
+        o+ yank text.....- cut(from, to)
+
+
+     To yank text, all text between two  text  positions  is
+copied into a cut buffer.  The original text is not changed.
+To copy the text into a cut buffer, you need  only  remember
+which  physical blocks that contain the cut text, the offset
+into the first block of the start of  the  cut,  the  offset
+into  the last block of the end of the cut, and what kind of
+cut it was.  (Cuts may be  either  character  cuts  or  line
+cuts;  the kind of a cut affects the way it is later "put".)
+Yanking is implemented in the function cut(), and pasting is
+implemented  in  the  function paste().  These functions are
+defined in "cut.c".
+
+     To delete text, you must  modify  the  first  and  last
+blocks,  and  remove any reference to the intervening blocks
+in the header's list.  The text to be deleted  is  specified
+by two marks.  This is implemented in the function delete().
+
+     To add text, you must specify the text to insert (as  a
+NUL-terminated  string)  and  the  place  to insert it (as a
+mark).  The block into which the text is to be inserted  may
+need  to  be  split  into  as  many as four blocks, with new
+intervening blocks needed as well...  or it could be as sim-
+ple as modifying a single block.  This is implemented in the
+function add().
+
+     There is also a change() function, which generally just
+calls delete() and add().  For the special case where a sin-
+gle character is being replaced by another single character,
+though,  change() will optimize things somewhat.  The add(),
+delete(),  and  change()  functions  are  all   defined   in
+"modify.c".
+
+     The input() function reads text from a user and inserts
+it  into  the  file.   It  makes  heavy  use  of  the add(),
+delete(), and change() functions.  It inserts characters one
+at a time, as they are typed.
+
+     When  text  is  modified,  an  internal   file-revision
+counter,  called  changes,  is incremented.  This counter is
+used to detect when certain caches are out  of  date.   (The
+"changes"  counter  is  also incremented when we switch to a
+different file, and also in one or two similar situations --
+all related to invalidating caches.)
+
+0.31.  Marks and the Cursor
+
+     Marks are places within the text.  They are represented
+internally  as  32-bit  values which are split into two bit-
+fields: a line number and a character index.   Line  numbers
+start with 1, and character indexes start with 0.  Lines can
+be up to 1023 characters long, so the character index is  10
+bits wide and the line number fills the remaining 22 bits in
+the long int.
+
+     Since line numbers start with 1, it is impossible for a
+valid  mark  to have a value of 0L.  0L is therefore used to
+represent unset marks.
+     When you do the "delete text" change,  any  marks  that
+were  part of the deleted text are unset, and any marks that
+were set  to  points  after  it  are  adjusted.   Marks  are
+adjusted similarly after new text is inserted.
+
+     The cursor is represented as a mark.
+
+0.32.  Colon Command Interpretation
+
+     Colon commands are parsed,  and  the  command  name  is
+looked  up  in  an  array of structures which also contain a
+pointer to the function that implements the command,  and  a
+description  of the arguments that the command can take.  If
+the command is recognized and its arguments are legal,  then
+the function is called.
+
+     Each function performs its task;  this  may  cause  the
+cursor to be moved to a different line, or whatever.
+
+0.33.  Screen Control
+
+     In input mode or visual command  mode,  the  screen  is
+redrawn  by  a  function  called redraw().  This function is
+called in the getkey() function  before  each  keystroke  is
+read in, if necessary.
+
+     Redraw() write to the screen via a package which  looks
+like  the  "curses" library, but isn't.  It is actually much
+simpler.  Most curses operations are implemented  as  macros
+which copy characters into a large I/O buffer, which is then
+written with a single large write()  call  as  part  of  the
+refresh() operation.
+
+     (Note: Under MS-DOS, the pseudo-curses macros check  to
+see  whether you're using the pcbios interface.  If you are,
+then the macros call functions in "pc.c" to implement screen
+updates.)
+
+     The  low-level  functions  which  modify  text  (namely
+add(), delete(), and change()) supply redraw() with clues to
+help redraw() decide which  parts  of  the  screen  must  be
+redrawn.    The  clues  are  given  via  a  function  called
+redrawrange().
+
+     Most EX commands use the pseudo-curses package to  per-
+form their output, like redraw().
+
+     There is also a function called msg()  which  uses  the
+same  syntax  as printf().  In EX mode, msg() writes message
+to the screen and automatically adds a newline.  In VI mode,
+msg()  writes  the  message on the bottom line of the screen
+with the "standout" character attribute turned on.
+
+
+0.34.  Options
+
+     For each option available through the  ":set"  command,
+Elvis contains a character array variable, named "o_option".
+For example, the  "lines"  option  uses  a  variable  called
+"o_lines".
+
+     For boolean options, the array has a  dimension  of  1.
+The  first  (and only) character of the array will be NUL if
+the variable's value is FALSE, and some other value if it is
+TRUE.   To  check  the  value, just by dereference the array
+name, as in "if (*o_autoindent)".
+
+     For number options, the array has  a  dimension  of  3.
+The  array  is  treated as three unsigned one-byte integers.
+The first byte is the current  value  of  the  option.   The
+second  and  third  bytes  are the lower and upper bounds of
+that option.
+
+     For string options, the array usually has  a  dimension
+of about 60 but this may vary.  The option's value is stored
+as a normal NUL-terminated string.
+
+     All of the options are declared in "opts.c".  Most  are
+initialized to their default values; the initopts() function
+is used to perform any environment-specific initialization.
+
+0.35.  Portability
+
+     To improve portability, Elvis collects as many  of  the
+system-dependent definitions as possible into the "config.h"
+file.  This file begins with some preprocessor  instructions
+which attempt to determine which compiler and operating sys-
+tem you have.  After that,  it  conditionally  defines  some
+macros and constants for your system.
+
+     One of the more significant macros is ttyread().   This
+macro is used to read raw characters from the keyboard, pos-
+sibly with timeout.  For UNIX systems, this basically  reads
+
+bytes  from  stdin.  For MSDOS, TOS, and OS9, ttyread() is a
+function defined in curses.c.  There is  also  a  ttywrite()
+macro.
+
+     The tread() and twrite() macros are versions of  read()
+and  write() that are used for text files.  On UNIX systems,
+these are equivelent to  read()  and  write().   On  MS-DOS,
+these  are  also equivelent to read() and write(), since DOS
+libraries are generally clever  enough  to  convert  newline
+characters  automatically.   For  Atari TOS, though, the MWC
+library is too stupid to do  this,  so  we  had  to  do  the
+conversion explicitly.
+
+     Other macros may substitute index()  for  strchr(),  or
+bcopy()  for memcpy(), or map the "void" data type to "int",
+or whatever.
+
+     The file "tinytcap.c" contains a set of functions  that
+emulate  the  termcap  library  for  a small set of terminal
+types.  The terminal-specific info is hard-coded  into  this
+file.   It  is only used for systems that don't support real
+termcap.  Another alternative for screen control can be seen
+in  the  "curses.h"  and  "pc.c"  files.  Here, macros named
+VOIDBIOS and CHECKBIOS are used to indirectly call functions
+which perform low-level screen manipulation via BIOS calls.
+
+     The stat() function must be able to come up with  UNIX-
+style  major/minor/inode  numbers  that  uniquely identify a
+file or directory.
+
+     Please try to keep you changes localized, and wrap them
+in  #if/#endif pairs, so that Elvis can still be compiled on
+other systems.  And PLEASE let me know about it,  so  I  can
+incorporate your changes into my latest-and-greatest version
+of Elvis.
+
+     Elvis uses many preprocessor symbols to control  compi-
+lation.   Some  of  these  control  the sizes of buffers and
+such.  The "-DNO_XXXX" options remove small sets of  related
+features.
+
+     Most  Elvis  users  will  probably  want  to  keep  all
+features  available.   Minix-PC  users, though, will have to
+sacrifice some sets because otherwise  Elvis  would  be  too
+bulky  to  compile.   The "asld" phase of the compiler craps
+out.
+
+-DM_SYSV, -DTOS, -DCOHERENT
+     These flags tell the compiler that Elvis is being  com-
+     piled  for  System-V  UNIX,  Atari  TOS,  or  Coherent,
+     respectively.  For other systems, the config.h file can
+     generally figure it out automatically.
+
+-DDATE=string
+     DATE should be defined to be a string constant.  It  is
+
+     printed by the :version command as the compilation date
+     of the program.
+
+     It is only used in cmd1.c, and even there you may leave
+     it undefined without causing an urp.
+
+-DNBUFS=number
+     Elvis keeps most of your text in a temporary file; only
+     a  small  amount  is actually stored in RAM.  This flag
+     allows you to control how much of the file  can  be  in
+     RAM  at  any  time.  The default is 5 blocks.  (See the
+     -DBLKSIZE flag, below.)
+
+     More RAM allows  global  changes  to  happen  a  little
+     faster.   If  you're  just making many small changes in
+     one section of a file, though,  extra  RAM  won't  help
+     much.
+
+-DBLKSIZE=number
+     This controls the size of blocks that Elvis uses inter-
+     nally.   The  value  of BLKSIZE must be a power of two.
+     Every time you double BLKSIZE, you quadruple  the  size
+     of  a  text  file  that  Elvis can handle, but you also
+     cause the temporary file to grow faster.   For  MS-DOS,
+     Coherent,  and  Minix-PC,  the  default  value is 1024,
+     which allows you to edit files up to almost 512K  bytes
+     long.   For  all  other  systems,  the default value is
+     2048, which allows you to edit files that are nearly  2
+     megabytes long.
+
+-DTMPDIR=string
+     This sets the default value of the "directory"  option,
+     which   specifies  where  the  temporary  files  should
+     reside.  The value of TMPDIR must be a  string,  so  be
+     sure  your  value includes the quote characters on each
+     end.
+
+-DEXRC=str, -DHMEXRC=str, -DSYSEXRC=str, -DEXINIT=str
+     This lets you control the names of  the  initialization
+     files.   Their  values  must  be strings, so be careful
+     about quoting.
+
+     EXRC is the name of  the  initialization  file  in  the
+     current  directory.   Its  default  value is ".exrc" on
+     UNIX systems -- the same as the  real  vi.   For  other
+     systems, check the config.h file.
+
+     HMEXRC is the name of the initialization file  in  your
+     home  directory.   By  default, it is the same as EXRC.
+     Elvis will automatically prepend the name of your  home
+     directory  to  HMEXRC at run time, so don't give a full
+     path name.
+
+     SYSEXRC is the name  of  a  system-wide  initialization
+     file.   It  has no default value; if you don't define a
+     value for it, then the code that supports SYSEXRC  just
+     isn't  compiled.  The value of SYSEXRC should be a full
+     pathname, in quotes.
+
+     EXINIT is the name of an environment variable that  can
+     contain  initialization  commands.  Normally, its value
+     is "EXINIT".
+
+-DKEYWORDPRG=string
+     This  flag  determines  the  default   value   of   the
+     "keywordprg" option.  Its value must be a string, so be
+     careful about quoting.  The default value of this  flag
+     is "ref", which is a C reference program.
+-DCC_COMMAND=string -DMAKE_COMMAND=string -DERRLIST=string
+     These control the names of the C compiler,  the  "make"
+     utility, and the error output file, respectively.  They
+     are only used if -DNO_ERRLIST is not given.
+
+-DMAXMAPS=number
+     This controls the capacity of the key map table.
+
+-DMAXRCLEN=number
+     This determines how large a .exrc file can be (measured
+     in bytes).  The default is 1000 bytes.  If you increase
+     this value significantly, then you may need to allocate
+     extra memory for the stack.  See the "CHMEM" setting in
+     the Makefile.
+
+-DSHELL=string
+     This is the default value of the  "shell"  option,  and
+     hence  the  default shell used from within Elvis.  This
+     only controls the default; the value you give here  may
+     be  overridden  at  run-time  by setting an environment
+     variable named SHELL  (or  COMSPEC  for  MS-DOS).   Its
+     value  must  be  a string constant, so be careful about
+     quoting.
+
+-DTAGS=string
+     This sets the name of the "tags" file, which is used by
+     the :tag command.  Its value must be a string constant,
+     so be careful about quoting.
+
+-DCS_IBMPC -DCS_LATIN1
+     The digraph table and  flipcase  option  will  normally
+     start  out  empty.   However,  if you add -DCS_IBMPC or
+     -DCS_LATIN1 to your CFLAGS, then they  will  start  out
+     filled  with values that are appropriate for the IBM PC
+     character set or the ISO Latin-1 character set, respec-
+     tively.
+
+-DDEBUG
+     This adds the ":debug" and  ":validate"  commands,  and
+     also   adds   many  internal  consistency  checks.   It
+     increases the size of the ".text" segment by about 6K.
+
+-DSYSV_COMPAT
+     This makes elvis  mimic  the  SystemV  version  of  vi,
+     rather  than  the  BSD version.  The "vbell" and "mode-
+     line" options are renamed to "flash"  and  "modelines",
+     respectively.   The abbreviated command ":ma" is inter-
+     pretted as ":mark" instead of ":map".  The "-L" and  "-
+     c" command line options are recognized.
+
+-DCRUNCH
+     This flag removes some non-critical code, so that Elvis
+     is  smaller.   For example, it removes a short-cut from
+     the regexp package, so that text searches  are  slower.
+     Also, screen updates are not as efficient.  A couple of
+     obscure features are disabled by this, too.
+
+-DNO_MKEXRC
+     This removes the ":mkexrc"  command,  so  you  have  to
+     create any .exrc files manually.  The size of the .text
+     segment will be reduced by about 600 bytes.
+
+-DNO_CHARATTR
+     Permanently disables the charattr option.  This reduces
+     the size of your ".text" segment by about 850 bytes.
+
+-DNO_RECYCLE
+     Normally, Elvis will recycle space (from the tmp  file)
+     which  contains  totally obsolete text.  This flag dis-
+     ables this recycling.  Without recycling,  the  ".text"
+     segment is about 1K smaller than it would otherwise be,
+     but the tmp file grows much faster.  If you have a  lot
+     of  free space on your harddisk, but Elvis is too bulky
+     to run with recycling, then try it without recycling.
+
+     When using a version of Elvis that  has  been  compiled
+     with  -DNO_RECYCLE, you should be careful to avoid mak-
+     ing many small changes to a file because  each  indivi-
+     dual change will cause the tmp file to grow by at least
+     1k.  Hitting "x" thirty times counts as thirty changes,
+     but  typing  "30x"  counts  as  one  change.  Also, you
+     should occasionally do a ":w" followed  by  a  ":e"  to
+     start with a fresh tmp file.
+
+-DNO_SENTENCE
+     Leaves out the "(" and ")" visual mode commands.  Also,
+     the  "[[",  "]]", "{", and "}" commands will not recog-
+     nize *roff macros.  The sections and paragraphs options
+     go  away.   This  saves  about 650 bytes in the ".text"
+     segment.
+
+-DNO_CHARSEARCH
+     Leaves out the visual commands  which  locate  a  given
+     character  in the current line: "f", "t", "F", "T", ","
+     and ";".  This saves about 900 bytes.
+
+-DNO_EXTENSIONS
+     Leaves out the "K" and "#" visual commands.  Also,  the
+     arrow  keys  will no longer work in input mode.  (Other
+     extensions are either inherent in the design of  Elvis,
+     or  are  controlled  by more specific flags, or are too
+     tiny to be worth removing.) This saves about 250 bytes.
+
+-DNO_MAGIC
+     Permanently disables the "magic" option, so  that  most
+     meta-characters  in  a  regular  expression  are  *NOT*
+     recognized.  This  saves  about  3k  of  space  in  the
+     ".text" segment, because the complex regular expression
+     code can be replaced by much simpler code.
+
+-DNO_SHOWMODE
+     Permanently  disables  the  "showmode"  option,  saving
+     about 250 bytes.
+
+-DNO_CURSORSHAPE
+     Normally, Elvis tries to adjust the shape of the cursor
+     as   a   reminder   of   which  mode  you're  in.   The
+     -DNO_CURSORSHAPE flag disables this, saving  about  150
+     bytes.
+
+-DNO_DIGRAPH
+     To allow entry of non-ASCII characters, Elvis  supports
+     digraphs.   A digraph is a single (non-ASCII) character
+     which is entered as a combination of two other  (ASCII)
+     characters.  If you don't need to input non-ASCII char-
+     acters, or if your keyboard supports a  better  way  of
+     entering non-ASCII characters, then you can disable the
+     digraph code and save about 450 bytes.
+
+-DNO_ERRLIST
+     Elvis adds a ":errlist" command,  which  is  useful  to
+     programmers.   If  you don't need this feature, you can
+     disable it via the -DNO_ERRLIST flag.  This will reduce
+     the .text segment by about 900 bytes, and the .bss seg-
+     ment by about 300 bytes.
+
+-DNO_ABBR
+     The -DNO_ABBR flag disables the  ":abbr"  command,  and
+     reduces the size of Elvis by about 600 bytes.
+
+-DNO_OPTCOLS
+     When Elvis displays the current  options  settings  via
+     the  ":set"  command,  the  options are normally sorted
+     into columns.  The -DNO_OPTCOLS flag causes the options
+     to  be  sorted  across the rows, which is much simpler.
+     The -DNO_OPTCOLS flag will  reduce  the  size  of  your
+     .text segment by about 500 bytes.
+
+-DNO_MODELINE
+     This removes all support for modelines.
+
+-DNO_TAG
+     This disables tag lookup.  It reduces the size  of  the
+     .text segment by about 750 bytes.
+
+     Elvis uses fairly  standard  termcap  fields  for  most
+things.   I  invented  the cursor shape names but other than
+that there should be no surprises.
+
+Required numeric fields
+
+        :co#:...number of columns on the screen (chars per line)
+        :li#:...number of lines on the screen
+
+
+Required string fields
+
+        :ce=:...clear to end-of-line
+        :cl=:...home the cursor & clear the screen
+        :cm=:...move the cursor to a given row/column
+        :up=:...move the cursor up one line
+
+
+Boolean fields
+
+        :am:....auto margins - wrap when char is written in last column?
+        :xn:....brain-damaged auto margins - newline ignored after wrap
+        :pt:....physical tabs?
+
+
+Optional string fields
+
+        :al=:...insert a blank row on the screen
+        :dl=:...delete a row from the screen
+        :cd=:...clear to end of display
+        :ei=:...end insert mode
+        :ic=:...insert a blank character
+        :im=:...start insert mode
+        :dc=:...delete a character
+        :sr=:...scroll reverse (insert row at top of screen)
+        :vb=:...visible bell
+        :ti=:...terminal initialization string, to start full-screen mode
+        :te=:...terminal termination, to end full-screen mode
+        :ks=:...enables the cursor keypad
+        :ke=:...disables the cursor keypad
+
+
+Optional strings received from the keyboard
+
+        :kd=:...sequence sent by the <down arrow> key
+        :kl=:...sequence sent by the <left arrow> key
+        :kr=:...sequence sent by the <right arrow> key
+        :ku=:...sequence sent by the <up arrow> key
+        :kP=:...sequence sent by the <PgUp> key
+        :kN=:...sequence sent by the <PgDn> key
+        :kh=:...sequence sent by the <Home> key
+        :kH=:...sequence sent by the <End> key
+
+
+     Originally, termcap  didn't  have  any  names  for  the
+<PgUp>,  <PgDn>, <Home>, and <End> keys.  Although the capa-
+bility names shown in the table above are the  most  common,
+they  are  not  universal.  SCO Xenix uses :PU=:PD=:HM=:EN=:
+for those keys.  Also, if the four arrow keys happen  to  be
+part  of  a  3x3 keypad, then the five non-arrow keys may be
+named :K1=: through :K5=:, so an  IBM  PC  keyboard  may  be
+described  using those names instead.  Elvis can find any of
+these names.
+
+Optional fields that describe character attributes
+
+        :so=:se=:.......start/end standout mode (We don't care about :sg#:)
+        :us=:ue=:.......start/end underlined mode
+        :md=:me=:.......start/end boldface mode
+        :as=:ae=:.......start/end alternate character set (italics)
+        :ug#:...........visible gap left by :us=:ue=:md=:me=:as=:ae=:
+
+
+Optional fields that affect the cursor's shape
+
+     The :cQ=: string is used by  Elvis  immediately  before
+exiting  to  undo  the  effects  of  the  other cursor shape
+strings.  If :cQ=: is not given, then all other cursor shape
+strings are ignored.
+
+        :cQ=:...normal cursor
+        :cX=:...cursor used for reading EX command
+        :cV=:...cursor used for reading VI commands
+        :cI=:...cursor used during VI input mode
+        :cR=:...cursor used during VI replace mode
+
+
+     If the capabilities above aren't given, then Elvis will
+try to use the following values instead.
+
+        :ve=:...normal cursor, used as :cQ=:cX=:cI=:cR=:
+        :vs=:...gaudy cursor, used as :cV=:
+
+
+An example
+
+     Here's the termcap entry I use on my  Minix-ST  system.
+Some  of  the  fields  in  it have nothing to do with Elvis.
+Some can only work on my system; I have modified my kernel's
+screen driver.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mx|minix|minixst|ansi:\
+
+
+     Elvis currently works under  BSD  UNIX,  AT&T  System-V
+
+UNIX,   SCO  XENIX,  Minix,  Coherent,  MS-DOS,  Atari  TOS,
+OS9/68k, and VAX/VMS.  This section of the  manual  provides
+special  information that applies to each particular version
+of Elvis.
+
+     For all versions except MS-DOS, the file "Makefile.mix"
+should  be  copied  to "Makefile", and then edited to select
+the correct set of options for your system.  There  is  more
+information about this embedded in the file itself.
+
+
+0.36.  BSD UNIX
+
+     Temporary files are stored in /tmp.
+
+     You should modify /etc/rc so that the  temp  files  are
+preserved  when  the  system  is  rebooted.   Find a line in
+/etc/rc which reads
+     ex4.3preserve /tmp
+
+     or something like that, and append the  following  line
+after it:
+     elvprsv /tmp/elv*
+
+     If you do not have permission to modify /etc/rc,  don't
+fret.  The above modification is only needed to allow you to
+recover your changes after a system crash.   You  can  still
+run  Elvis  without  that  modification,  and  you can still
+recover your changes when Elvis crashes or when your  dialup
+modem  looses  the  carrier  signal, or something like that.
+Only a system crash or power failure could hurt you.
+
+     Both Elvis and the real Vi read initialization commands
+from  a  file  called ".exrc", but the commands in that file
+might work on one but not  the  other.   For  example,  "set
+keywordprg=man"  will  work  for Elvis, but Vi will complain
+because it doesn't have a "keywordprg" option.  If the warn-
+ing  messages annoy you, then you can edit the config.h file
+to change the name of the  initialization  file  ".exrc"  to
+something else, such as ".Elvisrc".
+
+     If you use X windows, you may wish to add "-DCS_LATIN1"
+to  CFLAGS.  This will cause the digraph table and the flip-
+case option to have default values that are appropriate  for
+the  LATIN-1  character  set.  That's the standard character
+set for X.
+
+0.37.  System-V UNIX
+
+     If your system uses terminfo instead of  termcap,  then
+you  will  have  to  edit  the LIBS setting in the Makefile.
+Currently it says "LIBS=-ltermcap",  but  you  may  have  to
+change it to "LIBS=-lterminfo" or "LIBS=-lterm" or something
+like that.
+
+     The /etc/rc file should be modified  as  described  for
+BSD  systems,  above.  The only difference is that SysV sys-
+tems tend to have directories for initialization, instead of
+a  single  large  /etc/rc  file.  Editor recovery is usually
+done somewhere in the /etc/rc2.d directory.
+
+     The potential trouble with ".exrc" described above  for
+BSD UNIX applies to System-V UNIX as well.
+
+     Elvis uses control-C as the interrupt key, not Delete.
+
+0.38.  SCO Xenix
+
+     For Xenix-386, you can use the  generic  System-V  set-
+tings.   You may wish to add "-DCS_IBMPC" to CFLAGS, to have
+the digraph table and flipcase option start  up  in  a  mode
+that is appropriate for the console.
+
+There is a separate group of settings for  use  with  Xenix-
+286.  It already has "-DCS_IBMPC" in CFLAGS.
+
+     Because Xenix is so similar to System-V,  everything  I
+said  earlier  about  System-V  applies to the Xenix version
+too, except that  editor  recovery  probably  belongs  in  a
+directory called /etc/rc.d/8.
+
+0.39.  Minix
+
+     There are separate settings in Makefile.mix for  Minix-
+PC and Minix-ST.  The differences between these two are that
+the ST version uses ".o" for the object file extension where
+the  PC version uses ".s", and the PC version has some extra
+flags in CFLAGS to reduce the size of Elvis.  The PC version
+also  uses tinytcap (instead of the full termcap) to make it
+smaller.
+
+     Minix-PC users should read the CFLAGS section  of  this
+manual very carefully.  You have some choices to make...
+
+     The  temporary  files  are  stored  in  /usr/tmp.   The
+/usr/tmp  directory  must exist before you run Elvis, and it
+must be readable/writable by  everybody.   We  use  /usr/tmp
+instead  of  /tmp  because  after  a  system  crash or power
+failure, you can recover the altered version of a file  from
+the  temporary  file in /usr/tmp.  If it was stored in /tmp,
+though, then it would  be  lost  because  /tmp  is  probably
+located on the RAM disk.
+
+     Elvis uses control-C as the interrupt key, not Delete.
+
+0.40.  Coherent
+
+     Elvis was ported to Coherent by Esa Ahola.
+
+     Elvis is too large to run  under  Coherent  unless  you
+eliminate  some features via the CFLAGS setting.  The recom-
+mended settings, in Makefile.mix, produce a working  version
+of Elvis which emulates Vi faithfully, but lacks most of the
+extensions.  You should read  the  CFLAGS  section  of  this
+manual carefully.
+
+     You can probably reduce the  size  of  Elvis  by  using
+tinytcap.c  instead of -lterm.  This would allow you to keep
+most features of Elvis, at the expense of terminal  indepen-
+dence.   (Tinytcap.c  has  ANSI  escape sequences hard-coded
+into it.) To use tinytcap,  just  add  "tinytcap.o"  to  the
+"EXTRA="  line in the Makefile, and remove "-lterm" from the
+"LIBS=" line.
+
+     The temporary files are stored  in  /tmp.   You  should
+modify your /etc/rc file as described for BSD earlier.
+
+0.41.  MS-DOS
+
+     Elvis was ported to MS-DOS by Guntram Blohm and  Martin
+Patzel.  Willett Kempton added support for the DEC Rainbow.
+
+     Ideally, Elvis should be compiled with Microsoft C  5.1
+and  the  standard  Microsoft  Make utility, via the command
+"make elvis.mak".  This will compile Elvis and  all  related
+utilities.
+
+     If you have  Turbo-C,  then  you  can  almost  use  the
+"Elvis.prj"  file  to  compile  Elvis.   You must explicitly
+
+force Turbo-C to compile it with the "medium" memory  model,
+and  you  must  increase the stack size to 16k.  Most of the
+related programs (ctags, ref, virec, refont,  and  wildcard)
+are  only  one file long, so you should have no trouble com-
+piling them.  The "alias.c" file is  meant  to  be  compiled
+once  into  an  executable  named "ex.exe".  You should then
+copy "ex.exe" to "vi.exe" and "view.exe".
+
+     Elvis stores its temporary files in C:\tmp.  If this is
+not  satisfactory,  then  you should edit the CFLAGS line of
+your Makefile to change TMPDIR to something else before com-
+piling.  You can also control the name of the temp directory
+via an environment variable named TMP or TEMP.   The  direc-
+tory must exist before you can run Elvis.
+
+     The TERM environment variable determines how elvis will
+write  to  the screen.  It can be set to any one of the fol-
+
+lowing values:
+
+
+     If  the  TERM  variable  isn't  set,  then  elvis  will
+automatically  select  either  the "rainbow" interface (when
+run on a Rainbow) or "pcbios" (on an IBM clone).
+
+     You may prefer to use NANSI.SYS for speed; or  you  may
+NEED to use ANSI.SYS for a non-clone, such as a lap-top.  If
+so, you should  install  one  of  these  drivers  by  adding
+"driver  = nansi.sys" (or whatever) to your CONFIG.SYS file,
+and then you should define TERM to be "nansi" (or  whatever)
+by  adding  "set TERM=nansi" to your AUTOEXEC.BAT file.  You
+must then reboot for these changes to  take  effect.   After
+that,  Elvis  will  notice  the  "TERM"  setting and use the
+driver.
+
+     Since ".exrc" is not a valid DOS filename, the name  of
+the  initialization  file  has  been  changed to "elvis.rc".
+Elvis will look for an "elvis.rc" file first  in  your  home
+directory, and then in the current directory.  Note that you
+must set an environment variable named "HOME"  to  the  full
+pathname  of  your home directory, for Elvis to check there;
+if "HOME" isn't set,  then  Elvis  will  only  look  in  the
+current  directory.   To set "HOME", you would typically add
+the following line to your AUTOEXEC.BAT file:
+     set HOME c:.PP An extra program, called "wildcard",  is
+needed  for  MS-DOS.  It expands wildcard characters in file
+names.  If Elvis flashes "Bad command or  filename"  message
+when  it  starts, then you've probably lost the WILDCARD.EXE
+program somehow.
+
+0.42.  Atari TOS
+
+     Elvis was ported to Atari TOS by Guntram Blohm and Mar-
+tin  Patzel.   It is very similar to the MS-DOS version.  It
+has only been tested with the Mark Williams C compiler.
+
+     The TERM environment variable is ignored; the  ST  port
+always  assumes  that  TERM=vt52.   The SHELL (not COMSPEC!)
+variable should be set to the name of a line-oriented shell.
+
+     A simple shell in included with Elvis.  Its  source  is
+in "shell.c", and the name of the executable is "shell.ttp".
+The file "profile.sh" should contain a set  of  instructions
+to  be  executed when the shell first starts up.  An example
+of this file is included, but you will almost certainly want
+to  edit it right away to match your configuration.  (If you
+already have a command-line shell, then you'll probably want
+to  continue  using  it.  The shell that comes with Elvis is
+very limited.)
+
+     Currently, character attributes cannot be displayed  on
+the screen.
+
+
+
+0.43.  OS9/68k
+
+     Elvis was ported to OS9/68k by Peter Reinig.
+
+     The Makefile is currently configured to  install  Elvis
+and  the  related  programs  in /dd/usr/cmds If this this is
+unacceptable, then you should change the BIN setting to some
+other  directory.   Similarly, it expects the source code to
+reside in /dd/usr/src/Elvis; the ODIR  setting  is  used  to
+control this.
+
+     Temporary files are stored in  the  /dd/tmp  directory.
+Your  /dd/startup file may need to be modified to prevent it
+from deleting Elvis' temporary files.
+
+     The program in alias.c is linked repeatedly to  produce
+the "vi", "view", and "input" aliases for Elvis.  Sadly, the
+"ex" alias is impossible to implement under OS9, because the
+shell has a built-in command by that name.
+
+     For some  purposes,  you  must  give  `make'  the  "-b"
+option.  Specifically, you need this for "make -b clean" and
+"make -b install".
+
+0.44.  VAX/VMS
+
+     John Campbell ported Elvis to VAX/VMS.
+
+     While running, elvis will  create  temporary  files  in
+SYS$SCRATCH.   SHOW  LOGICAL  SYS$SCRATCH to see what actual
+directory  you  are  using.   Many  sites  have  SYS$SCRATCH
+equivalenced  to  SYS$LOGIN.  The elvis temporary files look
+like the following on VMS while elvis is running:
+       ELV_1123A.1;1       ELV_1123A.2;1       SO070202.;1
+
+     Also, filtering commands (like !!dir and !}fmt)  should
+work  on  VMS.   This  assumes, however, that you can create
+temporary mailboxes and that your mailbox  quota  (a  sysgen
+parameter)  is  at least 256 bytes for a single write to the
+mailbox.  This is the default  sysgen  parameter,  so  there
+should be few people who experience filter problems.
+
+     Additionally, an attempt was made to support the  stan-
+dard  terminals  on  VMS: "vt52", "vt100", "vt200", "vt300",
+"vt101", "vt102".  Non-standard terminals could be supported
+by  setting your terminal type to UNKNOWN (SET TERM/UNKNOWN)
+and  defining  the  logical   name   ELVIS_TERM.    Whatever
+ELVIS_TERM  translates to, however, will have to be included
+in tinytcap.c.  Note that the case  of  the  translation  is
+important:  DCL  will upshift characters that are not quoted
+strings:  DEFINE ELVIS_TERM "hp2621a".   As distributed,  it
+would  probably  not  be  a  good idea to have more than the
+standard terminals in tinytcap.c (else it wouldn't be  tiny,
+would  it?).   Changes  here,  of  course,  would  require a
+recompilation to take effect.
+
+     If you have a version  of  the  "termcap"  library  and
+database  on  your  system,  then  you  may  wish to replace
+tinytcap with the real termcap.
+
+     Elvis examines several environment  variables  when  it
+starts  up.   The  values of these variables are used inter-
+nally for a variety of purposes.  You don't need  to  define
+all  of  these; on most systems, Elvis only requires TERM to
+be  defined.   On  MS-DOS  or  TOS  systems,  even  that  is
+optional.
+
+TERM, TERMCAP
+
+     TERM tells Elvis the name of the termcap entry to  use.
+TERMCAP  may contain either the entire termcap entry, or the
+full pathname of the termcap file to search through.
+
+     If your version of Elvis is using tinytcap  instead  of
+the  full  termcap library, then the value of TERMCAP cannot
+contain any  backslash  escapes  (\E,  \r,  etc.)  or  carat
+escapes  (^[, ^M, etc.), because tinytcap doesn't understand
+them.  Instead, you should embed the actual control  charac-
+ter into the string.
+
+TMP, TEMP
+
+     These only work for MS-DOS and Atari  TOS.   Either  of
+these  variables  may be used to set the "directory" option,
+which controls where temporary files  are  stored.   If  you
+define them both, then TMP is used, and TEMP is ignored.
+
+LINES, COLUMNS
+
+     The termcap entry for your terminal should specify  the
+size of your screen.  If you're using a windowing interface,
+then there is an ioctl() call which will provide the size of
+the  window;  the ioctl() values will override the values in
+the termcap entry.  The LINES and COLUMNS environment  vari-
+ables  (if  defined)  will override either of these sources.
+They, in turn, can be overridden by a ":set" command.
+
+     Normally, the LINES  and  COLUMNS  variables  shouldn't
+need to be defined.
+
+EXINIT
+
+     This variable's value may contain one  or  more  colon-
+mode  commands,  which  will  be  executed  after all of the
+".exrc" files but before interactive editing begins.
+
+     To put  more  than  one  command  in  EXINIT,  you  can
+separate  the  commands  with  either  a  newline  or  a '|'
+character.
+
+SHELL, COMSPEC
+
+     You can use COMSPEC in MS-DOS, or SHELL  in  any  other
+system,  to specify which shell should be used for executing
+commands and expanding wildcards.
+
+HOME
+
+     This variable should give the  full  pathname  of  your
+home  directory.   Elvis needs to know the name of your home
+directory so it can locate the ".exrc" file there.
+
+TAGPATH
+
+     This variable is used by the "ref"  program.   It  con-
+tains  a  list  of directories that might contain a relevent
+"tags" file.  Under MS-DOS or Atari TOS, the  names  of  the
+directories  should be separated by semicolons (";").  Under
+other operating systems, the names should  be  separated  by
+colons (":").
+
+     If you don't define TAGPATH,  then  "ref"  will  use  a
+default  list which includes the current directory and a few
+other likely places.  See the definition  of  DEFTAGPATH  at
+the start of ref.c for an accurate list.
+
+
