@@ -1,0 +1,34 @@
+From: mcrowley@mtholyoke.edu (Michael A. Crowley)
+Subject: Re: HELP with Vi, PLEASE!!!
+Organization: Mount Holyoke College
+Date: Tue, 4 Aug 1992 00:54:00 GMT
+Lines: 26
+
+
+                    EXTREMELY TERSE vi REFERENCE NOTES
+CURSOR CONTROL      TEXT ADDITION          TEXT CHANGE         TEXT DELETION   
+  h  left             (adds until <ESC>)     xp  Transpose        x  del char   
+  j  down             i  insert before        J  Join lines      dw  del word   
+  k  up               a  insert after        rC  Rep char "C"    nx  del n chars
+  l  right            I  ins begin line   r<cr>  Rep with <cr>  ndw  del n words
+ nh  n char left      A  ins end line         R  Rep to esc      dd  del line
+ nj  n char down      o  opens line           u  Undoes last    ndd  del n lines
+     (etc,etc,etc)    O  open line above      :s/str1/str2/       D  to end line
+                                          
+  w  Fwd word       SCREEN CONTROL          BUFFER COMMANDS (for unnamed buffer)
+  b  Back word       ^L  Redraw scrn            yy  yanks current line to buffer
+  H  Upper left       z  current line to top   nyy  yanks n lines to buffer
+     of screen        z- curr line to bottom    yw  yanks current word to buffer
+  M  Mid screen       z. line to middle scn    ynw  yanks n words to buffer
+  L  Lowest line     ^F  Page fwd                p  puts yanked text after
+     on screen       ^B  Page back                  current line or word
+  G  Bottom file     ^D  1/2 page fwd            P  puts yanked text before
+ nG  To line n       ^U  1/2 pge back       ENDING vi  
+  0  begin line   /string/  search for          ZZ  writes changes, quits
+  $  end line          line with string         :q  quit,no change  :q! for sure
+                  //   repeats last search      :w  write changes, no quit
+
+
+
+
+
