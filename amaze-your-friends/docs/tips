@@ -1,0 +1,93 @@
+From: bs@augusta.UUCP (Burch Seymour)
+Subject: vi tips- summary number one
+Date: 8 Sep 87 19:09:56 GMT
+
+
+
+This is the first summary in response to my recent request for vi
+tips.  The response was really amazing.  These are the short items.
+Longer items will follow shortly in other articles
+
+Thanks to the following people for submitting tips.
+Arden White, Mike Marshall, Ernie Englehart, Marty Brilliant, Don Law, Jeff Lee,
+Bob Weissman, Steve Losen, Ed Blackmond, Mike Stroyhan, lcuxlm!wgs, Seth,
+David Klann, Joe Boykin, Joe Kalash, Jack Bonn, Bob Devine, Tim O'Reilly,
+Dan Messinger, Shannon Nelson, John McLaughlin, Ray Lampman, David Elliot,
+Bryan Ewbank, Brandon Allbery, Jeff Bowles, Bart Schaefer, Paul Sutcliff, 
+Roger Murray, Amos Shapir, and Patrick Wolfe.
+
+I think I named everybody whom I have received mail from up to this point
+in time. If your name isn't here, I either didn't get your mail or managed
+to miss typing your name above. If the latter is the case, sorry.
+
+================================================================================
+A note on this text. Control characters will be typed as
+<ctrl>c for control c or similarly <esc> for escape. All
+commands or characters which are imbedded in text will be
+in single quotes, for example 'H' means to type capitol h,
+not quote H quote. I'll probably mess this up at least once,
+but you should be able to work out what I meant :-)
+-----------
+Here's the "best" tip of all, it involves work, but still.......
+
+> My advice is for people to take a copy of the reference card, and
+> try every single command on it. I was a pretty mediocre vi user
+> until I had to evaluate vi, and now there's very little I don't
+> understand.
+------------
+Use the tilde ~  to change case (upper/lower) of letters. It will ignore
+punctuation.
+------------
+Reverse 2 characters in a word with 'xp'. I remember this as an abbreviation
+of the word transpose.
+------------
+When editing 2 file, switch between them with ':e#' or '<ctrl>^' . The latter
+does not always work due to differences in terminals.
+------------
+Use the caret '^' and dollar '$' to match beginning of line and end of line in
+ed style substitutions. For example:
+  :%s/^/>  /
+places a '>  ' at the front of every line in the buffer.
+------------
+Move to the bottom of the file with 'G'.
+Move to the top of the file with '1G'
+Move to the top of the screen with 'H' or <home>
+Move to the middle of the screen with 'M'
+Move to the end of the screen with 'L'
+------------
+Re-format text using the '!}fmt' command. This one will re-format a paragraph.
+'!]]fmt' does the rest of the buffer. '!)fmt' does a sentence.
+------------
+Much mail concerned the use of ranges in vi commands. For example consider
+the 'd', delete, command.
+
+'dw' deletes a word
+'dG' deletes to bottom of file
+'d)' deletes a sentence.  Sentences are delimited by TWO spaces.
+'d%' deletes to the matching bracket, brace, or paren. Works
+     forwards or backwards.
+'d''' (that's d with 2 single quotes) Deletes to the last place we
+      jumped from. For example, find the first line to delete, place
+      the curser on that line. Jump using a '/pattern' search. Type
+      'd''', the lines between those points will be deleted.
+'d]]' deletes the rest of the buffer
+'dtp' deletes through the letter p, but leaves the p
+'dfp' deletes to and including the letter p
+
+The search operation may be used also:
+
+'d/pattern<esc>' deletes up to the patern, but leaves the pattern.
+
+The neat thing about this principle is it works with most other vi commands
+such as 'y' yank, and 'c' change.
+--------------------------------------------------------------------------------
+    #####              Gould Computer Systems Division
+      ###                  in Sunny South Florida
+#####   #####                   Burch Seymour
+#####    ####     =>  ...!{sun,pur-ee,brl-bmd}!gould!bseymour
+#####   #####     =>  ...!{ihnp4!codas,allegra}!novavax!gould!bseymour
+      ##          => NOTE: Disregard header info. Email to above paths only.
+    ####          => The opinions expressed are probably not worth disclaiming
+================================================================================
+
+
