@@ -1,0 +1,55 @@
+From: jakkanen@klaava.Helsinki.FI (Jukka Akkanen)
+Newsgroups: comp.editors
+Subject: vi dumps core (SunOS)
+Date: 13 Aug 92 16:37:47 GMT
+Organization: University of Helsinki
+Lines: 11
+
+Today I discovered a mysterious bug in vi on both SunOS 4.1.1 and
+4.1.2.  Marking a position in a file with letter d, moving below the
+marked line, and performing c'd causes segmentation violation.
+
+Funny enough, by using any other letter than d for the mark, or `d
+instead of 'd as the cursor movement command, things work the way
+they're supposed to.
+
+Any comments?
+
+-J.Akkanen
+
+
+From: coactive@netcom.com (Coactive Aesthetics)
+Newsgroups: comp.editors
+Subject: Re: vi dumps core (SunOS)
+Date: Fri, 14 Aug 92 10:04:09 GMT
+Organization: Netcom - Online Communication Services  (408 241-9760 guest) 
+Lines: 26
+
+jakkanen@klaava.Helsinki.FI (Jukka Akkanen) writes:
+: Today I discovered a mysterious bug in vi on both SunOS 4.1.1 and
+: 4.1.2.  Marking a position in a file with letter d, moving below the
+: marked line, and performing c'd causes segmentation violation.
+: 
+: Funny enough, by using any other letter than d for the mark, or `d
+: instead of 'd as the cursor movement command, things work the way
+: they're supposed to.
+: 
+: Any comments?
+: 
+
+This seems to be a generic bug in vi, since it does the same thing on a
+NeXT station (vi version 3.7). I find it is interesting, because I have
+been using vi for almost 6 years, and have found it very difficult to do
+something which would dump a core file without a lot of work. BTW, I did
+the same command in vile (my current editor of choice), and it did the
+right thing.
+
+Otto
+
+---
+Otto Lind                  Coactive Aesthetics
+otto@coactive.com          P.O. Box 425967, San Francisco, CA 94142
+netcom!coactive!otto       voice:(415)626-5152    fax:(415)626-6320
+
+
+
