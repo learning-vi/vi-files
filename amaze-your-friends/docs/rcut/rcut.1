@@ -1,0 +1,72 @@
+.\"    #ident       "@(#)rcut.1  2.0"
+.\" 
+.\" Author: Robert Colon, frc@dadd.ti.com
+.\" organization: Design Automation Division, Texas Instruments
+.\" updated: 03Apr93 14:19:01
+.\" 
+.TH RCUT 1L "Local Utilities"
+.SH NAME
+rcut \- rectangular cut and paste for the vi text editor
+.SH SYNOPSIS
+.B rcut -x -k -p -P
+.SH DESCRIPTION
+.I rcut 
+is a utility designed to be used with the vi text editor.  It allows one
+to specify blocks (i.e. rectangular portions of the text) to be selected for
+copying or deleting.  These blocks can later be pasted back into the text
+at another location.  This allows one, for example, to move columns of text
+around.
+
+The vi key maps used with this capability are as follows:
+.PD
+
+map =k meo^[256i ^[`ejr^:m'b-^M`bkr^!'ercut -k^M^G
+
+map =P moO^[256i ^[`okr^!Grcut -P^M^G
+
+map =p moO^[256i ^[`okr^!Grcut -p^M^G
+
+map =x meo^[256i ^[`ejr^:m'b-^M`bkr^!'ercut -x^M^G
+
+.PP
+IMPORTANT: The above key maps cannot be pasted directly into your vi .exrc
+file since these are only ascii equivalents.  To make them work replace ^[
+with ^V<ESC> (i.e. Ctrl-v followed by the ESCAPE key), ^M by ^V<RETURN> (i.e.
+Ctrl-v followed by the RETURN key), and ^G with ^V^G (i.e. Ctrl-v Ctrl-g). 
+These key definitions are also available in their correct form in the vi
+tutorial file mentioned below.  The 
+.I vitutor
+command will put you into a vi session on the tutorial file from which
+the .exrc file can be extracted.  See the bottom of the tutorial file
+for more information.
+
+The keymaps work by placing a line before the text to be processed containing
+the character "^" which indicates the columns to be copied or deleted (by =k
+or =x) or the column position to do the paste before or after (by =P or =p).
+
+.SH OPERATION
+
+1. Place the cursor at the top left or top right corner of the block to be
+copied or deleted and press  mb .  I.e. put a marker  b  (for "begin") at the
+cursor location.
+
+2. Move cursor to the opposite lower corner and press  =k  to copy the block
+or  =x  to delete  it.  The lower corner may be in the same column as the
+first marker causing a single column to be copied or deleted.
+
+3. Move cursor to location for the paste and press =p to paste the block
+after the cursor location or =P to paste before the cursor location.
+
+.SH FILES
+/usr/local/bin/rcut - rcut executable.
+
+/usr/local/lib/vi.tutorial - contains .exrc with key maps.
+
+$HOME/.rcut - paste buffer for rcut
+.PD
+.SH SEE ALSO
+vitutor(1), vi(1)
+.SH AUTHOR
+Robert Colon, Design Automation Division, Texas Instruments Inc.
+Phone: (214) 917-3644
+Mail: frc@dadd.ti.com.
