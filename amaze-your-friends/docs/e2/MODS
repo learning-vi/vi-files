@@ -1,0 +1,69 @@
+e Modification History.
+=======================
+
+
+Version 1.1 changes          October 1987.
+==========================================
+ 
+- Added "VIPATH" environment variable.
+- Fixed bug with argument lists that exceeded ARG_CHARS chars in multiple().
+- Added #ifdef statements to enable compilation on a SUN.
+- Put #defines etc into e.h as they were getting in the way.
+ 
+
+
+Version 1.2 changes          December 1987.
+===========================================
+ 
+- Made the numbering on "e -" the same as for "e .".
+- System V port (thanks to Simon Brown).
+- Added man page (thanks to Phil Oldiges).
+- Fixed handling of the VIPATH variable so that it doesn't screw up
+    when there is more than one delimiter. Added new delimiters.
+- Cleaned up terminal handling to use ioctl().
+- Cleaned up error handling.
+- Fixed (for sure this time) the bug with long argument lists.
+- Made returns consistent in check().
+- Flagged suspected unsatisfied symbolic link in check().
+- Added #define called E_PATH which contains the name of the environment
+    variable containing the PATH for cross directory stuff. (set to "VIPATH").
+- Added E_MODE #define for the protection mode for .e (set to 0644).
+- Fixed spelling correction to offer all likely targets in a directory, not
+    just the first encountered. Added 'N' option to say "I meant what I said,
+    don't give me more possible corrections."
+- Comments!
+ 
+
+Version 1.3 changes         December 1988.
+==========================================
+
+- Fixed error message when unable to open E_PATH component directory.
+- Added N option to cross-directory suggestions (==> no more suggestions)
+    should have done this in 1.2.
+- Made centralised .e file in the home directory.
+- Split source into twenty odd files.
+- Rewrote e.h to make it more manageable.
+- Rewrote Makefile.
+- Added E_HIST (set to "VIHIST") getenv to let the user decide where the
+    history should live & what to call it. Defaults to $HOME/.e
+- Added E_INHERIT and E_SAFE_INHERIT (set to "VIINHERIT" and "VISAFEINHERIT")
+    to allow/disable inheritance of .exrc files in other directories. See the
+    man page for details.
+
+To be added?
+============
+
+- Allow backspacing on a select line.
+- Spelling corrections across directories.
+- Plenty of fancy things.
+
+
+
+-------------------------------------------------------------------------------
+Terry Jones, Department Of Computer Science, University Of Waterloo
+             Waterloo Ontario Canada N2L 3G1
+
+{ihnp4,allegra,decvax,utzoo,utcsri,clyde}!watmath!watdragon!tcjones
+tcjones@dragon.waterloo.{cdn,edu} tcjones@WATER.bitnet
+tcjones%watdragon@waterloo.csnet [from oz, tcjones@dragon.waterloo.cdn@munnari]
+-------------------------------------------------------------------------------
