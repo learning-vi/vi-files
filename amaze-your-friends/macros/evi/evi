@@ -1,0 +1,36 @@
+Article 4672 of comp.unix.questions:
+Path: chemabs!osu-cis!cbosgd!clyde!rutgers!sdcsvax!ucbvax!decvax!decwrl!sun!pitstop!sundc!seismo!uunet!mcvax!enea!kuling!irf
+From: irf@kuling.UUCP (Bo Thide)
+Newsgroups: comp.unix.questions
+Subject: 'evi' --- script to run vi(1) in Emacs mode
+Message-ID: <599@kuling.UUCP>
+Date: 1 Jan 88 03:04:47 GMT
+Organization: DoCS, Uppsala University, Sweden
+Lines: 162
+
+The standard UNIX visual display editors vi(1), vedit(1), view(1)
+are *much* more powerful than you would think in the first place.
+In fact, just like Emacs can be put in a vi mode, vi can be put
+in a kind of Emacs mode as shown by the following first attempt to do so.
+
+If only vi was improved in four ways:
+ 
+ 1. Make 'h' and 'l' wrap around to other lines
+
+ 2. Remove the silly left movement of the cursor when changing from
+    input to command mode (which make commands behave differently
+    when issued at the leftmost column than in any other column!)
+
+ 3. Increase the size of the macro stack by at least a factor of 2
+
+ 4. Make 'j' and 'k' ALWAYS move vertically down or up (also if the
+    line moved to is empty!)
+
+I would say vi would be the best editor of all.  The full emulation
+of Emacs, WordPerfect and other editors/word processors would then
+be a piece of cake... (if you really need that).
+
+Comments on my 'evi' script are most welcome.
+
+--Bo
+
