@@ -1,0 +1,13 @@
+" vi macros to fold and unfold text.
+" by Eric Bowles <bowles@is.s.u-tokyo.ac.jp>
+" (Let me know of improvements & bug fixes).
+"
+" Commands:
+"   :<address> vfold   - fold specified range of lines.
+"   [f                 - fold current C function.
+"   [u                 - unfold current line.
+"   [n                 - go to next folded line.
+"
+:map [f j[[j!/^}/-1~/bin/vfold
+:map [u !!~/bin/vfold 
+:map [n /^$$FOLDED:-- /
