@@ -1,0 +1,114 @@
+"					Modula-2 .exrc file
+"						Version 2.1
+"					  Roland  Bickel
+"					  (c) 12-12-1991
+"     Please report bugs,annoying features,and new/better ideas to : 
+"						
+"							rmbicke@cs.vu.nl
+"     If you think you can do better than this,then please go ahead and
+"     send me a copy of your result.
+"
+"	  P.S.
+"	  Thanks to Lennert Ploeger for al the general stuff.
+"	  -Changes-
+"	  Now possible to nest IF THEN constructions.
+"	  from-> FROM .... IMPORT
+"	  begin-> BEGIN<down>continue
+"	  Appended ';' to module construction
+" 
+" You will have probably to change all ^* characters into the appropiate control" characters....
+" this  means that ^V stands for (control)V(control)V and ^ stands for (control)" V
+
+set nonu ai
+set sw=4 ht=4 ts=4
+" ;sr -> to remap 'return'
+"
+map ;sr :unmap! 
+" -while-
+"
+map ;whr :map!  ;sro	
+ab while WHILE DOoEND;;whrk^ea
+" -repeat-
+"
+map ;rpr :map!  ;;srko	
+ab repeat REPEAToUNTIL;rprbea
+" -if-
+"
+ab if IF THENoEND;;whr;se;sik^ea
+map ;si :ab elsif ELSIF<<o	
+map ;se :ab else ELSE;ue<<o	
+map ;ue :ab else Z:unab Z:ab elsif Z:unab Z
+" -for-
+"
+ab for FOR DOoEND;;whrk^ea
+" -with-
+"
+ab with WITH DOoEND;;whrk^ea 
+" -case-
+"
+ab case CASE OFoEND;;whr;sek^ea
+" -record-
+"
+ab record RECORDoEND;;whrk^ea
+" -procedure-
+"
+ab proc PROCEDURE oEND;sprA
+map ;spr :map!  ;Bcwukelp;srA
+" -module-
+"
+ab module MODULE oEND;smrA
+map ;smr :map!  .Bcwukelpa;;sroo
+" -const-  
+"
+ab const CONSTo	
+" -var-
+"
+ab var VARo	 
+" -from-
+ab from FROM IMPORT;sfr^eli
+map ;sfr :map!  a;sr^A 
+" -begin-
+"
+ab begin BEGINo   
+" -general-
+"
+ab and AND
+ab array ARRAY
+ab def DEFINITION 
+ab imple IMPLEMENTATION 
+ab div DIV
+ab do DO
+ab import IMPORT
+ab not NOT
+ab or OR
+ab pointer POINTER
+ab ret RETURN
+ab rett RETURN TRUE
+ab retf RETURN FALSE
+ab type TYPE
+ab fsi FROM SimpleIO IMPORT
+ab fpi FROM PascalIO IMPORT
+ab abs ABS
+ab cap CAP
+ab trunc TRUNC
+ab float FLOAT
+ab dec DEC
+ab inc INC
+ab halt HALT
+ab nc NextChar
+ab get Get
+ab eol EOL
+ab eof EOT
+ab rch ReadChar
+ab rl ReadLn
+ab ri ReadInt
+ab rc ReadCard
+ab rr ReadReal
+ab wch WriteChar
+ab wl WriteLn
+ab wi WriteInt
+ab wc WriteCard
+ab wr WriteReal
+ab ws WriteString
+ab card CARDINAL
+ab bln BOOLEAN
