@@ -1,0 +1,186 @@
+From: trier@shasta.scl.cwru.edu (Stephen Trier)
+Subject: Editors 102: Updating the screen in a buffer-gap editor
+
+   A few weeks ago, I posted a request for help with an editor I was writing.
+After several attempts to write doubly-linked-list-of-lines editors
+(hereafter called linked-list editors), I decided to try writing one based
+on a buffer-gap data structure.
+
+   I found the basic operations of the editor to be much easier to write
+with the buffer-gap structure than with the linked-list structure.  Insertion
+and deletion were a breeze, and I didn't have to write any special code to
+handle new lines!  On the other hand, managing the screen display became much
+more complicated.
+
+   In the linked-list structure, the data is already broken into lines,
+simplifying screen updates.  With a pointer to the top line of the screen,
+it is trivial to output the next 24 nodes of the list to the screen.  In my
+buffer-gap editor, I decided that I must scan through the buffer to find the
+line breaks.  For efficiency, I did this while outputing the characters I
+passed to the screen.
+
+   The first implementation I tried used two nested loops to scan across the
+x and y directions of the window.  Several boolean variables were used to
+signal when the next character in the file should be output, when a tab was
+being expanded to spaces, or when the end of the line had been encountered,
+making it necessary to fill to the end with spaces.  This code was complicated
+and was slowed by the many comparisons I was making in order to allow for
+special cases such as the end of the buffer and skipping over the buffer gap.
+
+   I then re-implemented the editor from a different viewpoint, this time
+using nulls to flag the top of the gap and the end of the buffer.  (I still
+had pointers to the top and bottom of the gap and the top and bottom of the
+buffer.)  The screen-refresh code was much easier to write this time, and
+turned out to be substantially faster.  C-like pseudocode for the second
+implementation follows:
+
+	hit_gap = FALSE;
+	x = 0; y = 0;
+	p = screen;			/* screen points to the top of the
+					 *  screen in the buffer.
+					 */
+	while (y < bottom_line)
+	    switch (p++)  {
+	        case '\t':
+	            /* output spaces and increment x until (x % 8) == 0 */
+	            break;
+	        case '\n':
+	            /* clear to the end of the line */
+	            /* increment y */
+                    break;
+	        case '\0':
+	            if (!hit_gap)  {
+	                p = bottom_of_gap_pointer;
+	                hit_gap = TRUE;
+	                /* Mark this location as the current cursor point */
+	                }
+	            else  {
+	                /* Clear to the bottom of the screen */
+	                /* Drop out of the while loop */
+	                }
+	            break;
+	       default:
+	            /* Output the character to the screen and increment x */
+	            break;
+	       }
+
+    This implementation turned out to be much faster than the original.  By
+scanning the data and making the screen match, rather than the other way
+around, the refresh logic became much simpler.  In addition, tab handling
+became neat and clean, and the cursor can be positioned to reflect the actual
+position of the gap.
+
+    My actual code also has code for horizontal scrolling, clipping to fit
+inside a window, and support of larger-than-memory files.  I originally
+thought the linked-list structure supported virtual memory well, but that
+support came at the cost of a comparison on every line access, to see if
+it need to be pulled off of the disk.  It also necessitated some on-disk
+garbage collection, which *definitely* was something to avoid.  With the
+buffer-gap structure, virtual memory is easy.  If the gap comes too close
+to the top of the file, a page from the bottom of the buffer is written
+to a temporary file and a page is read into the top of the buffer from a
+second file.  If the gap gets too close to the bottom, the opposite
+transfers take place.  If the buffer becomes too full, a page is pushed
+out to the disk, and if it becomes too empty (more than two pages of free
+space), a new page is read in.
+
+    The code I wrote does not have any provision for cursor optimization
+during screen refresh.  This is because it's for MS-DOS machines with
+memory-mapped video.  In the time it would take to update a memory array
+showing what I would like on the screen, I can write the update directly
+to the video card.  At some point, I would like to port the code to curses,
+in which case I will let curses do the hard work!  :-)
+
+
+Gap Buffer Explained Again
+
+     The buffer gap method for storing data in an editor is not very
+complicated.  The idea is to divide the file into two sections at the cursor
+point, the location at which the next change will take place.  These sections
+are placed at opposite ends of the buffer, with the "gap" in between them
+representing the cursor point.  For example, here's a sixteen-character
+buffer containing the words "The net", with the cursor on the letter 'n'.:
+
+			The ---------net
+
+(I'm using the '-' character to represent the spaces making up the gap.)
+
+     Now, if you wanted to insert a character, all you must do is to add it
+into one end or the other of the gap.  Conventional editors that move the
+cursor left as you type would insert at the top edge of the gap.  For example,
+if I wanted to change the word "net" to "Usenet", I would start by typing the
+letter 'U', and the editor would change the buffer to look like this:
+
+			The U--------net
+
+     This represents the string "The Unet", with the cursor still on the 'n'.
+Typing an 's' character would bring us to the following:
+
+			The Us-------net
+
+     And finally, the 'e' character brings us to this:
+
+			The Use------net
+
+     But now we decide that we want to completely change tack and change the
+phrase from "The Usenet" to "The Usenix".  To do this, we will first have to
+move our cursor to the right one spot, so we don't waste time retyping an
+'n'.  To move the cursor point up and down through the file, we must move
+letters "across" the gap.  In this case, we're moving the cursor toward the
+end of the phrase, so we move the 'n' across the gap, to the top end.
+
+			The Usen------et
+
+     Now we're ready to delete the 'e' and the 't'.  To do this, we just
+widen the gap at the bottom edge, wiping out the appropriate character.
+After deleting the 'e', the buffer looks like this:
+
+			The Usen-------t
+
+     And after deleting the 't', the buffer looks like this:
+
+			The Usen--------
+
+     (Note that the gap now extends all the way to the edge of the buffer.
+This means that the file now reads "The Usen", with the cursor at the very
+end.)
+
+     Backspacing works out to be something very similar to delete, with the
+gap is widening at the top instead of the bottom.
+
+     Now we add the letters 'i' and 'x', giving us the following buffer
+snapshots after each key is pressed:
+
+			The Useni-------
+
+			The Usenix------
+
+     Now we've made our changes.  Moving the cursor back to the top of the
+file means moving the characters across the buffer in the other direction,
+starting with the 'x', like this:
+
+			The Useni------x
+
+     Finally, after doing this once for each of the letters in the buffer,
+we're at the top of the file, and the buffer looks like this:
+
+			------The Usenix
+
+     Of course, there are many details yet to consider.  Real buffers will be
+much larger than this, probably starting at 64K and stopping at whatever size
+is appropriate for the machine at hand.  In a real implementation, line breaks
+have to be marked in some way.  My editor does this by simply inserting line
+feed ('\n') characters into the buffer, but other approaches might be useful.
+Moving the cursor up and down between lines can get complicated.  What about
+virtual memory, so that we can fit the 21-letter phrase "The Usenix
+Conference" in our 16-letter buffer? Then, of course, there's the question of
+making the screen reflect the contents of the buffer, which is what my
+original "Editor 102" post discussed.
+
+     Hope this clears up the question of what a buffer gap is, and why it's
+a convenient data structure to use in an editor.  There are, of course,
+other ways to structure an editor's memory, with no clear victor.  All have
+their strong points and weak points, so I picked the buffer gap for my
+editor because of its simplicity and efficient use of memory.
+
+
