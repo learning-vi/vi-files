@@ -1,0 +1,44 @@
+Article 794 of comp.sources.bugs:
+Path: chemabs!osu-cis!tut.cis.ohio-state.edu!mailrus!nrl-cmf!ames!hao!oddjob!gargoyle!ihnp4!att-cb!clyde!watmath!watdragon!tcjones
+From: tcjones@watdragon.waterloo.edu (Crocodile Dundee)
+Newsgroups: comp.sources.bugs
+Subject: e - the friendly interface to vi.
+Message-ID: <5389@watdragon.waterloo.edu>
+Date: 27 Feb 88 22:38:33 GMT
+Reply-To: tcjones@watdragon.waterloo.edu (Crocodile Dundee)
+Organization: U. of Waterloo, Ontario
+Lines: 31
+
+
+Warren Swan has pointed out a couple of potential problems in e if 
+you are at a non-BSD site. The line
+
+struct sgttyb blk;
+
+at about line 475 in e.c is totally useless. I have no idea how it 
+crept into the code - you should remove it. (BSD'ers can remove it too.)
+
+The other (bigger) problem is with the opening and reading of
+directories. I used the BSD opendir()/readdir() functions to handle all
+that for me and was told that these were available on non-BSD unices if
+one #included <ndir.h>.  If you don't have ndir.h then you will have to
+read the directory in the "normal" open/read fashion, or take out the
+cross directory searching completely (which would be a pity).  ndir.h
+seems to exist in v8, but perhaps not in SysV - can anyone fill me in
+on this?
+
+If enough people encounter this problem then I'll do a rewrite using
+only open/read and repost it.
+
+Terry Jones
+
+-------------------------------------------------------------------------------
+Department Of Computer Science, University Of Waterloo
+Waterloo Ontario Canada N2L 3G1
+
+{ihnp4,allegra,decvax,utzoo,utcsri,clyde}!watmath!watdragon!tcjones
+tcjones@dragon.waterloo.{cdn,edu} tcjones@WATER.bitnet
+tcjones%watdragon@waterloo.csnet [from oz, tcjones@dragon.waterloo.cdn@munnari]
+-------------------------------------------------------------------------------
+
+
