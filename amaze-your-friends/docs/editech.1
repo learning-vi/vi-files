@@ -1,0 +1,440 @@
+From: jhallen@wpi.wpi.edu (Joseph H Allen)
+Subject: Editor 101
+
+>I like many others have been writing my own editor based what I like.
+>The code is not as well laid out as I would like but then that is 
+>careless designing on my part. It would be nice if there was some
+>sort of reference that suggests how to implement all the basic
+>structures and operations necessary for an editor.
+
+As far as I know there isn't any text-book for editors.  I have seen various
+articles about text editors and also a few books on related issues:  There's
+lots of things about string searches and a few theory books about the snobol
+language (which encounters similer issues). 
+
+I've made several text editors and I'm in the process of making another one. 
+This most recent one is my emacs replacement so I've been doing quite a bit of
+thinking and researching (if its going to replace emacs, it had better be
+pretty good :).  I'm in the mood today so I'll try to show some of the thought
+processes and research I've made.  (** Warning, I'm not a licensed CS major
+so these may not be 'official' theories **)  Perhaps if I start, others will
+expand/correct what I say.
+
+>	editor buffer data structures - multiple file buffers
+
+GAP BUFFER
+
+I've seen two ways people have done this and know of at least 2 other
+approaches.  One way is the gap buffer of my previous article.  In the editor
+I used that in, I didn't start out using a gap buffer.  Originally, I had a
+large array to hold the file in and a small array which held a small piece of
+the large array in which the inserting and deleting occured.  Moving the point
+involved saveing (and possibly making space in the large array for) the small
+array and loading a new one.  When I found out about the gap method I rewrote
+the buffer manager.  Both my method and the gap method work on a similer
+method but the gap method is much more refined.  If anyone knows, I'd be
+interested in hereing who invented the gap buffer.  Gnu-emacs uses a gap
+buffer. 
+
+The gap buffer has the best performance if you can insure that the gap is
+always at the cursor.  If this is guarenteed, then the only time that there is
+ever a delay is when the gap gets completely filled- on unix systems, you have
+to realloc the block the buffer is in and make a new gap.  On systems where
+you can access the far ends of the memory, you can prolong this as much as
+possible by starting out with the largest possible gap.  This is what I've
+seen done on machines without memory management (micros) and on machines with
+really good memory management (the DEC 20, where to allocate memory you just
+access it).
+
+If the editor has multiple windows onto the same file it may not be possible
+to insure that the gap is always at the cursor.  There is a tradeoff to think
+about here.  You can do two things:  move the gap with the cursor into the
+other window.  Then there is a delay here, but the gap is always with the
+cursor.  The second way is to move the gap only when you are about to insert
+or delete something.  This is not a bad idea since you usually only edit in
+one window and only look at the others.  You CAN have more than one pointer to
+the buffer but you can't have more than one gap (well, you could have more
+than one gap but it would be very, very messy to manage).
+
+I don't like the gap buffer for editors with multiple windows because of the
+gap motion delays.  In particular, if you're on a virtual memory system, much
+of the buffer might be swapped out to the disk.  Then if you have to move the
+gap there has to be a lot of disk accesses.  Still, the gap editor does use
+the least amount of cycles (remember the things you do most often in an editor
+is type single characters and move the cursor short distances), so if you're
+most interested in not loading down the system...
+
+IBM METHOD
+
+One method which I suspect many old IBM machines use is to store the text in
+an array of fixed length arrays.  This is a leftover from 80 column puch
+cards.
+
+LINKED LIST OF LINES BUFFER
+
+The next most common buffer data structure I've seen is the doubly linked list
+of lines buffer.  In this case you store each line in a structure:
+
+struct line
+ {
+ struct line *next; 	/* Link to other lines */
+ struct line *prev;
+ unsigned char size;	/* Size of 'text' */
+ unsigned char bksize;	/* Size of malloc block this is in */
+ char text[];
+ };
+
+Each line contains only a small amount of text so you can insert and delete
+using brute force without any noticable delays (although this will use 20
+times as many cycles as the gap buffer).
+
+This buffer scheme eliminates the large delays of the gap method and also
+eliminates some of the delays at higher levels in the editor (you don't have
+to search for ends of lines any more), but it also has some problems.  Most
+significantly, the line length is limited and the file must be processed when
+it's loaded and stored.  Also, splitting lines and doing cut & paste become
+slightly more complicated and the memory overhead is quite a bit higher (50%
+higher).  However, even with these problems, many people choose it for its
+simplicity and speed- brief, jove, vedit, vi, and many more use this method.  
+
+A slight variation of this scheme can ease some of its problems.  Instead of
+attaching the headers to the text, you can have them seperate:
+
+struct line
+ {
+ struct line *next;
+ struct line *prev;
+ unsigned char size;		/* Size of text */
+ unsigned char bksize;		/* Size of block text is in */
+ char *text;
+ };
+
+If the headers are seperate like this then you can do things a little
+differently.  Instead of loading files in small pieces (or in seperate
+buffers) you can load them in contiguously, the way you can with the gap
+buffer.  You still have to go through this loaded text and find where all the
+lines are and make the headers, but this isn't so bad.  An added benefit of
+this is that there will be bit less virtual memory swapping when you move
+through a lot of lines without looking at the text (this requires that the
+headers be packet together away from the text).
+
+If you are a truely masachistic programmer and don't have any memory problems,
+you can solve the line length limit by having a linked list of line segments
+within each line.  The code for handling this is quite complex.
+
+I don't particularly like this buffer scheme either because of the line length
+limits and the huge memory overhead.  A header will contain 14 bytes and a
+typical line has 20 characters in it- almost 100% more memory is needed
+for this method than the gap buffer.
+
+LINKED LIST BUFFER
+
+Another buffer scheme similer to the linked list of lines buffer is a linked
+list of blocks- I.E., ignore where the lines begin:
+
+struct block
+ {
+ struct block *next;
+ struct block *prev;
+ unsigned char size;
+ unsigned char bksize;
+ char *text;
+ };
+
+This method will also need at least 14 bytes in each header, but you can start
+out editing with each block containing a large amount of text (a full 256
+characters, say).  This solves the memory problem because it will only use
+about 5% more memory (14/256) than the gap buffer.  But you will have to
+search for line-ends as with the gap buffer.
+
+BUFFER HINTS
+
+With the linked list of lines buffer and the linked list buffer, you can store
+hints (extra information) in the headers.  For the linked-list of lines
+buffer these might include the column width of the line and which attributes
+(if the editor is a word processor) became active in this line (as an other
+way of not going through all the text, only the headers).  For the linked list
+buffer, these might include the number of lines contained in the text block
+and the column width of this block.  Again, so that you don't have to look at
+as much text.
+
+VIRTUAL MEMORY TECHNIQUES
+
+A good editor will have a software virtual memory manager.  Even if the
+machine has hardware virtual memory, the process size limit is usually too
+small (anything smaller than the largest file allowed on the file system is
+too small- and then you want to be able to edit more than one file at once...).
+
+There are two general techniques for handling virtual memory.  You could
+either have a very seperate virtual memory handler in which you have to
+translate virtual addresses to physical ones (or machine virtual ones) or have
+the virtual memory as an integral part of the buffer scheme. 
+
+When the gap buffer is employed, the virtual memory handler is usually part of
+the buffer scheme.  One way of doing this is to break the file being edited
+into many small files.  You will only have one of these loaded at a time in
+the gap buffer arrangement.  Usually there will be a set of interface
+functions between the buffer and the rest of the editor (fmgetc, fminsc, and
+fmdel of my gap buffer for example).  Each of these has to be made to test for
+when the end of or the beginning of the buffer is reached and then swap to a
+new buffer.  The more complex buffer functions get a little messy.  My fmsave
+function which writes a number of characters out to a file beginning with the
+point would have to go through all the virtual memory files which contain data
+to be saved.  A doubly linked list structure could be used to manage all the
+files and would allow new files to be inserted relatively easily.
+
+An important concept is to have two files for one whole buffer in memory. 
+This way, when the end or beginning of the buffer is reached you only outload
+half of it.  If this isn't done, there will be one position in the file where
+the disk will be accessed whenever you move around it.  Also, if the screen
+update algorithm reads the screen from the buffer for each key...
+
+I think (I'm not sure) that this form of virtual memory was used often in the
+past for editors such as edt, teco and WordStar.  It's not terribly
+appropriate when there are multiple windows since going between windows would
+require swapping (I theorize that this is why WordStar never had multiple
+windows).  This method is very easy to implement and completely hides the
+virtual memory from higher levels.
+
+The second general method uses a virtual memory system which sits below the
+buffer scheme.  It's usually used with the linked list methods since these
+don't require large contiguous blocks.  Probably the best way of doing this is
+to use a linked list method with the headers seperate from the text.  Then you
+store all the headers in one virtual memory file and the text in another. 
+This is nice bacause to load a file all you have to do is copy it into ram or
+if it doesn't fit, copy it into a virtual memory file.  Then there would be a
+set of functions to translate virtual addresses to physical ones:
+
+	void *lock(struct vfile *file,unsigned long addr);
+	void unlock(struct vfile *file,unsigned long addr);
+	void change(struct vfile *file,unsigned long addr);
+
+'lock' would translate the virtual address into a physical one and lock that
+bit of virtual memory into physical memory so that it could can be accessed. 
+Then when accessing it is done, 'unlock' is called.  If the memory was changed
+while it was locked, 'change' is called to indicate that the block is dirty
+and should be written out the virtual memory file.
+
+The virtual memory file should be broken into pages.  Each page of the virtual
+memory file will have header like this when it's loaded into physical memory:
+
+struct vpage
+ {
+ struct vpage *next;	/* linked list of pages */
+ VFILE *owner;		/* points to owner VFILE structure */
+ unsigned long addr;	/* Offset from beginning of file where this block is*/
+ int locks;		/* number of locks on this page */
+ int changed;		/* set if this block must be written out */
+ char data[16384];	/* data loaded from virtual file */
+ };
+
+the vfile structure would be something like this:
+
+struct vfile
+ {
+ unsigned long size;	/* Size of virtual memory file */
+ char *name;		/* File name (or 0 if doesn't exist) */
+ int fd;		/* Descriptor (-1 if file not open) */
+ };
+
+The pages which are loaded into physical memory are stored in singly linked
+list.  When 'lock' is called, it first searches this list to see if the page
+is already loaded.  If it is, 'lock' will return a pointer into the data part
+of the vpage (plus whatever offset within that page is requested) and move the
+vpage to the head of the list.  This is done since 'lock' should be called for
+the same page often.  Lock will also increment the 'locks' count in vpage (and
+unlock will decrement it) to prevent it from beBing swapped out.  When there is
+no more memory to load new pages, 'lock' will have to reuse old unused pages
+(ones which don't have 'change' or 'locks' set).  If there are no reuseable
+pages, then 'lock' must swap out 'changed' pages which arn't locked.  It's
+probably a good idea to swap out all the 'changed' pages (which arn't locked)
+when this condition occures because usually more pages are about to be loaded
+in when one page is loaded in.  If all the pages arn't swapped out, the disk
+head will move between the file being loaded and the swap file for each block
+which is slow (and the disk drive makes a funny sound). 
+
+The swap file will not be needed if there is enough room for the file be
+loaded completely into memory.  Therefore, the comments in the vfile
+structure.  The temporary swap file will be created when there's no more
+memory.  [Also, it's a good idea to have linked list of the vfiles.  This way
+if you run out of file descriptors (you can only have 32 open files in unix)
+you can close all the swap files (which should automatically reopen when
+needed)]
+
+Unless you want to implement a complete malloc system in the virtual files,
+it's a good idea to make the virtual memory block some multiple of the size of
+both the headers and the text.  (make the headers 16 bytes, the text 256 and
+the virtual block some large power of 2).  You also don't want to have text
+overlap between blocks.
+
+If you use linked list of lines, you will have to implement a malloc for the
+virtual memory files because it's too wastefull to have fixed sized blocks in
+the virtual memory when lines are typically only 10% of their maximum length.
+
+I'm not completely sure, but I think vedit and me use an malloc system in a
+paged virtual memory.
+
+POINTERS
+
+Usually there will be several pointers into a buffer.  One for each window,
+one or two for block beginning and ends and the cursor.  These pointers should
+be placed in a linked list so that the low level insert/delete functions can
+update them.  If this isn't done then all pointers after inserts and deletes
+will move relative to the text they point to.  I personally think you should
+keep a lot of data in the pointers: 
+
+struct point
+ {
+ struct point *next;
+ unsigned row;
+ unsigned column;	/* column number from beginning of line */
+ unsigned byte;
+ unsigned byte_line;	/* byte offset from beginning of line */
+ 
+ /* If linked list method is used */
+ unsigned long header;	/* virtual address of header */
+ unsigned offset;	/* offset into text of header */
+
+ /* If this is a wordprocessor */
+ unsigned attributes;
+ unsigned right_margin;
+ etc...
+ };
+
+All of this data should be updated for each pointer whenever pointers move and
+whenever inserts/deletes occure.  Updating this data when doing
+inserts/deletes also saves you from having to check for bounds problems (I.E.,
+if a pointer moved past the end of a file, or if one of the text blocks got
+deleted and so 'header' is no longer valid).
+
+Pointers should be the standard positioning objects within the editor.  The
+basic editing functions should use pointers as their arguments:
+
+	cursor_down(struct point *pointer);
+	cursor_right(struct point *pointer);
+	struct point *dup_point(struct point *pointer);
+
+	save(file,struct point *from,struct point *to);
+	insert_file(file,struct point *position);
+
+	etc...
+
+>	cut and paste problems
+
+My favorite way of doing cut/paste is to do cut & paste with the file saving
+and inserting functions.  This way you can cut & paste between edit sessions. 
+Although, on smaller systems you'd certainly want to have a memory buffer for
+cutting and pasting so that you don't always have to access slow disk drives. 
+Cutting & pasting also require you to update all the pointers which follow the
+cur/paste position.
+
+>	undo issues
+
+The key to undo is to have a standard set of buffer primatives (insert, delete
+and pointer motion).  When any of these is executed, the converse is stored in
+an undo buffer of some type.  If the linked list methods are used it should
+be possible to keep the undo data right there (I.E., a deleted block is already
+in the form of a linked list, so all you have to do is clean up the ends).
+
+Undo should also always have a Redo... incase you undo too much.  Also I like
+the idea of having an undo/redo system that works with just the positions.  So
+you can undo to the previous position and redo back to the original one.  The
+points could be stored whenever text is changed at a position.
+
+>	displaying and editing around tabs
+>	screen display issues
+>	word wrap vs horizontal scrolling
+
+There are two approaches to screen updates.  The first is to have all the edit
+functions update the screen when they are executed.  Editors that do this
+usually use few CPU cycles but are very complicated and arn't too
+customizable.  vi is such an editor.  The second approach is to have the
+screen update completely seperate from the edit functions.  This is the nice
+modular way of making an editor which can be customized by people who don't
+know the complete screen update processes.  The general algorithm for updating
+the screen is this:  after each edit function is executed (each key is
+pressed) compare the data on the screen (or data in an array which is a copy
+of the screen) with the buffer and write any characters which don't match to
+the screen (if there are multiples windows, compare them all in case there is
+more than one on the same buffer).  For micros, this is usually all that is
+needed since the screen is accessable as normal ram and this process is
+reasonably fast.  The screen update function might be made suspendable if the
+screen update takes longer then you can type.  If any keys are hit will the
+screen is being updated, then you execute that edit function and start the
+screen update over again afterwards.  
+
+To handle tabs, control characters and other multi-character symbols two
+approaches can be taken.  The first is to just not handler them.  Convert the
+tabs into spaces and display the control characters in inverse video instead
+of as ^A.  If you want to handle them then you need a translation table:
+
+struct
+ {
+ int width;		/* Column width of sequence to display */
+ char *sequence;	/* Sequence to display */
+ }
+ table[256];
+
+Then when you compare the buffer you go through this table first.  'width'
+could be set to '-1' to indicate special processing and 'sequence' could
+contain a function to do it.  For exmaple, if width is -1 then sequence points
+to a tab handler which takes the current position being updated (a pointer)
+and returns a sequence of characters which should be displayed back to the
+screen update algorithm (I.E., 1 to 8 spaces, the number depending on the
+column position).
+
+TERMINALS
+
+A whole book could probably be written about how to update terminal screens
+going through slow serial ports.  In general there are two parts to this. 
+First, there should be a way to optomize setting the cursor position since
+there are usually many ways to do this (CR, BS output a character, etc...). 
+The second is to try to find instances of terminal control sequences which
+make the terminal screen look more like the buffer.  These include scrolling
+regions and line inserts/deletes and the methods of detecting when they can be
+used (Gosling's famous algorithm).  Also included are easier sequences to
+handle:  clear to the end of lines, clear to end of screen etc.  Once these
+sequences are used the brute force compare method previously described is
+called to get anything missed. 
+
+NETWORKS
+
+I've found that to get the screen update suspendable over terminals on
+networks requires that the editor know the baud rate of the terminal.  Then
+whenever anything is sent to the terminal you must delay by the number of
+characters sent times the baud time before sending anything else.  If this
+isn't done, data builds up in network server buffers and the screen becomes
+uninterruptable (hitting page down 5 times make the screen output 5 pages
+insteade of only one).
+
+INSIDE MULTI-CHARATCER SEQUENCES AND PAST THE ENDS OF LINES
+
+I think most people prefer not to have the cursor change column position when
+the row is changed.  A way to do this is to have a flag in the pointer
+structure which indicates that the cursor is not at a legal column position. 
+Then when the user types, space can be added to the ends of lines or the
+column position could be changed to a legal one.  This is greatly superior to
+the other things I've seen:  wordstar:  immediatly go to legal column
+positions when rows change, edt: keep the cursor at the same byte offset from
+beginnings of lines (the cursor will jump to random column positions when the
+row changes if there are tabs or control characters), emacs & vi:  remember
+the column position but move to a legal position anyway (and move back to the
+old column position whenever possible), turbo pascal: ignore tabs.
+
+ATTRIBUTES
+
+Handling attributes in wordprocessors requires that attribute change
+information be stored somewhere.  A nice place to put this information is in
+the line/block headers.  Unless the attributes are inverting, you need to
+store the new attribute along with what it was previously so that you can move
+'up'. 
+
+>	regular expression search/replace
+>	folds
+
+I'll leave these for others.  I have to research regular expression compiling
+to say anything intelligent and I havn't encountered folds.  [plus this
+article is getting just a bit long... :]  Also, I'd add:
+
+	macro languages and customizability issues.
+
