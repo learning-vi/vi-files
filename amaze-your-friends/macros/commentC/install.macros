@@ -1,0 +1,8 @@
+#!/bin/csh -f
+
+uudecode comment.macros.uu
+tar -xvf comment.macros.tar
+cat comment.macros>>.exrc
+cp -i macro-on ~/.macro-on
+cp -i macro-off ~/.macro-off
+# end of installation script
