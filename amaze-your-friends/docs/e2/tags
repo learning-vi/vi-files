@@ -1,0 +1,36 @@
+Mmain	main.c	/^main(argc, argv)$/
+abandon	abandon.c	/^abandon()$/
+ask_hist	ask_hist.c	/^ask_hist()$/
+catch_signals	signal.c	/^catch_signals()$/
+char_in	io.c	/^char_in(prompt)$/
+check_hist	check_hist.c	/^check_hist()$/
+clean_up	signal.c	/^clean_up()$/
+dir_check	dir_check.c	/^int $/
+dir_find	dir_find.c	/^dir_find()$/
+do_vi	do_vi.c	/^do_vi(thing)$/
+e	e.c	/^e(c, v)$/
+e_error	e_error.c	/^e_error(u, v, w, x, y, z)$/
+find_hist	find_hist.c	/^find_hist()$/
+find_match	find_match.c	/^find_match(pattern)$/
+get_temp	get_temp.c	/^get_temp()$/
+inheritance	inheritance.c	/^inheritance()$/
+insert_cmd	insert_cmd.c	/^insert_cmd(command)$/
+is_delim	dir_find.h	/^#define is_delim(c) ((*c)==' '||(*c)==':'||(*c)=='/
+match	find_match.c	/^match(argument, pattern)$/
+multiple	multiple.c	/^multiple(number, args, size)$/
+new_vi	new_vi.c	/^new_vi()$/
+normal	normal.c	/^normal(string)$/
+nth_hist	nth_hist.c	/^nth_hist(n)$/
+ok_fprintf	io.c	/^ok_fprintf(stream, format, u, v, w, x, y, z)$/
+ok_sprintf	io.c	/^ok_sprintf(dest, format, u, v, w, x, y, z)$/
+read_hist	read_hist.c	/^read_hist()$/
+reconstruct	reconstruct.c	/^reconstruct(except)$/
+safety_first	do_vi.c	/^safety_first(s)$/
+skip_delim	dir_find.h	/^#define skip_delim(c) while (is_delim((c))) (c)++;/
+skip_to_next_delim	dir_find.h	/^#define skip_to_next_delim(c) while (*(c) && !is_d/
+skip_to_white	e.h	/^#define skip_to_white(c) while (*(c) && *(c) != ' /
+skip_white	e.h	/^#define skip_white(c) while (*(c) == ' ' || *(c) =/
+sp_dist	sp_dist.c	/^sp_dist(s, t)$/
+spell_help	spell_help.c	/^spell_help(flag)$/
+terminal	terminal.c	/^terminal(what)$/
+zap_nl	e.h	/^#define zap_nl(c) while (*(c) && *(c) != '\\n') (c)/
