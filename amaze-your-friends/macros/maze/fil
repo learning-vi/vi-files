@@ -1,0 +1,4 @@
+set remap
+set nomagic
+set noterse
+set wrapscan
