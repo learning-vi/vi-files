@@ -1,0 +1,11 @@
+" Word completion (Komplete, Next, Previous).
+"
+" Eric Edward Bowles  (bowles@is.s.u-tokyo.ac.jp) 
+"
+" Here is my set of word completion macros.  Type the first part of
+" a word, then do ^K to try to complete it.  If it's not correct, keep
+" on trying using ^N (for next).  If you want a previous match, use
+" ^P (for previous).
+:map!  a. hbmmi?\<2h"zdt.@zywmx`mPbea dwbis"zdt.x@z
+:map!  a. hbdw`xnywmx`mPbea dwbis"zdt.x@z
+:map!  a. hbdw`xNywmx`mPbea dwbis"zdt.x@z
