@@ -1,0 +1,80 @@
+From kencham@myria.cs.umn.edu (Deepak "Kerd")
+Subject: What does "sections=NHSHH HUuhsh+c" mean ??
+Date: 8 Jun 92 00:35:44 GMT
+Article-I.D.: myria.kencham.707963744
+
+Folks, 
+
+Sequel to the previous query ? What is a section / and that setting do ?
+
+Deepak
+--------------------------------------------------------------------------------
+Sherlock Holmes observed that ".. After you have eliminated the impossible, only
+the possible, however improbable, remains..". I, however, do not like to elimin-
+ate the impossible. And so I believe, Holmes and Watson were gays.
+--------------------------------------------------------------------------------
+Email: kencham@{cs,centi.cs}.umn.edu      Department of Gopher Science 
+Voicemail:(res)(612)339-8397		  University of Minnesota
+	  (off)(612)626-7524	   	  Minneapolis, MN 55455, USA
+--------------------------------------------------------------------------------
+--
+--------------------------------------------------------------------------------
+J.S.S.Holmes observed that ".. After you have eliminated the impossible, only 
+the possible, however improbable, remains..". I, however, do not like to elimin-
+ate the impossible. And so I believe, Holmes and Watson were gays.
+
+
+From msb@cats.ucsc.edu (the MOST SIGNIFICANT bit)
+Subject: Re: What does "sections=NHSHH HUuhsh+c" mean ??
+Date: 9 Jun 92 10:17:58 GMT
+Article-I.D.: darkstar.36769
+
+
+brandy@tramp.Colorado.EDU (BRANDAUER CARL M) writes:
+
+>The answer to both queries is that they are the names of the
+>appropriate macros in various n/troff macro packages.  Next time,
+>why not try one posting for asking two questions or even better, RTFM.
+
+Well, this is absurd.  I don't think that there was any need to be
+such a jerk in response to some guy's question, even if he did
+post twice to ask two questions.  
+
+RTFM --- my, what a useful response!  At least on our Suns here,
+"man ex" or "man vi" not only DO NOT mention anything that would
+remotely help someone figure out the answer, they aren't really
+much use for anything besides looking up relevant envariables and
+command line switches.
+
+The on-line manual is of course a natural first place to look, but
+I'm sure you must be aware that it isn't perfect.  I don't know
+anyone who's learned to typeset a doc by doing "man tex," for
+example.
+--------
+msb@cats.ucsc.edu
+msb@ucscb.ucsc.edu
+
+
+From kencham@giga.cs.umn.edu (Deepak "Kerd")
+Subject: Re: What does "sections=NHSHH HUuhsh+c" mean ??
+Date: 9 Jun 92 16:46:46 GMT
+Article-I.D.: giga.kencham.708108406
+
+Folks,
+
+I am sorry about the double posting - the problem was that I realized that there
+was a section option only later - so hence the second post.
+
+Apologies ......
+
+The problem I am facing is that if I am editing a LaTeX file and I wish to 
+format only the test ( and no the fig code that co-exists ) - {!}fmt formats
+the whole file (atleast from where one is to $). So, I was wondering if any 
+change to those settings could help me format just the para I want ( currently
+working on ).
+
+Apologies, once again for the erring.
+
+Kerd
+--
+-------------------
