@@ -1,0 +1,72 @@
+"
+"	Center Text and Other assorted macros.
+"
+"	From: Dave Beyerl <db21@ihlpm.att.com>
+" 
+"
+"	Center Text
+"
+"	:s/^[ ^I]*//^V^M	- substitute at the begin of the line as many
+"				  spaces or tabs (^I) as possible with nothing,
+"				  i.e. delete them; the return (^M) needs to
+"				  be escaped with ^V when typed inside vi;
+"				  in the .exrc file there will be a ^M only
+"
+"	$ma			- go to EOL and mark that position with `a'
+"
+"	81a ^V^[		- append a space 81 times; just like return the
+"				  escape (^[) needs to be escaped
+"
+"	81^V^V|			- go to column 81; the pipe is the `ex' command
+"				  separator; it needs to be escaped when vi is
+"				  SCANNING the map to SET it, not when it's
+"				  typed in, hence we put a ^V before the pipe;
+"				  this ^V has to be typed twice, just because
+"				  it's the escape character (if want to change
+"				  for a different line length such as 65, then
+"				  change the 81 to new line length plus 1, 
+"				  ie. 66)
+"
+"	D			- delete the rest of the line; this is "not an
+"				  (`ex') editor command" - it seems you missed
+"				  the ^V to escape the preceding pipe!
+"
+"	`a			- back to the mark
+"
+"	lx			- delete 1 character to the right (a space)
+"
+"	d0			- delete to the begin of the line; only the
+"				  spaces we appended remain (the number is
+"				  80 minus the original line length)
+"
+"	:s/  / /g^V^M		- halve the number of spaces
+"
+"	$p^V^M			- go to EOL, put the original line, go to the
+"				  next line
+"
+"	Center text on 70 columns
+map #1 :s/^[	]*//$ma71a 71|D`alxd0:s/  / /g$p
+"	   ^   ^ tab	      ^ escape
+"          ^ not escape 
+"
+"
+"	Other assorted macros.
+"
+set para=P\ DSDETSTEALDLBLRLLILESGAEASBEBSDFFSFEMLspbp
+set sect=H\ SKNHSHHUSP
+"
+"	Reformat paragraph
+map  !}fmt
+"
+"	Run spell without exiting
+map sp :!spell % > %.sp:e %.sp
+"
+"	Move to misspelled word
+map / 0i/$a/"wdd:w:e#@w
+"
+"	Return to error file
+map \ :w:e#
+"
+"	Remove error file
+map $ :!rm -f %.sp
+"
