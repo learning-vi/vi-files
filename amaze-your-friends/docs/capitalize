@@ -1,0 +1,583 @@
+From navarra@casbah.acns.nwu.edu (John Navarra)
+Subject: Capitalizing first [a-z] letter in sentence in vi 
+Date: Fri, 17 Jul 1992 22:38:18 GMT
+
+
+Has anyone come up with a good way to capitalize the first [a-z] (small
+case alpha character) after the occurance of a [.!?] characters?
+Effectively, I would like a way to capitalize the first letter of the
+first word in every sentence but I am getting stumped on how to write
+an expression to search for a ending punctuation character followed
+by a space, followed by a [a-z] character to capitalize. Assuming the
+following block of text: 
+
+
+       This is a sting of text. is this a good file.name? it better be!
+now, back to the file.
+
+The 'i' beginning the second sentence should be capitalized as well as
+the 'i' beginning the third sentence and the 'n' beginning the last
+sentence. The 'n' in file.name should not be capitalized.
+
+For most cases, capitalizing the first [a-z] character after the .,!,or?
+characters would be sufficient but there are also times where sentences
+end a line, " or ' begin a line, or perhaps other weird contortions. 
+
+Has anyone looked into this? Any ideas?
+
+-tms
+
+
+From gregg@cbnewsc.cb.att.com (gregg.g.wonderly)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi 
+Date: Sat, 18 Jul 1992 21:26:21 GMT
+
+>From article <1992Jul17.223818.4027@news.acns.nwu.edu>, by navarra@casbah.acns.nwu.edu (John Navarra):
+> Assuming the  following block of text: 
+> 
+>        This is a sting of text. is this a good file.name? it better be!
+> now, back to the file.
+
+If you have two spaces afte your puncuation, the '(' and ')' characters
+will allow you to find the previous, and next sentence respectively.
+Thus, to capitalize the current sentence, I would type "(~"...
+
+
+
+From pck0276@tamsun.tamu.edu (Philip Kizer)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Sun, 19 Jul 1992 02:35:21 GMT
+
+navarra@casbah.acns.nwu.edu (John Navarra) writes:
+>Has anyone come up with a good way to capitalize the first [a-z] (small
+>case alpha character) after the occurance of a [.!?] characters?
+> [...]
+>       This is a sting of text. is this a good file.name? it better be!
+>now, back to the file.
+>
+>The 'i' beginning the second sentence should be capitalized as well as
+>the 'i' beginning the third sentence and the 'n' beginning the last
+>sentence. The 'n' in file.name should not be capitalized.
+>
+>For most cases, capitalizing the first [a-z] character after the .,!,or?
+>characters would be sufficient but there are also times where sentences
+>end a line, " or ' begin a line, or perhaps other weird contortions. 
+>
+>Has anyone looked into this? Any ideas?
+
+OK...here's first thoughts:
+
+/[.!*] [ ]*[a-z]
+w~
+
+Search for punctuation followed by at least one space followed by a
+lowercase letter.  Move to next word (lowercase letter) and change the
+case of it.  The only problem is that this will also match for 3+ spaces
+and not just for one ow two, but it successfully matches your requirements.
+
+later,
+philip
+
+____________________________________________________________ Philip Kizer ___
+Texas A&M Unix Help Desk                                     pckizer@tamu.edu
+
+
+From navarra@casbah.acns.nwu.edu (John Navarra)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi 
+Date: Sun, 19 Jul 1992 21:12:44 GMT
+
+In article <1992Jul18.212621.704@cbnewsc.cb.att.com> gregg@cbnewsc.cb.att.com (gregg.g.wonderly) writes:
+>From article <1992Jul17.223818.4027@news.acns.nwu.edu>, by navarra@casbah.acns.nwu.edu (John Navarra):
+>> Assuming the  following block of text: 
+>> 
+>>        This is a sting of text. is this a good file.name? it better be!
+>> now, back to the file.
+>
+>If you have two spaces afte your puncuation, the '(' and ')' characters
+>will allow you to find the previous, and next sentence respectively.
+>Thus, to capitalize the current sentence, I would type "(~"...
+>
+
+	Yeah, but this is not really what I wanted. Very rarely do I
+put two spaces in between sentences because I don't find it natural do
+to so. One thing I was thinking of is to use a global substitution and
+change all '. ' (period space) patterns to '.  ' (period space space) 
+and then use (~ but I was wanting some other ideas. I don't want to 
+have to re-invent the wheel on this one if someone else has come up with
+a better way.
+
+-tms
+
+
+
+@opem vi.crlf
+From navarra@casbah.acns.nwu.edu (John Navarra)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Mon, 20 Jul 1992 21:19:03 GMT
+
+In article <1992Jul19.023521.29749@tamsun.tamu.edu> pck0276@tamsun.tamu.edu (Philip Kizer) writes:
+>
+>OK...here's first thoughts:
+>
+>/[.!*] [ ]*[a-z]
+>w~
+>
+>Search for punctuation followed by at least one space followed by a
+>lowercase letter.  Move to next word (lowercase letter) and change the
+>case of it.  The only problem is that this will also match for 3+ spaces
+>and not just for one ow two, but it successfully matches your requirements.
+>
+
+        ok, I think this might work but how would I repeat this sequence
+of commands over an entire file? I could match the pattern, move to the
+next word, hit '~', and then use 'n' to move to the next pattern to
+repeat the process. Is there a way to automate this?
+        Secondly, you need to mention that you MUST have the ignorecase
+turned OFF otherwise the w~ sequence will match A-Z and turn them to
+lower case.
+        The fact that it matches more than one or two spaces is not a
+problem -- as long as strings like 'file.name' , '!variable' etc are
+not matched, the extra spaces do not matter. I may want to think about
+tab separations though but I will save that for later.
+
+
+-tms
+
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Mon, 20 Jul 1992 23:38:31 GMT
+
+In <1992Jul20.211903.28367@news.acns.nwu.edu> navarra@casbah.acns.nwu.edu (John Navarra) writes:
+>In article <1992Jul19.023521.29749@tamsun.tamu.edu> pck0276@tamsun.tamu.edu (Philip Kizer) writes:
+>>
+>>OK...here's first thoughts:
+>>
+>>/[.!*] [ ]*[a-z]
+>>w~
+>>
+>>Search for punctuation followed by at least one space followed by a
+>>lowercase letter.  Move to next word (lowercase letter) and change the
+>>case of it.  The only problem is that this will also match for 3+ spaces
+>>and not just for one ow two, but it successfully matches your requirements.
+>>
+
+>        ok, I think this might work but how would I repeat this sequence
+>of commands over an entire file? I could match the pattern, move to the
+>next word, hit '~', and then use 'n' to move to the next pattern to
+>repeat the process. Is there a way to automate this?
+
+Yes, there is:
+
+:write				" Just in case....
+:set nowrapscan magic remap noignorecase
+:map K n~Kq			" The q stop vi from saying "No tail recursion".
+/[.!*] [ ]*[a-z]
+1GK
+:unmap K			" Too dangerous to leave it around.
+:set wrapscan ignorecase	" Whatever you like.
+
+Vi will say "Address search hit BOTTOM without matching pattern"
+after the 1GK bit.  Ignore that.
+
+[ OK, in this case, you don't need the wrapscan wrinkle, since when you're
+through there won't be any instances of the pattern left.  But often it's
+the only way to stop this type of loop. ]
+
+--
+Hope this helps,
+
+Hans Mulder			hansm@cs.kun.nl
+
+
+From navarra@casbah.acns.nwu.edu (John Navarra)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Tue, 21 Jul 1992 22:48:16 GMT
+
+In article <1992Jul20.233831.9582@sci.kun.nl> hansm@cs.kun.nl (Hans Mulder) writes:
+>
+>:write				" Just in case....
+>:set nowrapscan magic remap noignorecase
+>:map K n~Kq			" The q stop vi from saying "No tail recursion".
+
+ :map K nw~Kq			"need the w to goto beginning of next word.
+
+>/[.!*] [ ]*[a-z]
+
+ /[.!?*] [ ]*[a-z]		"add '?' to the search pattern.
+
+>1GK
+>:unmap K			" Too dangerous to leave it around.
+>:set wrapscan ignorecase	" Whatever you like.
+
+				" if you set ignorecase and reissue the
+ 				  command, then all changes will be undone
+				  (in case you didn't like it)
+
+Now, onto phase 2:
+	So far, this is very good. The only problem I have now is getting
+sentences which begin a newline. For example.
+
+this is a sentence on the current line[.!?] followed by another sentence[.!?]
+and here is the beginning of a new sentence on a new line.
+
+We have accomplished capitalizing the 'f' in followed when the sentence 
+ends in [.!?] and there are one or more spaces after the punctuation. Now
+I would like to round this out and work on the lines which begin a
+sentence. Obviously, not all lines will begin a sentence, so I need some
+way to see if the last character on the previous line end in [.!?] (if so,
+do a ^~ to capitalize that first character).
+
+Any more ideas on this?
+-tms
+
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Wed, 22 Jul 1992 14:14:33 GMT
+
+In <1992Jul21.224816.25122@news.acns.nwu.edu> navarra@casbah.acns.nwu.edu (John Navarra) writes:
+>In article <1992Jul20.233831.9582@sci.kun.nl> I wrote:
+>>:write				" Just in case....
+>>:set nowrapscan magic remap noignorecase
+>>:map K n~Kq			"The q stops vi from saying "No tail recursion".
+
+> :map K nw~Kq			"need the w to goto beginning of next word.
+
+Oops.  You're right.
+
+>>/[.!*] [ ]*[a-z]
+
+> /[.!?*] [ ]*[a-z]		"add '?' to the search pattern.
+
+You might even consider:
+
+/[.!?*])* [ ]*[a-z]/		"add the option of a ')' or two
+
+Note that you need to add a closing '/' to a search pattern if you
+want to add a "comment.  [ Does anyone ever do that? ]
+
+>>1GK
+>>:unmap K			" Too dangerous to leave it around.
+>>:set wrapscan ignorecase	" Whatever you like.
+
+>				" if you set ignorecase and reissue the
+> 				  command, then all changes will be undone
+>				  (in case you didn't like it)
+
+Well, no.  Not if you've :unmapped it.  And even if you hadn't, it would
+change to lowercase the first letters of many sentences that began with an
+uppercase letter originally.  And the 'u' command doesn't cut it, either.
+
+The remarkably simple way to undo all those changes is:
+
+:e!
+
+This works because there's a :write at the start of the sequence.
+
+>Now, onto phase 2:
+>	So far, this is very good. The only problem I have now is getting
+>sentences which begin a newline. For example.
+
+>this is a sentence on the current line[.!?] followed by another sentence[.!?]
+>and here is the beginning of a new sentence on a new line.
+
+>Any more ideas on this?
+
+How about:
+
+:g/[.!?])*[ ]*$/+s/[a-z]/\u&
+
+For that matter,
+
+:%s/[.!?*])* [ ]*[a-z]/\U&/g
+
+looks like an alternative solution to the question in phase 1.
+
+--
+Hope this helps,
+
+Hans Mulder			hansm@cs.kun.nl
+
+
+From navarra@casbah.acns.nwu.edu (John Navarra)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Wed, 22 Jul 1992 21:57:52 GMT
+
+In article <1992Jul22.141433.26865@sci.kun.nl> hansm@cs.kun.nl (Hans Mulder) writes:
+>>Now, onto phase 2:
+>>	So far, this is very good. The only problem I have now is getting
+>>sentences which begin a newline. For example.
+>
+>>this is a sentence on the current line[.!?] followed by another sentence[.!?]
+>>and here is the beginning of a new sentence on a new line.
+>
+>How about:
+>
+>:g/[.!?])*[ ]*$/+s/[a-z]/\u&
+
+	I am not sure about this one. Can you explain it more? I am getting
+a "Not that many lines in buffer" error when I try it. 
+
+>
+>For that matter,
+>
+>:%s/[.!?*])* [ ]*[a-z]/\U&/g
+
+	This works great. One final suggestion for this substitution:
+
+:%s/[.!?*])*[SPACETAB]*[a-z]/\U&/g
+
+This will fix sentences separated by whitespace characters instead of those
+just separated by one or more spaces. 
+
+Now, all I need is that beginning of sentence case and all will be well I
+think....
+
+-tms
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Thu, 23 Jul 1992 01:04:24 GMT
+
+In <1992Jul22.215752.19032@news.acns.nwu.edu> navarra@casbah.acns.nwu.edu (John Navarra) writes:
+>In article <1992Jul22.141433.26865@sci.kun.nl> I wrote:
+>>How about:
+>>
+>>:g/[.!?])*[ ]*$/+s/[a-z]/\u&
+
+>	I am not sure about this one. Can you explain it more? I am getting
+>a "Not that many lines in buffer" error when I try it. 
+
+OK, how about:
+
+:1,$-1g/[.!?])*[ ]*$/+s/[A-Za-z]/\u&
+
+It dissects as follows:
+
+:		Means that it's an ex command.
+1,$-1		The range of lines it must be applied to: from the first till
+		the second last.  Your problem is that the last line ends
+		in one of [.!?] and you can't ~ the first char of the last
+		line +1, because there are "Not that many lines in buffer".
+g		Short for global.  Applies the +s/[a-z]/\u& command to all
+		lines matching the pattern /[.!?])*[ ]*$/.
+/[.!?])*[ ]*$/ 	Pattern for lines ending in one of [.!?], possibly some )
+		and white space.  Add a tab between the [] if necessary.
++		Short for .+1 i.e. apply the s/// bit to the next line
+s/[A-Za-z]/	Replace the first letter...
+\u		...by upper case of version of...
+&		...whatever matched the first argument.
+
+In the second argument of the s/// command, the magic sequence \u changes
+the next letter to upper case, \U changes everything to upper case until
+the next \e or \l or whatever.  The lower case versions are \l and \L.
+
+--
+Hope this helps,
+
+Hans Mulder				hansm@cs.kun.nl
+
+
+From navarra@casbah.acns.nwu.edu (John Navarra)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Thu, 23 Jul 1992 10:28:52 GMT
+
+In article <1992Jul23.010424.4048@sci.kun.nl> hansm@cs.kun.nl (Hans Mulder) writes:
+>:1,$-1g/[.!?])*[ ]*$/+s/[A-Za-z]/\u&
+>
+	Ok, Hans, this works pretty well. (you can see it coming by now
+can't you ;-) ) I added the TAB key in with the [SPACE] part to check for
+sentences which ended with any whitespace combinations.
+ 	The only instances where this misses, that I can see, are as
+follows:
+
+1) It misses the first line because there is no punctutation before the
+   first sentence. I.e., if the file started:
+
+in the beginning....
+
+   it would miss the 'i' because the search pattern found no [.!?] on
+   the previous line. However, this is easily correctable by hand.
+
+2) It misses instances where there are blank lines in between two 
+   sentences. I.e., say your file was double spaced and it looked like
+   this:
+
+This is sentence one.
+
+this is sentence two.  
+
+   'this' would not be capitalized in the second sentence. 
+   After some contemplation, the only thing I could think of two take 
+   care of this situation is to do the following:
+
+   :%s/^[SPACETAB]*$/./g
+
+Which will make the file look like:
+
+This is sentence one.
+.
+this is sentence two. 
+
+    and run your substitution on it. Now the 'this' will be capitalized
+    correctly. Now I can just do:
+
+   :%s/^.$//g
+
+    to get rid of all those '.' lines I just made. 
+    The only problem with this approach is that a sentence obviously need 
+    not end on each line but may contain a blank line in between anyway.
+    Therefore, by deliberately inserting a '.', a line could be changed that
+    wasn't supposed to be. However, this is the best I could come up
+    with.  I am still open to suggestion on this one. Ah the headaches
+    of regular expressions!
+
+
+----------
+
+And, while I'm at it, more progress on phase1:
+we had this line:
+
+:%s/[.!?])*[SPACETAB]*[a-z]/\U&/g
+
+but the following is better:
+:%s/[.!?])*[SPACETAB][SPACETAB]*[a-z]/\U&/g
+
+The extra SPACETAB is in there to make sure words like
+file.name  weird?construction wild!wild!wild 
+
+are not capitalized. 
+
+Getting tired of this yet? ;-(
+-tms
+
+
+From Reg Foulkes
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Thu, 23 Jul 1992 13:15:25 GMT
+
+In article <1992Jul23.010424.4048@sci.kun.nl> hansm@cs.kun.nl (Hans Mulder)
+writes:
+
+>It dissects as follows:
+>
+>:		Means that it's an ex command.
+>1,$-1		The range of lines it must be applied to: from the first till
+>		the second last.  Your problem is that the last line ends
+>		in one of [.!?] and you can't ~ the first char of the last
+>		line +1, because there are "Not that many lines in buffer".
+>g		Short for global.  Applies the +s/[a-z]/\u& command to all
+>		lines matching the pattern /[.!?])*[ ]*$/.
+>/[.!?])*[ ]*$/ 	Pattern for lines ending in one of [.!?], possibly some )
+>		and white space.  Add a tab between the [] if necessary.
+>+		Short for .+1 i.e. apply the s/// bit to the next line
+>s/[A-Za-z]/	Replace the first letter...
+>\u		...by upper case of version of...
+>&		...whatever matched the first argument.
+>
+>In the second argument of the s/// command, the magic sequence \u changes
+>the next letter to upper case, \U changes everything to upper case until
+>the next \e or \l or whatever.  The lower case versions are \l and \L.
+>
+>--
+>Hope this helps,
+
+  Hans, 
+       What a beautiful piece of work. Care to write a book on vi?
+
+--------------------------------
+Reg Foulkes                             Bell-Northern Research
+riskit@x400gate.bnr.ca           2745 Iris Street
+Telephone :(613) 763-4131     Ottawa, Ontario., Canada  K1Y 4H7
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Thu, 23 Jul 1992 13:53:05 GMT
+
+In <1992Jul23.102852.1466@news.acns.nwu.edu> navarra@casbah.acns.nwu.edu (John Navarra) writes:
+>In article <1992Jul23.010424.4048@sci.kun.nl> I wrote:
+>>:1,$-1g/[.!?])*[ ]*$/+s/[A-Za-z]/\u&
+> 	The only instances where this misses, that I can see, are as
+>follows:
+
+>1) It misses the first line because there is no punctutation before the
+>   first sentence.
+
+>2) It misses instances where there are blank lines in between two 
+>   sentences.
+
+OK, fourth attempt:
+
+:g/[.!?])*[SPACETAB]*$//[A-Za-z]/s//\u&
+
+I.e. replace the + ("next line") by a search for a line that actually
+has a letter on it.  This obviously soves problem 2.  If you have the
+wrapscan option set, it also solves your first line problem, plus the
+"Not that many lines in buffer" problem in your previous post.
+
+Incidentally, in this sort of construct the pattern to the left of
+the s/// is the default for its first argument.
+
+>Getting tired of this yet? ;-(
+
+Well, I'm going on holiday tomorrow; so it may take a while before
+you see my next attempt.
+
+--
+Hope this helps,
+
+Hans Mulder			hansm@cs.kun.nl
+
+
+From navarra@casbah.acns.nwu.edu (John Navarra)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: Sat, 25 Jul 1992 04:03:02 GMT
+
+In article <1992Jul23.135305.2389@sci.kun.nl> hansm@cs.kun.nl (Hans Mulder) writes:
+>
+>OK, fourth attempt:
+>
+>:g/[.!?])*[SPACETAB]*$//[A-Za-z]/s//\u&
+>
+
+	Hey, so far this works GREAT!
+
+Thanx a lot for your help with this topic Hans!
+
+-tms
+
+-- 
+>From the Lab of the MaD ScIenTiST:
+					
+navarra@casbah.acns.nwu.edu		
+
+
+From hargrove@ramirez.mitre.org (Paul H. Hargrove)
+Subject: Re: Capitalizing first [a-z] letter in sentence in vi
+Date: 28 Jul 92 15:51:41 GMT
+
+In article <1992Jul23.010424.4048@sci.kun.nl> hansm@cs.kun.nl (Hans Mulder)
+ writes:
+>:1,$-1g/[.!?])*[ ]*$/+s/[A-Za-z]/\u&
+[very good, piece by piece, explanation deleted]
+>--
+>Hope this helps,
+>
+>Hans Mulder				hansm@cs.kun.nl
+
+As the person who asked the question noted, this works (but is better with
+[ ^I] than with just [ ].  It works if I _type_ it, but when I tried:
+	:map q :1,$-1g/[.!?])*[ ^I]*$/+s/[A-Za-z]/\u&^V^M
+and hit 'q' I got a message than told me that undo was not permitted in
+globals.  I also tried using
+	:map q :g/[.!?])*[ ^I]*$//[A-Za-z]/s//\u&^V^M
+(which helps fix the first line if the last is properly punctuated and I have
+wrapscan set).  This also fails with the 'no undo' message.
+
+I get the same result whether I type the map command or put it in my .exrc
+file (with the required ^V^V
