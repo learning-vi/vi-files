@@ -1,0 +1,28 @@
+From riskit@x400gate.bnr.ca (Reg Foulkes)
+Subject: Re: Using vi to edit columns (was Re: Why I love VI)
+Date: Thu, 13 Aug 1992 13:38:45 GMT
+
+In article <Bsu0EG.73F@root.co.uk>, gwc@root.co.uk (Geoff Clare) wrote:
+> 
+> In <riskit-100892113813@47.201.0.36> riskit@x400gate.bnr.ca (Reg Foulkes) writes:
+> 
+> >  My main objection is that you cannot use vi to edit columns.
+> 
+> Which is why I wrote some macros to do "block delete and copy". 
+> They are available from the worldwide vi archive sites.
+
+    What, or more precisely where, are these worldwide vi archive sites?
+Where is the closest one to Ottawa, Canada?
+    I would like to try these out, but first why would a block delete and 
+copy work? I would expect by the name that you block and copy rows, since 
+vi is a stream editor not columns.
+  
+
+***********************************
+riskit@x400gate.bnr.ca (Reg Foulkes)
+
+No passion on earth, no love or hate
+Is equal to the passion 
+to change someone else's code
+
+
