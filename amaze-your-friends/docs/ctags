@@ -1,0 +1,118 @@
+From mschee@bcarh600.bnr.ca (Michael SamChee)
+Subject: Help need in using CTAGS !
+Date: Thu, 6 Aug 1992 15:23:30 GMT
+
+Hi,
+
+Please, I need some help! using CTAGs in unix:
+
+If I recursively invoke tags (by typing "CNTRL ]" on each
+identifier I wish to search for), say 3 times, I am unable
+to "pop back" to the file where I *first* invoked tags. 
+
+When I was on campus, it used to work the way I wanted 
+it to, but now on my job, when I create a tags file and
+invoke it in a nested (recursive) fashion, I'm only able
+to "pop back" to the *previous* file where tags was invoked.
+
+Also, invoking tags seem to be case sensitive ie. identifier
+"Ct" is not treated the same as "ct". Is there a way to make it
+case insensitive?
+
+Anybody ever had these experiences, or knows how to
+overcome these problems ?
+
+Your help will be very much appreciated !
+
+
+Thanks,
+Michael.
+
+
+From stephen@memex.co.uk (Stephen Marley)
+Subject: Bug in vi? CTAGS
+Date: 25 Aug 92 10:15:42 GMT
+
+
+I have a problem using named buffers in vi (SunOs 4.11), perhaps someone 
+can shed some light on this. First I'll tell you the circumstances which led 
+me to find this problem ...
+
+A short while ago, Michael Samchee submitted the following news article...
+
+> Hi,
+> 
+> Please, I need some help! using CTAGs in unix:
+> 
+> If I recursively invoke tags (by typing "CNTRL ]" on each
+> identifier I wish to search for), say 3 times, I am unable
+> to "pop back" to the file where I *first* invoked tags. 
+> 
+> When I was on campus, it used to work the way I wanted 
+> it to, but now on my job, when I create a tags file and
+> invoke it in a nested (recursive) fashion, I'm only able
+> to "pop back" to the *previous* file where tags was invoked.
+> 
+> Also, invoking tags seem to be case sensitive ie. identifier
+> "Ct" is not treated the same as "ct". Is there a way to make it
+> case insensitive?
+> 
+> Anybody ever had these experiences, or knows how to
+> overcome these problems ?
+> 
+> Your help will be very much appreciated !
+> 
+> 
+> Thanks,
+> Michael.
+
+
+I too had a the same problem and came up with the following simple solution.
+However I didn't post the article because vi did not always behave as I
+expected. Before I describe the problem led me show what was to be my original
+posting.
+
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+In your .exrc file or EXINIT parameter add the following 2 mappings
+
+map ^A mzywo^[pI:!exec vi -t ^["zdd`z@z
+map ^K :q!^M^M			# if too risky, force yourself to type :q! 
+map ^W :!exec listtags
+
+where listtags is a shell script to display vi's -t option argument from
+a ps listing. eg on a Sun, this works...
+    ps | grep 'vi -t' | grep -v grep | awk '{ print $NR }'
+( This was an afterthought and is admittedly a bit ropey )
+
+To use, type:
+<ctrl-A> on the identifier you want to tag to, like ^]. 
+<ctrl-K> takes you back. 
+<ctrl-W> gives you a listing of the tags stack. 
+
+Obviously you could use your own preferrences to ^A,^K and ^W. 
+
+Perhaps you would appreciate an explanation of the first macro.
+
+mz		-  mark cursor position as point z
+eb     		-  put cursor on first character of word (end, beginning) 
+yw		-  yank word into unnamed buffer
+o	  	-  open a line
+^[		-  <esc> come out of edit mode
+p		-  put back yanked word
+I:!exec vi -t ^[-  insert before word :!exec vi -t
+"zdd		-  delete line into buffer z
+		   ( buffer now contains `:!exec vi -t *identifier*' )
+`z              -  Put cursor back to original spot z
+@z		-  Run contents of buffer z as ex command. 
+
+As for the case insensitivity you could change the macro so that the command
+line becomes
+
+	:!exec vi -t `echo *identifier* | tr "[A-Z]" "[a-z]"`
+
+but this would only work if you had previously de-capitalized the first word on each line of your tags file. A simple shell script could could be used to 
+create a new lower case tags file, say lctags, and the :se tags=lctags command 
+in vi could be used to change the file searched when tagging. 
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+Now when testing these macros I found they worked well most of the
