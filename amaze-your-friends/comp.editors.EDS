@@ -1,0 +1,524 @@
+newsgroups: comp.editors,news.answers
+Approved: news-answers-request@MIT.Edu
+Followup-To: poster
+Subject: comp.editors - List of editors
+Expires: Sun 12 Sep 92 01:28:01 1992 GMT 
+Reply-To: Ruben@Uib.no
+
+Archive-name: editor-faq/Editor_List 
+
+Version: Thu Aug 13 01:27:53 GMT 1992
+
+Intorduction
+^^^^^^^^^^^^
+This is a list of some of the editors availible on the net.
+
+This list is constantly updated. There will always be a updated
+list on the VI/EX archives. 
+
+I've restricted the various Emacs implementations to GNU emacs and
+microemacs, because of Craig Finseth's posting on emacs implementations.
+
+Also, if I haven't listed an editor here that you want to find, then it
+may be a good idea for you to look at the 'How to find sources' article
+which is regularly posted to comp.sources.wanted, alt.sources and
+news.answers.  
+And then when you find it, tell me about it. I would be exstremly happy
+if you could submit the same information that the editors in this posting 
+have.
+
+I've tried to list at least ONE site in each part of the world (Europe,
+North America, Australia and Asia).    
+
+
+Anonymous FTP
+^^^^^^^^^^^^^
+To fetch a file from anomymous FTP do the following steps after beeing
+connected to the FTP server:
+  - When the FTP server asks for a login, try either 'anonymous' or
+    'ftp'.
+  - When the FTP server asks for a password, your password is the
+    same as your login-ID and your hostname. To enter this properly,
+    use the following format:
+       LoginID@HostName.DomainName.
+    DO NOT use 'ident' or 'guest' since this is bad nettiquette.
+
+If you are going to use FTP, use the site that is the closest to you
+counting NET-VICE. If you don't know what I'm talking about, please 
+ask someone who know (ie. your system administrator).
+
+Why YOU shold use the site closest to you NET-VICE:
+      - Faster access.
+      - Reducing the net load.
+      - Keeping the site.
+
+Please do NOT use ftp to the sites during peak hours at the various 
+locations. Please respect this or else, if there is too much FTP'ing 
+going on prime time to the various places, the ftp site may have to 
+shut down.  NON OF US WOULD WANT THAT, WOULD WE ?
+So what is the peak hours at the various places in the world ? - Usualy
+from 0800 AM to 0500 PM LOCAL TIME.
+
+Do absolutely NOT post a question to this news-group or other news-groups
+questions about how to use FTP. Ask this question to your local system 
+administrator or at your local help desk. There is also a FAQ on how to 
+use FTP. Look for it in the news.answers newsgroups. 
+
+
+I need your help !
+^^^^^^^^^^^^^^^^^^^
+I have only access to UNIX, CMS, VMS and MSDOS computers. Therefore
+editors from other machines and OS' will be exstremly limited unless 
+YOU help me out.
+
+
+Editor writers
+^^^^^^^^^^^^^^
+If you are a editor writer I would be happy to receive information about
+your editor. What I want is: Editor name, Current release, Maintainer
+(name and email adress), what OS the editor run's on. The editor's
+file name (Example: fooBarEd.tar.Z) for easy searching with archie is a
+must :-), either this or you include FTP sites where the editor is 
+sure to be found. A description of your editor should be limited to
+15 lines of text.
+
+
+Copyright
+^^^^^^^^^
+This listing is copyright (C) Ove Ruben R Olsen. All rights reserved.
+
+
+The listings
+^^^^^^^^^^^^
+After a Anonymous FTP entry there is a date. This date is when the FAQ
+maintainer last cheked the existance of the entry.
+The date in the Current release, is the date when the maintainer got
+the information about the upgrade or when the upgrade was announced on
+NetNews.
+
+001) Ant's Editor.
+002) ce
+003) Crisp
+004) Elvis
+005) FPTED
+006) GNU Emacs
+007) JOE's editor.
+008) Jstevie
+009) Mutt Editor 2
+010) Microemacs
+011) Mined
+012) Origami
+013) pico
+014) REDT
+015) Sedt Editor
+016) SLIM
+017) Stevie
+018) TECO
+019) TERSE
+020) Vile
+
+-------------------------------------------------------------------------------
+Editor: Ant's Editor.
+Current Release: Anthony's Editor May 92
+Maintainer: Anthony Howe <ant@mks.com>
+
+Operating system(s):
+	UXIX based systems.
+	Atari ST, MS-DOS
+
+	AE'92 merges two schools of thought by providing both VI
+	style (modual) and EMACS style (modeless) editing
+	interfaces.  One can start an editor session in one style
+	or the other and switch during a session.
+	
+	The source should be portable to any environment that
+	provides a K&R C compiler and a CURSES library.
+	
+	The editor has Online help and support for function keys on
+	using TERMCAP.
+	
+	The source can be obtained directly from the author.
+	
+
+--------------
+Editor: ce
+Current Release: v1.1e (Jun 30 1992)
+Maintainer: Charles Henrich (henrich@crs.cl.msu.edu)
+
+Anonymous FTP:
+	crs.cl.msu.edu:/pub/cedist.tar.Z (920810)
+Operating system(s):
+	UNIX (ATT3B2, SUN, AIX3, NEXT, CONVEX)
+
+	The CE editor is a modeless, easy to use and configurable
+	editor.
+	
+	The neat thing about this editor is that if your terminal
+	is not in the set of configured terminals, you can invoke
+	it with a command line option that prompts you for the
+	various keystrokes it uses, and then creates a .file for
+	that terminal for you, so it will always work.  It makes
+	extensive use of function keys, and lets you use escape
+	sequences if you don't have them.
+	
+	Submitted by: Steven Fought (keeper@lighthouse.caltech.edu)
+	
+
+--------------
+Editor: Crisp
+Current Release: 2.2e
+Maintainer: Paul Fox <fox@demon.co.uk>
+
+Anonymous FTP:
+	ftp.uu.net:pub/crisp/cr_2.2e.tar.Z.*
+
+	Crisp is a Brief lookalike.
+	
+	Crisp has also gone comercial for the laiter versions.
+	
+
+--------------
+Editor: Elvis
+Current Release: 1.5
+Maintainer: Steve Kirkendall <kirkenda@jov.cs.pdx.edu>
+
+Anonymous FTP:
+	prep.ai.mit.edu:pub/gnu/elvis-1.4.tar.Z
+	ftp.uu.net:packages/gnu/elvis-1.4.tar.Z
+	Any alt.sources archives for version 1.5. 
+Operating system(s):
+	MS-Dos 3.xx and up.
+	Atari TOS, OS/2, AmigaDOS.
+	UNIX based systems.
+
+	Elvis is one of the best PD Vi clones around.  It is not
+	100% compatible with the real vi/ex. Elvis has many small
+	extensions, some omissions, and a few features which are
+	implemented in a slightly different manner.  A lot of
+	people uses Elvis instead of the real 'VI' :-)
+	
+
+--------------
+Editor: FPTED
+Current Release: R4.0	(18/Feb/92)
+Maintainer: Fernando J. G. Pereira (fjp@minerva.inesc.pt)
+
+Anonymous FTP:
+	minerva.inesc.pt:pub/aplic/fpted4.tar.Z
+Operating system(s):
+	UNIX based systems.
+
+	FPTED is a, easy to use, text editor, that allows the user
+	to do almost all of the most used features in other text
+	editors.  It isn't as powerful as "vi", or "emacs", but I
+	think, it's easy to use, its runtime version is very small
+	(in disk space), and it lets you do almost everything you
+	usually do in other editors.
+	
+
+--------------
+Editor: GNU Emacs
+Current Release: 18.58
+Maintainer: Joseph Arceneux
+
+Anonymous FTP:
+	prep.ai.mit.edu:pub/gnu/emacs-18.58.tar.Z
+	ftp.uu.net:packages/gnu/emacs/18.58.Z.*
+
+	GNU Emacs is one of the most popular editors around.  It's
+	very big, very powerful and extensible, and lots of people
+	use it.  In a Usenet poll, it had about equal footing with
+	vi in terms of number of people using it.  Gnu.emacs.help
+	and Comp.emacs are good places to look for more information
+	about GNU Emacs.
+	
+
+--------------
+Editor: JOE's editor.
+Current Release: 29 Sept 1988??
+Maintainer: Joseph H. Allen <jhallen@wpi.wpi.edu>
+
+Anonymous FTP:
+	wpi.wpi.edu:stusrc/joe.tar.Z
+
+	Joe is a small and easily configurable editor, with
+	wordstar bindings as default.  Apparently the ideal editor
+	for users coming from the IBM PC/DOS world.
+	
+
+--------------
+Editor: Jstevie
+Current Release: 1.3
+Maintainer: Junn Ohta <ohta@src.ricoh.co.jp>
+
+Anonymous FTP:
+	utsun.s.u-tokyo.ac.jp [133.11.11.11], as ftp/jstevie1.3.tar.Z
+Operating system(s):
+	UNIX, MS-DOS, OS/2
+
+	Jstevie is an improved version of Stevie 3.69 and can be
+	used to edit Japanese text encoded in either Shift JIS,
+	7-bit JIS, or EUC, as well as other 8-bit text.  It also
+	features tag stack, abbreviations, and map(!)s.  To edit
+	Japanese on UNIX, you should link it to the ONEW library,
+	which is a client interface to the Wnn Kanji Server.  The
+	latest version of ONEW is available from etlport.etl.go.jp
+	[192.31.197.99].
+	
+	[Sub: Eric E. Bowles <bowles@is.s.u-tokyo.ac.jp>] 
+	
+
+--------------
+Editor: Mutt Editor 2
+Current Release: Unknown
+Maintainer: Craig Durland (craig@cv.hp.com)
+
+Anonymous FTP:
+	hpcvaaz.cv.hp.com:pub/pub/me2.shar.Z
+	WSMR-SIMTEL20.ARMY.MIL:<msdos.editor>ME_CD22.ZIP (Old MSDOS ver.)
+Operating system(s):
+	HP-UX (Series 800, 700 and 300), 
+	BSD Unix (Sun, Apollo, DEC, etc) 
+	IBM AIX, OSF/POSIX (HP and DEC), 
+	MS-DOS/PC-DOS (IBM PCs and compatibles)
+	OS/2 and Atari (TOS and MiNT).  
+
+	ME2 is a medium-small, portable, extendable Emacs' like
+	editor that is known to compile and run on a wide flavor of
+	architechtures.  Standalone, ME2 is pretty mundane - you
+	need to customize it to make full use of it.  A compiled
+	language is provided for this as well as lots of example
+	programs:  a C mode, paren matching, a visual towers of
+	hanoi, incremental searching, programmers calculator, mark
+	rings, multi file search (and replace) picture mode (from
+	GNU Emacs), gomoku (from GNU Emacs) and lots more.  Other
+	features include undo and the ability to have concurrent
+	processes (such as make) running in a buffer (Unix only).
+	
+	
+
+--------------
+Editor: Microemacs
+Current Release: 3.11
+Maintainer: Daniel M. Lawrence <dan@mbds.uucp>
+
+Anonymous FTP:
+	midas.mgmt.purdue.edu:dist/uemacs311/*
+
+	Another easy to use and small editor.  Emacs based.  Easily
+	extensible.
+	
+
+--------------
+Editor: Mined
+Current Release: July 1992 (comp.editors postings)
+Maintainer: Thomas Wolff (wolff@inf.fu-berlin.de)
+
+Operating system(s):
+	UNIX, MS-DOS, VMS
+
+	Its original version is the editor that comes along with
+	Andrew S. Tanenbaum's operating system minix. This version 
+	has som exchangemet over the original: enabling arbitrary 
+	terminals, windows with dynamic size changes, full 8 bit 
+	compatibility and support, function keys, improved user 
+	interface.
+	
+	Has a great deal of commands.  Modeless editor.
+	
+	This editor is a good candidate for people comming from the
+	MS-DOS world.
+	
+
+--------------
+Editor: Origami
+Current Release: 1.6.30
+Maintainer: Michael Haardt <u31b3hs@messua.informatik.rwth-aachen.de>
+
+Anonymous FTP:
+	irisa.irisa.fr:News/comp.binaries.atari.st/volume16/origami
+	wuarchive.wustl.edu:usenet/comp.binaries.atari.st/volume16/origami
+	ftp.thp.uni-koeln.de:minix/beta/origami/origami.tar.Z
+
+	Origami is a folding editor for Atari ST's, Minix and SunOS.
+	
+
+--------------
+Editor: pico
+Current Release: 1.4 (Thu Aug 13 00:27:48 GMT 1992)
+Maintainer: Found inside the Pine package.
+
+Anonymous FTP:
+	ftp.cac.washington.edu:/mail/pine/pine.4.3.tar.Z
+
+	Pico is originally derived from MicroEmacs 3.6 and is found
+	inside the 'Pine' mail system composer.
+	Pico is a simple, modeless, display-oriented text editor based 
+	on the Pine mail system composer. Commands are displayed at 
+	the bottom of the screen, and context sensitive help is provided. 
+	As characters are typed they are immediately inserted into the 
+	text. Editing commands are entered using control-key combinations.
+	
+	The editor has three basic features: paragraph justification, 
+	case insensitive searching, and a spelling checker.
+	
+	Michael Seibel (mikes@cac.washington.edu) and Laurence Lundblade 
+	(lgl@cac.washington.edu) has written the Pico editor.
+
+--------------
+Editor: REDT
+Current Release: Version 2.1 (25 Nov 91 00:12:20 GMT)
+Maintainer: Roger Nelson (rnelson@yoda.eecs.wsu.edu)
+
+Operating system(s):
+	UNIX (SGI/IRIX, HP-UX, SunOS, AT&S/SysV, DEC/ULTRIX)
+	AmigaOS
+
+	REDT follows a VMS/EDT text editing model and is similar to
+	the SEDT text editor by Anker Berg-Sonne. REDT is curses
+	based and should compile under any UNIX system.
+	
+	A version for the Amiga is now available by request.
+	
+	REDT allows you to make full use of your keyboard so you
+	can bind commands to almost any escape/control/function key
+	sequence.  A full screen interactive utility is provided to
+	generate [the human readable] command key binding files.
+	
+	REDT can be compiled with Mike Sweet's cmenu library for
+	pulldown menus, and gadgets.
+	
+	Some of the features:
+	    - Columnwise cut and paste.  
+	    - Cursor movement and character insertion past EOLN.  
+	    - Format ruler line and paragraph fill and justify.  
+	    - Multiple buffers (9).
+	    - Macro language.
+	
+	The editor can be obtained from the maintainer via email.
+	He will eventualy setup a anonymous FTP site when  SGI
+	get's on the network in a few months.
+	
+
+--------------
+Editor: Sedt Editor
+Current Release: Version 4.2 3-Feb-1991
+Maintainer: Anker Berg-Sonne (72337,3211%compuserve.com@CS.RELAY.NET)
+
+Anonymous FTP:
+	aix370.rrz.uni-koeln.de:msdos/editors/sedt40.zip
+	aix370.rrz.uni-koeln.de:msdos/mswindows/sedtwin.zip
+	dnpap.et.tudelft.nl:pub/Os2/sedt40.zoo
+	luga.latrobe.edu.au:pub/os2/editors/sedt40.zoo
+	wuarchive.wustl.edu:mirrors/msdos/editor/sedt40pc.arc
+	wuarchive.wustl.edu:mirrors/msdos/editor/sedt40pc.arc
+Operating system(s):
+	IBM-PC MSDOS (and Windows), OS/2
+	DEC Rainbow, Atari ST
+	VAX ULTIRX, RISC ULTIRX
+	SCO SysV, SCO XENIX
+
+	EDT editor. Not much information yet.
+	
+
+--------------
+Editor: SLIM
+Current Release: 0.9 (24 Jul 92 03:40:19 GMT)
+Maintainer: Joseph Gil <yogi@cs.ubc.ca>
+
+Anonymous FTP:
+	cs.ubc.ca:/ftp/pickup/terse/trs140f.zip   The full distribution:   ~175K
+Operating system(s):
+	MSDOS
+
+	The SLIM editor, a bigger brother to TERSE.
+	
+	SLIM is a big brother of TERSE. It can do anything TERSE
+	can, and a lot more, including:  "read file into buffer"
+	command, "switch to another file" command <Alt-E>, "go to
+	line number" command <Alt-G>,  "set right margin" command
+	<Alt-M>, "swap cursor and mark" command <Shift-Tab>, "pump
+	block thru external filter" command <Alt-F>,  "exchange
+	marked block with paste buffer" command <Keypad *>, "right
+	margin set" command <Alt-M> and word wrap, and display of
+	the hexadecimal value of the current char in the status line.
+	
+	Many features can be easily added to SLIM by virtue of the
+	"pump block thru buffer command.  Word counting, date and
+	time stamping, formatting, sorting, column summation,
+	character sets conversions are just a few examples.
+	Sophisticated users should probably get copy of a DOS port
+	of the famous UNIX 'sed' and 'awk', and harness their power
+	to enhance SLIM.  The effects of the extenal filter can be
+	undone.
+	
+
+--------------
+Editor: Stevie
+Current Release: Unknown
+Maintainer: Tony Andrews <onecom!wldrlg!tony>
+
+Anonymous FTP:
+	ftp.uu.net:usenet/comp.sources.unix/volume15/stevie/*
+	nic.funet.fi:pub/minix/stevie
+
+	Another good vi clone.
+	
+
+--------------
+Editor: TECO
+Current Release: Unknown
+Maintainer: Matt Fichtenbaum
+
+Anonymous FTP:
+	usc.edu:pub/teco
+	ftp.uu.net:usenet/comp.sources.unix/volume9/*
+	munnari.oz.au:comp.sources.unix/volume9/*
+
+	The best editor *ever*.  :-) Commands look like line noise
+	(even more so than vi).
+	
+	The usc.edu has perhaps the most complete collection of
+	tecos avalible.  It has documentation, macros and a wealth
+	of teco implementations.
+	
+
+--------------
+Editor: TERSE
+Current Release: 1.4 (24 Jul 92 03:40:19 GMT)
+Maintainer: Joseph Gil <yogi@cs.ubc.ca>
+
+Anonymous FTP:
+	wsmr-simtel20.army.mil:PD1:<MSDOS.EDITOR>TERSE11.ZIP
+	cs.ubc.ca:/ftp/pickup/terse/trs140f.zip  The full distribution:   ~175K
+	cs.ubc.ca:/ftp/pickup/terse/trs140a.zip  An abridged distribution: ~27K
+Operating system(s):
+	MSDOS
+
+	TERSE is a tiny (only 4096 bytes) but amazingly powerful
+	full-screen editor for files of up to 64K in length. TERSE
+	runs on all PC compatible machines. Its command keys are
+	very similar to those of the famous BRIEF editor (by
+	UnderWare Inc.). TERSE can edit both UNIX and MS-DOS style
+	text files as well as binary files. No hacker's disk is
+	complete without it.  No disk, be it hard or floppy, is too
+	full to include it.
+	
+
+--------------
+Editor: Vile
+Current Release: 3.9
+Maintainer: Paul Fox <pgf@cayman.com>
+
+Anonymous FTP:
+	ftp.cayman.com:pub/vile/vile3.18shar.Z
+
+	Vile is a vi feelalike.  It's based around Microemacs, but
+	modifed to look (feel) like vi.  You can't really say its a
+	vi clone, because its not *that* vi-like.
+	
+
+--------------
+
+
+
