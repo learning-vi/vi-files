@@ -1,0 +1,62 @@
+From beaumont@CompSci.Bristol.AC.UK (Tony Beaumont)
+Subject: vi macros for block copy/move
+Date: 4 Jul 92 13:10:51 GMT
+
+I am using vi and I have four macros defined in my .exrc for block
+operations on text:
+
+\C and \c copy a block of text (from between marks a and b) to before
+or after the current cursor position.
+\M and \m move a block of text (from between marks a and b) to before
+or after the current cursor position.
+
+The lines in my .exrc to define these macros are as follows...
+
+map \C mz'b"zy'a'z"zP
+map \c mz'b"zy'a'z"zp
+map \M mz'b"zd'a'z"zP
+map \m mz'b"zd'a'z"zp
+
+
+My problem is this, whever I do \c or \C I get a beep from my terminal.  This
+does not happen when I do \M or \m.  The beeping seems to come after the text
+is put into the z buffer and before moving back to the z mark to put the text.
+
+I do not get the beep if I type the command sequences for \c and \C by hand.
+
+Anyone tell me why I get a beep and how I can get rid of it.
+(please reply by email because I don't read this newsgroup often.  I'll
+post any solutions that work back to the newsgroup)
+
+-Tony Beaumont
+
+========================================================
+email: beaumont@uk.ac.bristol.compsci
+snail: Tony Beaumont,
+       Advanced Computing Research Center,
+       University of Bristol,
+       Bristol, BS8 1TR,
+       UK
+========================================================
+
+
+From brandy@tramp.Colorado.EDU (BRANDAUER CARL M)
+Subject: Re: vi macros for block copy/move
+Date: Tue, 7 Jul 1992 17:27:47 GMT
+
+Using macros to do block copying/moving seems overly complicated since
+there are ex/ed commands designed for the purpose.  From my SVR3 manual:
+
+	(.,.)ma
+
+will move the addressed block after the line addressed by a, while
+
+	(.,.)ta
+
+will duplicate the addressed block after the ine addressed by a.  Both
+work in vi even though ex uses different command names.
+
+Note that with these commands you are no longer restricted to using marks
+for selecting the block, although they work just fine.
+
+Cheers - Carl
