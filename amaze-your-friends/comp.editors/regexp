@@ -1,0 +1,288 @@
+From sjreeves@eng.auburn.edu (Stan Reeves)
+Subject: Regular Expression Question
+Date: 12 Aug 92 12:54:06 GMT
+
+
+I need to construct a regular expression that locates all words without
+an "@".  I've exhausted all my own ideas and was wondering if I could
+draw on the expertise of this group.
+
+
+--
+Stan Reeves
+Auburn University, Department of Electrical Engineering, Auburn, AL  36849
+INTERNET: sjreeves@eng.auburn.edu
+
+
+From lwv26@cas.org (Larry W. Virden)
+Subject: Re: Regular Expression Question
+Reply-To: lvirden@cas.org (Larry W. Virden)
+Date: Thu, 13 Aug 1992 11:52:27 GMT
+
+In article <sjreeves.920812075405@eng.auburn.edu> sjreeves@eng.auburn.edu (Stan Reeves) writes:
+:
+:I need to construct a regular expression that locates all words without
+:an "@".  I've exhausted all my own ideas and was wondering if I could
+:draw on the expertise of this group.
+
+Easy I thought, and I typed vi /etc/motd to play.
+
+First, I tried:
+
+/\<[^@]+\>
+
+which is the most obvious thing.  And I got an error.  Oh, vi doesn't appear
+to recognize +.  Sigh.  Well, let's try the next most obvious:
+
+/\<[^@]*\>
+
+That will do it, right?  Nah.  The problem here is that the * eats everything
+up to the first @ in the line and treats it all as a string.
+
+/\<[^.,<>!@#$%^&*()_-+=|\\{}:;"'~` 	]*\>
+
+is close - there may be a few more things that I missed in there, and
+there may be a need to quote a couple of those characters.  I gave up
+after finding a subset of the above that worked enough to show me the
+theory is right...
+-- 
+Larry W. Virden                 UUCP: osu-cis!chemabs!lvirden
+Same Mbox: BITNET: lvirden@cas  INET: lvirden@cas.org
+Personal: 674 Falls Place,   Reynoldsburg, OH 43068-1614
+America Online: lvirden@aol.com
+
+
+From navarra@casbah.acns.nwu.edu (John Navarra)
+Subject: Deleting text above and below PATTERN recursively
+Date: Sat, 11 Jul 1992 00:04:36 GMT
+
+
+	I want to do some recursive file manipulations using either vi
+or ed under the following scenario:
+	I have a file the contains a certain pattern which occurs at the
+beginning of a line multiple times in a file. I want to delete 5 lines
+above that pattern and 6 lines below that pattern for each occurance of
+PATTERN in the file. I need some help writing a recursive routine to do
+this. I started with the following ed script to do the first occurance:
+
+/^PATTERN	#search for first occurance of PATTERN at begin of line 
+-5n		#go up five lines
+.,+4d		#delete from current line down 4 lines
+.+1p		#print current line (skip the line matching PATTERN)
+.,+5d		#delete from current line down 5 lines
+w		#write it. 
+q		#quit editing. 
+
+Now I need some way to recursively search for PATTERN and give the 
+neccessary 'q' for ed to complete the operations when no more PATTERNS
+have been found.	
+	I would love to see a solution in vi as well. 
+Any ideas?
+
+ 
+here is an idea of what the file would look like:
+ 
+1
+2
+3		5 lines to be deleted
+4
+5
+PATTERN TO MATCH
+1
+2
+3
+4		6 lines to be deleted
+5
+6
+more text of file which does not need to be deleted
+1
+2
+3
+4
+5
+PATTERN TO MATCH
+1
+2
+3
+4
+5
+6
+
+Thanx for any help,
+-tms
+
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: Deleting text above and below PATTERN recursively
+Date: Sat, 11 Jul 1992 03:39:36 GMT
+
+In <1992Jul11.000436.15556@news.acns.nwu.edu> navarra@casbah.acns.nwu.edu (John Navarra) writes:
+>	I want to do some recursive file manipulations using either vi
+>or ed under the following scenario:
+
+Is there any particular reason you insist on doing it recursively?
+
+>	I have a file the contains a certain pattern which occurs at the
+>beginning of a line multiple times in a file. I want to delete 5 lines
+>above that pattern and 6 lines below that pattern for each occurance of
+>PATTERN in the file. I need some help writing a recursive routine to do
+>this. I started with the following ed script to do the first occurance:
+
+>/^PATTERN	#search for first occurance of PATTERN at begin of line 
+>-5n		#go up five lines
+>.,+4d		#delete from current line down 4 lines
+>.+1p		#print current line (skip the line matching PATTERN)
+
+Which is it?  Do you want to print the line containing PATTERN, or do
+you want to skip it?
+
+>.,+5d		#delete from current line down 5 lines
+
+In the paragraph above you said 6.
+
+>w		#write it. 
+>q		#quit editing. 
+
+If I can assume that there are enough line above the first and below the
+last occurance of PATTERN and that you wanted to skip the matching lines,
+and that you meant 6 rather than 5, a vi/ex command to do it would be:
+
+:g/^PATTERN/-5,-1d|+1,+6d
+
+If on the other hand there might be occurances of PATTERN in the first or the
+last 5 lines, and you do want those matching lines printed, you'd do:
+
+:6,$-6g/^PATTERN/-5,-1d|p|+1,+6d
+
+Or, if you insist on minimizing the number of keystrokes:
+
+:6,$-6g/^PATTERN/-5,-dp|+,+6d
+
+
+I'm afraid you can't do it in a single command in ed, you'll have to use two:
+
+g/^PATTERN/-5,-d
+g/^PATTERN/+,+6d
+
+Add a 'p' to the first of these lines if you want to print the matching line.
+Stick '6,$-6' in front if occurances of PATTERN near the extremes of the file
+are a problem.
+
+>	I would love to see a solution in vi as well. 
+
+If you insist on doing it recursively and using true vi mode commands:
+
+:write				" just in case... :-}
+:set nowrapscan report=7	" so vi won't say "5 lines deleted"
+:map K n5k5ddj6ddK+		" the + stops vi from saying "No tail recursion"
+/^PATTERN/
+1GK
+:unmap K			" too dangerous to keep it around
+:set wrapscan report=5
+
+When you've typed the 1GK bit, vi will move around a lot and eventually
+report: "Address search hit BOTTOM without matching pattern".  Ignore that.
+
+--
+Hope this helps,
+
+Hans Mulder			hansm@cs.kun.nl
+
+
+From dattier@ddsw1.mcs.com (David W. Tamkin)
+Subject: Re: Deleting text above and below PATTERN recursively
+Date: Sun, 12 Jul 1992 02:39:31 GMT
+                the poster and does not represent MCSNet or the system owners.
+
+navarra@casbah.acns.nwu.edu (John Navarra) wrote in
+<1992Jul11.205053.29328@news.acns.nwu.edu>:
+
+| 	I tried to put this in my .exrc file with the line:
+| 
+| :map ^Tp :g/^PATTERN/-5,-1d|+1,+6d
+| 
+| and I got the error "No lines in buffer" when starting up vi. A ^Tp
+| only printed: :g/^PATTERN/-5,-1d
+| 
+| what happened?
+
+Just as the pipe is a separator in an ex command, it is a separator in .exrc.
+You told your .exrc to do TWO things with that line:
+
+1.  to :map ^Tp :g/^PATTERN/-5,-1d
+
+and 
+
+2.  to +1,+6d
+
+Accordingly it mapped ^Tp as you told it and tried to delete the six lines
+below the current one, but there were no lines in the buffer when vi sourced
+.exrc, so it couldn't do the second part.
+
+The only way to include pipes in mappings is to precede them with a hard ^V;
+that is, when you prepare your .exrc you have to type ctrl-V twice to get a
+ctrl-V to stay in the file.
+
+For a mapping like this one, which gets rescanned, one hard ^V should be
+enough, since on the second scan you *want* the pipe to be interpreted as a
+command separator.  Sometimes it takes three, five, or even seven hard ^V's
+in a mapping in .exrc to get some problem characters like a pipe or the ^M
+that will eventually become a ^J sufficiently quoted.
+
+By the way, since you are mapping an ex command, you'll need a newline at the
+end, so you have to put ^M (typed as ctrl-V ctrl-M) [or ^V^M (typed as three
+ctrl-V's and a ctrl-M) or even ^V^V^V^M] on the end of that mapping, or when
+you use it, the cursor will sit at the end of the command window at the
+bottom of the vi screen and the commands in the mapping won't execute until
+you send NL manually.
+
+David W. Tamkin   Box 59297   Northtown Station, Illinois  60659-0297
+dattier@ddsw1.mcs.com    CompuServe: 73720,1570    MCI Mail: 426-1818
+
+
+From navarra@casbah.acns.nwu.edu (John Navarra)
+Subject: Re: Deleting text above and below PATTERN recursively
+Date: Sat, 11 Jul 1992 20:50:53 GMT
+
+In article <1992Jul11.033936.10152@sci.kun.nl> hansm@cs.kun.nl (Hans Mulder) writes:
+>In <1992Jul11.000436.15556@news.acns.nwu.edu> navarra@casbah.acns.nwu.edu (John Navarra) writes:
+>
+>>/^PATTERN	#search for first occurance of PATTERN at begin of line 
+>>-5n		#go up five lines
+>>.,+4d		#delete from current line down 4 lines
+>>.+1p		#print current line (skip the line matching PATTERN)
+>
+>Which is it?  Do you want to print the line containing PATTERN, or do
+>you want to skip it?
+
+	This will skip the line by printing it. 
+
+>
+>>.,+5d		#delete from current line down 5 lines
+>
+>In the paragraph above you said 6.
+	
+	The way ed does this is by deleting the current line AND 5 more
+additional lines ==6 lines. That is what I wanted to do. If you notice
+the line '.,+4d' , this does the same thing and deletes 5 lines above
+the pattern. 
+ 
+>
+>If I can assume that there are enough line above the first and below the
+>last occurance of PATTERN and that you wanted to skip the matching lines,
+>and that you meant 6 rather than 5, a vi/ex command to do it would be:
+>
+>:g/^PATTERN/-5,-1d|+1,+6d
+>
+	Yes, this is perfect. I didn't know you could do this in vi. I
+do not need any recursion if a global search and replace option is 
+available. I didn't know about the '|' in vi. 
+
+btw, 
+	I tried to put this in my .exrc file with the line:
+
+:map ^Tp :g/^PATTERN/-5,-1d|+1,+6d
+
+and I got the error "No lines in buffer" when starting up vi. A ^Tp
+only
