@@ -1,0 +1,152 @@
+From: davis@shasta.bu.edu ("John E. Davis")
+Newsgroups: comp.editors
+Subject: Tabs and Blanks: an experiment
+Date: 2 Mar 92 23:27:55 GMT
+Sender: news@bu.edu.bu.edu
+Reply-To: davis@amy.tch.harvard.edu (John E. Davis)
+Organization: Image Graphics Lab
+Lines: 100
+
+There has been alot of discussion about tabs vs spaces.  Here I present an a
+numerical argument in favor of 8 column tabs.  But first, let me throw in a
+subjective statement.
+
+First of all, there seems to be almost universal agreement that tabs should be
+eight columns.  Most devices assume this.  Right or wrong this is the way it
+is.  Of course the good ones allow the user to specify what the tabs are.
+Usually there is a command to set up tabs to 8 columns automatically.  I have
+never seen one with an option of 4 column tabs.  So it seems to be a good idea
+to stick with 8 column tabs. Many people prefer 4 column tabs for indentation
+purposes.  In my opinion, this is an editor limitation.  A good editor will
+indent the proper amount for you--- the tab key is usually bound to the indent
+command.
+
+The only real argument that one can make about tab size is based on the
+resulting file size.  If four column tabs produce a smaller file size than
+eight column, then I'd say that we should adopt 4 column tabs.  I propose a
+method to find out:
+
+let t be the tab size (4,8 or whatever).
+let d be the indentation of the line that one produces by using tabs and
+spaces.
+
+Obviously, the number of tabs and spaces, n,  for a given indentation, d, is
+given by:
+
+                         n(d,t) = d - (d/t) * (t - 1)
+
+Here I am using integer arithmetic.  Now suppose that the probability of an
+indentation d is p(d).  Then the average number of tabs and spaces <n> for an
+arbitrary line is given by:
+
+                       <n(t)> = sum_d { p(d) * n(d,t) }
+
+This gives the average number of tabs and spaces for a given tab size t.  Thus
+one only minimize this with respect to t to determine the optimal tab size.
+The only undetermined quantity is the probability distribution p(d).  One can
+get some idea of what ths is by examing many files and constructiong the
+distribution.  This will also depend on the indentation used by the person and
+on what one calls the tab size.  In the following, I consider equal
+probalities. That is I take p(d) a constant.
+
+Then consider the program:
+#include <stdio.h>
+
+main()
+{
+    int sum, i, t, n;
+
+    t = 1;
+    while (t < 50)
+      {
+          sum = 0;
+          for (i = 1; i < 80; i++)
+            {
+                n = i / t;
+                sum += i - n * (t - 1);
+            }
+          printf("%d %d\n", t, sum);
+          t++;
+      }
+}
+
+with the output
+1 3160
+2 1600
+3 1106
+4 880
+5 760
+6 690
+7 652
+8 640
+9 632      <-------- optimal choice
+10 640
+11 640
+12 652
+13 676
+14 690
+15 710
+16 760
+17 760
+18 780
+19 820
+20 880
+21 880
+22 892
+23 916
+24 952
+25 1000
+  .
+  .
+  .
+47 1642
+48 1656
+49 1672
+
+So as you can see, the optimal amount for equal probabilities is at t = 9.
+
+--John
+davis@amy.tch.harvard.edu
+
+
+From: davis@shasta.bu.edu ("John E. Davis")
+Newsgroups: comp.editors
+Subject: Re: Tabs and Blanks: an experiment
+Date: 3 Mar 92 00:46:29 GMT
+Reply-To: davis@amy.tch.harvard.edu (John E. Davis)
+Organization: Image Graphics Lab
+Lines: 30
+In-reply-to: davis@shasta.bu.edu's message of 2 Mar 92 23:27:55 GMT
+
+
+In the previous article, I wrote a program for which I assummed equal
+probabilities.   This is not really true.  I really assumed that
+
+p(d) = const != 0 for d < 80 and 0 otherwise
+
+Here the cutoff was 80.  Making the cutoff bigger will give greater tab sizes
+and making it less will produce smaller ones.
+
+It seems difficult to calculate p(d).  As I said earlier, it depends on what
+one chooses for the tab size.  This is just another reason for conformance to
+a standard.
+
+Still, I find it interesting if someone writes a sed, awk or whatever script
+that calculates p(d) for a large number of files using 8 column tabs with the
+assumption that this is most common.
+
+In fact we can play the same game as earlier:
+
+Take a poll to find the probability q(t) that one uses tab size t.  It will
+most likely be peaked at 8 with a small bump at 4.  Then fold this probability
+into the calculation of p(d).  That is, calculate p(d;t) using tab size t by
+examing a ton of files with the above script.  Then define
+
+                        p(d) = sum_t { p(d;t) * q(t) }
+
+and use the result in the calculation of the previous article.
+                        
+--John
+davis@amy.tch.harvard.edu
+
+
