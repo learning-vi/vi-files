@@ -1,0 +1,1456 @@
+From buboo@alf.uib.no (Ove Ruben R Olsen)
+Subject: Re: Good names for vi macros
+Date: Wed, 5 Feb 92 11:08:28 GMT
+Status: O
+
+Jan Van den Bussche (vdbuss@bigeye.cs.indiana.edu) writes:
+>I hope this is not something which was already discussed at length here, or
+>worse, a FAQ.
+
+This was discussed last summer I belive... :-) AND it should be in a VI-faq.
+
+>
+>My question is: does anyone has suggestions concerning which names to choose 
+>for naming macros? For example, it is probably not a good idea to remap the 
+>"cursor" keys k,h,j,l (which are actually already macros themselves)
+>to other commands. More generally, i frequently have a hard time finding
+>a name for a certain macro, that is not yet "occupied".
+
+>From the UCB-docs on VI (vi.chars.Z in the VI/EX archives):
+
+^A             Unused.
+^C             Unused.
+^K             Unused.
+^O             Unused.
+^S             Unused.  Some  teletype  drivers  use  ^S  to
+               suspend output until ^Q is.
+^X             Unused.
+^\             Unused.
+^_             Unused.  Reserved as  the  command  character
+               for the Tektronix 4025 and 4027 terminal.
+*              Unused.
+K              Unused.
+V              Unused.
+\              Unused.
+_              Unused.
+g              Unused.
+q              Unused.
+v              Unused.
+~              Unused.
+
+---
+NOTE that ^S is not a too wise char to map, unless you are into heavy
+pain or wizzardry :-)
+
+Instead of maping one char at the time you can map two and three chars. 
+This will expand your "map-space" a lot.
+I considder this The Right Way to do it, as all of VI's commands are valubale
+in general editing. In this way it is also simpler to find memonics for
+your macros.
+
+For instance, in one of my .exrc files i may have this two mappings:
+
+     :map #e :wq!^M
+     :map! #e ^[:wq!^M
+
+When in command mode I can hit #e and exit the editor. When in one of the
+textmodes, I can also hit #e and I'll exit the editor. I've used #e due to
+that #e is not a commom key-combination for me. Your milage may vary.
+
+OR:
+     :map #n :w!^M:n^M
+     :map! #n ^[:w!^M:n^M
+
+To get on to the next file in a multifile editing session.
+Keeping the same chars to both :map and :map! saves me from remebering to
+many macros. 
+Instead of :map! one can also use abbrevations. This is perhaps a better way 
+to do it, 'cuz one don't have to take care of the timelimit of :map!.
+
+As a general rule: One should not alter the command set, only expand it.
+
+>
+>Thanks in advance,
+>
+>--Jan Van den Bussche, vdbuss@cs.indiana.edu
+
+\Ruben.
+
+
+-- 
+    Ove Ruben R Olsen,  Proffessional VI user.  EMAIL: rubenro@viggo.blh.no
+    Also known as "The Gnarfer from Hell".  (Registered character of ORRO.)
+    Maintaining the Largest  VI/EX-STUFF  Archive in the WORLD (alf.uib.no)
+    :wq!
+
+
+From steinbac@hpl-opus.hpl.hp.com (Guenter Steinbach)
+Subject: Re: Good names for vi macros
+Date: 7 Feb 92 20:20:48 GMT
+Status: O
+
+> / hpl-opus:comp.editors / buboo@alf.uib.no (Ove Ruben R Olsen) /  3:08 am  Feb  5, 1992 /
+> 
+> Instead of maping one char at the time you can map two and three chars. 
+> This will expand your "map-space" a lot.
+> I considder this The Right Way to do it, as all of VI's commands are valubale
+> in general editing. In this way it is also simpler to find memonics for
+> your macros.
+
+Right.  I use a lot of "*x"-style macro names.  A word of caution,
+however:  On some machines, such as mine running HP-UX 7.05,
+multi-character macros can not be called from other macros.  So e.g.
+for a "ring" of macros to toggle between ":set wm=0" and ":set wm=8", I
+have to use a one-character name.  Check it out on your machine, you may
+be luckier than I am.
+
+	 Guenter Steinbach			steinbac@hpl-opus.hpl.hp.com
+
+
+From roger@quantime.co.uk (Roger Phillips)
+Subject: Re: Good names for vi macros
+Date: 9 Feb 92 13:25:45 GMT
+Status: O
+
+In article <1992Feb4.121606.19333@news.cs.indiana.edu>,
+vdbuss@bigeye.cs.indiana.edu (Jan Van den Bussche) writes:
+> My question is: does anyone has suggestions concerning which names to choose 
+> for naming macros?
+
+If you're using a vi which only allows single-character macro names,
+then you need to memorise which characters are available.
+E.g. I use v, then q for short-term macros.
+Some control-chars such as ^E, ^K may be ok,
+depending on your terminal, I guess.
+
+Fortunately, I always use vi's which allow 2-char names.
+The commands [[ and ]] (back/forward to next section/function),
+mean that the keys [ and ] have to be unbound on their own,
+so I can use [a [b ... [z and ]a ]b ... ]z for 52 different macros,
+even getting some sort of mnemonic naming sometimes :-)
+
+Anyone got any more ideas?
+
+-- 
+Roger Phillips                            roger@quantime.co.uk
+
+
+From mschee@bcarh600.bnr.ca (Michael SamChee)
+Subject: How do I ignorecase when using a TAGs file?
+Keywords: tags, ignorcase
+Date: 10 Feb 92 01:32:23 GMT
+Status: O
+
+I'm using a tags file in vi and would like it to ignore
+the case of the identifiers being searched for:
+
+e.g.,
+doing a  on the identifiers TEMP, Temp, or temp should
+be recognized as the same identifier.
+
+Does anybody know how to overcome this problem?
+
+Michael.
+
+
+From vss@bigair.wpd.sgi.com (V.S.Senthil Kumar)
+Subject: Tabs and Blanks
+Date: 7 Feb 92 01:49:25 GMT
+Status: O
+
+
+
+what is the easy way to covert the tabs to appropriate number of blanks.
+
+personally, i fell sick of this tabs. (who cares about the file size?)
+[I use a tab stop of 4. but vi default is 8. so when ever some body brings
+my source file in the editor, it looks awful.]
+
+Does any body have a vi macro so that whenever i press 
+tabs appropriate number of blanks are used.
+
+thanks,
+vs senthilkumar
+
+
+From peter@ferranti.com (peter da silva)
+Subject: Re: Tabs and Blanks
+Date: 9 Feb 92 19:46:28 GMT
+Status: O
+
+In article <golgj5k@dragon.wpd.sgi.com> vss@bigair.wpd.sgi.com (V.S.Senthil Kumar) writes:
+> what is the easy way to covert the tabs to appropriate number of blanks.
+
+Use an external program.
+
+> personally, i fell sick of this tabs. (who cares about the file size?)
+
+Personally, I like tabs (and not for file size).
+
+> [I use a tab stop of 4. but vi default is 8. so when ever some body brings
+> my source file in the editor, it looks awful.]
+
+That's why I like tabs. I use a tab stop of 2, 4, 6, or 8... switching on the
+fly as I edit my program.
+
+> Does any body have a vi macro so that whenever i press 
+> tabs appropriate number of blanks are used.
+
+No, that's the hard way.
+-- 
+-- Peter da Silva,  Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
+From weisen@daedalus.dcrt.nih.gov (Neil Weisenfeld)
+Subject: Re: Tabs and Blanks
+Date: 10 Feb 92 16:55:01 GMT
+Status: O
+
+
+In article <golgj5k@dragon.wpd.sgi.com> vss@bigair.wpd.sgi.com (V.S.Senthil Kumar) writes:
+
+
+   what is the easy way to covert the tabs to appropriate number of blanks.
+
+   personally, i fell sick of this tabs. (who cares about the file size?)
+   [I use a tab stop of 4. but vi default is 8. so when ever some body brings
+   my source file in the editor, it looks awful.]
+
+[stuff removed]
+
+
+What I do is this: set tabs to 8 and shift-width (sw) to the indent
+that I want to use (e.g. 4).   To indent a level, type ctrl-t.  To
+unindent a level, type ctrl-d.  
+
+This will add the proper number of *tabs and spaces* to get you to
+where you want to go.  It uses tabs for spacing out whatever the
+tabstop is set to, and uses spaces for fractions of a tabstop.  You
+can also use the shift operators to unindent and indent regions.
+
+If you need to remove the tabs from a file, you can do this:
+
+:%!expand
+
+if your system has the expand command.
+
+
+--Neil
+
+
+--
+Neil I. Weisenfeld                           phone: (301) 402-2788
+Building 12A, Room 2046                      uucp:  uunet!nih-csl!weisen
+National Institutes of Health                Internet: weisen@alw.nih.gov
+Bethesda, MD 20892
+
+
+From smarc@mas.UUCP (Marc Siegel)
+Subject: Re: Tabs and Blanks
+Date: 10 Feb 92 17:06:07 GMT
+Status: O
+
+vss@bigair.wpd.sgi.com (V.S.Senthil Kumar) writes:
+> 
+> 
+> what is the easy way to covert the tabs to appropriate number of blanks.
+> 
+> personally, i fell sick of this tabs. (who cares about the file size?)
+> [I use a tab stop of 4. but vi default is 8. so when ever some body brings
+> my source file in the editor, it looks awful.]
+> 
+> Does any body have a vi macro so that whenever i press 
+> tabs appropriate number of blanks are used.
+> 
+> thanks,
+> vs senthilkumar
+
+This is a simple problem. 
+set the environment variable EXINIT as follows:
+
+EXINIT="map ^T :1,$ s;tab;    ;g|se tabstop=4 "
+
+Replace the ^T with an actual control-T or whatever you want the
+sequence to be. Replace the word tab with an actual tab.
+You can put the appropriate number of spaces in the field following the 
+tab.
+
+      Marc Siegel  (smarc@mas.UUCP)
+      Emtronix Data Services Inc.    (410) 486-2940
+      Baltimore, Maryland
+      smarc@mas.wb3ffv.AMPR.ORG      <<New, Improved .sig Lite>>
+
+
+From jpr@jpradley.jpr.com (Jean-Pierre Radley)
+Subject: Re: Good names for vi macros
+Status: O
+
+In article <1992Feb9.132545.19653@quantime.co.uk> roger@quantime.co.uk (Roger Phillips) writes:
+>In article <1992Feb4.121606.19333@news.cs.indiana.edu>,
+>vdbuss@bigeye.cs.indiana.edu (Jan Van den Bussche) writes:
+>If you're using a vi which only allows single-character macro names,
+>then you need to memorise which characters are available.
+>E.g. I use v, then q for short-term macros.
+>Some control-chars such as ^E, ^K may be ok,
+>depending on your terminal, I guess.
+>
+>Fortunately, I always use vi's which allow 2-char names.
+>The commands [[ and ]] (back/forward to next section/function),
+>mean that the keys [ and ] have to be unbound on their own,
+>so I can use [a [b ... [z and ]a ]b ... ]z for 52 different macros,
+>even getting some sort of mnemonic naming sometimes :-)
+>
+>Anyone got any more ideas?
+
+Yeah. Use a vi which allows three-character names. The function keys on my
+ansi terminal emit three characters, and I map any of F1 through F12, and PgUp
+and PgDn too.
+-- 
+Jean-Pierre Radley   Unix in NYC   jpr@jpr.com   jpradley!jpr   CIS: 72160,1341
+
+
+From casterln@are.Berkeley.EDU (Gary Casterline)
+Subject: easy vi question: how to 'grep -v /r.e/'
+Date: 11 Feb 92 20:50:10 GMT
+Status: O
+
+This must me so obvious that I can't see it.
+Would some kind soul please show me how to
+do a negative search -- like 'grep -v string'.
+Go to the next line that does not have a specified
+regular expression.
+
+Thanks in advance.
+
+-- 
+Gary Casterline                        Agricultural & Resource Economics
+casterln@are.berkeley.edu              207 Giannini Hall
+(510) 642-5583                         UC Berkeley, CA 94720
+
+
+From heroux@cemmva.cem.msu.edu (Brett J. Heroux)
+Subject: Re: easy vi question: how to 'grep -v /r.e/'
+Date: 12 Feb 92 01:40:19 GMT
+Status: O
+
+In article <kpgdo2INNkit@agate.berkeley.edu>, casterln@are.Berkeley.EDU (Gary Casterline) writes:
+>This must me so obvious that I can't see it.
+>Would some kind soul please show me how to
+>do a negative search -- like 'grep -v string'.
+>Go to the next line that does not have a specified
+>regular expression.
+
+>From within 'ex' try (the : is supplied)
+
+:g!/re/vi  (or :v/re/vi and :v/re/vi. will put
+            that line in the middle of the screen)
+
+-from vi I'm stuck...
+
+
+Brett Heroux					heroux@titan.cem.msu.edu
+
+
+From baillod@dip.eecs.umich.edu (Brad Baillod)
+Subject: vi question
+Date: 12 Feb 92 06:50:28 GMT
+Status: O
+
+I just have one small question about vi that my man command
+can't seem to answer.  Please don't respond to this if you
+read it after Wednesday, February 12.
+
+I've used "vi bai*" and such to edit multiple files from
+the command line, and vi seems to read multiple files into
+its buffers, but I'll be damned if I can figure out a way
+to switch between buffers!
+
+It seems like I've tried every letter and control-letter
+sequence in both edit mode and command mode.  I can type
+:q or ZZ to quit, or save and exit, etc. but it just keeps
+the same file on the screen and tells me I have "one more
+file to edit."  My problem is switching to that file.
+
+Thanks for any help you can give me.
+
+Brad
+
+-- 
+Brad Baillod						baillod@eecs.umich.edu
+
+From tchrist@convex.COM (Tom Christiansen)
+Subject: Re: vi question
+Date: 12 Feb 92 07:14:46 GMT
+>From the keyboard of baillod@dip.eecs.umich.edu (Brad Baillod):
+Status: O
+
+>I've used "vi bai*" and such to edit multiple files from
+>the command line, and vi seems to read multiple files into
+>its buffers, but I'll be damned if I can figure out a way
+>to switch between buffers!
+
+What you want is
+
+    :n 
+
+I happen have ^N mapped to ":n +/^M" becuase that way I can say (tcsh alias)
+
+    alias vall 'vi +/!:1 `grep -l !:1 *.[^oa]`'
+
+and use ^N to get me through all the files at the right position.
+
+--tom
+
+
+From haegele@ibhinfo.hemminger-gdv.de (Frank Haegele)
+Subject: vi - redefine <TAB>-key with <BLANK><BLANK>
+Date: 11 Feb 92 18:17:02 GMT
+Status: O
+
+I'm using a VT420 terminal an I want to redefine the <TAB>-Key during
+an vi-session with two blanks.
+TERM=vt100
+
+I tried:
+
+	:set list<RETURN>
+	:map! ^I   <RETURN>
+		^^^- three blanks
+
+but it dosen't work. 
+
+MfG Frank Haegele ( Hemminger GmbH )
+
+------------------------------------------------------------------------------
+Office: Frank Haegele, Hemminger GmbH, Rennstr.16, 7300 Esslingen
+Tel.: Germany +49 711,  311021 Voice,  311155 Fax
+Priv: Frank Haegele, Olgastr.50, 7300 Esslingen, Germany +49 711/3169139 Voice
+E-Mail: haegele@ibhinfo.Hemminger-GDV.DE  haegele@delos.stgt.sub.org
+-------------------------------------------------------------------------------
+
+
+From ndh@bnr.co.uk (Neale D Hind)
+Subject: Re: vi question
+Date: 12 Feb 92 13:41:12 GMT
+Status: O
+
+In the referenced article baillod@dip.eecs.umich.edu (Brad Baillod) writes:
+>I just have one small question about vi that my man command
+>can't seem to answer.  Please don't respond to this if you
+>read it after Wednesday, February 12.
+>
+>:q or ZZ to quit, or save and exit, etc. but it just keeps
+>the same file on the screen and tells me I have "one more
+>file to edit."  My problem is switching to that file.
+>
+
+Use :n to move to the next file and :rewind to go back to the first file
+in the list.
+
+
++----------------------------------------------------------------+
+| Neale D. Hind                    | Email: ndh@bnr.co.uk        |
+| Manager, Business Systems        | Phone: +44 279 429531 x3613 |
+| BNR Europe Limited               | Fax  : +44 279 441551       |
+| London Road, HARLOW              | ESN  : 6-742-3613           |
+| Essex  CM17 9NA, United Kingdom  | Telex: 81151 STL HW G       |
++----------------------------------------------------------------+
+
+
+From weisen@daedalus.dcrt.nih.gov (Neil Weisenfeld)
+Subject: Re: vi question
+Date: 12 Feb 92 17:31:34 GMT
+Status: O
+
+In article <1992Feb12.065028.4746@zip.eecs.umich.edu> baillod@dip.eecs.umich.edu (Brad Baillod) writes:
+>I just have one small question about vi that my man command
+>can't seem to answer.  Please don't respond to this if you
+>read it after Wednesday, February 12.
+>
+>I've used "vi bai*" and such to edit multiple files from
+>the command line, and vi seems to read multiple files into
+>its buffers, but I'll be damned if I can figure out a way
+>to switch between buffers!
+>
+
+Brad,
+
+The :n and :rew answers that you got are correct, but I just wanted to make
+sure that you realized something.  There is only *one* buffer in vi and you
+must save your changes to disk before switching between files.  This is
+contrary to how multiple buffer editors like emacs work.  You can't
+experiment as safely.  I'm a die-hard vi fan, but sometimes find that using
+the VI emulation in emacs is handy.  I always wind up coming back to the
+original, though.
+
+Also, if you get sick of the messages telling you that you need to write
+out the file before switching, set autowrite (aw).  This will cause the
+buffers to be written to disk automatically when you switch from one file
+to another.  You need to be more careful here, though.  One last thing:
+CTRl-^ lets you switch to the ``previous file'' if there was one.  This is
+a handy way to toggle between two files.
+
+
+Regards and happy editing,
+Neil
+
+
+--
+Neil I. Weisenfeld                           phone: (301) 402-2788
+Building 12A, Room 2046                      uucp:  uunet!nih-csl!weisen
+National Institutes of Health                Internet: weisen@alw.nih.gov
+Bethesda, MD 20892
+
+
+From hm@fwi.uva.nl (Hans Mulder)
+Subject: Re: easy vi question: how to 'grep -v /r.e/'
+Date: 12 Feb 92 20:12:09 GMT
+Status: O
+
+In <0095603A.918A0900@cemmva.cem.msu.edu> heroux@cemmva.cem.msu.edu (Brett J. Heroux) writes:
+
+>In article <kpgdo2INNkit@agate.berkeley.edu>, casterln@are.Berkeley.EDU (Gary Casterline) writes:
+>>This must me so obvious that I can't see it.
+>>Would some kind soul please show me how to
+>>do a negative search -- like 'grep -v string'.
+>>Go to the next line that does not have a specified
+>>regular expression.
+
+>From within 'ex' try (the : is supplied)
+
+>:g!/re/vi  (or :v/re/vi and :v/re/vi. will put
+>            that line in the middle of the screen)
+
+But next time you try to switch to ex mode, you get thrown back into
+vi mode at the next line not matching /re/......
+
+>-from vi I'm stuck...
+
+Try
+
+:.,$v/re/a
+
+This jumps to the next line not matching /re/ and then complains that
+a: No such command from open/visual
+
+--
+Hans Mulder		hansm@cs.kun.nl
+			hm@fwi.uva.nl
+
+
+From evh@genie.slhs.udel.edu (Troy Saville)
+Newsgroups: comp.binaries.ibm.pc.wanted
+Subject: Re: wanted: ms-dos vi
+Date: 13 Feb 92 05:16:41 GMT
+Status: O
+
+In article <1992Feb12.143027.1@sysjj.mdcbbs.com> lembark@sysjj.mdcbbs.com writes:
+>does anyone know of a vi for ms-dos (source/share/binary)?  even a more-or-less
+>portable K&R source from UNIX!  ANYTHING!
+>thanx
+
+I went through this a couple of months ago.
+Your best bet is to get ahold of the binaries or source code for
+a vi-clone called 'stevie'. I got it from an archive site.
+I managed to get it to compile under turbo C(++) and work.
+Its not a perfect 'vi'(as compared to a UNIX version), but i have found it
+to be good enough. It doesn't handle certain commands the same way
+as you would expect. Especially 'change' command.
+EX: 'cw'
+
+instead of placing a dollar sign at the end of the word it delete the word
+and puts you into insert mode.
+Oh yeah, its ram based so you can't edit really big files.
+
+If i get the chance i plan to make it handle 'cw' etc correctly,
+use memory above 1MB(extended, expanded whatever) and some other crap
+(maybe a keystoke files to recover changes, i don't know......)).
+
+
+I believe a commercial version is available from Mortice Kern Systems
+called MKS VI. Last time i checked, price was around 100$ at programmers
+paradise(or was it programmers connection), however, i got ahold of
+'stevie' and didn't order MKS vi.
+There is also an old version by custom system software(or something like that),
+but i beleive that they are no longer in business.
+I used this version and it was very good. as good as UNIX vi as far as
+i could tell. however, i bought a better graphics card and it wouldn't
+work so i'm using 'stevie' now.
+
+
+   evh@genie.slhs.udel.edu
+
+PS: I don't have the stevie source or binaries on the machine that my acct
+    is on so don't send requests for it. I don't expect to do any thing
+    with the stevie source code for months.
+-- 
+- Golf Discs and "MINI'S" bought and traded, DISC GOLF INFO ? - SEND EMAIL
+   evh@genie.slhs.udel.edu - T Saville - MENS OPEN PRO - PDGA #5399
+
+
+From tom@vpnet.chi.il.us (Tom Hansen)
+Subject: Re: vi question
+Date: 12 Feb 92 19:03:13 GMT
+Status: O
+
+In article <1992Feb12.065028.4746@zip.eecs.umich.edu> baillod@dip.eecs.umich.edu (Brad Baillod) writes:
+>I just have one small question about vi that my man command
+>can't seem to answer.  Please don't respond to this if you
+>read it after Wednesday, February 12.
+>
+>I've used "vi bai*" and such to edit multiple files from
+>the command line, and vi seems to read multiple files into
+>its buffers, but I'll be damned if I can figure out a way
+>to switch between buffers!
+
+	I use ':e filename' to get the next file to edit, rather than the way
+	you seem to be doing it.
+	Once you have two files in the buffer the command ':e #'
+	will switch back and forth between the two.  If you have more than
+	two then ':n' will get the next in sucession.
+
+-- 
+| Tom Hansen           || "My beard grows to my toes.  I never wears no     |
+| tom@vpnet.chi.il.us  ||  clothes.  I wraps my hair around my bare, and    |
+| "I yam what I yam"   ||  down the road I goes."    - Shel Silverstein     |
+|______________________||___________________________________________________|
+
+
+Newsgroups: comp.unix.questions
+From buboo@alf.uib.no (Ove Ruben R Olsen)
+Subject: Re: vi - redefine <TAB>-key with <BLANK><BLANK>
+Date: Fri, 14 Feb 92 07:41:40 GMT
+
+Frank Haegele (haegele@ibhinfo.hemminger-gdv.de) writes:
+>I'm using a VT420 terminal an I want to redefine the <TAB>-Key during
+>an vi-session with two blanks.
+>TERM=vt100
+>
+>I tried:
+>
+>	:set list<RETURN>
+>	:map! ^I   <RETURN>
+>		^^^- three blanks
+>
+>but it dosen't work. 
+
+This solution works on version SVR3.1 of VI.
+
+First of all you need to escape the TAB key. Then you need to escape the
+SPACEs.
+
+:map! ^V^I ^V   <RETURN>
+             ^^^- three blanks
+
+To get the CTRL's right:
+   
+:map! <CTRL-V><CTRL-V><CTRL-V><CTRL-I> <CTRL-V><CTRL-V><SPC><SPC><SPC><CR>
+
+\Ruben.
+
+
+-- 
+    Ove Ruben R Olsen,  Proffessional VI user.  EMAIL: rubenro@viggo.blh.no
+    Also known as "The Gnarfer from Hell".  (Registered character of ORRO.)
+    Maintaining the Largest  VI/EX-STUFF  Archive in the WORLD (alf.uib.no)
+    :wq!
+
+
+From scott@odin.unomaha.edu (Scott Ames)
+Subject: macro record and playback in vi?
+Keywords: vi macro
+Date: 15 Feb 92 13:51:48 GMT
+Status: O
+
+Is there a way to record macros and play them back in vi?
+I know about being able to execute commands that are in a named text
+buffer by doing @buffer_name, but it is a pain to get the commands in
+the buffer.
+
+Thanks,
+Scott Ames
+scott@odin.unomaha.edu
+
+
+From clewis@ferret.ocunix.on.ca (Chris Lewis)
+Subject: Re: Tabs and Blanks
+Date: 17 Feb 92 08:39:58 GMT
+Status: O
+
+In article <1992Feb17.061334.9585@robohack.UUCP> woods@robohack.UUCP (Greg A. Woods) writes:
+>In article <WEISEN.92Feb10115501@daedalus.dcrt.nih.gov> weisen@daedalus.dcrt.nih.gov (Neil Weisenfeld) writes:
+>> What I do is this: set tabs to 8 and shift-width (sw) to the indent
+>> that I want to use (e.g. 4).   To indent a level, type ctrl-t.  To
+>> unindent a level, type ctrl-d.  
+
+This, incidentally, is exactly what I do.
+
+>EEEK!  Wrong!  :-)
+
+What's wrong with it Greg?  You certainly see a lot of my code! ;-)
+We had a short chat about this earlier, in which you admitted ignorance
+of this technique - did you do any exploration beyond that conversation?
+
+>This makes the file very painful to edit/print/display on anything
+>with a tab-size of other than 8 characters, and difficult to edit with
+>any edit that properly deals with tabs characters in a normal fashion.
+
+Almost all hardware devices have 8 character tab widths, and relatively
+few hardware devices have settable tab stops.  UNIX has no provision
+for setting tab width in serial drivers, or generically in hardware
+devices (other than settabs which few hardware devices support) and vi
+can only change tab width by doing the expansion itself.
+
+Having tab space as anything other than 8 is stupid, because *ONLY*
+vi can handle it.  Your printer probably can't.  Nor will your serial
+devices (and hence pg/more will be screwed) etc.  And everyone else
+on earth will hate you.  I certainly will.
+
+>Please set your shift-width and tabs to the same size!  Then when you
+>want to squish everything down to fit on the screen/paper, you only
+>need to change the tab size, and when the indentation is important to
+>see, the tab size can be set up to a decent value (like 8 :-), and all
+>looks great!
+
+On the contrary, set tabs to 8.  And set shift-width to what you
+want for code indentation.  Then your code will look as you intended
+no matter what they display it on.
+
+Futzing around with non-8 tab widths is a fools game.  It can
+turn mild-mannered system integrators into screaming maniacs.
+(Speaking as one who has screamed more than once ;-)
+
+>Yes, this makes tabs other than at the beginning of the code difficult
+>to line up, but they are no matter what you do.
+
+It's more than that.  Screwing around with tab width screws up indentation
+even at the beginning of lines.  And it can screw up any non-beginning
+formatting that doesn't have tabs just as easily.
+
+Ie: you have an if statement with multiple logical segments.  It's
+nice to line things up, ala:
+
+	if (A ||
+	    (B && D...........
+		  E) ||
+	    F
+
+    or
+	fprintf(stderr, "%s %s %d..."
+			arg1,
+			arg2
+
+Or, what will happen with this, even with tabs only at the beginning
+of lines?
+
+	if (something) {	/* here we .... */
+	    foo                 /* and do some more */
+
+
+etc.  Screwing around with tab widths just destroys any attempts to
+make this sort of thing readable.
+
+(Greg has been known to concatenate nice&neat multiple line statements
+written by others into something that wraps several times.  Just because
+he's on something that can display 100 columns.  At the time.)
+
+[If you want to reply to this, please send mail.  This machine doesn't
+get comp.editors - I got the original just because eci386 L1's me)
+-- 
+Chris Lewis; clewis@ferret.ocunix.on.ca; Phone: Canada 613 832-0541
+Psroff 3.0 info: psroff-request@ferret.ocunix.on.ca
+Ferret list: ferret-request@ferret.ocunix.on.ca
+
+
+From woods@robohack.UUCP (Greg A. Woods)
+Subject: Re: Tabs and Blanks
+Date: 17 Feb 92 06:13:34 GMT
+Status: O
+
+In article <WEISEN.92Feb10115501@daedalus.dcrt.nih.gov> weisen@daedalus.dcrt.nih.gov (Neil Weisenfeld) writes:
+> 
+> What I do is this: set tabs to 8 and shift-width (sw) to the indent
+> that I want to use (e.g. 4).   To indent a level, type ctrl-t.  To
+> unindent a level, type ctrl-d.  
+
+EEEK!  Wrong!  :-)
+
+This makes the file very painful to edit/print/display on anything
+with a tab-size of other than 8 characters, and difficult to edit with
+any edit that properly deals with tabs characters in a normal fashion.
+
+Please set your shift-width and tabs to the same size!  Then when you
+want to squish everything down to fit on the screen/paper, you only
+need to change the tab size, and when the indentation is important to
+see, the tab size can be set up to a decent value (like 8 :-), and all
+looks great!
+
+Yes, this makes tabs other than at the beginning of the code difficult
+to line up, but they are no matter what you do.
+-- 
+						Greg A. Woods
+
+woods@{robohack,gate,eci386}.UUCP    VE3-TCP	UniForum Canada & Elegant Comm.
+(416) 443-1734 [home]  (416) 595-5425 [work]	Toronto, Ontario; CANADA
+
+
+From peter@ferranti.com (peter da silva)
+Subject: Re: Tabs and Blanks
+Date: 17 Feb 92 17:05:11 GMT
+Status: O
+
+In article <3157@ecicrl.ocunix.on.ca> clewis@ferret.ocunix.on.ca (Chris Lewis) writes:
+> Having tab space as anything other than 8 is stupid, because *ONLY*
+> vi can handle it.
+
+Having indent space as anything other than one tabstop is IMHO just as
+stupid, because you can't easily adjust the indenting of your code as you
+like it (say, using pr, or vi, or psroff|ghostscript, or whatever).
+
+I set tabstops to whatever is convenient for editing the code at hand,
+and leave them at 8 characters for prettifying the code so it looks nice
+on character-cell printers.
+
+> And everyone else on earth will hate you.  I certainly will.
+
+You've seen my code. (now where have I heard that before?)
+
+> On the contrary, set tabs to 8.  And set shift-width to what you
+> want for code indentation.  Then your code will look as you intended
+> no matter what they display it on.
+
+Set tabs and shiftwidth to 8 for normal editing, and change them both
+together if you need more room. That way your code will look open and
+readable on hardcopy, but you can still edit it conveniently on narrow
+devices.
+
+> Futzing around with non-8 tab widths is a fools game.  It can
+> turn mild-mannered system integrators into screaming maniacs.
+
+Futzing around with non-tabwidth indents is a fools game. It can
+turn mild mannered system integrators into screaming maniacs.
+
+> (Speaking as one who has screamed more than once ;-)
+
+(Speaking as one who has screamed more than once :-> )
+-- 
+-- Peter da Silva,  Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
+From tchrist@convex.COM (Tom Christiansen)
+Subject: Re: Tabs and Blanks
+Date: 17 Feb 92 18:52:04 GMT
+Status: O
+
+>From the keyboard of peter@ferranti.com (peter da silva):
+:> On the contrary, set tabs to 8.  And set shift-width to what you
+:> want for code indentation.  Then your code will look as you intended
+:> no matter what they display it on.
+:
+:Set tabs and shiftwidth to 8 for normal editing, and change them both
+:together if you need more room. That way your code will look open and
+:readable on hardcopy, but you can still edit it conveniently on narrow
+:devices.
+:
+:> Futzing around with non-8 tab widths is a fools game.  It can
+:> turn mild-mannered system integrators into screaming maniacs.
+:
+:Futzing around with non-tabwidth indents is a fools game. It can
+:turn mild mannered system integrators into screaming maniacs.
+
+I really don't see anything wrong with having shiftwidth be 4 and
+tabstop be 8.  I don't like tabstop not to be 8 for printing purposes,
+and by having sw=4 makes code fit better, and it only takes two to 
+make a tab.  Some folks set sw=3, but then you can't >> and hit a real
+tab.  Maybe that doens't matter.
+
+--tom
+
+
+From matthew@garfield.cs.mun.ca (Matthew J. Newhook)
+Subject: Re: Tabs and Blanks
+Date: 17 Feb 92 20:05:41 GMT
+Status: O
+
+tchrist@convex.COM (Tom Christiansen) writes:
+
+>From the keyboard of peter@ferranti.com (peter da silva):
+[snip]
+>I really don't see anything wrong with having shiftwidth be 4 and
+>tabstop be 8.  I don't like tabstop not to be 8 for printing purposes,
+
+Assuming tabstop=4 what's wrong with expand -4 code.c | lpr ?
+
+Not that I ever print my code anymore anyway...  I personally feel that
+it's never worth printing code.  Isn't there some sort of heuristic
+that states the productivity of a programmer is inversely proportional to 
+the number of times that the programmer prints the code?
+Of course, for students I guess this is a necessity.
+The only problem that I see in not having my tabstops set to 8 is that
+when I page my file (less, more, etc)  it doesn't look right :(.  However,
+I personally don't find this to be much of a problem.
+
+>and by having sw=4 makes code fit better, and it only takes two to 
+>make a tab.  Some folks set sw=3, but then you can't >> and hit a real
+>tab.  Maybe that doens't matter.
+
+>--tom
+
+Matthew Newhook
+-- 
+----------------matthew@cs.mun.ca 
+"Living in the limelight; the universal dream for those who wish to 
+seem. Those who wish to be must put aside the alienation, get on with 
+the fascination, the real relation, the underlying theme" - Rush
+
+
+From norrish@rata.vuw.ac.nz (Michael Norrish)
+Subject: vi ! command in non-interactive envt.
+Date: 18 Feb 92 06:34:01 GMT
+Status: O
+
+I have recently come to appreciate the wonders that can be performed
+with vi's rather elegant ! command. (For those reading who don't know,
+this takes a region of your buffer and feeds that to a specified shell
+command, with the output from that command replacing what was in the
+region). 
+
+I am now curious about how this same task might be accomplished
+"non-interactively", (i.e. using sed or awk or something similar).
+Assume I want to run awk script silly.awk on lines 100-120 of my file.
+This would be my best stab at a solution, and I realise now that it's
+pretty ghastly:
+
+sed -n '100,120p' < myfile | awk -f silly.awk > /tmp/stage1.$$
+# now I have a file of the changed region. Now I have to sort of patch
+# this back into the original
+
+sed -n '1,99p' < myfile > /tmp/first_half.$$
+sed -n '121,$p' < myfile > /tmp/second_half.$$
+cat /tmp/first_half.$$ /tmp/stage1.$$ /tmp/second_half.$$ > myfile
+
+Voila! All done, but so kludgey. If anyone has any better ideas on how
+to accomplish this, I would be keen to see them, either here, or by
+mail.
+
+Thank you,
+Michael.
+
+--
+Michael Norrish.                                norrish@rata.vuw.ac.nz
+----------------Victoria University of Wellington---------------------
+"I can't believe *that*!" said Alice.
+"Can't you?" the Queen said in a pitying tone. "Try again: draw a long
+breath, and shut your eyes."
+
+
+From tchrist@convex.COM (Tom Christiansen)
+Subject: Re: vi ! command in non-interactive envt.
+Date: 18 Feb 92 06:13:37 GMT
+Status: O
+
+>From the keyboard of norrish@rata.vuw.ac.nz (Michael Norrish):
+:I have recently come to appreciate the wonders that can be performed
+:with vi's rather elegant ! command. (For those reading who don't know,
+:this takes a region of your buffer and feeds that to a specified shell
+:command, with the output from that command replacing what was in the
+:region). 
+:
+:I am now curious about how this same task might be accomplished
+:"non-interactively", (i.e. using sed or awk or something similar).
+:Assume I want to run awk script silly.awk on lines 100-120 of my file.
+
+    #!/bin/awk -f
+    {
+	if (NR >= 100 && NR <= 120) {
+	    # do the awk stuff
+	} else {
+	    print
+	} 
+    }
+
+or
+
+    #!/usr/bin/perl -p
+    if (100 .. 120) {
+	# do the awk stuff
+    } 
+
+If what you want to do betwen lines 100 and 120 isn't an awk thing, 
+you can open a pipe to another process.  Make sure to close it when 
+you're done so your output is in the right order.   Your awk doesn't
+support close()?  Get gawk.   However, if you want to flush your pipe
+partway through, you're out of luck.  Get the awk-to-perl translator. :-)
+
+
+--tom
+
+
+From tcm@tcm.austin.ibm.com (Tom McDonald)
+Subject: VI - Number of Lines
+Date: 14 Feb 92 16:11:19 GMT
+Status: O
+
+
+I've been trying to use vi in a 132x50 window.  132 columns works fine, but
+I can't get vi to use more than 24 lines.
+
+I've tried using 'vi -w50', ':set window=50', ':set scroll=50', to no avail.
+
+I'm using an xterm window on an RS/6000.  Any ideas on what's causing the
+problem?  Emailed answers preferred.
+
+
+Tom McDonald
+tcm@netmail.austin.ibm.com
+----------------------------------------------------------------------------
+My opinions are unrelated to IBM's
+
+
+From peter@ferranti.com (peter da silva)
+Subject: Re: Tabs and Blanks
+Date: 18 Feb 92 15:10:32 GMT
+Status: O
+
+In article <1992Feb17.185204.22850@news.eng.convex.com> tchrist@convex.COM (Tom Christiansen) writes:
+> [...] and by having sw=4 makes code fit better [...]
+
+I'd rather have the code open and readable, thanks. I was just working on
+some code that was not only sw=4, but looked like this:
+
+	if(...)
+	{   int foo = bar;
+	    ...
+	    return spooge; }
+
+If I'm working on code and sw=8 makes it wrap I take it as a hint that I
+should consider refactoring it into smaller routines. If that doesn't look
+easy, I change ts and sw together while I'm working on it and use a wider
+printer.
+> make a tab.  Some folks set sw=3, but then you can't >> and hit a real
+> tab.  Maybe that doens't matter.
+> 
+> --tom
+
+
+-- 
+-- Peter da Silva,  Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
+From peter@ferranti.com (peter da silva)
+Subject: Re: Tabs and Blanks
+Date: 18 Feb 92 15:12:54 GMT
+Status: O
+
+In article <1992Feb17.200541.8661@garfield.cs.mun.ca> matthew@garfield.cs.mun.ca (Matthew J. Newhook) writes:
+> Not that I ever print my code anymore anyway...  I personally feel that
+> it's never worth printing code.  Isn't there some sort of heuristic
+> that states the productivity of a programmer is inversely proportional to 
+> the number of times that the programmer prints the code?
+
+I guess that depends on whether you've got a laptop that's legible when
+you're desk-checking your code out by the pool. Sometimes one gets tired
+of cubing.
+-- 
+-- Peter da Silva,  Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
+From hugh@BRL.MIL ( Hugh Dempsey)
+Newsgroups: comp.unix.questions
+Subject: Re:  vi - redefine <TAB>-key with <BLANK><BLANK>
+Date: 18 Feb 92 13:18:07 GMT
+Status: O
+
+Hi,
+
+An easier solution is to either set shiftwidth or tabstop to 3.
+
+:set sw=3
+:set ts=3
+
+Best,
+
+Hugh
+hugh@brl.army.mil
+
+
+From anibal@wiley.EE.McGill.CA (JODORCOVSKY/ANIBAL GASTON/MR)
+Newsgroups: comp.unix.questions
+Subject: vi and terminal emulation vt102 ???
+Date: 18 Feb 92 18:51:11 GMT
+Status: O
+
+Hi!!
+
+   I am having a little problem when using VT102 emulation terminal.
+I am connecting with a modem (Supramodem 2400) to a Unix system, the
+comm software that I am using (Telix) supports VT102 emulation and
+I am using that one, having in my .login a set term=vt102.
+The problem is that when editing with vi, if I want to delete the
+last character of a line I sit on it and press x, but what happens is
+that 2 characters are deleted from the screen. I refresh the screen
+and the character that was before the last one reappears.
+A weird thing is that when I move the cursor to the left, the 
+characters are erased from the screen but as soon as I refresh the
+screen they are there again.
+
+Has anyone know what is going on?
+
+Thanks a lot!
+
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+= Anibal / anibal@honi.ee.mcgill.ca   =
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+From chris@visionware.co.uk (Chris Davies)
+Newsgroups: comp.unix.questions
+Subject: Re: vi - redefine <TAB>-key with <BLANK><BLANK>
+Date: 18 Feb 92 16:23:12 GMT
+Status: O
+
+Frank Haegele (haegele@ibhinfo.hemminger-gdv.de) writes:
+>I'm using a VT420 terminal an I want to redefine the <TAB>-Key during
+>an vi-session with two blanks.
+
+In article <1992Feb14.074140.3454@alf.uib.no> buboo@alf.uib.no (Ove Ruben R Olsen) writes:
+>To get the CTRL's right:
+>:map! <CTRL-V><CTRL-V><CTRL-V><CTRL-I> <CTRL-V><CTRL-V><SPC><SPC><SPC><CR>
+
+Ah!  So that's how you do it.
+
+I've now got this set so that my TAB key becomes ^T (soft-indent), and
+I've set the shiftwidth (sw) to 4.  This means I get 4-character
+indents which become tabs as and when possible...
+
+Thanks,
+
+Chris
+-- 
+         VISIONWARE LTD, 57 Cardigan Lane, LEEDS LS4 2LE, England
+  Tel +44 532 788858 x238.  Fax +44 532 304676.  Email chris@visionware.co.uk
+------------ "VisionWare:   The home of DOS/SQL/UNIX/X integration" -----------
+
+
+From pct@LEO.Stanford.EDU (Peter C. Tam)
+Newsgroups: comp.unix.admin,comp.protocols.tcp-ip.ibmpc
+Subject: VI terminal type
+Date: 20 Feb 92 04:48:22 GMT
+Status: O
+
+Hi,
+  I try to install nansi termcap entry by:
+
+  . Entering nansi termcap entry into /etc/termcap w content roughly:
+     PC|nansi|IBM PC NANSI SYS :\
+         :al-\EE.......
+         ...
+         ... etc
+
+  . setenv TERM nansi
+
+  . tset
+
+  . vi filename
+
+    & vi complains it does not know terminal type "nansi". When I search
+    the /etc/termcap, it is there.
+
+  What is missing in the sequence?
+
+
+From woods@robohack.UUCP (Greg A. Woods)
+Subject: Re: Tabs and Blanks
+Summary: Trying not to scream, tear my hair out, and flame too much
+Date: Tue, 25 Feb 92 03:42:57 GMT
+Status: O
+
+In article <3157@ecicrl.ocunix.on.ca> clewis@ferret.ocunix.on.ca (Chris Lewis) writes:
+> What's wrong with it Greg?  You certainly see a lot of my code! ;-)
+> We had a short chat about this earlier, in which you admitted ignorance
+> of this technique - did you do any exploration beyond that conversation?
+
+What's wrong with it is it makes any other indentation options
+*impossible* under software control without *changing* the file.
+
+> Having tab space as anything other than 8 is stupid, because *ONLY*
+> vi can handle it.  Your printer probably can't.  Nor will your serial
+> devices (and hence pg/more will be screwed) etc.  And everyone else
+> on earth will hate you.  I certainly will.
+
+Having tab size set to something other than 8 lets you read wide-bodied
+code on antique terminals without twisting your eyeballs trying to
+follow the wrapping.
+
+Then, when people with modern terminals, and/or wide-carriage (or
+small font) printers, get a look at the code, it appears in a readable
+form with nice deep and obvious indentation.
+
+This has absolutely nothing to do with what hardware or drivers can
+support what tab handling characteristics.  Doing it right in the first
+place makes the actual tab size of no concern.
+
+> Futzing around with non-8 tab widths is a fools game.  It can
+> turn mild-mannered system integrators into screaming maniacs.
+> (Speaking as one who has screamed more than once ;-)
+
+Only if you have a layout style that'll turn some of us into screaming
+maniacs when we merely look at it, let alone try to read it.
+
+> etc.  Screwing around with tab widths just destroys any attempts to
+> make this sort of thing readable.
+
+So, write it out "properly" so that anyone can read it regardless of
+their tab size setting, or use one tab character per indent and assume
+that the de-facto standard of 8-space tabs will keep your layout sane.
+-- 
+						Greg A. Woods
+
+woods@robohack.UUCP woods@Elegant.COM  VE3-TCP	UniForum Canada & Elegant Comm.
+(416) 443-1734 [home]  (416) 595-5425 [work]	Toronto, Ontario; CANADA
+
+
+From woods@robohack.UUCP (Greg A. Woods)
+Subject: Re: Tabs and Blanks
+Date: Tue, 25 Feb 92 03:53:26 GMT
+Status: O
+
+In article <1992Feb17.185204.22850@news.eng.convex.com> tchrist@convex.COM (Tom Christiansen) writes:
+> From the keyboard of peter@ferranti.com (peter da silva):
+> :Futzing around with non-tabwidth indents is a fools game. It can
+> :turn mild mannered system integrators into screaming maniacs.
+> 
+> I really don't see anything wrong with having shiftwidth be 4 and
+> tabstop be 8.  I don't like tabstop not to be 8 for printing purposes,
+> and by having sw=4 makes code fit better, and it only takes two to 
+> make a tab.  Some folks set sw=3, but then you can't >> and hit a real
+> tab.  Maybe that doens't matter.
+
+What's wrong with it (and any other un-equal setting of the so-called
+shift-width and the tab size) is that you end up using both tabs and
+spaces to represent indentation, and the "level" of indentation cannot
+be determined by counting the number of indentation characters, nor
+can the amount of indentation per level be changed without changing
+the number of characters in the indentation, i.e. changing the file.
+
+By using *only* the tab character (i.e. *the* indentation character),
+the amount of indentation per level can be easily controlled by
+changing the the amount to space displayed per indentation character.
+No change to the file is necessary.
+
+How much simpler can you get?
+-- 
+						Greg A. Woods
+
+woods@robohack.UUCP woods@Elegant.COM  VE3-TCP	UniForum Canada & Elegant Comm.
+(416) 443-1734 [home]  (416) 595-5425 [work]	Toronto, Ontario; CANADA
+
+
+From Tom Christiansen <tchrist@convex.COM>
+Subject: Re: Tabs and Blanks
+Date: Tue, 25 Feb 1992 16:11:44 GMT
+Status: O
+
+>From the keyboard of woods@robohack.UUCP (Greg A. Woods):
+:In article <1992Feb17.185204.22850@news.eng.convex.com> tchrist@convex.COM (Tom Christiansen) writes:
+:> I really don't see anything wrong with having shiftwidth be 4 and
+:> tabstop be 8.  
+:
+:What's wrong with it (and any other un-equal setting of the so-called
+:shift-width and the tab size) is that you end up using both tabs and
+:spaces to represent indentation, and the "level" of indentation cannot
+:be determined by counting the number of indentation characters, nor
+:can the amount of indentation per level be changed without changing
+:the number of characters in the indentation, i.e. changing the file.
+
+Indentation is for humans to read.  If computers wish to do so, they
+are quite happy to convert the tabs to spaces before counting.  
+
+--tom
+
+
+From mitchell@mdd.comm.mot.com (Bill Mitchell)
+Subject: Re: Tabs and Blanks
+Date: 25 Feb 92 19:14:29 GMT
+Status: O
+
+in comp.editors, tchrist@convex.COM (Tom Christiansen) said:
+
+
+>From the keyboard of woods@robohack.UUCP (Greg A. Woods):
+>:In article <1992Feb17.185204.22850@news.eng.convex.com> tchrist@convex.COM (Tom Christiansen) writes:
+>:> I really don't see anything wrong with having shiftwidth be 4 and
+>:> tabstop be 8.  
+>:
+>:What's wrong with it (and any other un-equal setting of the so-called
+>:shift-width and the tab size) is that you end up using both tabs and
+>:spaces to represent indentation, and the "level" of indentation cannot
+>:be determined by counting the number of indentation characters, nor
+>:can the amount of indentation per level be changed without changing
+>:the number of characters in the indentation, i.e. changing the file.
+>
+>Indentation is for humans to read.  If computers wish to do so, they
+>are quite happy to convert the tabs to spaces before counting.  
+>
+
+and this may be a problem if your code is ever going to be maintained by
+some human who will use a different text editor than you use.
+
+-- 
+mitchell@mdd.comm.mot.com (Bill Mitchell)
+
+
+From Tom Christiansen <tchrist@convex.COM>
+Subject: Re: Tabs and Blanks
+Date: Tue, 25 Feb 1992 19:58:55 GMT
+Status: O
+
+>From the keyboard of mitchell@mdd.comm.mot.com (Bill Mitchell):
+:>Indentation is for humans to read.  If computers wish to do so, they
+:>are quite happy to convert the tabs to spaces before counting.  
+:
+:and this may be a problem if your code is ever going to be maintained by
+:some human who will use a different text editor than you use.
+
+Which is one of the reasons I keep my physical tabs set at 8, although
+shiftwidth and indentation level to 4.  Any reasonable editor allows you
+to define simple code-shifting commands to arbitrary widths.  It's not my
+fault if the person maintaining my code won't use a reasonable editor.
+
+--tom
+
+
+From buettneb@Informatik.TU-Muenchen.DE (Buettner)
+Subject: Bug in elvis?
+Date: Wed, 26 Feb 1992 07:45:09 GMT
+Status: O
+
+Hi folks,
+
+Yesterday I managed to kill elvis with a legal command (I believe).
+I wanted to replace <eol> from the current line to marker m with 
+a comma and a blank. Actually I wanted to convert a short vertical 
+list of items into a comma delimited list over two or three lines.
+
+With the following ex command I managed to hang my machine.
+
+:.,'ms/$/, /g
+
+I had marked a position below the cursor with mm before.
+
+Any ideas? Can anyone tell me what happens?
+
+
+Greetings, 
+
+Bernhard Buettner
+
+
+From xiaofei@acsu.buffalo.edu (XiaoFei Wang)
+Subject: Re: Bug in elvis?
+Date: 26 Feb 92 14:29:15 GMT
+Status: O
+
+/* From the keyboard of buettneb@Informatik.TU-Muenchen.DE (Buettner) */:
+With the following ex command I managed to hang my machine. 
+[with elvis ]
+:.,'ms/$/, /g
+
+This happens to me when I use elvis on msdos. The `solution' I found is
+to omit the `g' at the end, i.e. use
+:.,'ms/$/, /
+
+I do not know the address the author. Let us forward the problem to the
+author. Despite a few bugs, elvis is just great and I would like to see
+it to be perfect. 
+
+-- 
+xiaofei@acsu.buffalo.edu | Subscribe Chinese Poem Exchange and Discussion List 
+mail LISTSERV@UBVM.BITNET with "SUB CHPOEM-L 1st LastName" in the MESSAGE BODY
+InterNet Address: UBVM.CC.BUFFALO.EDU | Posting in UUENCODED GB and BIG5
+
+
+From pgf@cayman.COM (Paul Fox)
+Subject: Re: Bug in elvis?
+Date: 26 Feb 92 17:46:29 GMT
+Status: O
+
+buettneb@Informatik.TU-Muenchen.DE (Buettner) writes:
+: With the following ex command I managed to hang my machine.
+: 
+: :.,'ms/$/, /g
+: 
+: Any ideas? Can anyone tell me what happens?
+
+how embarassing -- I smugly tried this with vile, thinking I'd fixed similar
+behavior before.  Same bug.  :-)  At least I'm in good company.
+
+I suspect elvis is going infinite for the same reason vile does -- the /g
+on the end tries to redo the substitute for all non-overlapping matches, and
+the accounting of where we are and where we've matched gets a little fouled
+up when dealing with zero-length matches.
+
+paul fox, pgf@cayman.com
+(vile 3.9 is available for *BETA* testing at ftp.cayman.com, in pub/vile)
+-- 
+		paul fox, pgf@cayman.com, (617)494-1999
+		Cayman Systems, 26 Landsdowne St., Cambridge, MA 02139
+
+
+From steve@monu6.cc.monash.edu.au (Steve Balogh (+61 3 565 4747))
+Subject: Re: Tabs and Blanks
+Date: 26 Feb 92 00:59:54 GMT
+Status: O
+
+In article <3157@ecicrl.ocunix.on.ca> clewis@ferret.ocunix.on.ca (Chris Lewis) writes:
+> Futzing around with non-8 tab widths is a fools game.  It can
+> turn mild-mannered system integrators into screaming maniacs.
+> (Speaking as one who has screamed more than once ;-)
+
+The FIRST thing I do when I obtain some "new" source code is to replace all
+tabs with spaces. I HATE TABS in source code. They seem to make editing and
+reformating much harder than it needs to be.
+
+Anyway it works for me. :)
+
+Steve
+
+----_--_-_-_--_-__-_------_-__---_-___-_----_-____-_-_--__-_--_--___-_-_-_--__-_
+Steve Balogh  VK3YMY   (Maths G.14)   | steve@monu6.cc.monash.edu.au
+Monash University, Clayton Campus     |      37 54'38.8"S  145 07'47.1"E ...ICBM
+Wellington Road, Clayton.  	      |      +61 3 565 4747 Voice (Office)
+Melbourne, AUSTRALIA. 3168	      |      +61 3 565 4746 Fax
+
+
+From peter@ferranti.com (peter da silva)
+Subject: Re: Tabs and Blanks
+Date: Tue, 25 Feb 1992 23:24:20 GMT
+Status: O
+
+> :[...] and the "level" of indentation cannot
+> :be determined by counting the number of indentation characters,
+
+In article <1992Feb25.161144.26962@news.eng.convex.com> tchrist@convex.COM (Tom Christiansen) writes:
+> Indentation is for humans to read.  If computers wish to do so, they
+> are quite happy to convert the tabs to spaces before counting.  
+
+Quite true. But what about the second point in the text you quoted? To
+wit:
+
+> :nor can the amount of indentation per level be changed without changing
+> :the number of characters in the indentation, i.e. changing the file.
+-- 
+-- Peter da Silva,  Ferranti International Controls Corporation
+-- Sugar Land, TX  77487-5012;  +1 713 274 5180
+-- "Have you hugged your wolf today?"
+
+
