@@ -1,0 +1,22 @@
+You have typed 'i', 'a', 'I' or 'A'.  The one you typed is now activated.
+
+i     is a command for start inserting text before the current cursor
+      position.
+
+a     is a command for start appending text after the current cursor
+      position.
+
+I     is a shorthand for "^i", start inserting text before the first NON-BLANK
+      CHARACTER in the current line.
+
+A     is a shorthand for "$a", start appending text after the last character
+      in the current line.
+
+Use this text for harmless practicing.  End text insert/append by typing
+'<ESC>'.  Undo last change with 'u'.  Examples:
+
+    0i         start inserting text in the first COLUMN of the current line.
+    67a-<ESC>  append 67 '-'s and return to command mode (used in next line!).
+-------------------------------------------------------------------bt 88/01/25
+Type '^c' to continue editing or 'v' to visit old buffer. Type 'q' to quit.
+
