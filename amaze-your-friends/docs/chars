@@ -1,0 +1,924 @@
+
+
+
+                           - 23 -
+
+
+_A_p_p_e_n_d_i_x: _c_h_a_r_a_c_t_e_r _f_u_n_c_t_i_o_n_s
+
+     This appendix gives the uses the editor makes  of  each
+character.   The  characters are presented in their order in
+the ASCII character set:   Control  characters  come  first,
+then  most  special  characters,  then the digits, upper and
+then lower case characters.
+
+     For each character we tell a meaning it has as  a  com-
+mand  and  any  meaning  it has during an insert.  If it has
+only meaning as a command,  then  only  this  is  discussed.
+Section  numbers in parentheses indicate where the character
+is discussed; a `f' after the section number means that  the
+character is mentioned in a footnote.
+
+^@             Not a command character.   If  typed  as  the
+               first   character   of  an  insertion  it  is
+               replaced with the last text inserted, and the
+               insert  terminates.   Only 128 characters are
+               saved from the last insert; if  more  charac-
+               ters  were  inserted  the  mechanism  is  not
+               available.  A ^@ cannot be part of  the  file
+               due to the editor implementation (7.5f).
+
+^A             Unused.
+
+^B             Backward window.  A count  specifies  repeti-
+               tion.   Two  lines  of continuity are kept if
+               possible (2.1, 6.1, 7.2).
+
+^C             Unused.
+
+^D             As a command, scrolls down a  half-window  of
+               text.  A  count gives the number of (logical)
+               lines to scroll, and is remembered for future
+               ^D  and  ^U  commands  (2.1, 7.2).  During an
+               insert, backtabs over _a_u_t_o_i_n_d_e_n_t white  space
+               at  the  beginning of a line (6.6, 7.5); this
+               white space cannot be backspaced over.
+
+^E             Exposes  one  more  line  below  the  current
+               screen  in the file, leaving the cursor where
+               it is if possible.  (Version 3 only.)
+
+^F             Forward window.  A  count  specifies  repeti-
+               tion.   Two  lines  of continuity are kept if
+               possible (2.1, 6.1, 7.2).
+
+^G             Equivalent  to  :fCR,  printing  the  current
+               file,  whether  it  has  been  modified,  the
+               current line number and the number  of  lines
+               in  the  file,  and the percentage of the way
+               through the file that you are.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 24 -
+
+
+^H (BS)        Same as _l_e_f_t  _a_r_r_o_w.   (See  _h).   During  an
+               insert,  eliminates the last input character,
+               backing  over  it  but  not  erasing  it;  it
+               remains  so you can see what you typed if you
+               wish to type  something  only  slightly  dif-
+               ferent (3.1, 7.5).
+
+^I (TAB)       Not a command character.   When  inserted  it
+               prints  as  some  number of spaces.  When the
+               cursor is at a tab character it rests at  the
+               last  of  the spaces which represent the tab.
+               The spacing of tabstops is controlled by  the
+               _t_a_b_s_t_o_p option (4.1, 6.6).
+
+^J (LF)        Same as _d_o_w_n _a_r_r_o_w (see _j).
+
+^K             Unused.
+
+^L             The ASCII formfeed character, this causes the
+               screen  to  be  cleared and redrawn.  This is
+               useful after a transmission error, if charac-
+               ters typed by a program other than the editor
+               scramble  the  screen,  or  after  output  is
+               stopped by an interrupt (5.4, 7.2f).
+
+^M (CR)        A carriage return advances to the next  line,
+               at  the first non-white position in the line.
+               Given a count, it advances  that  many  lines
+               (2.3).   During  an  insert,  a CR causes the
+               insert to continue onto another line (3.1).
+
+^N             Same as _d_o_w_n _a_r_r_o_w (see _j).
+
+^O             Unused.
+
+^P             Same as _u_p _a_r_r_o_w (see _k).
+
+^Q             Not a command character.  In input  mode,  ^_Q
+               quotes  the  next  character, the same as ^_V,
+               except that some teletype  drivers  will  eat
+               the ^_Q so that the editor never sees it.
+
+^R             Redraws the current screen, eliminating logi-
+               cal lines not corresponding to physical lines
+               (lines with only  a  single  @  character  on
+               them).   On  hardcopy terminals in _o_p_e_n mode,
+               retypes the current line (5.4, 7.2, 7.8).
+
+^S             Unused.  Some  teletype  drivers  use  ^_S  to
+               suspend output until ^_Qis
+
+^T             Not a command character.  During  an  insert,
+               with  _a_u_t_o_i_n_d_e_n_t  set and at the beginning of
+               the line, inserts _s_h_i_f_t_w_i_d_t_h white space.
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 25 -
+
+
+^U             Scrolls the screen  up,  inverting  ^D  which
+               scrolls down.  Counts work as they do for ^D,
+               and the previous scroll amount is  common  to
+               both.   On  a  dumb  terminal,  ^U will often
+               necessitate clearing and redrawing the screen
+               further back in the file (2.1, 7.2).
+
+^V             Not a  command  character.   In  input  mode,
+               quotes  the next character so that it is pos-
+               sible  to  insert  non-printing  and  special
+               characters into the file (4.2, 7.5).
+
+^W             Not a command character.  During  an  insert,
+               backs  up  as  b  would  in command mode; the
+               deleted characters remain on the display (see
+               ^H) (7.5).
+
+^X             Unused.
+
+^Y             Exposes  one  more  line  above  the  current
+               screen,  leaving  the  cursor  where it is if
+               possible.  (No mnemonic value for  this  key;
+               however,  it is next to ^U which scrolls up a
+               bunch.) (Version 3 only.)
+
+^Z             If supported by the Unix  system,  stops  the
+               editor, exiting to the top level shell.  Same
+               as :stopCR.  Otherwise, unused.
+
+^[ (ESC)       Cancels a partially formed command, such as a
+               z  when  no  following character has yet been
+               given; terminates inputs  on  the  last  line
+               (read  by  commands  such as : / and ?); ends
+               insertions of new text into the  buffer.   If
+               an  ESC  is  given  when quiescent in command
+               state, the editor rings the bell  or  flashes
+               the  screen.   You  can  thus  hit ESC if you
+               don't know what is happening till the  editor
+               rings the bell.  If you don't know if you are
+               in insert mode you can type  ESCa,  and  then
+               material  to  be  input; the material will be
+               inserted correctly whether or not you were in
+               insert mode when you started (1.5, 3.1, 7.5).
+
+^\             Unused.
+
+^]             Searches for the word which is after the cur-
+               sor as a tag.  Equivalent to typing :ta, this
+               word, and then a CR.  Mnemonically, this com-
+               mand is ``go right to'' (7.3).
+
+^|^             Equivalent to :e #CR, returning to the previ-
+               ous  position  in  the  last  edited file, or
+               editing a file which you specified if you got
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 26 -
+
+
+               a `No write since last change diagnostic' and
+               do not want to have to  type  the  file  name
+               again  (7.3).  (You have to do a :w before ^|^
+               will work in this case.  If you do  not  wish
+               to  write  the  file  you  should  do :e! #CR
+               instead.)
+
+^_             Unused.  Reserved as  the  command  character
+               for the Tektronix 4025 and 4027 terminal.
+
+SPACE          Same as _r_i_g_h_t _a_r_r_o_w (see _l).
+
+!              An operator, which processes lines  from  the
+               buffer  with reformatting commands.  Follow !
+               with the object to be processed, and then the
+               command  name  terminated  by CR.  Doubling !
+               and preceding it  by  a  count  causes  count
+               lines  to be filtered; otherwise the count is
+               passed on to the object after  the  !.   Thus
+               2!}_f_m_tCR reformats the next two paragraphs by
+               running them through the program _f_m_t.  If you
+               are working on LISP, the command  !%_g_r_i_n_dCR,*
+               given  at  the  beginning of a function, will
+               run the text of the function through the LISP
+               grinder  (6.7,  7.3).   To read a file or the
+               output of a command into the  buffer  use  :r
+               (7.3).   To  simply  execute a command use :!
+               (7.3).
+
+"              Precedes a named buffer specification.  There
+               are named buffers 1-9 used for saving deleted
+               text and named buffers a-z into which you can
+               place text (4.3, 6.3)
+
+#              The macro character which, when followed by a
+               number, will substitute for a function key on
+               terminals without function  keys  (6.9).   In
+               input  mode, if this is your erase character,
+               it will delete the last character  you  typed
+               in  input mode, and must be preceded with a \
+               to insert it, since it  normally  backs  over
+               the last input character you gave.
+
+$              Moves to the end of the current line.  If you
+               :se listCR, then the end of each line will be
+               shown by printing a $ after the  end  of  the
+               displayed  text  in the line.  Given a count,
+               advances to the  count'th  following  end  of
+               line; thus 2$ advances to the end of the fol-
+               lowing line.
+_________________________
+*Both _f_m_t and _g_r_i_n_d are Berkeley programs and  may  not
+be present at all installations.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 27 -
+
+
+%              Moves to the parenthesis or brace {  }  which
+               balances  the  parenthesis  or  brace  at the
+               current cursor position.
+
+&              A synonym for :&CR, by analogy with the _e_x  &
+               command.
+
+'              When followed by a ' returns to the  previous
+               context at the beginning of a line.  The pre-
+               vious context is  set  whenever  the  current
+               line  is  moved  in a non-relative way.  When
+               followed by a letter a-z, returns to the line
+               which  was  marked  with this letter with a m
+               command, at the first non-white character  in
+               the  line.  (2.2,  5.3).   When  used with an
+               operator such as d, the operation takes place
+               over complete lines; if you use `, the opera-
+               tion takes place from the exact marked  place
+               to  the  current  cursor  position within the
+               line.
+
+(              Retreats to the beginning of a  sentence,  or
+               to  the  beginning  of a LISP s-expression if
+               the _l_i_s_p option is set.  A sentence ends at a
+               .  ! or ? which is followed by either the end
+               of a line or by two spaces.   Any  number  of
+               closing  )  ]  "  and ' characters may appear
+               after the . ! or ?, and before the spaces  or
+               end  of  line.  Sentences also begin at para-
+               graph and section boundaries (see  {  and  [[
+               below).  A count advances that many sentences
+               (4.2, 6.8).
+
+)              Advances to the beginning of a  sentence.   A
+               count  repeats  the  effect.  See ( above for
+               the definition of a sentence (4.2, 6.8).
+
+*              Unused.
+
++              Same as CR when used as a command.
+
+,              Reverse of the last f F t or T command, look-
+               ing the other way in the current line.  Espe-
+               cially useful after hitting too many ;  char-
+               acters.  A count repeats the search.
+
+-              Retreats to the previous line  at  the  first
+               non-white  character.  This is the inverse of
+               + and RETURN.  If the line moved to is not on
+               the   screen,  the  screen  is  scrolled,  or
+               cleared and redrawn if this is not  possible.
+               If  a  large  amount  of  scrolling  would be
+               required  the  screen  is  also  cleared  and
+               redrawn,  with the current line at the center
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 28 -
+
+
+               (2.3).
+
+.              Repeats the last command  which  changed  the
+               buffer.    Especially  useful  when  deleting
+               words  or  lines;   you   can   delete   some
+               words/lines and then hit . to delete more and
+               more words/lines.  Given a count,  it  passes
+               it  on  to  the command being repeated.  Thus
+               after a 2dw, 3.  deletes  three  words  (3.3,
+               6.3, 7.2, 7.4).
+
+/              Reads a string from  the  last  line  on  the
+               screen,   and  scans  forward  for  the  next
+               occurrence of this string.  The normal  input
+               editing  sequences  may  be  used  during the
+               input on the bottom line; an returns to  com-
+               mand   state  without  ever  searching.   The
+               search begins when you hit  CR  to  terminate
+               the  pattern;  the cursor moves to the begin-
+               ning of the last line to  indicate  that  the
+               search is in progress; the search may then be
+               terminated with a DEL or RUB, or by backspac-
+               ing when at the beginning of the bottom line,
+               returning the cursor to its initial position.
+               Searches  normally  wrap end-around to find a
+               string anywhere in the buffer.
+
+               When  used  with  an  operator  the  enclosed
+               region  is  normally affected.  By mentioning
+               an offset from the line matched by  the  pat-
+               tern   you   can  force  whole  lines  to  be
+               affected.  To do this give a pattern  with  a
+               closing  a closing / and then an offset +_n or
+               -_n.
+
+               To include the  character  /  in  the  search
+               string,  you  must escape it with a preceding
+               \.  A |^  at  the  beginning  of  the  pattern
+               forces the match to occur at the beginning of
+               a line only; this speeds the search.  A $  at
+               the  end  of  the pattern forces the match to
+               occur at  the  end  of  a  line  only.   More
+               extended  pattern  matching is available, see
+               section 7.4; unless you set nomagic  in  your
+               ._e_x_r_c file you will have to preceed the char-
+               acters . [ * and ~ in the search pattern with
+               a  \ to get them to work as you would naively
+               expect (1.5, 2,2, 6.1, 7.2, 7.4).
+
+0              Moves to the first character on  the  current
+               line.   Also  used, in forming numbers, after
+               an initial 1-9.
+
+1-9            Used to form numeric  arguments  to  commands
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 29 -
+
+
+               (2.3, 7.2).
+
+:              A prefix to a set of commands  for  file  and
+               option  manipulation  and escapes to the sys-
+               tem.  Input is given on the bottom  line  and
+               terminated  with  an CR, and the command then
+               executed.  You can return to where  you  were
+               by  hitting  DEL or RUB if you hit : acciden-
+               tally (see primarily 6.2 and 7.3).
+
+;              Repeats the last single character find  which
+               used  f F t or T.  A count iterates the basic
+               scan (4.1).
+
+<              An  operator  which  shifts  lines  left  one
+               _s_h_i_f_t_w_i_d_t_h,  normally  8  spaces.   Like  all
+               operators, affects lines when repeated, as in
+               <<.   Counts  are passed through to the basic
+               object, thus 3<<  shifts  three  lines  (6.6,
+               7.2).
+
+=              Reindents line for LISP, as though they  were
+               typed in with _l_i_s_p and _a_u_t_o_i_n_d_e_n_t set (6.8).
+
+>              An operator  which  shifts  lines  right  one
+               _s_h_i_f_t_w_i_d_t_h, normally 8 spaces.  Affects lines
+               when repeated as in >>.   Counts  repeat  the
+               basic object (6.6, 7.2).
+
+?              Scans backwards, the opposite of /.  See  the
+               /  description  above for details on scanning
+               (2.2, 6.1, 7.4).
+
+@              A macro character (6.9).   If  this  is  your
+               kill  character,  you must escape it with a \
+               to type it in during input mode, as  it  nor-
+               mally  backs over the input you have given on
+               the current line (3.1, 3.4, 7.5).
+
+A              Appends at the end of line, a synonym for  $a
+               (7.2).
+
+B              Backs up a word, where words are composed  of
+               non-blank  sequences,  placing  the cursor at
+               the beginning of the word.  A  count  repeats
+               the effect (2.4).
+
+C              Changes the rest of the text on  the  current
+               line; a synonym for c$.
+
+D              Deletes the rest of the text on  the  current
+               line; a synonym for d$.
+
+E              Moves forward to the end of a  word,  defined
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 30 -
+
+
+               as  blanks  and  non-blanks, like B and W.  A
+               count repeats the effect.
+
+F              Finds a single following character, backwards
+               in  the  current  line.  A count repeats this
+               search that many times (4.1).
+
+G              Goes to the line number  given  as  preceding
+               argument,  or  the  end  of  the  file  if no
+               preceding count  is  given.   The  screen  is
+               redrawn  with  the  new  current  line in the
+               center if necessary (7.2).
+
+H              _H_o_m_e _a_r_r_o_w.  Homes the cursor to the top line
+               on the screen.  If a count is given, then the
+               cursor is moved to the count'th line  on  the
+               screen.   In  any case the cursor is moved to
+               the first non-white character  on  the  line.
+               If  used  as  the target of an operator, full
+               lines are affected (2.3, 3.2).
+
+I              Inserts at the beginning of a line; a synonym
+               for |^i.
+
+J              Joins together lines,  supplying  appropriate
+               white  space:  one  space  between words, two
+               spaces after a ., and no spaces at all if the
+               first  character  of the joined on line is ).
+               A count causes that many lines to  be  joined
+               rather than the default two (6.5, 7.1f).
+
+K              Unused.
+
+L              Moves the cursor to the first non-white char-
+               acter of the last line on the screen.  With a
+               count, to the first non-white of the count'th
+               line from the bottom.  Operators affect whole
+               lines when used with L (2.3).
+
+M              Moves the cursor to the middle  line  on  the
+               screen,  at  the  first non-white position on
+               the line (2.3).
+
+N              Scans for the next match of the last  pattern
+               given  to  /  or ?, but in the reverse direc-
+               tion; this is the reverse of n.
+
+O              Opens a new line above the current  line  and
+               inputs  text there up to an ESC.  A count can
+               be used on dumb terminals to specify a number
+               of  lines  to  be  opened;  this is generally
+               obsolete, as the _s_l_o_w_o_p_e_n option works better
+               (3.1).
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 31 -
+
+
+P              Puts the last deleted text back  before/above
+               the  cursor.   The  text  goes  back as whole
+               lines above the cursor if it was  deleted  as
+               whole  lines.  Otherwise the text is inserted
+               between the characters before and at the cur-
+               sor.   May  be  preceded  by  a  named buffer
+               specification "_x to retrieve the contents  of
+               the   buffer;  buffers  1-9  contain  deleted
+               material, buffers a-z are available for  gen-
+               eral use (6.3).
+
+Q              Quits from _v_i to _e_x command  mode.   In  this
+               mode,  whole lines form commands, ending with
+               a RETURN.  You can give all the  :  commands;
+               the editor supplies the : as a prompt (7.7).
+
+R              Replaces characters on the screen with  char-
+               acters  you  type  (overlay  fashion).   Ter-
+               minates with an ESC.
+
+S              Changes whole lines, a  synonym  for  cc.   A
+               count  substitutes  for that many lines.  The
+               lines are saved in the numeric  buffers,  and
+               erased  on the screen before the substitution
+               begins.
+
+T              Takes a single following  character,  locates
+               the   character  before  the  cursor  in  the
+               current line,  and  places  the  cursor  just
+               after  that  character.   A count repeats the
+               effect.  Most useful with operators such as d
+               (4.1).
+
+U              Restores the current line to its state before
+               you started changing it (3.5).
+
+V              Unused.
+
+W              Moves forward to the beginning of a  word  in
+               the  current line, where words are defined as
+               sequences of blank/non-blank  characters.   A
+               count repeats the effect (2.4).
+
+X              Deletes the character before the  cursor.   A
+               count repeats the effect, but only characters
+               on the current line are deleted.
+
+Y              Yanks a copy of the  current  line  into  the
+               unnamed  buffer,  to be put back by a later p
+               or P; a very useful synonym for yy.  A  count
+               yanks  that many lines.  May be preceded by a
+               buffer name  to  put  lines  in  that  buffer
+               (7.4).
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 32 -
+
+
+ZZ             Exits the editor.  (Same  as  :xCR.)  If  any
+               changes have been made, the buffer is written
+               out to the current  file.   Then  the  editor
+               quits.
+
+[[             Backs up to the previous section boundary.  A
+               section  begins at each macro in the _s_e_c_t_i_o_n_s
+               option, normally a `.NH' or `.SH' and also at
+               lines  which  which start with a formfeed ^L.
+               Lines beginning with {  also  stop  [[;  this
+               makes  it  useful  for  looking  backwards, a
+               function at a time, in C  programs.   If  the
+               option  _l_i_s_p  is  set, stops at each ( at the
+               beginning of a line, and is thus  useful  for
+               moving   backwards  at  the  top  level  LISP
+               objects. (4.2, 6.1, 6.6, 7.2).
+
+\              Unused.
+
+]]             Forward to a section boundary, see [[  for  a
+               definition (4.2, 6.1, 6.6, 7.2).
+
+|^              Moves to the first non-white position on  the
+               current line (4.4).
+
+_              Unused.
+
+`              When followed by a ` returns to the  previous
+               context.   The  previous context is set when-
+               ever the current line  is  moved  in  a  non-
+               relative way.  When followed by a letter a-z,
+               returns to the position which was marked with
+               this letter with a m command.  When used with
+               an operator such as d,  the  operation  takes
+               place  from  the  exact  marked  place to the
+               current position within the line; if you  use
+               ',  the  operation  takes place over complete
+               lines (2.2, 5.3).
+
+a              Appends arbitrary text after the current cur-
+               sor  position;  the  insert can continue onto
+               multiple lines by  using  RETURN  within  the
+               insert.   A count causes the inserted text to
+               be replicated, but only if the inserted  text
+               is all on one line.  The insertion terminates
+               with an ESC (3.1, 7.2).
+
+b              Backs up to the beginning of a  word  in  the
+               current  line.   A  word  is  a  sequence  of
+               alphanumerics, or a sequence of special char-
+               acters.  A count repeats the effect (2.4).
+
+c              An  operator  which  changes  the   following
+               object, replacing it with the following input
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 33 -
+
+
+               text up to an ESC.  If more than  part  of  a
+               single  line  is  affected, the text which is
+               changed away is saved in  the  numeric  named
+               buffers.  If only part of the current line is
+               affected,  then  the  last  character  to  be
+               changed  away  is  marked  with a $.  A count
+               causes that many objects to be affected, thus
+               both  3c)  and c3) change the following three
+               sentences (7.4).
+
+d              An  operator  which  deletes  the   following
+               object.   If  more  than  part  of  a line is
+               affected, the text is saved  in  the  numeric
+               buffers.  A count causes that many objects to
+               be affected; thus 3dw  is  the  same  as  d3w
+               (3.3, 3.4, 4.1, 7.4).
+
+e              Advances to the end of the next word, defined
+               as  for  b and w.  A count repeats the effect
+               (2.4, 3.1).
+
+f              Finds the first instance of the next  charac-
+               ter following the cursor on the current line.
+               A count repeats the find (4.1).
+
+g              Unused.
+
+               Arrow keys _h, _j, _k, _l, and _H.
+
+h              _L_e_f_t _a_r_r_o_w.  Moves the cursor  one  character
+               to  the  left.   Like  the  other arrow keys,
+               either _h, the _l_e_f_t _a_r_r_o_w key, or one  of  the
+               synonyms  (^H)  has  the  same effect.  On v2
+               editors, arrow keys on certain kinds of  ter-
+               minals  (those  which  send escape sequences,
+               such as vt52, c100, or hp) cannot be used.  A
+               count repeats the effect (3.1, 7.5).
+
+i              Inserts text  before  the  cursor,  otherwise
+               like a (7.2).
+
+j              _D_o_w_n _a_r_r_o_w.  Moves the cursor one  line  down
+               in the same column.  If the position does not
+               exist, _v_i comes as close as possible  to  the
+               same  column.  Synonyms include ^_J (linefeed)
+               and ^_N.
+
+k              _U_p _a_r_r_o_w.  Moves the cursor one line up.   ^_P
+               is a synonym.
+
+l              _R_i_g_h_t _a_r_r_o_w.  Moves the cursor one  character
+               to the right.  SPACE is a synonym.
+
+m              Marks the current position of the  cursor  in
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 34 -
+
+
+               the  mark  register which is specified by the
+               next character a-z.  Return to this  position
+               or use with an operator using ` or ' (5.3).
+
+n              Repeats the last /  or  ?  scanning  commands
+               (2.2).
+
+o              Opens new lines below the current line;  oth-
+               erwise like O (3.1).
+
+p              Puts text after/below the  cursor;  otherwise
+               like P (6.3).
+
+q              Unused.
+
+r              Replaces the single character at  the  cursor
+               with  a  single  character you type.  The new
+               character may be a RETURN; this is the  easi-
+               est  way  to  split  lines.  A count replaces
+               each of the following count  characters  with
+               the single character given; see R above which
+               is the more usually  useful  iteration  of  r
+               (3.2).
+
+s              Changes the single character under the cursor
+               to the text which follows up to an ESC; given
+               a  count,  that  many  characters  from   the
+               current line are changed.  The last character
+               to be changed is marked with $ as in c (3.2).
+
+t              Advances the cursor upto the character before
+               the  next  character typed.  Most useful with
+               operators such as d and c to delete the char-
+               acters  up to a following character.  You can
+               use . to delete more if this  doesn't  delete
+               enough the first time (4.1).
+
+u              Undoes the last change made  to  the  current
+               buffer.   If repeated, will alternate between
+               these two states, thus is  its  own  inverse.
+               When used after an insert which inserted text
+               on more than one line, the lines are saved in
+               the numeric named buffers (3.5).
+
+v              Unused.
+
+w              Advances to the beginning of the  next  word,
+               as defined by b (2.4).
+
+x              Deletes the single character under  the  cur-
+               sor.   With a count deletes deletes that many
+               characters forward from the cursor  position,
+               but only on the current line (6.5).
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 35 -
+
+
+y              An operator, yanks the following object  into
+               the unnamed temporary buffer.  If preceded by
+               a named buffer specification, "_x, the text is
+               placed  in  that  buffer  also.   Text can be
+               recovered by a later p or P (7.4).
+
+z              Redraws the  screen  with  the  current  line
+               placed  as specified by the following charac-
+               ter: RETURN specifies the top of the  screen,
+               . the center of the screen, and - at the bot-
+               tom of the screen.   A  count  may  be  given
+               after  the z and before the following charac-
+               ter to specify the new screen  size  for  the
+               redraw.   A  count  before  the  z  gives the
+               number of the line to place in the center  of
+               the  screen  instead  of  the default current
+               line. (5.4)
+
+{              Retreats to the beginning of the beginning of
+               the  preceding paragraph.  A paragraph begins
+               at each macro in the _p_a_r_a_g_r_a_p_h_s option,  nor-
+               mally  `.IP',  `.LP', `.PP', `.QP' and `.bp'.
+               A paragraph also begins  after  a  completely
+               empty line, and at each section boundary (see
+               [[ above) (4.2, 6.8, 7.6).
+
+|              Places the cursor on  the  character  in  the
+               column specified by the count (7.1, 7.2).
+
+}              Advances to the beginning of the  next  para-
+               graph.  See { for the definition of paragraph
+               (4.2, 6.8, 7.6).
+
+~              Unused.
+
+^? (DEL)       Interrupts the editor, returning it  to  com-
+               mand accepting state (1.5, 7.5)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 36 -
+
+
+               .
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       July 21, 1991
+
+
