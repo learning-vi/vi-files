@@ -1,0 +1,221 @@
+VI - MACROS, MAPPINGS... PART 1
+
+	Enough responses to my offer have reached my mbox.  This is
+	the first package I will sent: my vanilla 'standard-mode'.
+	The package is quite small, but introduces the concepts.
+
+	The next package will be my 'c-mode'.  Because almost all
+	"tactics" get introduced with the standard-mode, a short
+	description of what is done --rather than how-- will probably
+	suffice.
+
+	Please feel free to post bugs and flames directly to
+	comp.editors.  I consider many decisions in this packages more
+	as "hacks" than as "design"...
+
+	The rest of this note/file describes the 'standard-mode'
+	package itself: How to install it, how things were
+	accomplished and what problems occured (help!).
+
+
+USED VI - VERSION:
+
+	3.7, 18-Oct-85 under Ultrix 1.0, 1.1, 1.2, 2.0 (BSD 4.2)
+	(you can ask vi about it with the command ":version")
+
+REFERENCE DOCUMENTATION:
+
+	It is a shame, but an awful lot of users just read an short
+	introduction into "vi" in one of the unix intros.  And will
+	never know about such things as "tag files"... Here are the
+	docs I used, every vi user should read them:
+
+	William Joy, revised for versions 3.5/2.13 by Mark Horton:
+	"An Introduction to Display Editing with Vi"
+	"Ex Reference Manual,  Versions 3.5/2.13 -- September 1980"
+
+"INSTALLING" THE MACRO PACKAGES:
+
+	Create a directory and put all files there.  As they come, the
+	files use //usr/local/lib/vi as directory.  If you put them in
+	some other dir, you have to change all paths in the files.
+	Please use absolute paths.  From csh, you can use ed with a
+	script:
+
+	% cat > mypath.ed
+	1,$s/\/usr\/local\/lib\/vi/\/usr\/users\/joe\/vi/g
+	w
+	q
+	^D
+	% foreach f (std*)
+	> ed $f < mypath.ed
+	> end
+	%
+
+	Don't throw the script away -- other packages may follow.
+
+USING THE PACKAGE
+
+	This is, what I do: set the environment variable EXINIT with a
+	"source" command, under csh like this (probably in .login):
+	setenv EXINIT 'so //usr/local/lib/vi/std'
+
+	If you look into the above mentioned docs, you can find an
+	alternative initialization method: put a file .exrc in your
+	home directory, it will be "source"d at startup time. But only
+	if EXINIT is not set!!!  I was bitten by overlooking this
+	detail, when I started fiddling with vi...
+
+GENERAL DESIGN-ISSUES
+	The 'standard-mode' contains only things, that are useful in
+	_all_ contexts.  Other modes will often source the standard
+	package, so it will suffice to do the mode-dependend stuff in
+	the specialized packages.  This makes the standard package
+	rather small, please don't expect too much.
+
+	Another important decision was:  Keep all vi-key-bindings, as
+	they are.  The standard-mode should not change vi's behaviour,
+	but rather provide some little exensions.  The reason for this
+	was to allow "newcomers" an easy, riskless change to the
+	package.  This rule has lead to some restrictions:  For new
+	key-bindings, only unused keys can be used -- often resulting
+	in not very mnenomic bindings.  (But there aren't many new
+	bindings anyway...)  Secondly, there are no abbreviations in
+	the standard-mode.
+
+	As said before, the standard-mode isn't large.  But it
+	provides the complete framework and scheme used by other
+	packages as well.
+	
+FILES
+	Now we will look at all files in the package.  First of all,
+	all file names for the standard-mode start with "std".  The
+	file "std" without any extension is the 'root' of the package
+	and sources a list of sub-files.  "std" itself gets sourced
+	via EXINIT (see above).
+
+	You may criticize this 'hierachical approach' with lots of
+	small files.  However, I found the packages easier to debug,
+	maintain and adapt using this method.  When a package is in a
+	stable condition, you can "flatten" all sourced files into a
+	single file.  (I did this for std, but have never felt the
+	need for it with any other package.)
+
+std
+	This one is simple.  Yes, you are right: lines starting with
+	double quotes are comments.  When debugging a new package, it
+	is very convenient to comment the sourcing of other parts (and
+	their side effects) out.
+
+	One error happend more than once and was difficult to track
+	down: You must not have an empty line in a sourced editor
+	command file.  It would actually be the <return> command
+	(print-next-line).  But because there are no lines in the
+	buffer at startup time, this command would fail...
+
+	If you know a way to put some lines into the buffer at startup
+	time, I would be glad to hear from you.
+
+	The last line maps the macro-activation-character '@'.
+	Defining macros is nothing more than deleting the command text
+	into one of the named buffers.  But where should the text come
+	from?  Remember that I was unable to get any contents into the
+	text buffer!  My "solution" was to defer the loading of macros.
+	When the user hits the @ the first time, that will source the
+	macro stuff -- and make the @ unbound again.  Then the user
+	may call the macroes in the usual way (with @-letter).
+
+	There is still a bug, sorry.  If you are in the last line of
+	the buffer (or your buffer is empty), the reading of the
+	macro file will fail.  I've had not the time to dig this out,
+	but it could have something to do with the cursor positioning.
+
+std.ck
+	vhere-is-the-previous-occurence-of-the-following-word:
+
+	I kept this one in the package, because it is a nice demo.
+	The 'v'-command presumes that you are in front of the word you
+	want to find.  It functions this way:
+
+	deP	remember the word in the yank-buffer ("ye" would miss
+		the last character !  Why?!)
+	O^[	open a new line for the command
+	p	put the yanked word into it
+	I?^[	add the command character '?' for search-backward
+	"xdd	delete the command line as macro into buffer x
+		(The newline at the end of the macro line is
+		important, because it is needed to send the ?-command.
+		Generally, I use ex-style commands for this very
+		reason.)
+	@x	execute the macro in buffer x
+
+	Note that immediately after editor startup, the '@' is
+	remapped.  The 'vhere-...' command will only succed, if it has
+	its normal meaning again, i.e. you have already hit @ before
+	and loaded the macros.
+
+	Where does the buffer x vanish? After a 'vhere...', I would
+	assume that buffer x still contained the search-macro.
+	But in fact, though x can still be activated (with @x), I'm
+	not able to put the macro text anywhere (with "xp).  What is
+	going on here?
+
+	write-file-suspend-vi
+
+	You need a Unix system with job control to use this one.  The
+	idea to suspend vi rather than to exit it is very simple.
+	[The emacs people do it all the time.]  It needs some time to
+	get used to, at least I myself still hit 'ZZ' quite often
+	after installing the ^W.
+
+	'Foregrounding' a stopped vi-session has two advantages:
+	1. It saves startup time.
+	2. Your current state (cursor position etc.) is preserved.
+
+	^V problems:
+
+	I still don't know where I have to quote control characters
+	and where not.  For example, look at the definitions of ^A and
+	^W.  Both versions seem to work.  I think, vi gives you a
+	certain leniency here.  [I would prefer a strong definition.]
+
+std.ik
+	This set of keys is modelled after emacs.  (I used a different
+	set before.)  Most of the commands escape to the command mode,
+	move somewhere, and return to the insert mode.  Unfortunately
+	this has a small drawback:  the few original editing keys of
+	vi's insert-mode (character-, word- and line-erase) are not
+	applicable after a movement.  (Maybe one should remap them, too:
+	:map! ^V^W  ^V^[dBs   and so on.  However, I didn't try it.)
+
+std.mc
+	As explained before, I was not able to get some text into the
+	buffer at startup time.  This command file gets activated with
+	the '@-auto-load-feature' and does the macro definition.  It
+	first reads a file with the macro bodies into the buffer and
+	then deletes this text successively into the macro buffers.
+
+	You shouldn't activate std.mc from the last line in your text
+	or in an empty buffer.  Try it and see what happens.  There is
+	still more to wonder about: I have the odd impression that if
+	vi aborts a source command, it remembers the position in the
+	sourced file.  The next 'source' to this file will not
+	re-start from the beginning, but continue at the old
+	hangup-position.  This behaviour occured first to me, when I
+	had a source-file with some s/ubsti/tion commands.  Vi
+	complained, when no "ubsti" could be found and abortet the
+	"sourcing" process.  On the next "source" command to this
+	file, vi proceeded with the commands after the unsuccesful
+	substitute command.
+
+	If someone could fix the bug regarding the last line, he
+	should post his solution.
+
+std.ms
+	This file contains the macroes to be loaded. Of course you
+	have to keep this file "in sync" with std.mc.  Ex-commands are
+	easier than vi-commands, because you can easily delete whole
+	lines as macro body and don't have to strip off any newlines.
+
+std.se
+	This one is really simple.
