@@ -1,0 +1,14 @@
+" c.top  --  c-mode startup file
+"
+" use this file, if you want to start up VI in c-mode.  You can
+" source this file with in your EXINIT variable.
+"
+so /usr/local/lib/vi/c.ck
+so /usr/local/lib/vi/c.ab
+so /usr/local/lib/vi/c.ik
+so /usr/local/lib/vi/c.se
+"
+" Don't ask me why, but we have load the standard stuff AFTER the c-stuff,
+" if we want that c-mode mapping override std-mappings!
+"
+so /usr/local/lib/vi/std.fast
