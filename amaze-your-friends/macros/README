@@ -1,0 +1,31 @@
+
+All macros in this archive should have an explanantory note 
+at the beginning of the macro.
+
+All macros have their author/submiter's email adress included.
+
+Nearly all macros have been tested before they are uploaded to 
+the archive.
+
+BEVARE: Some of the macros have been run trough 'cat -v', in those
+        cases the macro will not work unless you expand all the 
+	CTRL-CHAR to their propper meanig. How to expand should be 
+	included with the macro itself. If not do the following: 
+	Let's say a macro is written:
+              map! ^W ^]:w!i
+        to get it to work propperly you must convert ^W and ^]. 
+	To convert ^W, type (in textmode) ^V, hold down the CTRL key 
+	and type V, relase all keys, hold down the CTRL key once 
+	more and type W. Your screen should read ^W.  To get ^] (the 
+	ESCAPE key), hold down the CTRL key and press V once again, 
+	then press the ESCAPE key. Your screen should read ^] now.
+
+
+If you wonder how the macro works, contact the author of the
+macro, not the archive maintainer.
+
+The archive maintainer IS NOT RESPONSIBLE for any damage the
+macros in this archive may cause.
+
+Ove Ruben R Olsen, (Ruben@Uib.NO)
+LPF-ARCHIVE MAINTAINER
