@@ -1,0 +1,1854 @@
+
+
+
+
+
+
+
+
+		#     #   ###
+		#     #    #
+		#     #    #
+		#     #    #
+		 #   #     #
+		  # #      #
+		   #      ###
+		
+	
+	
+
+
+
+
+
+
+
+
+
+		  ####    ####   #    #  #####    ####   ######
+		 #    #  #    #  #    #  #    #  #       #
+		 #       #    #  #    #  #    #   ####   #####
+		 #       #    #  #    #  #####        #  #
+		 #    #  #    #  #    #  #   #   #    #  #
+		  ####    ####    ####   #    #   ####   ######
+
+
+
+
+
+		Developed by Analytical Evaluation Branch, FSAC
+		Revision 2.1    13 Nov 1989
+		Author:		Dennis G. Rears
+		EMail Address:	<drears@pica.army.mil>
+		Phone:		(201) 724-2683
+		UPS:		Box 210, Wharton, NJ  07885
+
+
+
+
+
+
+
+			VI Course
+
+
+		Revision History
+
+	2.1	13 Nov 1989   Dennis Rears   <drears>
+
+		Minor corrections.
+
+	2.0	27 June 1989  Dennis Rears   <drears>
+
+	   	Changed representation of control characters to CTRL.
+	   	Expanded EX section.
+	
+
+
+	1.1	21 Mar 1989  Dennis Rears
+
+	   	Rewrote course, greatly expanding "outline".
+
+
+	1.0     Circa 1988  Dennis Rears
+
+		Original Course.
+
+
+
+
+		Developed by Analytical Evaluation Branch, FSAC
+		Host:		caesar.pica.army.mil
+		Location:	/u1/drears/teach/vi/course
+		Author:		Dennis G. Rears
+		EMail Address:	<drears@pica.army.mil>
+		Phone:		(201) 724-2683
+		Date:  		27 June 1989
+
+
+
+
+
+
+
+
+
+			VI Course
+
+
+
+
+
+
+
+
+
+
+
+		Table of Contents
+
+
+		1) Introduction
+
+		2) Navigation
+
+		3) Inserting Text
+
+		4) Deleting/Changing Text
+
+		5) Other Functions
+
+	   	6) Ex Mode
+
+
+
+
+
+
+
+  ####   #    #    ##    #####    #####  ######  #####            ##
+ #    #  #    #   #  #   #    #     #    #       #    #          # #
+ #       ######  #    #  #    #     #    #####   #    #            #
+ #       #    #  ######  #####      #    #       #####             #
+ #    #  #    #  #    #  #          #    #       #   #             #
+  ####   #    #  #    #  #          #    ######  #    #          #####
+
+
+
+
+
+
+
+
+    #    #    #   #####  #####    ####
+    #    ##   #     #    #    #  #    #
+    #    # #  #     #    #    #  #    #
+    #    #  # #     #    #####   #    #
+    #    #   ##     #    #   #   #    #
+    #    #    #     #    #    #   ####
+
+
+
+
+
+
+
+
+			INTRODUCTION
+
+
+
+		o Ed Family of Editors
+
+			o e
+			o edit
+			o ex
+			o view
+			o vi
+
+
+		o Full Screen Editor
+
+			o Terminal Type
+
+
+		o Developed by UC at Berkeley
+			
+			o Bill Joy
+			o Mike Horton
+
+
+
+
+
+
+
+
+
+			
+			Important Terms
+
+
+
+
+
+	
+	o VI - VIsual Editor, a full screen editor used by all UNIX
+        systems.
+
+	o shell - The command processor.
+
+	o shell escape - An action that allows the user to issue a
+	shell command from a running program. 
+
+	o buffer - A temporary place to store info.
+
+	o file - A permament place to store data.
+
+	o unix - The operating system in use on ARDEC workplace
+        automation machines.
+
+	o Control Character - A character represented by "CTRL X".
+	To make the character the Control and letter key must be
+	hit at the same time.
+
+	o White Space - A tab, space, or new line character.
+
+
+
+
+
+
+
+
+
+			Modes
+
+
+
+
+
+
+		 VI works in three different modes. They are:
+
+
+			o  Insert Mode -  This mode is used when
+		appending, inserting, changing, and replacing text. 
+
+			o  Ex Mode -  This mode allows for use of 
+		the ex set of commands.  This mode can act on one line
+		at a time, several lines at a time, or every line.
+		Shell escapes are executed at this level.
+
+			o  Command Mode - Vi begins in this mode.
+		This mode allows you to switch to the other modes.  
+		In addition, deleting, transposing, yanking, and 
+		other functions are performed here.
+
+
+
+
+
+
+
+
+
+
+			IMPORTANT KEYS
+
+
+
+
+
+
+
+		o  ESCAPE - Exits insert mode.
+
+		o  COLON - Enters ex mode.
+
+		o  BANG (!) - shell escape.
+
+		o  TILDE (~) - no line is present as opposed
+                   to nothing on the line. 
+
+		o  CTRL L - screen refresh or form feed.
+
+
+		   CTRL L indicates that the "L" key and the
+		Control key are depressed at the same time.
+
+
+
+
+
+
+
+ #####                                                           #####
+#     #  #    #    ##    #####    #####  ######  #####          #     #
+#        #    #   #  #   #    #     #    #       #    #               #
+#        ######  #    #  #    #     #    #####   #    #          #####
+#        #    #  ######  #####      #    #       #####          #
+#     #  #    #  #    #  #          #    #       #   #          #
+ #####   #    #  #    #  #          #    ######  #    #         #######
+
+
+
+
+
+
+
+
+
+#     #
+##    #    ##    #    #     #     ####     ##     #####     #     ####   #    #
+# #   #   #  #   #    #     #    #    #   #  #      #       #    #    #  ##   #
+#  #  #  #    #  #    #     #    #       #    #     #       #    #    #  # #  #
+#   # #  ######  #    #     #    #  ###  ######     #       #    #    #  #  # #
+#    ##  #    #   #  #      #    #    #  #    #     #       #    #    #  #   ##
+#     #  #    #    ##       #     ####   #    #     #       #     ####   #    #
+
+
+
+
+
+
+
+
+			What is a line?
+
+
+
+
+
+
+
+
+
+
+		o  Physical Line -  the maximum characters
+		your screen can hold in a line.
+
+		o  Logical Line  -  A line terminated by the <CR> 
+		character.
+
+		o  At most, one logical line can fit into one
+		physical line but physical line can fit into 
+		a logical line.
+
+
+
+
+
+
+			 Navigation
+
+
+
+
+
+
+
+
+
+
+		o  VI lets you move the cursor a character, word,
+      		   line, or region at a time.
+
+		o  As with other functions keys, a numeric count can
+		   be added before the key to repeat the function.
+
+		o  Example:
+
+			o h will move the cursor back 1 character
+
+			o 4h will move the cursor back 4 characters
+
+		o  VI will not let you navigate before the beginning
+		or end of the file.
+
+
+
+
+
+			Navigation
+
+
+
+
+
+
+
+
+
+
+		o  cursor keys
+
+		o  home keys
+
+			o h  -  1 space back		***
+			o j  -  1 space down		***
+			o k  -  1 space up		***
+			o l  -  1 space forward		***
+
+		o  screen keys
+
+			o H -  Home or 1st Line
+			o M -  Middle Line
+			o L -  Last Line
+
+		o control keys
+
+			o CTRL-B - back a screen
+			o CTRL-F - forward a screen
+			o CTRL-U - Up half a screen
+			o CTRL-D - Down half a screen
+
+
+		*** a numeric count can be added before the command.
+
+
+
+
+
+
+			Navigation Within A Line
+
+
+
+
+
+
+
+
+
+
+		o  Word Navigation (not including punctuation)
+
+			o  b - back up a word
+
+			o  e - forward to end of word
+
+			o  w - forward to next word
+
+
+		o Bigger Word (includes punctuation)
+
+
+			o  B - back up a word
+
+			o  E - forward to end of word
+
+			o  W - forward to next word
+
+		o Numeric count can be added before all of these commands
+		  
+			o e.g. 5e - forward to end of fifth word.
+
+
+
+
+
+
+
+			Navigating
+
+
+
+
+
+
+
+
+
+
+		o  0  - First character of file.
+
+		o  ^  - First non-whitespace character.
+
+		o  $  - End of line.
+
+		o  xG - line x of the file.
+
+		o  G  - Last line of file.
+
+		o  CTRL-G - Displays current info
+
+
+
+
+
+
+
+
+
+
+
+			      Summary
+
+
+
+
+
+
+
+
+
+			o  b  - back up a word
+			o  e  - forward to end of word
+			o  h  -  1 space back
+			o  j  -  1 space down
+			o  k  -  1 space up
+			o  l  -  1 space forward
+			o  w  - forward to next word
+
+			o  B  - back up a word
+			o  E  - forward to end of word
+		        o  G  - last line of file
+			o  H  -  Home or 1st Line
+			o  L  -  Last Line
+			o  M  -  Middle Line
+			o  W  - forward to next word
+
+			o  CTRL-B - Back a screen
+			o  CTRL-D - Forward 1/2 screen
+			o  CTRL-F - Forward a screen
+			o  CTRL-G - Displays current info
+			o  CTRL-U - Back 1/2 screen
+
+
+
+
+
+
+
+
+			Navigating.
+
+
+
+
+
+
+
+
+
+
+
+		Exercise #1  
+
+		o  Use view instead of vi
+
+		o  file name is movement
+	
+		o  practice moving around file 
+
+		o  Use ESC :q! to exit
+
+		o  Take a break!!!!
+
+
+
+
+
+
+
+
+ #####                                                           #####
+#     #  #    #    ##    #####    #####  ######  #####          #     #
+#        #    #   #  #   #    #     #    #       #    #               #
+#        ######  #    #  #    #     #    #####   #    #          #####
+#        #    #  ######  #####      #    #       #####                #
+#     #  #    #  #    #  #          #    #       #   #          #     #
+ #####   #    #  #    #  #          #    ######  #    #          #####
+
+
+
+
+
+
+
+
+
+
+  ###
+   #     #    #   ####   ######  #####    #####     #    #    #   ####
+   #     ##   #  #       #       #    #     #       #    ##   #  #    #
+   #     # #  #   ####   #####   #    #     #       #    # #  #  #
+   #     #  # #       #  #       #####      #       #    #  # #  #  ###
+   #     #   ##  #    #  #       #   #      #       #    #   ##  #    #
+  ###    #    #   ####   ######  #    #     #       #    #    #   ####
+
+#######
+   #     ######  #    #   #####
+   #     #        #  #      #
+   #     #####     ##       #
+   #     #         ##       #
+   #     #        #  #      #
+   #     ######  #    #     #
+
+
+
+
+
+
+
+
+
+			Inserting Text
+
+
+
+
+
+
+
+
+
+
+		o  Will be in Insert mode.
+
+		o  Escape will get you out.
+
+			o ESC ZZ -  write file and leave vi.
+
+			o ESC :wq - write file and leave vi.
+
+			o ESC -  Placed back into command mode.
+
+		o  Cursor is key element.
+
+
+
+
+
+
+
+
+			Inserting Text
+
+
+
+
+
+
+
+
+
+
+		o  Insert Commands
+
+			o  i - insert before cursor
+
+			o  I - insert at beginning of line
+
+
+		o  Append Commands
+
+			o  a - appends after cursor
+
+			o  A - appends at end of line
+
+
+		o  Either way in Insert Mode
+
+		o  Numeric count can be added before these commands
+
+
+
+
+
+
+
+
+
+			Inserting Text
+
+
+
+
+
+
+
+
+
+
+		o  Open a line
+
+			o  O  - Open a line above cursor
+
+			o  o  - Open a line below cursor
+
+
+
+
+
+
+
+
+
+
+
+
+			Misc. Commands
+
+
+
+
+
+
+
+
+
+
+		o  ^V - insert control characters
+
+		o  .  - Do it Again
+
+
+
+
+
+
+
+
+
+
+			Summary Text
+
+
+
+
+
+
+
+
+
+
+			o  a - appends after cursor
+			o  i - insert before cursor
+			o  o - Open a line below cursor
+
+			o  A - appends at end of line
+			o  I - insert at beginning of line
+			o  O - Open a line above cursor
+
+			o CTRL-V - insert control characters
+
+
+
+
+
+
+
+
+ #####                                                          #
+#     #  #    #    ##    #####    #####  ######  #####          #    #
+#        #    #   #  #   #    #     #    #       #    #         #    #
+#        ######  #    #  #    #     #    #####   #    #         #    #
+#        #    #  ######  #####      #    #       #####          #######
+#     #  #    #  #    #  #          #    #       #   #               #
+ #####   #    #  #    #  #          #    ######  #    #              #
+
+
+
+
+
+
+
+
+
+######                                                                #
+#     #  ######  #       ######   #####     #    #    #   ####       #
+#     #  #       #       #          #       #    ##   #  #    #     #
+#     #  #####   #       #####      #       #    # #  #  #         #
+#     #  #       #       #          #       #    #  # #  #  ###   #
+#     #  #       #       #          #       #    #   ##  #    #  #
+######   ######  ######  ######     #       #    #    #   ####  #
+
+ #####
+#     #  #    #    ##    #    #   ####      #    #    #   ####
+#        #    #   #  #   ##   #  #    #     #    ##   #  #    #
+#        ######  #    #  # #  #  #          #    # #  #  #
+#        #    #  ######  #  # #  #  ###     #    #  # #  #  ###
+#     #  #    #  #    #  #   ##  #    #     #    #   ##  #    #
+ #####   #    #  #    #  #    #   ####      #    #    #   ####
+
+                #######
+                   #     ######  #    #   #####
+                   #     #        #  #      #
+                   #     #####     ##       #
+                   #     #         ##       #
+                   #     #        #  #      #
+                   #     ######  #    #     #
+
+
+
+
+
+
+
+
+
+
+			Deleting Text
+
+
+
+
+
+
+
+
+
+
+		o  Deleting text is either done a character, word,
+
+		line, or region at a time.  By placing a number
+
+		in front of the delete expression the action can be 
+
+		done many times.
+
+ 
+		o  Deleting an expression will put it in a buffer.
+
+		The put command will place a copy of it after 
+
+		the cursor.
+
+
+
+
+
+
+
+
+
+			Deleting Text
+			Main Delete Commands
+
+
+
+
+
+
+
+
+
+
+		o  x - delete current character     ***
+
+		o  dw - delete word	            ***
+
+		o  d$ - delete to end of line
+		o  D  - delete to end of line
+
+		o  dd - delete whole line	    ***
+
+
+
+		*** numeric count can be added before command
+
+
+
+
+
+
+
+
+			Deleting Text
+			cursor characters
+
+
+
+
+
+
+
+
+
+
+		o  d(CR) - delete whole line
+		o  d^ - delete from beginning of line to cursor
+
+		o  db - delete previous word		***
+		o  dB - delete previous long word	***
+
+		o  de - delete to end of word
+		o  dE - delete to end of long word
+
+		o  dW - delete long word		***
+
+		o  dH - delete from beginning of window to cursor line
+		o  dM - delete from curor line to middle of screen
+		o  dL - delete from cursor to end of window
+
+
+
+		*** numeric count can be added before command
+	
+		These are not normally used except by expert users.
+
+
+
+
+
+
+
+
+
+			Changing Text
+
+
+
+
+
+
+
+
+
+
+		o  r - Replace one character.
+
+		o  R - Overwrite text in insert mode.
+
+		o  ~ - Change case
+
+
+
+
+
+
+
+
+
+
+			Changing Text
+
+
+
+
+
+
+
+
+
+
+		o  Changing text is either done a character, word,
+
+		line, or region at a time.  By placing a number
+
+		in front of the change expression, the action can be 
+
+		done many times.
+
+ 
+
+		o  In changing more than a word, vi deletes
+
+                the expression, and enters into insert mode at 
+
+		the beginning of the expression.
+
+
+
+
+
+
+
+
+
+
+			Changing Text
+
+
+
+
+
+
+
+
+
+
+		o  cw - change word			***
+
+		o  c$ - change to end of line
+
+		o  C  - change to end of line
+
+		*** Numeric count can be added before command
+
+
+
+
+
+
+
+
+
+
+			Changing Text
+			cursor characters
+
+
+
+
+
+
+
+
+
+
+		o  c(CR) - change whole line
+		o  c^ - change from beginning of line to cursor
+
+		o  cb - change previous word		***
+		o  cB - change previous long word	***
+
+		o  ce - change to end of word
+		o  cE - change to end of word
+
+		o  cW - change long word		***
+
+		o  cH - change from beginning of window to cursor line
+		o  cM - change from curor line to middle of screen
+		o  cL - change from cursor to end of window
+
+
+
+		*** numeric count can be added before command
+		These are not normally used except by expert users.
+
+
+
+
+
+
+
+
+
+
+			Undoing Stuff
+
+
+
+
+
+
+
+
+
+
+		o  u - undo last change
+
+		o  U - undo all changes to last line
+
+
+
+
+
+
+
+
+
+
+
+				Summary 
+
+
+
+
+
+
+
+
+
+
+			o  c - changes text
+			o  d - deletes text
+			o  r - replaces a character
+			o  u - undoes last change
+
+			o  C - changes to end of line
+			o  D - deletes to end of line
+			o  R - overwrites text
+			o  U - undoes all changes to line
+
+
+
+
+
+
+
+
+
+ #####                                                          #######
+#     #  #    #    ##    #####    #####  ######  #####          #
+#        #    #   #  #   #    #     #    #       #    #         #
+#        ######  #    #  #    #     #    #####   #    #         ######
+#        #    #  ######  #####      #    #       #####                #
+#     #  #    #  #    #  #          #    #       #   #          #     #
+ #####   #    #  #    #  #          #    ######  #    #          #####
+
+
+
+
+
+
+
+
+
+
+
+#######
+#     #   #####  #    #  ######  #####
+#     #     #    #    #  #       #    #
+#     #     #    ######  #####   #    #
+#     #     #    #    #  #       #####
+#     #     #    #    #  #       #   #
+#######     #    #    #  ######  #    #
+
+#######
+#        #    #  #    #   ####    #####     #     ####   #    #   ####
+#        #    #  ##   #  #    #     #       #    #    #  ##   #  #
+#####    #    #  # #  #  #          #       #    #    #  # #  #   ####
+#        #    #  #  # #  #          #       #    #    #  #  # #       #
+#        #    #  #   ##  #    #     #       #    #    #  #   ##  #    #
+#         ####   #    #   ####      #       #     ####   #    #   ####
+
+
+
+
+
+
+
+
+
+
+			Searching
+
+
+
+
+
+
+
+
+
+
+		o  /string  -  moves cursor to occurence of string
+		pattern.
+
+		o  ?string  -  searches backward through the buffer
+		for string pattern.
+
+		o  n -  finds next occurence of the string pattern.
+
+
+
+
+
+
+
+
+
+
+			Regular Expressions
+
+
+
+
+
+		A Regular Expression is used to specify parts of a
+	line.  It is used in search, substitute, and delete commands.  The
+	concept is also used in many other UNIX commands, to include grep,
+	sed, and jove.
+
+
+
+
+
+		o  ^ - beginning of line.
+
+		o  $ - end of line.
+
+		o  . - matches any character.
+
+		o  \ - delimits special characters.
+
+		o [] - range of characters.
+
+
+
+
+
+
+
+
+
+
+			Yanking
+
+
+
+
+
+
+
+
+
+
+		o  yw -  yank word
+
+		o  y$ -  yank to end of line
+
+		o  yy -  yank line
+
+
+
+
+
+
+
+
+
+
+			Yanking
+
+
+
+
+
+
+
+
+
+
+
+		o  y(CR) - yank whole line
+		o  y^ - yank from beginning of line to cursor
+
+		o  yb - yank previous word		***
+		o  yB - yank previous long word		***
+
+		o  ye - yank to end of word
+		o  yE - yank to end of long word
+
+		o  yW - yank long word			***
+
+		o  yH - yank from beginning of window to cursor line
+		o  yM - yank from curor line to middle of screen
+		o  yL - yank from cursor to end of window
+
+
+
+		*** numeric count can be added before command
+
+
+
+
+
+
+
+
+
+
+
+			Putting Text
+
+
+
+
+
+
+
+
+
+
+		o  puts last text object
+
+		o  p - puts on next line or next character
+
+		o  P - put on previous line or previous character
+
+		o  xp - transposes character
+
+
+
+
+
+
+
+
+
+
+
+
+			Screen Adjusting
+
+
+
+
+
+
+
+
+
+
+		o  CTRL-L -  refresh screen.
+
+		o  CTRL-E -  Scroll window down 1 line.
+
+		o  CTRL-Y -  Scroll window up 1 line.
+
+
+
+
+
+
+
+
+
+
+
+
+
+			Misc.
+
+
+
+
+
+
+
+
+
+
+		o   J - Joins lines.  The line(s) below the cursor
+	        will be appended to the current line.  "2J" is equal
+		to "J". "3J" will join the two line below the
+		current line with the current line.
+
+
+
+
+
+
+
+
+
+
+
+
+				Summary 
+
+
+
+
+
+
+
+
+
+
+			o  p - put text after cursor or line.
+			o  y - yank text.
+
+			o  J - join next line with cursor line.
+			o  P - put text before cursor or line.
+			o  Y - yank to end of line
+
+			o  CTRL-E -  scroll window down 1 line.
+			o  CTRL-Y -  scroll window up 1 line.
+
+
+
+
+
+
+
+
+ #####                                                           #####
+#     #  #    #    ##    #####    #####  ######  #####          #     #
+#        #    #   #  #   #    #     #    #       #    #         #
+#        ######  #    #  #    #     #    #####   #    #         ######
+#        #    #  ######  #####      #    #       #####          #     #
+#     #  #    #  #    #  #          #    #       #   #          #     #
+ #####   #    #  #    #  #          #    ######  #    #          #####
+
+
+
+
+
+
+
+
+
+
+
+####### #     #
+#        #   #
+#         # #
+#####      #
+#         # #
+#        #   #
+####### #     #
+
+#     #
+##   ##   ####   #####   ######
+# # # #  #    #  #    #  #
+#  #  #  #    #  #    #  #####
+#     #  #    #  #    #  #
+#     #  #    #  #    #  #
+#     #   ####   #####   ######
+
+
+
+
+
+
+
+
+
+
+
+			Writing
+
+
+
+
+
+
+
+
+
+
+		o  :w  - basic form of write command
+
+		o  :y,xw filename
+
+		o  :y,xw! filename
+
+		o  :y,xw! !program
+
+		  y refers to the yth line of the file, x to the xth
+		line of the file.  If the file already exists the !
+		right after the w tells vi to overwrite the file.  filename
+		refers to any file while !program means to write the
+		file to the input of the program.
+
+
+
+
+
+
+
+
+
+
+
+			Reading
+
+
+
+
+
+
+
+
+
+
+		o  :r file  - will read file into the buffer
+                after the cursor.
+
+		o  :xr file - will read file into the buffer
+	        after line x.
+
+		o  :r !program - will read into the buffer after the
+		cursor the output of executing program.
+
+		o  :xr !program - will read into the buffer after
+		line x the output of executing program.
+
+		o  :x,y! program - will replace lines x through y
+		with the output of executing program with input 
+                of lines x through y.
+
+		o  :x,y! fmt - reformat these lines.
+
+
+
+
+
+
+
+
+
+
+
+
+
+			Quit & File Commands
+
+
+
+
+
+
+
+
+
+
+		o  :x  - write and quit the vi buffer.
+		o  :wq - write and quit the vi buffer.
+
+		o  :q  - quit vi.  Will not allow you to quit
+		if any changes have been made to buffer.
+
+		o  :q! - quit vi regardless of wheter any changes 
+		have made made.
+
+		o  :f  - print the name of the file & line number
+		where cursor is located.
+
+
+
+
+
+
+
+		Editing Multiple Files
+
+
+
+
+
+
+
+
+
+
+	
+			o vi file1 file2 file3
+
+			o :n - will allow you to edit next file
+
+			o :e  file 
+			o :e! file  - change file to file
+			o :e! %     - start over
+
+
+
+
+
+
+
+
+
+
+
+
+
+			Deletion
+
+
+
+
+
+
+
+
+
+
+		o  :1d	- deletes first line of file.
+
+		o  :1,$d - deletes all lines from file.
+
+		o  :1,5d - deletes lines 1 through 5 of file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+			Substitution
+
+
+
+
+
+
+
+
+
+
+		o  :xs/RE/re/
+		o  :xs/RE/re/g   - On line x substitute "re" for 
+		"RE".  The g means do it for all lines.
+
+		o  :1,$s/RE/re/g 
+
+		As you can see, you can specify a line, lines, or the
+		whole file to change.  Use the g option to make
+		changes throughout the line rather than just the
+		first occurence of a change in the line.
+
+
+
+
+
+
+
+
+
+
+
+
+			Shell Escapes
+
+
+
+
+
+
+
+
+
+
+		o  :sh
+
+		o  :!sh
+
+		o  :1,5!fmt
+
+		Both ":sh" and ":!sh" will let you escape to the
+		command processor.  When the shell is exited, control
+		passes back to vi.  The form ":1,5!program" will
+		execute a program with lines 1 through 5 being used as
+		the standard input for the program.  The output of the
+		program will replace lines 1 through 5 in the file.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			Global Substitions
+
+
+
+
+
+
+
+
+
+
+		o  :g/RE/p  - global search and print.
+
+		o  :g/RE/d  - will delete any line with RE in it.
+
+		o  :g/RE/s//re will substitute re for RE globally
+		through out the file.
+
+		o  :g/RE/s/AB/CD/ - will substitute CD for AB
+		wherever RE exists on a line.
+
+
+		o  The p option will print to the terminal all lines
+                where the action was completed.
+
+		o  v instead of g will do it for all ines that don't
+		match.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			set
+
+
+
+
+
+
+
+
+
+
+
+		o  :set all  - list all parameters
+
+		o  :set nu
+		o  :set nonu -  Turns on/off numbering for lines
+		   in file.
+
+		o  :set list
+		o  :set nolist - Turns on/off substituting "^I" for
+		the tab character and $ for the (CR).
+
+		o  :set wm=x  - sets the wrap margin.  If wm is set to
+		0, cursor will not wrap around.  Cursor will wrap x
+		spaces from right margin.
+
+		o  all these parameters can go into a file called
+		.exrc which will do this for all invocations of vi.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			map & ab
+
+
+
+
+
+
+
+
+
+
+
+		o  ab chnage change - will change all occurrences of
+		chnage with change when separated by whitespace when
+		input in insert mode.
+
+		o  map f :f   -  whenever f is hit in command mode
+		will do :f instead of f.  Useful to define
+		cursor keys.
+
+		o  These can also be put into .exrc file.
+
+
+
+
+
+
+
+
+
+####### #     #    #    #       #     #    #    #######   ###   ####### #     #
+#       #     #   # #   #       #     #   # #      #       #    #     # ##    #
+#       #     #  #   #  #       #     #  #   #     #       #    #     # # #   #
+#####   #     # #     # #       #     # #     #    #       #    #     # #  #  #
+#        #   #  ####### #       #     # #######    #       #    #     # #   # #
+#         # #   #     # #       #     # #     #    #       #    #     # #    ##
+#######    #    #     # #######  #####  #     #    #      ###   ####### #     #
+
+
+1)  What were your goals in taking this course?
+
+----------------------------------------------------------------------
+
+
+2)  Did you learn anything in this course?  
+
+----------------------------------------------------------------------
+
+3)  What did you think of the course notes?
+
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+
+4)  Did you like the course?
+
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+
+5)  What did you think of the instructor?
+
+----------------------------------------------------------------------
+
+----------------------------------------------------------------------
+
+
+
+
+
+
+			Summary Of VI Commands
+		
+                        o  a  - appends after cursor
+                        o  b  - back up a word
+                        o  c  - changes text
+                        o  d  - deletes text
+                        o  e  - forward to end of word
+                        o  h  - 1 space back
+                        o  i  - insert before cursor
+                        o  j  - 1 space down
+                        o  k  - 1 space up
+                        o  l  - 1 space forward
+                        o  o  - Open a line below cursor
+                        o  p  - put text after cursor or line
+                        o  r  - replaces a character
+                        o  u  - undoes last change
+                        o  w  - forward to next word
+                        o  y  - yank text
+
+
+                        o  A  - appends at end of line
+                        o  B  - back up a word
+                        o  C  - changes to end of line
+                        o  D  - deletes to end of line
+                        o  E  - forward to end of word
+                        o  G  - last line of file
+                        o  H  - Home or 1st Line
+                        o  I  - insert at beginning of line
+                        o  L  - Last Line
+                        o  J -  join next line with cursor line
+                        o  P -  put text before cursor or line
+                        o  M  - Middle Line
+                        o  O  - Open a line above cursor
+                        o  R  - overwrites text
+                        o  U  - undoes all changes to line
+                        o  W  - forward to next word
+                        o  Y -  yank to end of line
+
+                        o  CTRL-B - Back a screen
+                        o  CTRL-D - Forward 1/2 screen
+                        o  CTRL-E - scroll window down 1 line
+                        o  CTRL-F - Forward a screen
+                        o  CTRL-G - Displays current info
+                        o  CTRL-U - Back 1/2 screen
+                        o  CTRL-V - insert control characters
+                        o  CTRL-Y - scroll window up 1 line
+
+
