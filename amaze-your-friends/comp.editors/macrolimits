@@ -1,0 +1,147 @@
+From jdawson@cs.utexas.edu (John Dawson)
+Subject: Vi macro limitation
+Date: 22 Jun 1992 01:51:21 -0500
+NNTP-Posting-Host: langtry.cs.utexas.edu
+
+I am trying to write moderately complicated vi macros and I'm bashing
+my head against limitations whose nature I can't figure out.  The
+specific problem I was trying to solve is to whack some key, have vi
+invoke make and send the output to a file, and edit that file; then,
+use the normal motion keys/commands to move to a line that looks like
+
+FILENAME:LINENO:blahblah...		# format of gcc
+
+and go to line number LINENO in file FILENAME.  My original plan was
+to move to the start of the line, and insert ":e ".  Go to the next
+colon, and insert a CR or ESC.  Go to the next colon, and insert G.
+Now the line should look like
+
+:e FILENAME:LINENOG:blahblah...
+
+Now the part that I can't do:  go to the start of the line, and yank
+the stuff up to the colon after FILENAME into one buffer, and yank
+the "LINENOG" stuff into a second buffer.  After this is all done, do
+a U command to restore the line, and @-execute the buffers you just
+yanked to.
+
+The problem is that whenever I try to do the yanking into a named
+buffer, it gives my my favourite error, "Can't yank inside global/
+macro".  I wasn't able to get it to yank anything at all
+without it giving me that error, as I recall, but I tried doing the
+"y" indirectly; i.e., I had a macro like
+
+map =y y
+
+and I would just do =y instead of y for the yank, and that pacified
+the "Can't yank inside global/macro" message.  But I wasn't able to
+do this twice in one macro.  (I tried many combinations of this
+indirection, and they didn't help.)
+
+This is very baffling.  Is someone else familiar with this problem?
+If you want the macro I was using to generate this error, the yanking
+part went something like this:  (the insertion part isn't interesting)
+
+map =e 0"eyt:f:l"gyt:
+
+I don't have the original macro for this stuff; I've found a solution
+that works using a single replacement to insert all the stuff on the
+line, and then the yanking stuff WORKS!  Here's that macro (I've taken
+control characters and expanded them, sticking carets underneath them
+to show where they are):
+
+map g mm:s/^\([^:][^:]*\):\([0-9][0-9]*\)/:e! \1^V^V^V^[:\2G/^M_
+						^ ^ ^ ^      ^
+map _ 0"e=yt:f:l"g=yt:u'm@e@g
+map =y y
+map =m :w!^M:!make -k >& ERRS^M:e ERRS^M
+	  ^		     ^        ^
+
+The fact that the same yanking submacro works given a different
+insertion technique is a great source of consternation.  What is
+the rule for when you can and cannot yank?  Is there a workaround
+for this?  [Note: "Use Emacs instead!" is not a valid answer.  A
+good friend of mine, a self-proclaimed vi expert, gave me that
+sage advice, along with a little lecture on how vi is an editor
+and is Meant To Edit Text and isn't a kitchen sink like Emacs.
+He should be ashamed of himself.  Calling himself a vi guru,
+indeed.]
+
+I can't help but think that this is possible to work around.  After
+all, I've seen gurus of ultimate godliness do things like Turing
+machines and maze solvers with vi macros.
+
+-- 
+jdawson@cs.utexas.edu (John Dawson)
+
+
+From jdawson@cs.utexas.edu (John Dawson)
+Subject: Vi macro limitation
+Date: 22 Jun 1992 01:51:21 -0500
+NNTP-Posting-Host: langtry.cs.utexas.edu
+
+I am trying to write moderately complicated vi macros and I'm bashing
+my head against limitations whose nature I can't figure out.  The
+specific problem I was trying to solve is to whack some key, have vi
+invoke make and send the output to a file, and edit that file; then,
+use the normal motion keys/commands to move to a line that looks like
+
+FILENAME:LINENO:blahblah...		# format of gcc
+
+and go to line number LINENO in file FILENAME.  My original plan was
+to move to the start of the line, and insert ":e ".  Go to the next
+colon, and insert a CR or ESC.  Go to the next colon, and insert G.
+Now the line should look like
+
+:e FILENAME:LINENOG:blahblah...
+
+Now the part that I can't do:  go to the start of the line, and yank
+the stuff up to the colon after FILENAME into one buffer, and yank
+the "LINENOG" stuff into a second buffer.  After this is all done, do
+a U command to restore the line, and @-execute the buffers you just
+yanked to.
+
+The problem is that whenever I try to do the yanking into a named
+buffer, it gives my my favourite error, "Can't yank inside global/
+macro".  I wasn't able to get it to yank anything at all
+without it giving me that error, as I recall, but I tried doing the
+"y" indirectly; i.e., I had a macro like
+
+map =y y
+
+and I would just do =y instead of y for the yank, and that pacified
+the "Can't yank inside global/macro" message.  But I wasn't able to
+do this twice in one macro.  (I tried many combinations of this
+indirection, and they didn't help.)
+
+This is very baffling.  Is someone else familiar with this problem?
+If you want the macro I was using to generate this error, the yanking
+part went something like this:  (the insertion part isn't interesting)
+
+map =e 0"eyt:f:l"gyt:
+
+I don't have the original macro for this stuff; I've found a solution
+that works using a single replacement to insert all the stuff on the
+line, and then the yanking stuff WORKS!  Here's that macro (I've taken
+control characters and expanded them, sticking carets underneath them
+to show where they are):
+
+map g mm:s/^\([^:][^:]*\):\([0-9][0-9]*\)/:e! \1^V^V^V^[:\2G/^M_
+						^ ^ ^ ^      ^
+map _ 0"e=yt:f:l"g=yt:u'm@e@g
+map =y y
+map =m :w!^M:!make -k >& ERRS^M:e ERRS^M
+	  ^		     ^        ^
+
+The fact that the same yanking submacro works given a different
+insertion technique is a great source of consternation.  What is
+the rule for when you can and cannot yank?  Is there a workaround
+for this?  [Note: "Use Emacs instead!" is not a valid answer.  A
+good friend of mine, a self-proclaimed vi expert, gave me that
+sage advice, along with a little lecture on how vi is an editor
+and is Meant To Edit Text and isn't a kitchen sink like Emacs.
+He should be ashamed of himself.  Calling himself a vi guru,
+indeed.]
+
+I can't help but think that this is possible to work around.  After
+all, I've seen gurus of ultimate godliness do things like Turing
+machines and maze s
