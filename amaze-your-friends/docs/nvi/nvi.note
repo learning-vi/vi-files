@@ -1,0 +1,29 @@
+Article 175 of comp.editors:
+Path: chemabs!osu-cis!cbosgd!ihnp4!homxb!mtuxo!mtune!rutgers!ames!oliveb!pyramid!nsc!taux01!amos
+From: amos@taux01.UUCP (Amos Shapir)
+Newsgroups: comp.editors
+Subject: Re: Novice vi(1) script with on-line help
+Summary: WARNING
+Message-ID: <449@taux01.UUCP>
+Date: 19 Jan 88 15:50:11 GMT
+References: <607@kuling.UUCP>
+Reply-To: amos%taux01@nsc.com (Amos Shapir)
+Organization: National Semiconductor (Israel) Ltd. Home of the 32532
+Lines: 13
+Hdate: 1 Shvat 5748
+
+WARNING! The referenced article contains something that looks like a shell
+archive but isn't - it contains compiling instructions, binary data, and
+*absolute* pathnames! If it works at all on your system, it might destroy
+something important.
+
+Though I think this was done in good will, and this is not a Trojan Horse,
+be *very* careful when unpacking - better edit, not execute it.
+
+-- 
+	Amos Shapir			(My other cpu is a NS32532)
+National Semiconductor (Israel)
+6 Maskit st. P.O.B. 3007, Herzlia 46104, Israel  Tel. +972 52 522261
+amos%taux01@nsc.com  34 48 E / 32 10 N
+
+
