@@ -1,0 +1,64 @@
+
+README - e version 1.3
+
+
+Blurb:
+    e is a command line preprocessor to get you into vi with ease.
+    I find it very useful - even given a shell with history. It keeps 
+    a history of the files that have been e'ed most recently in each 
+    directory. Thus it is nice to be able to do
+
+    cd somewhere
+    e
+
+    and get straight into the file you were last working on in the 
+    directory "somewhere". It also allows fast cross-directory editing,
+    does spelling corrections and solves the nasty modeline security
+	problem by allowing you to ensure that you never inherit someone
+	else's .exrc file.
+
+
+Documentation:
+    Documentation and examples can be found in the man page in e.1. 
+    This is in troff -man format.
+
+
+Installing e:
+    Change the UNIX line at the start of the Makefile. This *must* be 
+    one of Bsd, Sun, Sysv, Ultrix or Dynix. 
+
+    [If you are on a sequent (dynix), change the e dependency
+     line in the Makefile to "e :& $(HEADERS) $(OBJS)" to get parallel make]
+
+    Then make.
+
+    If you use a previous version of e, you will want to update your old 
+    .e files as the new version uses a single .e file in your home 
+    directory. The format is slightly different. The shell script in 
+    e_update.sh will make the changes for you.
+
+
+Portability:
+    This is known to work on BSD4.[23], Ultrix 2.0, Dynix (BSD4.2 universe),
+    and SUN 3.0. I put quite alot of time into trying to get it to go on
+    a SVR2 NCR tower here, but it was so *incredibly* slow that I ran out
+    of patience - but it is *very* close (it compiles, but the terminal gets
+    screwed up sometimes). Please let me know if you make it work.
+
+	It passes through lint without comment - except for the screwy stuff
+	in <sys/ioctl.h> on BSD.
+
+
+Thanks:
+    To Phil Oldiges, Simon Brown and John Sellens.
+    Also to Doug Gwyn for his directory routines and answering questions
+    about them.
+
+
+-------------------------------------------------------------------------------
+Terry Jones, Department Of Computer Science, University Of Waterloo
+             Waterloo Ontario Canada N2L 3G1
+{ihnp4,allegra,decvax,utzoo,utcsri,clyde}!watmath!watdragon!tcjones
+tcjones@dragon.waterloo.{cdn,edu} tcjones@WATER.bitnet
+tcjones%watdragon@waterloo.csnet [from oz, tcjones@dragon.waterloo.cdn@munnari]
+-------------------------------------------------------------------------------
