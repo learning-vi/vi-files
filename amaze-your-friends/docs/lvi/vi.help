@@ -1,0 +1,47 @@
+PREPEND BY n TO REPEAT n TIMES. TYPE <ESC> TO RETURN FROM INPUT TO COMMAND MODE!
+a [A]  append after cursor [line]     w [W]  word ["Word"]
+b [B]  back one word ["Word"]         x [X]  cross out char at [before] cursor
+c [C]  change next [to end of line]   y [Y]  yank next [whole line]
+d [D]  delete next [to end of line]   zpos   redraw zone at pos (.,-, or CR)
+e [E]  end of word ["Word"]           ZZ     write changes to file, exit 'vi'
+f [F]  find next [previous] in line   ^b[^f] backward [forward] paging
+G [nG] go to last [n:th] line in file ^d[^u] downward [upward] scrolling 
+h [l]  cursor left [right]            ^d[^t] delete [tab] one sw during insert
+H [L]  to home [last] line on screen  ^e[^y] expose 1 more line at bottom [top]
+i [I]  insert before cursor [line]    ^h[^w] erase char [word] during insert
+j [k]  cursor down [up]               ~      change case (upper/lower) of char 
+J      join line with next line       + [-]  to first char in next [prev] line
+mx[`x] mark [return to] position 'x'  0 [$]  to first [last] character in line
+M [n|] to middle line [n:th column]   ; [,]  repeat [reverse] last f,F,t, or T
+n [N]  to next [previous] occurrence  .      repeat last change of the text
+o [O]  open a line below [above]      <<[>>] shift line one sw left [right]
+p [P]  put in after [before]          ( [)]  to beginning of [next] sentence
+Q      quit 'vi', go to 'ex'          { [}]  to beginning of [next] paragraph
+r [R]  replace 1 [all] character[s]   / [?]  search forward [backward]
+s [S]  substitute character [line]    ``[''] return to previous position [line]
+t [T]  to next [previous] in line     : [:!] execute 'ex' [shell] command
+u [U]  undo last change[s in line]    ! [!!] shell command on next [this line]
+Type <ESC><ESC> and wait for the beep that says 'vi' is in command mode. Then
+a large variety of ':' commands are avilable e.g. the substitute command 's':
+
+:s/<pattern>/xx/<CR>             change FIRST <pattern> in CURRENT LINE to 'xx'
+:s/<pattern>/xx/g<CR>            change ALL <pattern>s in CURRENT LINE to 'xx'
+:%s/<pattern>/xx/g<CR>           change ALL <pattern>s in ALL LINES to 'xx'
+:s/\(<pat1>\)\(<pat2>\)/\2xx\1/  change FIRST occurrence of <pat1><pat2> in
+				 CURRENT LINE to <pat2>'xx'<pat1>. 
+:g/<pat1>/s/<pat2>$/xx/          ONLY in lines containing <pat1> change <pat2>
+                                 to 'xx' ONLY AT THE END OF THE LINE.
+:.,+ns/^./xx/                    change in CURRENT and FOLLOWING n lines ANY
+                                 character at the BEGINNING of the line to 'xx'
+:%s/<pattern>/xx&yy/g            change ALL <pattern>s in ALL lines to the
+				 combination 'xx'<pattern>'yy'
+:3s/<pattern>/\U&                change 1ST <pattern> in 3RD LINE to <PATTERN>
+
+    <pattern>  means
+    xx         the string 'xx' 
+    [xy]xx     the string 'xx' OR the string 'yx'
+    [^y]xx     the string 'zxx' where 'z' is any character EXCEPT 'y'
+    x*         the strings '', 'x', 'xx', 'xxx', ... 
+Type 'u' to undo and '&' to repeat a substitution.
+
+@(#)vi.help 1.1 88/01/25.  Bo Thide', Swedish Institute of Space Physics.
