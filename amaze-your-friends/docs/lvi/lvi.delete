@@ -1,0 +1,22 @@
+You have typed 'd' or 'D'.  The one you typed is now activated.
+
+d     is an operator that you put before a command that would normally move
+      you to another position in order to delete the text you pass over.
+      Deleted text is saved in one of buffers 1-9 or, if defined by '"', a-z.
+
+D     is a shorthand for the 'd$' command that deletes everything from the
+      current cursor position to, but not including, the newline character.
+
+dd    deletes the current line completely.
+
+Use this text for harmless practicing.  Undo last change with 'u'.  Examples:
+
+    d5w        delete next 5 words. 
+    d}         delete from the cursor to the end of the current paragraph.
+    d(         delete from the cursor to the beginning of the current sentence.
+    d/xyz<CR>  delete from the cursor to the next occurrence of 'xyz'.
+    "ad9|      delete to column 9. Save deleted text in named buffer 'a'.
+    "x3dd      delete 3 lines. Save the lines in the named buffer 'x'.
+-------------------------------------------------------------------bt 88/01/25
+Type '^c' to continue editing or 'v' to visit old buffer. Type 'q' to quit.
+
