@@ -1,0 +1,22 @@
+You have typed 's' or 'S'.  The one you typed is now activated.
+
+s     substitute the character at the cursor position with the 
+      text that you input immediately after the command.  End text insert
+      with <ESC>.  A '$' sign indicates how far the command will take effect.
+
+S     substitute the text on the current line with new text.
+
+Use this text for harmless practicing.  Undo last change with 'u'. Examples:
+
+    schar<ESC>      substitute the current character by the four characters
+                    "char".
+    3s5char<ESC>    substitute the current and following 2 characters by the
+		    five characters "5char".
+    4Sfour lines    substitute the current and following 3 lines by the single
+		    line containig the text "four lines".
+
+
+
+-------------------------------------------------------------------bt 88/01/25
+Type '^c' to continue editing or 'v' to visit old buffer. Type 'q' to quit.
+
