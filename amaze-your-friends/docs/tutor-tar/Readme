@@ -1,0 +1,29 @@
+@(#) CSM SCCS /u/sys/src/usr/local/bin/vitutor/SCCS/s.Readme 1.2 91/12/02 13:33:02
+
+Vitutor is a "hands on" tutorial for new users of the vi editor.
+
+Most new users can get through it in less than one hour.  The product
+is a person who can do simple editing task using the vi editor.
+
+To install, move "tutor.vi" to where you want to keep it, and then
+modify the FROM parameter in "vitutor" to reflect where you put it.
+
+Tutor.vi is a file that contains the tutorial lessons.  You can simply
+execute "vi tutor.vi" and then follow the instructions in the lessons.
+The lessons tell you to modify the file, so DON'T DO THIS ON YOUR
+ORIGINAL COPY.
+
+The "vitutor" file is a shell script that does the following:
+1. Checks if you are using a dumb terminal.
+2. Makes a backup copy of tutor.vi in your home directory, if it
+   already exist there.
+3. Copies "tutor.vi" to your home directory.
+4. Executes "vi tutor.vi".
+
+I have considered adding more advanced lessons but have not found the
+time.  Please let me know how you like it and send any improvements you
+make.
+
+Bob Ware, Colorado School of Mines, Golden, Co 80401, USA
+(303) 273-3987
+bware@mines.colorado.edu bware@slate.mines.colorado.edu bware@mines.bitnet
