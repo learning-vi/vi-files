@@ -1,0 +1,242 @@
+From: gww@beatnix.UUCP (Gary Winiger)
+Newsgroups: comp.bugs.sys5,comp.bugs.4bsd
+Subject: Re: VI bug
+Date: 19 Feb 88 18:11:56 GMT
+Sender: nobody@elxsi.UUCP
+Reply-To: gww@beatnix.UUCP (Gary Winiger)
+Organization: ELXSI Super Computers, San Jose
+Lines: 231
+
+In article <1027@sauron.Columbia.NCR.COM> wescott@sauron.Columbia.NCR.COM (Mike Wescott) writes:
+>In a number of places in its source, vi uses isdigit() (see ctype(3))
+>to check a character (encoded in an int or short) it just received.  No
+>problem, except that occasionally, like just after a SIGINT, the character
+>
+>There may be other isxxxx() calls that have similar problems.
+>
+>I don't have a fix yet.  We only discovered it while playing with a
+>shared library version of ctype.  And there is little probability
+>
+>Did isdigit() once have range checking built in?  Or was it a version
+>called _isdigit()?
+>
+
+I've had the bug fix for this since Sept, sorry I haven't posted it yet.
+Here it is.  This will get me off by butt and get the rest of the bug
+fixes that I've been sitting on posted.
+
+From gww Tue Sep  8 18:16:28 1987
+To: /RCS/Bugs
+
+Subject: Vi core dumps on SIGINT input. +Fix
+Index:	ucb/ex/{ex_vget.c, ex_vmain.c, ex_voper.c} 4.3BSD +Fix
+
+Description:
+	When vi receives the a SIGINT, it can queue it as the input character
+	ATTN (value -2).  This character is returned by getkey() (peekkey()).
+	In some cases, vi asks if the character received is an xxx with
+	``isxxx''.  The ``isxxx'' macros index the array _ctype_[] to
+	determine the type of the character.  If _ctype_ begins on a page
+	boundary and the previous page is not a valid page, a segment fault
+	will occur.
+Repeat-By:
+	vi foo
+	<user types INTERRUPT character>
+	When _ctype_ begins on a page boundary and the previous page is not
+	valid.
+Fix:
+	Guard against checking indexing _ctype_ when the character may be
+	ATTN.
+	The attached code solves this problem at Elxsi.
+
+Gary..
+{ucbvax!sun,lll-lcc!lll-tis,amdahl!altos86,bridge2}!elxsi!gww
+--------- cut --------- snip --------- :.,$w diff -------------
+Index: ucb/ex/ex_vget.c
+*** /tmp/,RCSt1001661	Tue Sep  8 17:32:37 1987
+--- ex_vget.c	Fri May  8 17:08:01 1987
+***************
+*** 1,5 ****
+--- 1,9 ----
+  /*
+   * $Log:	ex_vget.c,v $
++  * Revision 1.2  87/05/08  17:06:28  gww
++  * Check for ATTN (-2) before using isxxxx macro so as not to negatively
++  * index _ctype_[] and possibly get a segment fault.
++  * 
+   * Revision 1.1  86/12/23  18:16:10  gww
+   * Initial revision
+   * 
+***************
+*** 11,17 ****
+   */
+  
+  #ifndef lint
+! static char *ERcsId = "$Header: ex_vget.c,v 1.1 86/12/23 18:16:10 gww Exp $ ENIX BSD";
+  static char *sccsid = "@(#)ex_vget.c	6.8 (Berkeley) 6/7/85";
+  #endif not lint
+  
+--- 15,21 ----
+   */
+  
+  #ifndef lint
+! static char *ERcsId = "$Header: ex_vget.c,v 1.2 87/05/08 17:06:28 gww Exp $ ENIX BSD";
+  static char *sccsid = "@(#)ex_vget.c	6.8 (Berkeley) 6/7/85";
+  #endif not lint
+  
+***************
+*** 624,630 ****
+  	cnt = 0;
+  	for (;;) {
+  		c = getkey();
+! 		if (!isdigit(c))
+  			break;
+  		cnt *= 10, cnt += c - '0';
+  	}
+--- 628,634 ----
+  	cnt = 0;
+  	for (;;) {
+  		c = getkey();
+! 		if (c == ATTN || !isdigit(c))
+  			break;
+  		cnt *= 10, cnt += c - '0';
+  	}
+
+Index: ucb/ex/ex_vmain.c
+*** /tmp/,RCSt1001666	Tue Sep  8 17:32:57 1987
+--- ex_vmain.c	Fri May  8 17:08:07 1987
+***************
+*** 1,5 ****
+--- 1,9 ----
+  /*
+   * $Log:	ex_vmain.c,v $
++  * Revision 1.2  87/05/08  17:08:01  gww
++  * Check for ATTN (-2) before using isxxxx macro so as not to negatively
++  * index _ctype_[] and possibly get a segment fault.
++  * 
+   * Revision 1.1  86/12/23  18:16:13  gww
+   * Initial revision
+   * 
+***************
+*** 11,17 ****
+   */
+  
+  #ifndef lint
+! static char *ERcsId = "$Header: ex_vmain.c,v 1.1 86/12/23 18:16:13 gww Exp $ ENIX BSD";
+  static char *sccsid = "@(#)ex_vmain.c	7.7 (Berkeley) 6/7/85";
+  #endif not lint
+  
+--- 15,21 ----
+   */
+  
+  #ifndef lint
+! static char *ERcsId = "$Header: ex_vmain.c,v 1.2 87/05/08 17:08:01 gww Exp $ ENIX BSD";
+  static char *sccsid = "@(#)ex_vmain.c	7.7 (Berkeley) 6/7/85";
+  #endif not lint
+  
+***************
+*** 112,118 ****
+  			if (trace)
+  				fprintf(trace, "pc=%c",peekkey());
+  #endif
+! 			if (isdigit(peekkey()) && peekkey() != '0') {
+  				hadcnt = 1;
+  				cnt = vgetcnt();
+  				forbid (cnt <= 0);
+--- 116,124 ----
+  			if (trace)
+  				fprintf(trace, "pc=%c",peekkey());
+  #endif
+! 			if (peekkey() != ATTN && 
+! 			    isdigit(peekkey()) && 
+! 			    peekkey() != '0') {
+  				hadcnt = 1;
+  				cnt = vgetcnt();
+  				forbid (cnt <= 0);
+***************
+*** 126,132 ****
+  			 * an 'empty' named buffer spec in the routine
+  			 * kshift (see ex_temp.c).
+  			 */
+! 			forbid (c == '0' || !isalpha(c) && !isdigit(c));
+  			vreg = c;
+  		}
+  reread:
+--- 132,139 ----
+  			 * an 'empty' named buffer spec in the routine
+  			 * kshift (see ex_temp.c).
+  			 */
+! 			forbid (c == '0' ||
+! 				c != ATTN && !isalpha(c) && !isdigit(c));
+  			vreg = c;
+  		}
+  reread:
+***************
+*** 158,164 ****
+  			 * to go back to the "for" to interpret it. Likewise
+  			 * for a buffer name.
+  			 */
+! 			if ((isdigit(c) && c!='0') || c == '"') {
+  				ungetkey(c);
+  				goto looptop;
+  			}
+--- 165,171 ----
+  			 * to go back to the "for" to interpret it. Likewise
+  			 * for a buffer name.
+  			 */
+! 			if ((c != ATTN && isdigit(c) && c!='0') || c == '"') {
+  				ungetkey(c);
+  				goto looptop;
+  			}
+
+Index: ucb/ex/ex_voper.c
+*** /tmp/,RCSt1001671	Tue Sep  8 17:34:22 1987
+--- ex_voper.c	Fri May  8 17:08:15 1987
+***************
+*** 1,5 ****
+--- 1,9 ----
+  /*
+   * $Log:	ex_voper.c,v $
++  * Revision 1.2  87/05/08  17:08:08  gww
++  * Check for ATTN (-2) before using isxxxx macro so as not to negatively
++  * index _ctype_[] and possibly get a segment fault.
++  * 
+   * Revision 1.1  86/12/23  18:16:15  gww
+   * Initial revision
+   * 
+***************
+*** 11,17 ****
+   */
+  
+  #ifndef lint
+! static char *ERcsId = "$Header: ex_voper.c,v 1.1 86/12/23 18:16:15 gww Exp $ ENIX BSD";
+  static char *sccsid = "@(#)ex_voper.c	7.4 (Berkeley) 6/7/85";
+  #endif not lint
+  
+--- 15,21 ----
+   */
+  
+  #ifndef lint
+! static char *ERcsId = "$Header: ex_voper.c,v 1.2 87/05/08 17:08:08 gww Exp $ ENIX BSD";
+  static char *sccsid = "@(#)ex_voper.c	7.4 (Berkeley) 6/7/85";
+  #endif not lint
+  
+***************
+*** 133,139 ****
+  	 * Had an operator, so accept another count.
+  	 * Multiply counts together.
+  	 */
+! 	if (isdigit(peekkey()) && peekkey() != '0') {
+  		cnt *= vgetcnt();
+  		Xcnt = cnt;
+  		forbid (cnt <= 0);
+--- 137,143 ----
+  	 * Had an operator, so accept another count.
+  	 * Multiply counts together.
+  	 */
+! 	if (peekkey() != ATTN && isdigit(peekkey()) && peekkey() != '0') {
+  		cnt *= vgetcnt();
+  		Xcnt = cnt;
+  		forbid (cnt <= 0);
+
+
