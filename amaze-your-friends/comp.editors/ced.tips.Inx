@@ -1,0 +1,97 @@
+This file contains the INDEX of the Comp.Editor tips collection.
+The index is created by running a grep(1) on the Subject.
+
+The various tips files can easily be acessed via the standard Berkeley
+mailinterface:
+	mail -f ced.tips.1
+
+When I have the time, I exstract some of the subject presents, and put
+them in separate files. But this will probably not happen before 
+easter '92 ;-).
+
+
+ced.tips.1 
+	In vi: How to delete from str1 to str2 ?
+	In vi: How do I put line numbers in frant of each line ?
+	writing from buffers
+	How to disable 'vi' beep?
+	Tabs as spaces in VI.
+	vi question - am I so different?
+	vi question, replace second occurence
+	removing first field from a number of lines with vi
+	Smart 'C' editors?!?
+	vi question, replace second occurence
+	filling paragraph in vi
+
+ced.tips.2
+	Quoting in ex/vi -- more info
+	Vi and Tags file...(please help).
+	piping in an ex keymap
+	EX / VI delete up-to and including
+	What does this do? (was Vi internal design doc. needed)
+	Fun with tags
+	VI search for begin/end of blocks
+	how do I macroize c --> |c|
+	Addressing lines in vi and ex
+
+ced.tips.3
+	Using shell filters in VI
+	VI: Freeing macro space for map command
+	How do do these things in vi?
+	How do you do these things in vi?
+	vi window scrolling
+	How to change timeout length in vi without timeoutlen ?
+	ctrl-u in vi
+	vi window scrolling (vt100)
+	Reverse video in vi
+	Going crazy with non-vi DOS editor 
+	ex command to delete blank lines
+	vi (including file name)
+
+ced.tips.4
+	vi (including file name)
+	VI: Changing case for an entire word...how did I do it?
+	How do I... (vi or awk question, perhaps?)
+	.exrc location(s)
+	vi macro def at startup
+	Octal code quotation in vi search & replace?
+
+ced.tips.5
+	Good names for vi macros
+	do I ignorecase when using a TAGs file?
+	Tabs and Blanks
+	easy vi question: how to 'grep -v /r.e/'
+	vi question
+	vi - redefine <TAB>-key with <BLANK><BLANK>
+	wanted: ms-dos vi
+	macro record and playback in vi?
+	vi ! command in non-interactive envt.
+	VI - Number of Lines
+	vi and terminal emulation vt102 ???
+	VI terminal type
+	Bug in elvis?
+
+ced.tips.6
+	regular expression puzzle
+	vi question--scrambled long lines
+	Vi query
+	`vi' without `stty crt -tabs' gets crazy (Help!)
+	Tabs and Blanks: an experiment
+	Tabs and Blanks
+	VI Limitations
+	vi with X-window features
+	Using the vi -c command line option
+	vi command line thing
+	Using the vi -c command line option
+	Vi message 'Where are you?' from !}fmt command - huh?
+	vi startup in insert mode?
+	vi puzzler ..
+	case macros in vi ?
+
+ced.tips.7
+	Problem with vi paste
+	Friendly vi for new users SUMMARY
+	"c," in vi
+	VI bug using X.
+	Buggy vi's
+
