@@ -1,0 +1,22 @@
+You have typed 'x' or 'X'.  The one you typed is now activated.
+
+x     cross out (delete) the character at the cursor position.
+
+X     cross out (delete) the character before the cursor position.
+
+Use this text for harmless practicing.  Undo last change with 'u'.  Examples:
+
+    5x    cross out the character at the current cursor position and  the 4
+          following characters.
+
+    5X    cross out the 5 characters before the current cursor position.
+
+
+  
+
+
+
+
+-------------------------------------------------------------------bt 88/01/25
+Type '^c' to continue editing or 'v' to visit old buffer. Type 'q' to quit.
+
