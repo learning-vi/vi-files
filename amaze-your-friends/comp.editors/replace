@@ -1,0 +1,21 @@
+From dattier@genesis.MCS.COM (DWT)
+Subject: Re: Replacement prompting in vi?
+Date: 7 Jun 1993 21:47:27 -0500
+Reply-To: dattier@genesis.mcs.com (DWT)
+
+thanasis@ucsb.edu (Athanassios S. Poulakidas) wrote in <8940@ucsbcsl.ucsb.edu>:
+
+| I'd like to have interactive search&replace in vi, i.e., when I want to
+| substitute string1 with string2 globally, for each [occurrence] of string1
+| in the file, vi should ask me if the substitution should be performed.
+| 
+| Is there a macro that efficiently does this?
+
+It's already built in.  Add the c flag to the substitution command:
+
+:range s/target/replacement/gc
+
+David W. Tamkin   Box 59297   Northtown Station, Illinois  60659-0297
+dattier@genesis.mcs.com   CompuServe: 73720,1570   MCI Mail: 426-1818
+
+
