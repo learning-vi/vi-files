@@ -1,0 +1,121 @@
+#
+# Copyright (C) 1990 Ove Ruben R Olsen   (rubenro@viggo.blh.no)
+#
+
+clear
+echo ""
+echo "VI ON-LINE HELP setup procedure."
+echo ""
+echo "You may interupt the installation procedure anytime, hitting CTRL-C."
+echo ""
+echo ""
+echo "A ADVANCED help system is for those people who know the basics of vi."
+echo "If you are a starter, or just uses vi occasionaly, answer N."
+echo "If you know the basics of vi and want to be a GURU, answer Y."
+echo ""
+echo -n "Is this a ADVANCED setup [y/N] >"
+set svar = "`line | cut -c1`"
+if ( ($svar == "N") || ($svar == "") ) set svar = "n"
+echo ""
+
+echo ""
+echo "Your current login-shell is $SHELL."
+
+set type = 0
+
+foreach test ( csh tcsh rc )
+  if ($SHELL == "/bin/$test") set type = 1
+end
+
+if ($type == 0) then
+  foreach test ( sh ksh bash zsh ash )
+    if ($SHELL == "/bin/$test") set type = 2
+  end
+endif
+
+if ($type == 0) then
+  foreach test ( newcsh jsh pem )
+    if ($SHELL == "/bin/$test") then
+      echo ""
+      echo "Please mail the author and explain him about this shell."
+      echo "He know's it exsistance, but he don't know much about it."
+      echo "The author Ove Ruben Olsen, can be reached at rubenro@viggo.blh.no"
+      echo ""
+    endif
+  end
+endif
+
+if ($type == 0) then
+  echo ""
+  echo "Sorry can't resolve login-shell type."
+  echo ""
+  echo "I know the following shell types: "
+  echo ""
+  echo "Type 1: csh, tcsh and rc"
+  echo "Type 2: ch, ksh, bash and ash"
+  echo ""
+  echo -n "Enter your lohin-shell type (1 or 2): "
+  set type = "`line | cut -c1`"
+  if ( $type > 2 || $type < 1 ) then
+    echo ""
+    echo "Sorry Dave, due to human error I can't continue..."
+    echo ""
+    exit 99
+  endif
+endif
+
+if ($type == 1) then
+  set prof = "~/.cshrc "
+else
+  set prof = "~/.profile " 
+endif
+
+#
+# The system should find this by itself, but I didn't have time to 
+# fix it.
+#
+
+echo ""
+echo "Do you use EXINIT ? If you are unsure about this, check out your $prof"
+echo "If there is a statment assigning EXINIT to something, you probalu use" 
+echo "If you are using EXINIT, delete the entry from the $prof and put them"
+echo "in a file called ~/.exrc. ~/.exrc is the initfile for the vi-editor."
+echo ""
+echo -n "Using EXINIT [y/N] >"
+set init = "`line | cut -c1`"
+if ( ($init == "N") || ($init == "") ) set init = "n"
+echo ""
+echo ""
+
+
+if ( $svar == "n" ) then
+  echo "Setting up BASIC vi-online help."
+  set inst = ":map  :so $filer/vi.olh.BASIC"
+else
+  echo ""
+  echo "Sorry Dave... There's no ADVANCED help for the HAL-9000 computer yet."
+  echo ""
+  echo "Get version 3.00 or higher if you want ADVANCED help."
+  echo ""
+  set inst = ":map  :so $filer/vi.olh.ADVANCED" exit
+endif
+
+echo "$inst" >>! ~/.exrc
+
+
+if ($init == "y") then
+  if ($type == 1) then
+    echo "setenv EXINIT '$inst'" >>! ~/.cshrc
+  else
+    echo "EXINIT='$inst'" >>! ~/.profile
+  endif
+endif
+
+
+echo ""
+echo "Setup ready."
+if ($svar == "n") echo "When you are inside vi, press CTRL-H."
+if ($svar != "n") echo "When you are inside vi, press gg."
+echo ""
+
+  
