@@ -1,0 +1,32 @@
+##################################
+# Global Message-of-the-Day file #
+##################################
+# See  rainbow:~pab/motd  directory for information.
+# Use >> as host introducer before motd text.
+# NOTE: Personal Iris ones have been disabled, due to bug in "rcp" over there.
+# Examples:
+#	>> mv3 rahef
+#	>> mv* eld
+#	>> tur humphreys 123
+#	>> all
+#
+>> mv*
+The ACM will hold a dry-run of the Programming Contest system on 2/13/92 from
+10 AM until 12 noon.  This is in preparation for the Engineering Day contests.
+They will need to use as many as six (6) terminals in the Unix Lab at this time.
+>> all
+The NAU Library Card Catalog computer system is finally on the network!
+To access it from unix, type "telnet carl.lib.nau.edu" and press RETURN.
+>> all
+Air-conditioning in the Unix Computer Room is still broken.  All four microvax
+computers were kept running during the weekend; the temperature was hotter
+than comfortable, but luckily is within the working limits of the equipment.
+All non-necessary equipment will be turned off during non-working hours.
+This means PostScript printers (ps,rps) will not work except 8-5 Mon-Fri.
+The regular printers in the Unix Lab (137) will not be effected.
+>> 123
+Games have been moved from mv1,mv2,mv3 and placed on mv4.
+Contact Jamie Spake (jms@mv4 or root@mv4) for an account over there.
+>> all
+UNIX LAB HOURS week of 1/13/92:  Mon-Fri: 8AM-5PM, Sat-Sun: CLOSED
+	[To reread this message of the day, type "more /etc/motd"]
