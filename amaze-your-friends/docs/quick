@@ -1,0 +1,121 @@
+Vi QI.  This one was one we made before getting Jove.  Since it is
+modal for lots of operations, we find it less easily learned by complete
+novices.  The Jove QI used to have a layout like this, but the
+person who now administers the stuff decided to use troff and the page
+layouts are not quite right.  The ideal is basic commands and notes on
+the first page and advanced commands on the back.
+---------------------
+	QUICK INTRODUCTION TO THE vi VIDEO EDITOR
+		T.C. Slattery, US Naval Academy
+
+ENTERING vi
+
+	vi name		start vi editor with file   name   .
+			The file is created if it doesn't exist.
+
+LEAVING vi
+
+	ZZ		exit from vi, saving changes.
+	:q!		exit from vi, discarding changes.
+
+CURSOR POSITIONING
+
+	h		moves left one character position.
+	j		moves down one line.
+	k		moves up one line.
+	l		moves right one character position.
+			 NOTE: On the adm3a video terminal keyboard, these
+			  letters have arrows above them which correspond
+			  to the direction of the cursor movement.
+	0	(zero)	moves to the beginning of a line.
+	w		moves right one word.
+	b		moves left one word.
+	CTRL-u		moves up 1/2 screen full.
+	CTRL-d		moves down 1/2 screen full.
+	G		moves to the bottom of the file.
+	nG		moves to line number   n   .
+	CTRL-l		clear screen and re-draw.
+
+TEXT MODIFICATION
+
+	itextESC	inserts   text   to the left of the cursor.
+			 Insert doesn't cause the cursor to move;  text
+			 appears as it is typed, terminate with ESC.
+	atextESC	appends  (inserts)   text   to the right of the
+			 cursor, terminate with ESC.
+	RtextESC	Replaces (overprints) characters at the cursor
+			 position, terminate with ESC.
+	dd		deletes the line the cursor is on.
+	ndd		deletes   n   lines from the cursor position.
+			 NOTE: Deleted lines are replaced with the character
+			   @   which is removed when the page is re-drawn.
+	D		deletes characters from the cursor position to the
+			 end of the line.
+	x		deletes the character at the cursor.
+	nx		deletes   n   characters to the right of the
+			 cursor.
+	u		undo the last change.
+
+PATTERN SEARCHING
+
+	/pat/		positions the cursor at the next occurrence
+			 of the string   pat   .
+
+NOTES:
+	ESC	represents the ESC key.  Press the ESC key when it is
+		called for in the above commands.
+	CTRL-	represents the CTRL key.  Hold the CTRL key and press the
+		following key simultaneously.
+
+------------------
+Second page of vi QI
+---------------------
+	SECOND LEVEL vi EDITING COMMANDS
+
+CURSOR POSITIONING
+
+	}		move down one paragraph.
+	{		move up one paragraph.
+	mx		save the current cursor position and label it
+			with the letter x. (x is any letter)
+	'x		return to the cursor position labeled x.
+
+TEXT MODIFICATION
+
+	dw		delete the next word.
+	.      (period) repeat last change.
+	A		append at the end of the current line.
+	P		put back deleted line(s).  Text deleted with D
+			and dd commands may be pasted back with the P
+			command.  Text is pasted in before the cursor
+			position.
+	:a,bs/old/new/	From line number 'a' to line number 'b', substitute
+			the pattern 'old' with the pattern 'new'.  You
+			may use any text string which doesn't contain a
+			carriage return in place of the 'old' and 'new' 
+			strings.  Use CTRL-G to tell what line the cursor is
+			on.
+PATTERN SEARCHING
+
+	//		search for the next occurrence of a previously
+			specified search string.  
+
+MISCELLANEOUS
+
+	:w		write out current changes.  The vi editor works
+			on a copy of your file.  The :w command causes
+			the editor to write its copy over the original
+			which is on the disk.
+	:w name		write out changes to the file  name  .  This is
+			like the :w command but the changes are written
+			into the file you specify.  (good for making
+			intermediate copies)
+Cut and Paste		Move to the begining of the text to cut.  Use dd
+			to delete (cut) several lines.  Use D to cut only
+			the end of one line.  Move to the place where you
+			wish to paste the text.  Use P to put back the text.
+			You may need to clean up the spacing after pasting.
+
+
+
+
