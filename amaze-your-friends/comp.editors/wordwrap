@@ -1,0 +1,76 @@
+From stokesj@gordon-emh3.army.mil ( SFC John Stokes)
+Subject: vi wordwrap
+Date: 2 Jun 92 23:09:17 GMT
+
+Does any one have a suggestion as to how to rewrap a paragraph
+in vi?  Here is a line I have in my .exrc that does the current
+line.  Is there a way to extend this to continue down each line
+until it gets to a blank line?  One flaw in this definition is
+the last word of the last line always wraps to the next line.
+
+map	^W	J070lF r^M
+
+(Note I used the carot (^) symbol here to indicate Control
+characters, which had to be quoted when entered.)
+                                              ______
+                                                /    
+                                               / __  /_  __
+                                           ___/ /_/ / / / /  Stokes
+
+
+From damrau@sscux1.ssc.gov (Jackie Damrau)
+Subject: Re: vi wordwrap
+Date: Wed, 3 Jun 1992 13:20:37 GMT
+
+In article <30759@adm.brl.mil> stokesj@gordon-emh3.army.mil ( SFC John Stokes) writes:
+>Does any one have a suggestion as to how to rewrap a paragraph
+>in vi?  Here is a line I have in my .exrc that does the current
+>line.  Is there a way to extend this to continue down each line
+>until it gets to a blank line?  One flaw in this definition is
+>the last word of the last line always wraps to the next line.
+>
+>map	^W	J070lF r^M
+>
+>(Note I used the carot (^) symbol here to indicate Control
+>characters, which had to be quoted when entered.)
+>                                              ______
+>                                                /    
+>                                               / __  /_  __
+>                                           ___/ /_/ / / / /  Stokes
+
+To format a paragraph within vi, I have used:
+
+{!}fmt where "fmt" is the UNIX command that does what you want (e.g.,
+J).
+-- 
+Jackie Damrau, SSC Laboratory                 
+Computer Operations Group, MS-1011,          
+2550 Beckleymeade Avenue, Dallas TX            
+Internet: damrau@sscvx1.ssc.gov             
+
+From tchrist@convex.COM (Tom Christiansen)
+Subject: Re:  vi wordwFrom mchinni@pica.army.mil (Michael J. Chinni, (SMCAR-CCS-W))
+Subject: Re:  vi wordwrap
+Date: 3 Jun 92 19:12:06 GMT
+
+John you wrote:
+> Does any one have a suggestion as to how to rewrap a paragraph
+> in vi?  Here is a line I have in my .exrc that does the current
+> line.  Is there a way to extend this to continue down each line
+> until it gets to a blank line?  One flaw in this definition is
+> the last word of the last line always wraps to the next line.
+> map	^W	J070lF r^M
+
+If your system has some BSD utilities, you can use "fmt". Quoting from the
+"man" page for "fmt":
+SYNOPSIS
+     fmt [ -width ] [ name ...     ]
+
+DESCRIPTION
+     Fmt is a simple text formatter that reads the concatenation
+     of input files (or standard input if none are given) and
+     produces on standard output a version of its input with
+     lines as close to 72 characters long as possible.  Default
+     line width can be altered with the -width option.  The
+     spacing at the beginning of the input lines is preserved in
+     the ou
