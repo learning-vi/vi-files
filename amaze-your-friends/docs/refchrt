@@ -1,0 +1,93 @@
+Article 2105 of comp.editors:
+Path: chemabs!tut.cis.ohio-state.edu!sunc.osc.edu!malgudi!caen!sdd.hp.com!uakari.primate.wisc.edu!aplcen!haven!decuac!bacchus.pa.dec.com!news.crl.dec.com!decvax.dec.com!abyss.zk3.dec.com!tarsa
+From: tarsa@abyss.zk3.dec.com (Greg Tarsa)
+Newsgroups: comp.editors
+Subject: vi command table
+Message-ID: <425@decvax.decvax.dec.com.UUCP>
+Date: 23 Oct 90 17:07:53 GMT
+Sender: news@decvax.dec.com.UUCP
+Reply-To: tarsa@abyss.zk3.dec.com (Greg Tarsa)
+Lines: 80
+
+What follows is not a "minimum command set", but a one page table that contains
+more than 175 vi commands in an easy to handle format.
+
+This table uses the fact that many vi editing commands are orthogonal with
+the cursor movement commands.  That is, 'h' moves to the left, 'dh' deletes
+to the left.  '/string' moves to the 1st occurrance of 'string', 'd/string'
+deletes to the 1st occurrance of 'string', etc.
+
+The table can be drastically reduced to cover a minimum set of vi commands.
+When I first learned vi, the table reduced the ramp up time to about 15
+minutes.
+
+Hope this is of some use.  The table appears between formfeed characters.
+
+Greg
+
+
+
+				Vi Reference Chart
+				~~~~~~~~~~~~~~~~~~
+  Actions -->	    d       c       y       !       <       >
+	    ----+-------+-------+-------+-------+-------+-------+
+  O	h or l	|	+	+	+   no	+   no	+   no	+
+  b	    ----+-------+-------+-------+-------+-------+-------+
+  j	j or k	|	|	|	|	|	|	|
+  e	    ----+-------+-------+-------+-------+-------+-------+
+  c	0 or ^	|	|	|	|   no	|   no	|   no	|
+  t	    ----+-------+-------+-------+-------+-------+-------+
+  s	$	|	|	|	|   no	|   no	|   no	|
+  |	    ----+-------+-------+-------+-------+-------+-------+
+  |	w or e	|	|	|	|   no	|   no	|   no	|
+  V	    ----+-------+-------+-------+-------+-------+-------+
+	b	|	|	|	|   no	|   no	|   no	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	f or F	|	|	|	|   no	|   no	|   no	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	t or T	|	|	|	|   no	|   no	|   no	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	<#>|	|	|	|	|   no	|   no	|   no	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	H M L	|	|	|	|	|	|	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	/<pat>	|	|	|	|	|	|	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	?<pat>	|	|	|	|	|	|	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	<#>G   	|	|	|	|	|	|	|
+	    ----+-------+-------+-------+-------+-------+-------+
+ 	%	|	|	|	|	|	|	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	) or (	|	|	|	|	|	|	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	} or {	|	|	|	|	|	|	|
+	    ----+-------+-------+-------+-------+-------+-------+
+	]] or [[|	|	|	|	|	|	|
+	    ----+-------+-------+-------+-------+-------+-------+
+		    d       c       y       !       <       >
+  Action key:
+	d - delete	s - substitute	! - filter	y - yank
+	c - change	> - shift right	< - shift left
+  Object key:
+	h - left char	l - right char	      j - down line   k - up line
+	0 - line start	$ - line end	      ^ - first non-white space
+	w - forw word	b - back word	      e - end of word
+	/ - srch forw	? - srch back	   <#>G - move to line #
+	H - home scrn	M - middle scrn	      L - to last scrn line
+	( - sent. start	) - sent. end	   f<c> - forw to <c> (incl)
+	{ - para start	} - para end	   F<c> - back to <c> (incl)
+	[[- sect start	]]- sect end	   t<c> - forw to <c> (non-incl)
+	% - match bracket		   T<c> - back to <c> (non-incl)
+     <#>| - col <#>  <#>G - move to line #
+
+These vi commands are of the form:	<action>[object]
+
+
+Tarsa Software Consulting
+--------------------------------
+		33 Seabee Street
+		Bedford, NH 03102	tarsa@elijah.mv.com
+		(603)668-9226		{decuac,decvax}!elijah!tarsa
+
+
