@@ -1,0 +1,64 @@
+From: blknowle@uokmax.UUCP (Bradford L Knowles)
+Newsgroups: comp.editors
+Subject: My vi macros
+Date: 3 Jun 88 22:52:30 GMT
+Reply-To: blknowle@uokmax.UUCP (Bradford L Knowles)
+
+Well, enough people have mailed me asking for my vi macros, and since
+the mail program here can't mail to someone who's not actually on this
+machine, I decided to post them.
+
+For those of you who are new to vi macros, I put these in a file called
+".exrc" in my home directory (since Pnews eat REAL escapes, I replaced
+them with the two key combination ^[):
+set nu
+set sw=4
+set ai
+ab -B -Brad
+map ^[[J D
+map  O^[:set nonu
+map!  ^[o^[:set nonu
+map ^[[H Go^[!!cat ~/.include
+map! ^[[H ^[Go^[!!cat ~/.include
+map ^[[~ :map
+map! ^[[~ ^[:map!
+map #1 :w
+map! #1 ^[:w
+map #2 :q
+map! #2 ^[:q
+map #3 :wq
+map! #3 ^[:wq
+
+The following lines I have in another .exrc, but this time it is in a
+subdirectory where I program in Pascal a lot (I have versions for C,
+Prolog, etc...).  The really neat thing about these is, no matter which
+language I am programming in, f9 ALWAYS gives me the necessary
+character(s) for inserting comments into my code:
+map #6 i
+map! #6 function 
+map #7 i
+map! #7 procedure 
+map #9 i{
+map! #9 {}^[i
+
+One of the key things to remember about these is that the map's and map!'s
+do very similar things, but the map version is usually more complex and
+does more.
+
+P.S.  If anyone is interested in explanations of these macros, just let
+	me know and I'll post them.
+
+-Brad Knowles
+
+UUCP: ...!ihnp4!occrsh!uokmax!blknowle     ARPA: blknowle@uokmax.ecn.uoknor.edu
+SNAIL: 1013 Mobile Circle
+       Norman, OK  73071-2522
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Philosophy of Boris Yeltsin: "If one wants to be unemployed, one will
+	criticize ones' boss.  If one wants to be sent to Siberia, one
+	will criticize the wife of ones' boss."
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+Disclaimer: (The above opinions are my own.  They have nothing to do with the
+		Univeristy of Oklahoma nor intelligance of any sort. :-)
+
+
