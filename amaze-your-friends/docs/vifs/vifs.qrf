@@ -1,0 +1,22 @@
+VIF - Quick reference guide
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+macro usage:
+    #+	: push edit file name and current line number.
+    #-	: pop back to last pushed file and line.
+    #=	: show edit file stack.
+    #^]	: push and tag jump.
+    #^^	: synonym of #-.
+
+vifs command usage:
+    vifs, vifs show	: printout stack to stdout.
+	# Each vi process use different workfile by pid.
+    vifs push FILE	: push FILE.
+	Count line of stdin then write file name and line number
+	to workfile. 
+    vifs pop		: pop back.
+	Pop file name and line number from workfile then make a
+	ex command file to back to poped file. 
+    vifs clear		: clear stack.
+    vifs clean		: remove all workfiles.
+	# If you don't "vifs clean", some day system remove # files.
+
