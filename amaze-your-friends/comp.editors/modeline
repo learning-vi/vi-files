@@ -1,0 +1,180 @@
+From b.keck@trl.oz.au (Brian Keck)
+Subject: modeline -> Modified
+Date: Wed, 10 Jun 1992 04:59:34 GMT
+
+If I have even a trivial modeline, eg :
+  vi:map , j:
+with a minimal .exrc :
+  set modeline
+& no ~/.exrc or EXINITRC,
+then when I start vi the file is immediately marked [Modified].
+This seems a bit repulsive.  Is there a better fix than :
+  vi:map , j|w!:
+Thanks,
+Brian Keck
+b.keck@trl.oz.au, phone +61 3 253 6407, fax +61 3 253 6362 
+Network Services & Signalling, Telecom Research Laboratories
+770 Blackburn Rd, Clayton Victoria 3168, Australia
+
+
+From keck@wembley.trl.OZ.AU (Brian Keck)
+Subject: Re: modeline -> Modified
+Date: Thu, 11 Jun 1992 05:08:18 GMT
+
+I asked :
+
+>If I have even a trivial modeline, eg :
+>  vi:map , j:
+>with a minimal .exrc :
+>  set modeline
+>& no ~/.exrc or EXINITRC,
+>then when I start vi the file is immediately marked [Modified].
+>This seems a bit repulsive.  Is there a better fix than :
+>  vi:map , j|w!:
+
+I forgot to say this is SunOS 4.1.1 (:version -> Version SVR3.1)
+
+Thanks,
+Brian KecFrom 
+
+From: buboo@alf.uib.no (Ove Ruben R Olsen)
+Subject: Re: how to set vi options in file to be edited?
+Date: Tue, 26 May 92 21:50:34 GMT
+
+Lyndon C. Lim writes:
+
+>a friend told me once that vi used to be able to read
+>either the first or last few lines of a file, in a
+>certain format, and know that those lines were meant to
+>be executed as vi commands.  i haven't been able to
+>find this in any documentation.  i don't remember seeing
+>it in the faq either.  usually, i have ts=80, and sw=4.
+>however, for certain files, such as shellscripts, i would
+>like ts=4, sw=4.
+>
+>is this possible?  i would prefer not to have local .exrc
+>files since the directory also contains files for which
+>i don't want ts changed.
+
+Well... in your $HOME/.exrc you must have 
+   :set modeline 
+or else this will not work.
+You may also set the $EXINIT to the appropriate.
+
+Taken from Marten Litmaath VI refference, Version 7:
+
+    modeline                | When you read an existing file into the buffer,
+                            |   and this option is set, the first and last 5
+                            |   lines are checked for editing commands in the
+                            |   following form:
+                            |
+                            |     <sp>vi:set options|map ...|ab ...|!...:
+                            |
+                            |   Instead of <sp> a <ht> can be used, instead of
+                            |   `vi' there can be `ex'.  Warning: this option
+                            |   could have nasty results if you edit a file
+                            |   containing `strange' modelines.
+
+This is IMO a MUST of a document if you are not fully aware of all the
+quirks of VI. 
+It IS a quick refference, but one of the good ones around (no offence
+to the other ones !)
+
+For a fuller discussion on this issue, fetch the file called:
+    vi.startup.d.Z  
+from the VI archives.
+
+-------
+
+>From one of the INDEX files at the VI/EX archives around the world:
+
+For starters (and other interested peoples :-) I recomend:
+
+vi.intro.Z          Introduction on Display Editing with VI. UCB-dist. A Must.
+vi.reference.Z      VI reference. Version 7. A Must.
+
+ex.reference.Z      EX Reference Manual. UCB-dist. A Must.
+vi.apwh.ms.Z        VI Command & Function Reference. UCB-dist.
+vi.chars.Z          Apendix: character functions. UCB-dist. A Must.
+vi.intro.ps.Z       vi.intro in PostScript format. UCB-dist.
+vi.reference.ms.Z   VI reference for typesetters.
+
+There are several other courses/guides for starters. Check out the INDEX
+file, or take a look at the FAQ-2 posted at the beginig of this month.
+If your news expire works, it should be availible. If you can wait a week
+the INDEX files will be posted again. 
+
+The VI/EX archives can be found at:
+
+Europe:
+   Main site:     alf.uib.no (129.177.30.3)
+   Filearea:      pub/lpf/misc
+   Peak hours:    07.00 am GMT to 03.00 pm GMT
+
+Japan:
+   Mirror site:   utsun.s.u-tokyo.ac.jp (133.11.11.11)
+   Filearea:      misc/vi
+   Peak hours:    01.00 am GMT to 09.00 am GMT
+
+USA, Canada and Mexico:
+   Mirror site:   cs.uwp.edu (131.210.1.4)
+   Filearea:      /pub/vi
+   Peak hours:    None.
+
+Australia, NZ and the rest Down Under:
+   Main site:     monu6.cc.monash.edu.au (130.194.1.106)
+   Filearea:      /pub/Vi
+   Peak hours:    Not relevent
+
+
+For more information about the files at the archives and the archives
+itself, please read one of the FAQ for Comp.Editors.
+If you are in a hurry you may fetch the INDEX file.
+
+If you need more information, you are welcome to mail Ove.R.Olsen@uib.no.
+
+\Ruben.
+
+-- 
+    Ove Ruben R Olsen, Professional VI user. EMAIL: Ove.R.Olsen@ubb.uib.no 
+  Maintaining the Largest  VI/EX-STUFF Archive in the WORLD (alf.uib.no) and 
+the Comp.Editors FAQ file. If you have information about editing, new editors,  
+  please get in touch with me. This does not apply to EMACS type of editors.
+
+
+From soh@andromeda.trl.OZ.AU (Kam Hung Soh)
+Subject: Re: how to set vi options in file to be edited?
+Date: Tue, 26 May 1992 22:26:22 GMT
+
+lyndon@angelo.amd.com (Lyndon C. Lim) writes:
+
+>a friend told me once that vi used to be able to read
+>either the first or last few lines of a file, in a
+>certain format, and know that those lines were meant to
+>be executed as vi commands.  i haven't been able to
+>find this in any documentation.  i don't remember seeing
+>it in the faq either.  usually, i have ts=80, and sw=4.
+>however, for certain files, such as shellscripts, i would
+>like ts=4, sw=4.
+
+>is this possible?  i would prefer not to have local .exrc
+>files since the directory also contains files for which
+>i don't want ts changed.
+
+You need to add this to your .exrc file:
+
+set modeline
+
+Every file can have vi commands in the following format in the first or
+last five lines:
+
+ vi:command:
+
+The whitespace and colons seem necessary for our version of vi running
+in SunOS 4.1.1.  I found the modeline command in the ``Vi Manual'' by
+Sailer and Litmaath; it wasn't in the SunOS 4.0.3 documentation.
+
+For example, my LaTeX files have the following line in the start (the
+percent symbol is a comment in TeX):
+
+% :source $HOME/.ex
