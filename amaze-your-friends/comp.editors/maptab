@@ -1,0 +1,125 @@
+From emm@daneel.rdt.monash.edu.au (Wendigo)
+Subject: How to map! the tab character in VI
+Date: 1 Jun 92 06:52:12 GMT
+
+How would one map the tab character in vi using the ":map!" command?
+
+Thanx
+-- 
+Wendigo   [ Occasionally thought of as     |~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            emm@daneel.rdt.monash.edu.au ] | "This isn't science fiction,
+   { Sometimes answers to Evan McLean }    |  this is StarTrek!"
+(Now employed, no thanks to the government)|      -- Shelia Willis
+
+
+From sti@cs.hut.fi (Sami-Jaakko Tikka)
+Subject: Re: Mapping <tab> in Vi
+Reply-To: Sami.Tikka@hut.fi
+Date: Wed, 3 Jun 1992 08:27:52 GMT
+
+In article <1992Jun2.113530.19567@sci.kun.nl> hansm@cs.kun.nl (Hans Mulder) writes:
+
+> you might want to look at the possibility of map!ping <tab> to <control-V>
+> and setting shiftwidth to your preferred indent.
+
+I believe the button producing right mix of tabs and spaces is
+<control-T> not <control-V> as you said.  But that was probably a
+typo...
+--
+Sami.Tikka@hut.fi   $@%5%_%F%#%C%+(J           "LiveFrom jutta@opal.cs.tu-berlin.de (Jutta Degner)
+Subject: Re: Mapping <tab> in Vi
+Date: Fri, 29 May 1992 21:47:05 GMT
+
+brecht@white.toronto.edu (Tim Brecht) writes:
+> Can anyone tell me how to [..] map! <tab> <number of blank characters>
+
+Some characters are special to vi and must be quoted.  To quote, prefix
+with <CTRL>V (^V in short).  If that doesn't work -- this is the case for
+both tab and space -- double the ^V.
+
+	you type:  map! ^V^V<tab> ^V^V<space>^V^V<space>^V^V<space>
+	you see:   map! ^V<tab> ^V<space>^V<space>^V<space>
+
+Maybe you wont be happy with this, though.  To correctly expand tabs,
+they must be replaced by tabstop - index % tabstop blanks; and although
+it may be possible to painstakingly implement this function in vi, it's
+just _so_ much easier to simply call
+
+	:%!expand
+
+and leave the work to a tool that was written to do it.
+
+--Jutta
+
+
+From buboo@alf.uib.no (Ove Ruben R Olsen)
+Subject: Re: Mapping <tab> in Vi
+Date: Fri, 29 May 92 22:21:13 GMT
+
+Tim Brecht writes:
+
+>This has likely been discussed before but ...
+
+Yes, around october last year and february and march this year :-)
+
+>
+>Can anyone tell me how to map the <tab> key to output
+>some number of blank characters instead ?
+>
+>Note that changing tabstop isn't sufficient.
+>I want to be able to create a file that does not contain
+>any tab characters even though I use the tab key when
+>creating the file. It seems to be mainly a problem of
+>how to escape the blank characters (and possibly the tab).
+>
+>map! <tab> <number of blank characters>
+
+You should perhaps have consulted the VI archive (If you read the FAQ
+this is known).
+
+Also stay tuned for the next 96 hours to see the FAQ for June :-)
+
+>From one of the INDEX files at the VI/EX archives around the world:
+
+ced.tips.1.Z        Comp.Editors tips collection. October 91 issue.
+ced.tips.5.Z        Comp.Editors tips collection. February 92 issue.
+ced.tips.6.Z        Comp.Editors tips collection. March 92 issue.
+
+This threee files will deal with the TAB/SPC's in greater length.
+
+The VI/EX archives can be found at:
+
+Europe:
+   Main site:     alf.uib.no (129.177.30.3)
+   Filearea:      pub/lpf/misc
+   Peak hours:    07.00 am GMT to 03.00 pm GMT 
+
+Japan:
+   Mirror site:   utsun.s.u-tokyo.ac.jp (133.11.11.11) 
+   Filearea:      misc/vi
+   Peak hours:    01.00 am GMT to 09.00 am GMT
+
+USA, Canada and Mexico: 
+   Mirror site:   cs.uwp.edu (131.210.1.4)
+   Filearea:      /pub/vi
+   Peak hours:    None.            
+
+Australia, NZ and the rest Down Under:
+   Main site:     monu6.cc.monash.edu.au (130.194.1.106)
+   Filearea:      /pub/Vi
+   Peak hours:    Not relevent
+
+
+For more information about the files at the archives and the archives 
+itself, please read one of the FAQ for Comp.Editors.
+If you are in a hurry you may fetch the INDEX file.
+
+If you need more information, you are welcome to mail Ove.R.Olsen@uib.no.
+
+\Ruben.
+
+
+-- 
+    Ove Ruben R Olsen, Professional VI user. EMAIL: Ove.R.Olsen@ubb.uib.no 
+  Maintaining the Largest  VI/EX-STUFF Archive in the WORLD (alf.uib.no) and 
+the Comp.Editors FAQ file. If yo
