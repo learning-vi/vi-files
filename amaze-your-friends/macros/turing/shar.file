@@ -1,0 +1,187 @@
+#! /bin/sh
+# This is a shell archive, meaning:
+# 1. Remove everything above the #! /bin/sh line.
+# 2. Save the resulting text in a file.
+# 3. Execute the file with /bin/sh (not csh) to create the files:
+#	README
+#	TMabc
+#	TMabc2
+#	TMupdown
+#	tm.uuencode
+# This archive created: Wed Mar 14 09:20:29 1990
+export PATH; PATH=/bin:$PATH
+if test -f 'README'
+then
+	echo shar: will not over-write existing file "'README'"
+else
+cat << \SHAR_EOF > 'README'
+
+			Vi Turing Machine Emulation
+			---------------------------
+
+This directory contains a set of macros which allow vi to simulate a
+Turing Machine.  The file "tm" contains the macros.
+
+The "TM*" files each contain a turing machine description.
+
+To execute the TMupdown machine, do the following:
+
+	$ vi TMupdown
+	:so tm
+
+Then, from escape mode in vi, type 'g' for go.
+
+I've included a simple turing machine description to use as an example
+in explaining the format.
+
+----------------------- cut here for sample turing machine ---------------------
+
+START{####:####:R:DOWN:}
+DOWN{up:down:R:DOWN:}{%%%%:%%%%:L:UP:}
+UP{down:up:L:UP:}{####:####:R:DOWN:}
+####
+up
+up
+up
+up
+%%%%
+--------------------------- end of turing machine ------------------------------
+
+The top line is used as a scratch pad by the macros and must not be
+removed. The lines from the second line to the line containing "####"
+encode the turing machine's state table, and the lines from "####" to
+"%%%%" represent the turing machine's tape.
+
+The tape is lying on its side such that left is up and right is down.
+Each line represents one tape symbol.  "####" is the start symbol on
+the tape, and "%%%%" is the end symbol.
+
+Each line above "####" represents the information for one state
+of the turing machine.   I'll describe the format using an example:
+
+	DOWN{up:down:R:DOWN:}{%%%%:%%%%:L:UP:}
+
+The name of the state, in this case "DOWN", comes first.  Following that
+comes any number of 4-tuples describing the action to take for a particular
+tape symbol.   The first 4-tuple states that if the current tape symbol
+is "up", then that symbol should be replaced by "down", the current position
+on the tape should be moved "R" -- that is, to the right -- and the
+turing machine should enter the "DOWN" state.
+
+The general format of these 4-tuples is:
+
+   '{' <current symbol> ':' <new symbol> ':' <direction> ':' <next state> ':}'
+
+Where <direction> is "R", "L", or "N" for move left, move right, or no move.
+The other fields can contain any alpha-numeric string.  (In fact, any string
+that does not include "{}:" or any vi magic characters will probably work.)
+
+When a turing machine first starts, after the 'g' command, it is in the
+"START" state with its head positioned on the "####" symbol on the tape.
+SHAR_EOF
+fi # end of overwriting check
+if test -f 'TMabc'
+then
+	echo shar: will not over-write existing file "'TMabc'"
+else
+cat << \SHAR_EOF > 'TMabc'
+
+
+START{####:####:R:check}
+check{a:a:N:find_b}{b:REJECT:N:HALT}{c:REJECT:N:HALT}{%%%%:ACCEPT:N:HALT}
+find_b{a:a:R:find_b}{b:b:L:kill_a1}{c:REJECT:N:HALT}{%%%%:REJECT:N:HALT}
+kill_a1{a:b:R:find_c}
+find_c{b:b:R:find_c}{c:c:L:kill_b2}{%%%%:REJECT:N:HALT}
+kill_b2{b:c:L:kill_b1}
+kill_b1{b:c:R:find_end}
+find_end{c:c:R:find_end}{%%%%:%%%%:L:kill_c3}
+kill_c3{c:%%%%:L:kill_c2}
+kill_c2{c:%%%%:L:kill_c1}
+kill_c1{c:%%%%:L:RETURN}
+RETURN{a:a:L:RETURN}{b:b:L:RETURN}{c:c:L:RETURN}{####:####:N:START}
+
+####
+a
+a
+b
+b
+c
+c
+%%%%
+SHAR_EOF
+fi # end of overwriting check
+if test -f 'TMabc2'
+then
+	echo shar: will not over-write existing file "'TMabc2'"
+else
+cat << \SHAR_EOF > 'TMabc2'
+
+START	{a:a:L:START}    {b:b:L:START}    {c:c:L:START}    {####:####:R:kill_a}
+	{a':a':L:START}  {b':b':L:START}  {c':c':L:START}
+kill_a	{a:a':R:kill_b}  {b:NO:N:NO}       {c:NO:N:NO}       {%%%%:YES:N:YES}
+	{a':a':R:kill_a} {b':b':R:kill_a} {c':c':R:kill_a}
+kill_b	{a:a:R:kill_b}   {b:b':R:kill_c}  {c:NO:N:NO}       {%%%%:NO:N:NO}
+	{a':NO:N:NO}     {b':b':R:kill_b} {c':NO:N:NO}
+kill_c	{a:NO:N:NO}       {b:b:R:kill_c}   {c:c':L:START}   {%%%%:NO:N:NO}
+	{a':NO:N:NO}     {b':NO:N:NO}     {c':c':R:kill_c}
+
+####
+a
+a
+a
+b
+b
+b
+c
+c
+c
+%%%%
+SHAR_EOF
+fi # end of overwriting check
+if test -f 'TMupdown'
+then
+	echo shar: will not over-write existing file "'TMupdown'"
+else
+cat << \SHAR_EOF > 'TMupdown'
+
+
+START{####:####:R:DOWN}
+DOWN{up:down:R:DOWN}{%%%%:%%%%:L:UP}
+UP{down:up:L:UP}{####:####:R:DOWN}
+
+####
+up
+up
+up
+up
+up
+up
+up
+%%%%
+SHAR_EOF
+fi # end of overwriting check
+if test -f 'tm.uuencode'
+then
+	echo shar: will not over-write existing file "'tm.uuencode'"
+else
+cat << \SHAR_EOF > 'tm.uuencode'
+begin 644 tm
+M;6%P"4,).B`*;6%P"4,).B`)5'5R:6YG($UA8VAI;F4@16UU;&%T:6]N($UA
+M8W)O<RX*;6%P"4,).B`*;6%P"4,).@E#;W!Y=W)I=&4@,3DX-R!$879E($AI
+M='H*;6%P"4,).B`*;6%P"4,).@E554-0.B![9&5C=F%X+'5C8G9A>"QI:&YP
+M-'TA9&5C=W)L(6UI<',A:&ET>B`)"FUA<`E#"3H)1$1$.B!H:71Z0#0P."TY
+M.3$M,#,T-0IM87`)0PDZ(`IS970)<F5M87`*;6%P"6<)>%,*;6%P"5,))W1L
+M&#%':W=6=E@G<T!B9CIL;7-7)W1K=VUT3V!S9CIL;7-70&)#8'-F.FQE,4=K
+M=T580&)M;F!S<6!N46US<PIM87`)<PE3"FUA<`E8"2)B60IM87`)&`DB8GDD
+M"FUA<`E7"2)B>70Z"FUA<`EE"2)B>71]"FUA<`EW"2)B4`IM87`)4@DG="MM
+M=`IM87`)3`DG="UM=`IM87`)3@DG=&UT"FUA<`E%"5YI+UY;*B!=&PIM87`)
+M0PE>:'(J"FUA<`EC"5YH(&P*;6%P"5$)7FAR*@IM87`)<0D_7"H-7G(@;`IM
+M87`)5@E)+WL;"FUA<`EV"4$Z&PIM87`)3PE>:2`;"FUA<`EK"19\1`IM87`)
+F>`DZ)7,O7B\@+PTO7B`C(R,C)"\-;71#+UX@4U1!4E0O#6US40I\
+`
+end
+SHAR_EOF
+fi # end of overwriting check
+#	End of shell archive
+exit 0
+
