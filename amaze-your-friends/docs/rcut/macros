@@ -1,0 +1,23 @@
+" 1) To mark the section to be cut or copied use "mb" to mark the upper left
+"    (right) of the rectangle and the cursor position to mark the lower
+"    right (left) of the rectangle.  The same column may be used in which
+"    case a single column will be affected.
+"
+" 2) To cut out the section press "=x" in command mode. Key definition:
+"
+map =x meo256i `ejr^:m'b-`bkr^!'ercut -x
+"
+" 3) To copy rectangular section press "=k". Key definition:
+"
+map =k meo256i `ejr^:m'b-`bkr^!'ercut -k
+"
+" 4) To paste the previously cut text, place the cursor at the location at
+"    which the text is to be inserted and press "=P". Key definition:
+"
+map =P moO256i `okr^!Grcut -P
+"
+" 5) To paste the section after the cursor position use "=p". Key definition:
+"
+map =p moO256i `okr^!Grcut -p
+"
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
