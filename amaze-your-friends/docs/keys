@@ -1,0 +1,196 @@
+From: mrd@ecs.soton.ac.uk (Mark Dobie)
+Subject: Free keys to bind to in vi (longish)
+Date: 23 Aug 91 11:03:05 GMT
+
+Which keys can I bind to in vi?
+-------------------------------
+
+When I experiment with a vi macro I always have trouble finding a free
+key to bind it to.  Vi has so many useful functions that all the best
+keys are taken.  One solution is to learn the complete vi command set
+so that you know where the gaps are.  Another solution is to bind to
+short strings instead of single keys.  A third solution is to use this
+reference list to see where the gaps are.
+
+This list shows the keys on the keyboard along with a cryptic clue to
+their function in vi in command mode.  If there is a gap, the key is
+free and you can bind a macro to it.
+
+Some keys do different things on different systems and implementations.
+These are shown in parentheses. Many of the control-symbol and
+control-number combinations produce strange results and I am not
+confident about relying on these. On a PC you can usually bind to ALT
+key combinations. On Suns and PCs you can bind to function keys.
+
+The free keys which you can rely on seem to be:
+
+^A ^I ^K ^O ^T ^V ^W ^X
+g q v V \
+
+and # * K if you're not using elvis.
+
+I hope this is useful to others out there, although the list is a bit
+over the top :-) Perhaps it could go in a FAQ list (for comp.editors.vi?)
+
+				Mark.
+
+UNIX refers to UNIX systems.
+PC   refers to IBM PC compatibles.
+ELV  refers to elvis 1.4
+
+ Key         Normal               Shift                Control
+----------------------------------------------------------------------
+ ESC  | cancel command     | N/A                | N/A                |
+ RET  | start of next line | N/A                | N/A                |
+SPACE | move right         | N/A                | N/A                |
+  !   | pipe through shell | N/A                | N/A                |
+  "   | refer to register  | N/A                | N/A                |
+  #   | (ELV,incr)         | N/A                | N/A                |
+  $   | end of line        | N/A                | N/A                |
+  %   | match bracket      | N/A                | N/A                |
+  &   | repeat ex subst    | N/A                | N/A                |
+  '   | start marked line  | N/A                | N/A                |
+  (   | prev sentence      | N/A                | N/A                |
+  )   | next sentence      | N/A                | N/A                |
+  *   | (ELV,nxt err)      | N/A                | N/A                |
+  +   | start of next line | N/A                | N/A                |
+  ,   | reverse last fFtT  | N/A                | N/A                |
+  -   | start of prev line | N/A                | N/A                |
+  .   | repeat command     | N/A                | N/A                |
+  /   | next match         | N/A                | N/A                |
+  0   | first char of line | N/A                | N/A                |
+  1   | command count      | N/A                | N/A                |
+  2   | command count      | N/A                | N/A                |
+  3   | command count      | N/A                | N/A                |
+  4   | command count      | N/A                | N/A                |
+  5   | command count      | N/A                | N/A                |
+  6   | command count      | N/A                | N/A                |
+  7   | command count      | N/A                | N/A                |
+  8   | command count      | N/A                | N/A                |
+  9   | command count      | N/A                | N/A                |
+  :   | exec an ex command | N/A                | N/A                |
+  ;   | repeat last fFtT   | N/A                | N/A                |
+  <   | shift left         | N/A                | N/A                |
+  =   | lisp fmt (not ELV) | N/A                | N/A                |
+  >   | shift right        | N/A                | N/A                |
+  ?   | prev match         | N/A                | N/A                |
+  @   | execute register   | N/A                | N/A                |
+  a   | ins after cursor   | ins end of line    |                    |
+  b   | prev word          | prev WORD          | back page          |
+  c   | change area        | change to eol      | (break)            |
+  d   | delete area        | delete to eol      | scroll down        |
+  e   | next word end      | next WORD end      | move screen up     |
+  f   | find right         | find left          | forward page       |
+  g   |                    | goto line          | file details       |
+  h   | move left          | top of screen      | move left          |
+  i   | ins before cursor  | ins start of line  |                    |
+  j   | move down          | join line          | move down          |
+  k   | move up            | (ELV,tag)          |                    |
+  l   | move right         | bottom of screen   | refresh screen     |
+  m   | mark position      | middle of screen   | start of next line |
+  n   | repeat search      | reverse search     | move down          |
+  o   | open after line    | open before line   |                    |
+  p   | put after cursor   | put before cursor  | move up (PC,print) |
+  q   |                    | switch to ex       | (flow control)     |
+  r   | replace char       | replace to eol     | refresh screen     |
+  s   | subst char         | subst line         | (flow control)     |
+  t   | till right         | till left          |                    |
+  u   | undo               | undo line          | scroll up          |
+  v   |                    |                    |                    |
+  w   | next word          | next WORD          |                    |
+  x   | delete char        | delete prev char   |                    |
+  y   | yank area          | yank line          | move screen down   |
+  z   | window control     | write & quit ZZ    | (UNIX,suspend)     |
+  [   | prev sect [[       | N/A                | cancel command ESC |
+  \   |                    | N/A                |                    |
+  ]   | next sect ]]       | N/A                | follow tag         |
+  ^   | start of line      | N/A                | edit alt file      |
+  _   | st nx ln (not ELV) | N/A                | N/A                |
+  `   | goto mark          | N/A                | N/A                |
+  {   | prev para          | N/A                | N/A                |
+  |   | move to column     | N/A                | N/A                |
+  }   | next para          | N/A                | N/A                |
+  ~   | toggle case        | N/A                | N/A                |
+----------------------------------------------------------------------
+
+-- 
+Mark Dobie                              M.Dobie@uk.ac.soton.ecs (JANET)
+University of Southampton		M.Dobie@ecs.soton.ac.uk (Bitnet)
+
+--------
+From: dattier@vpnet.chi.il.us (David W. Tamkin)
+Subject: Re: Free keys to bind to in vi (longish)
+Date: 24 Aug 91 15:37:29 GMT
+
+mrd@ecs.soton.ac.uk (Mark Dobie) wrote in <8658@ecs.soton.ac.uk>:
+
+| The free keys which you can rely on seem to be:
+| 
+| ^A ^I ^K ^O ^T ^V ^W ^X
+| g q v V \
+| 
+| and # * K if you're not using elvis.
+
+Not ^_?  Is that spoken for on some systems?  Mark listed it as "N/A".  I've
+had no repercussions from mapping ^_.
+
+Also, ^I, ^V, and ^W (and ^T?) are available for mapping but not for map!ping.
+
+| I hope this is useful to others out there.
+
+Yes, it is.  Thank you.
+
+David W. Tamkin  Box 7002  Des Plaines, Illinois  60018-7002  +1 708 518 6769
+dattier@vpnet.chi.il.us   GEnie:D.W.TAMKIN  CIS:73720,1570  MCI Mail:426-1818
+
+"Parker Lewis Can't Lose" mailing list:
+ flamingo-request@esd.sgi.com (reflector)   flamingo-request@mcs.com (digest)
+
+--------------
+From: roger@quantime.co.uk (Roger Phillips)
+Subject: Re: Free keys to bind to in vi
+Date: 25 Aug 91 15:25:43 GMT
+
+mrd@ecs.soton.ac.uk (Mark Dobie) wrote in <8658@ecs.soton.ac.uk>:
+| The free keys which you can rely on seem to be:
+| 
+| ^A ^I ^K ^O ^T ^V ^W ^X
+| g q v V \
+| 
+| and # * K if you're not using elvis.
+
+Since [ and ] are only meaningful when doubled
+(e.g. ]] is bound, but ] isn't),
+you can map two-key sequences
+(e.g.	[a	]b	][	]-	[1	...),
+which widens your name space
+and can occasionally allow you to use
+slightly mnemonic names.
+
+Roger
+
+--------------------
+From: mfg@castle.ed.ac.uk (M Gordon)
+Subject: Re: Free keys to bind to in vi (longish)
+Date: 29 Aug 91 08:36:59 GMT
+
+I'm not sure how many versions of vi the following will work on - 4.3BSD and
+SunOs 4.* are ok but I haven't checked it on any others.
+
+Vi lets you map function keys with 'map #3 ...'.  Some implementations don't
+check that it's actually a number after the '#' and so you can do things
+like 
+	
+	map #f 0}!{fmt -70
+
+to map the sequence '#f' to a macro which formats the current
+paragraph.  Together with the use of the '[' key posted earlier in
+this thread this gives you more free key sequences to bind things to
+than you're ever going to need (or be able to remember)
+
+
+-- 
+                                                         _   _   _    _   _	
+Michael Gordon - mfg@castle.ed.ac.uk OR ee.ed.ac.uk     | |_| |_| |__| |_| |   
+                                                        | . . . .      . . |    
+It's not an optical illusion, it just looks like one    |_________|~~|_____|    
