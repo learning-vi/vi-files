@@ -1,0 +1,81 @@
+"                       VI ON-LINE HELP SYSTEM 
+"                       """"""""""""""""""""""
+"      Copyright (C) by Ove Ruben R Olsen (rubenro@viggo.blh.no)
+"                       All rights reserved
+" 
+" Version: 2.00, Sun Jul 21 22:49:23 MET DST 1991
+"
+" The author is NOT responsible for any damage this package may make.
+"
+" You may freely distribute this system as long as you don't get
+" paid for doing so.  This system is FREE.
+" 
+" All copyright info on all files must be intact.
+"
+" You are may NOT change this files without mailing the author
+" your changes for inclusion in later editions/versions.
+"
+" Please mail all bug-reports, suggestions et.al to rubenro@viggo.blh.no
+"
+" You may find this package on anon. ftp: alf.uib.no (129.177.30.3)
+"    pub/lpf/misc/vi.online-100.tar.Z 
+"
+"
+" CREDITS:
+"
+"   'Vi Reference'                                by Maarten Lithmaath
+"   'Vi Macros, Abbreviations and Buffers'        by Fred Buck
+"
+"
+"
+" INSTALLATION:
+"
+"    Copy the files  vi.{olh,ende,help} to /usr/local/lib.
+"    If you don't want them there, change the path. No need to mailing the
+"    author for this.
+"
+"    Put   map  :source /usr/local/lib/vi.olh   in your ~/.exrc or your
+"    EXINIT or other places where you need the vi online manual.
+"    Everytime you hit CTRL-H in command mode you will load the help-system.
+"
+"    When entering ^H or other controll characters in vi, type ^V before
+"    you enter your controll char.
+"
+"    After doing this you are ready to use the on-line help system
+"
+"
+"
+" THIS SYTEM WORKS ON:
+"
+"    SunOS 4.1.1    - 4/75
+"    HP-UX A.B7.00  - B9000/825 /834
+"    bsd 4.3        - Unknown
+"  
+"
+"
+" HOW THIS WORKS:
+"
+"    The 'g' macro start's it all after first reading inn the helpfile.
+"    It works like this: Yank the differenct sections into different
+"    buffers. Map various controll-keys to display various sections.
+"
+"    After assiging to different buffers, we source the file vi.ende to 
+"    get rid of the various temporary mappings.
+" 
+"
+set remap redraw 
+" map g 190GW30GA50GE70GD90GF110GR130GU150GX170GOq1G
+"
+" Temporary mappings.
+"
+map W "h23yy
+map A "m18yy
+map E "e19yy
+map D "d11yy
+map F "f17yy
+map R "r10yy
+map U "u9yy
+map X "x14yy
+map O "o12yy
+"
+"
