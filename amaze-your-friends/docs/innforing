@@ -1,0 +1,1033 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  		    En Innf|ring i Tekstredigering med
+
+
+	  #     #                         #######
+	  #     #  ######  ######         #         #   #  ######
+	  #     #  #       #              #          # #   #
+	  #     #  #####   #####   #####  #####       #    #####
+	   #   #   #       #              #           #    #
+	    # #    #       #              #           #    #
+	     #     ######  ######         #######     #    ######
+
+
+
+               Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+         Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+	   Versjon 1.3-162
+
+
+	   Dette dokumentet kan distribueres fritt, forutsatt 
+	   at man ikke tar seg betalt for distribusjonen.
+	   En kan heller ikke ta seg betalt for distribusjons-
+	   mediumet.
+
+	   Man st}r ogs} fritt til } gj|re hva man vil med 
+	   dette dokumentet s} lenge all Copyright informasjon 
+	   er tatt med, samt denne notis. Dog gjelder det at
+	   en kan ikke kreve |konomiske ytelser i sammenhenger 
+	   hvor dette dokument brukes. Dispensasjon fra dette 
+	   gjelder klasse- eller gruppeundervisning. Annen 
+	   dispensasjon kan bli gitt ved foresp|rsel.
+
+	   Dersom du har glede av denne innf|ringen, venligst
+	   doner NOK 100,- til kreftforskningen.
+
+	   Vennligst send forandringer, rettelser, begrunnet 
+	   kritikk, oa til forfatteren.
+	   Forfatterens email adresse er: Ove.R.Olsen@ubb.uib.no.
+
+
+	   Versjonshistorikk / debugging:
+
+	   1.0-000   - Ove Ruben R Olsen.
+	   1.3-023   - Ove Ruben R Olsen.
+	   1.3-141   - H.C. Sundenes.
+	   1.3-154   - Chet A. Creider.
+	   1.3-160   - Ove Ruben R Olsen.
+	   1.3-162   - Ove Ruben R Olsen.
+
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+INNHOLD
+     
+    0. Innhold.
+    1. Hvorfor bruke en dinosaur som VI ?
+	 - Grunner for } bruke VI.
+	 - Hva med den ber|mte ESCAPE tasten ?
+	 - Hvor lang tid vil jeg bruke p} } l{re VI ?
+    2. Innledning.
+	 - Diverse nyttig informasjon om VI.
+	 - Angre utf|rt kommando.
+    3. Oppstart og avslutning.
+	 - Hvordan starte VI.
+	 - Hvordan starte et bestemt sted i fila.
+	 - Vise en fil.
+	 - Avslutte med lagring.
+	 - Avslutte uten lagring.
+    4. Flytting av mark|r i teksten.
+	 - Mellom enkelttegn, ord, linjer, setninger og avsnitt. 
+	 - Flytting p} linja.
+	 - Flytting mellom skjermsider.
+    5. Skrive inn tekst.
+	 - P} og etter mark|r posisjon.
+	 - P} begynnelsen og slutten av linja.
+	 - Starte ny linje over og under innev{rende linje.
+    6. Slette tekst.
+	 - Sletting av tegn, ord, linje(r), avsnitt.
+    7. Forandre i teksten.
+	 - Overskrive tekst.
+	 - Forandre tegn, ord, linje(r), setninger, avsnitt.
+    8. S|ke / erstatt i teksten.
+	 - S|ke framover og bakover i fila.
+	 - S|ke og erstatt i fila.
+    9. Arbeide med filer.
+         - Jobbe med to filer av gangen.
+	 - Jobbe med flere filer.
+	 - Lese fra en fil.
+	 - Skrive til en alternativ fil.
+   10. 'Mapping', makroer og forkortelser.
+	 - Makroer i VI.
+	 - 'abbreviations' (forkortelser) i VI.
+   11. Buffers.
+	 - Kopiering / flytting av tekst i innev{rende fil.
+	 - Kopiering / flytting av tekst mellom to filer.
+   12. Merking.
+         - Merking av tekst.
+	 - Finne igjen et merke i teksten.
+	 - Bruke merker som adressering.
+   13. Shell kommandoer.
+	 - Utf|re UNIX kommandoer under VI.
+	 - Eksportere tekst til et UNIX filter og importere resultatet.
+	 - Importere resultatet fra en unix kommando.
+   14. Opsjoner og variabler (settingser).
+	 - Forklaring p} de vanligste variabler.
+   15. Tips.
+	 - Hvordan f} piltastene til } virke som de skal.
+	 - "Jeg f}r bare : p} sjermen!"
+	 - Funksjonstaster. 
+	 - Bruk av forkortelser.
+	 - Settingser i exrc-filer og andre vi-kommandofiler.
+   16. Evaluering.
+	 - Forfatteren sp|r og graver om dette dokkumentet.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+HVORFOR BRUKE EN DINOSAUR SOM VI ?
+	
+For det f|rste, den virker.
+  - Den virker p} h|yhastigshet og lav hastighets terminaler. 
+  - Den virker p} smarte terminaler, dumme terminaler og glass ttys. 
+  - Den virker med funksjonstaster, piltaster, meta-taster og helt 
+    vanlig ASCII.
+  - Den virker p} alle kjente (og ukjente) terminaler. 
+ 
+For det andre er den forutsigbar.
+  - Den har et konsist kommandoset. 
+  - Alle kommandoer tar et konsist antall argumenter. 
+  - Du kan alltid abryte i midten av en kommando. 
+ 
+For det tredje, den er godt integrert med UNIX.
+  - Den bruker samme regul{re utrykk som awk, sed, grep osv. 
+  - Den virker opp mot UNIX filtere med f} kostnader. 
+  - Den mister ikke fil-modus, lager ikke backupfiler osv. 
+  - Den spiser ikke opp maskinresurser. 
+  - Den er bra rask i oppstarten.
+ 
+For det fjerde er den til } stole p}.
+  - Den tar vare p} den orginale fila, som er til stor hjelp ved
+    system krasj.
+  - Den gjemmer aldri informasjon utenfor skjermen, eller gjemmer
+    formateringskoder inne i teksten.
+  - Den d|r aldri uten } br}ke. G}r noe galt, forteller den deg det. 
+  - Den som kjenner dens oppf|rsel kan stole p} dens kraft. Den vil aldri
+    la deg i stikken.
+
+For det femte er den ganske kraftig.
+  - Den gj|r det jeg ber om, og ikke nok med det men ogs} ganske kjapt 
+  - Du kan med enkle kommandoer bevege deg til hvilken som helst posisjon
+    p} skjermen.
+  - Du trenger ikke } fjerne h}nda fra tastaturet for } finne musa.
+  - Du trenger ikke } bevege fingrene langt avg}rde til pilstastene, "page-up"
+    og "page down" bare for } bevege deg i teksten.
+  - Du trenger ikke } bry deg med et utall av tastekombinasjoner a-la
+    CTRL-ALT-META-SHIFT-en-eller-annen-tast-langt-avg}rde.
+  - Det er bare to-modus editorer som lar deg bevege deg raskt, effektivt og
+    smertefritt hvor som helst p} skjermen, eller i fila di. 
+ 
+-----
+
+
+Du kan stole p} at den er p} ethvert UNIX system. Til og med de sm} "leke
+UNIX'ene" har en VI klone liggende. 
+Ingen porting av kode, ingen klussing med tastatur-layouten og du trenger 
+ikke } bry deg om hvilken versjon av editoren du bruker.
+ 
+Det konsise kommando-settet gj|r at kommandoene er lette } l{re, og gir 
+brukeren en fantastisk handlekraft n}r det gjelder redigering.
+Videre s} passer VI's oppf|rsel UNIX idiomet ganske godt.
+
+Hva med ESCAPE-tasten ?   
+  - Jo, den blir du s} rakst venner med, at du ikke tenker over den i det 
+    hele tatt. Problemet blir n}r du kommer over i en-modus editorer, og du 
+    trykker ESCAPE i tide og utide :-)
+
+Hvor lang tid vil jeg bruke p} } l{re VI ?
+  - For helt ferske, vil jeg ansl} at tiden for } l|re VI er p} under 2 
+    timer ved effektiv studie av denne innf|ringen. (Dvs at du pr|ver alle 
+    kommandoer mens du leser deg gjennom innf|ringen.)
+  - Det skal la seg gj|re } l{re } bruke VI effektivt p} under halvannen
+    time for de som har brukt en annen editor tidligere.
+  - Dersom du kan basics VI fra f|r, tar deg deg ikke mer en 30 min } l{re
+    det som du ikke kan.
+
+
+
+        "One starts to suspect that vi is a religion, not an editor!"
+
+            - Michael Tobis i Comp.Editors, NetNews.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+INNLEDNING
+
+Dette dokumentet skal gi brukeren en introduksjon til VI. (VI uttales
+vee-eye, eller p} norsk: vee-ii.) Dokumentet tar for seg versjon 3.5 
+av editoren.
+Da dette er en introduksjon, er ikke alle 'features' tatt med. Folk
+skal kunne huske det som st}r her, og jo f{rre ting som er tatt med,
+jo lettere blir det } huske innholdet.
+
+Det l|nner seg } ha VI tilgjengelig n}r du g}r i gjennon denne innf|ringen.
+Det enkleste er kanskje } ha dokumentet inne i VI.
+
+VI er en interaktiv editor som vil kj|re p} de fleste terminaler som finnes.
+Editoren vil virke som et vindu p} teksten din, de forandrinene du gj|r der
+vil ogs} v{re forandringer i fila.
+
+] bruke VI kan sammenliknes med } kj|re en Ferrari: "Vi is like a Ferrari,
+when you're learning it's a bitch to drive, but once you've learnt its 
+POWERFUL and FAST".
+
+Definisjoner brukt i dette dokumentet:
+
+   Default verdier      = 1
+   <*>                  = '*' er ikke bokstavelig ment.
+   [*]                  = '*' er valgfri.
+   ^X                   = Hold ned CTRL og trykk X samtidig.
+   <cr>                 = Entertast (Carriage return).
+   <lf>                 = Linjeskift (Line feed).
+   <tb>                 = Tabulator.
+   <esc>                = Escape tasten.
+   <a-z>                = Et element i gruppen a - z.
+   TEGN                 = Tegn forskjellig fra Mellomrom eller Tabulator.
+   ORD                  = Ord etterfulgt av Tabulator, Mellomrom eller 
+			  Linjeskift.
+
+De fleste VI kommandoer tar et numerisk argument, det betyr at kommandoen
+skal utf|res N antall ganger. N er argumentet.
+
+VI er en modusbasert editor, dette vil si at den har forsjellige modi.
+Dette kan i begynnelsen v{re noe uvant for folk som har brukt en-modus
+editorer tidligere.
+De to viktigste modi er Kommando og Tekst. Som navnene sier, i kommando-
+modus gir du kommandoer, og i tekstmodus skriver du inn tekst.
+Tekstmodus avsluttes ALLTID med } trykke <esc>. Dersom du er usikker p} 
+hvilket modus du er i, trykk <esc>. Dette vil ta deg tilbake til kommando-
+modus.
+
+Dersom du skal gi en kommando, og du st}r i tekstmodus, husk } trykke <esc>
+f|r du taster inn kommandoen.
+
+Til } begynne med kan det v{re vanskelig } skille mellom hvilket modus du
+er inne i. For } lette dette finnes det en mulighet til alltid } vise modus
+i statuslinja p} skjermen. For } f} fram denne linja, skriver du :set novice
+OBS: Ikke alle versjoner har denne opsjonen.
+
+Dersom du finner du at du vil gj|re om din siste kommando, skriving av tekst
+eller noe annet, bruk 'u' for undo.
+For } gj|re om alle endringer p} innev{rende linje, brukes 'U'. Du kan kun 
+bruke 'U' dersom du ikke har flyttet deg i fra innev{rende linje.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+OPPSTART OG AVSLUTNING
+
+For } starte VI, skriver du
+
+  vi [filnavn] 
+
+'filnavn' kan enten v{re en fil eller en liste med filer.
+
+F.eks.  vi foo.h foo.c   vil f|rst lese inn foo.h, n}r jeg er ferdig
+med denne, kan jeg g} til foo.c uten } avslutte editoren. Det er og
+fullt mulig } g} tilbake til foo.h n}r jeg er i foo.c. Mer om dette 
+i 'Arbeide med filer'.
+
+Vi kan bli initiert fra to steder, nemlig UNIX-milj|variablen EXINIT
+og fila .exrc. Dette vil si at du kan ha et oppsett for hvordan VI
+skal oppf|re seg etter at du har starten den opp.
+Det beste er } ha en .exrc fil i hjemmekatalogen. Dersom du bruker 
+.exrc i steden for EXINIT, m} du huske p} } fjerne EXINIT fra oppstarts-
+filene dine.
+Dersom det finnes en .exrc i innev{rende katalog (forsjellig fra hjemme-
+katalogen), vil VI initiere fra denne i steden for ~/.exrc. Dette har sin 
+fordel i muligheten for } ha forskjellige oppstartsfiler for forsjellige
+arbeid. En oppstartsfil for C programmering, en oppstartsfil for LaTeX, 
+osv.
+
+Eksempel p} kommandoer i en .exrc fil:
+
+   set autoindent              
+   set nolisp
+   set terse
+   map q :wq!
+
+Hva de forskjellige kommandoene/variablene betyr, finner du i de respektive
+kapitlene.
+
+Det er og mulig } lese kommandoer fra en annen fil en .exrc. Dette gj|res
+ved kommandoen ':source'. 
+
+  :so fil
+
+vil lese kommandoer fra fila 'fil'. ':source' er forkortet til ':so'.
+De fleste kommandoer og settings kan forkortes.
+
+Dersom du |nsker starte p} et bestemt sted i fila kan du gi opsjonen +N,
+der N er et heltall.  vi +15 .cshrc   vil starte opp VI, og plassere
+mak|ren p} linje 15 i .cshrc fila.   vi + .cshrc  vil starte opp VI og
+plassere mark|ren p} siste linje i fila .cshrc.
+Det er ogs} mulig } starte opp p} en bestemt posisjon i en fil. La oss 
+anta at du har en funksjon som heter 'main' i fila 'foo.c'. For } starte
+opp ved f|rste forekomst av 'main' i 'foo-c' skriver du  vi +/main foo.c
+
+\nsker du bare } se p} en fil, gj|res dette ved   vi -r fil 
+Dette gj|r at du ikke kan lagre fila dersom du gj|r forandringer i den.
+
+For } avslutte VI er den enkleste m}ten } skrive 'ZZ' i kommandomodus.
+Dersom du har tastet inn tekst og er ferdig, trykk '<esc>ZZ' for } lagre og
+avslutte arbeidet ditt. Har du startet med -r opsjon, m} du bruke ':q!' i 
+stedet for 'ZZ'.
+Skal du bare avslutte uten } lagre vil ':q!' gj|re nytten.
+
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+FLYTTING AV MARK\REN I TEKSTEN	
+
+I de fleste VI installasjoner er det mulig } bruke piltaster, dersom 
+disse finnes p} terminalen.
+Det er i utgangspunktet tastene h,j,k,l som beveger mark|ren i
+kommandomodus. 
+
+  h - venstre
+  l - h|yre
+  j - ned
+  k - opp
+
+Som tidligere nevnt er det mulig } la kommandoer ta numeriske argumenter.
+Skal du f.eks 5 tegn til venstre trykker du '5h', skal du 5 linjer opp
+trykker du '5k'.
+Dersom du har piltaster som virker, er det mulig } bruke '5<PIL-OPP>' og
+'5<PIL-VENSTRE>'
+
+'w' og 'b' flytter deg til begynnelsen av et ord. 'w' flytter til h|yre og 
+'b' til venstre. Skal du til et ORD, bruk 'W' eller 'B'.
+Skal du til slutten av et ord, brukes 'e'. For ORD, brukes 'E'.
+Huskeregel her: w - word, b - beginning og e - end.
+
+N}r det gjelder linjer, vil '0' flytte mark|ren til starten og '$' til 
+slutten.  Huskeregel er: 0 - Null posisjon.
+Skal du til f|rste TEGN p} ei linje brukes '^'. '^' kan ikke ta numeriske 
+argumenter.  '|' vil f|re mark|ren til en bestemt kolonne p} linja. 
+F.eks. '40|' vil plassere mark|ren i kolonne 40 p} innev{rende linje.
+
+'(' og ')' flytter mark|ren til start og slutt p} en setning, '{' og '}' vil 
+gj|re det samme med hele avsnitt. Skal du 5 setninger framover skriver du 
+'5)'.
+P} enkelte VI versjoner er setning- slutt/start definert som punktum etterfulgt
+av et mellomrom. P} andre versjoner, kun punktum.
+
+'f' etterfulgt av en bokstav vil flytte mark|ren til f|rste forekomst av 
+bokstaven framover (h|yre) p} linja. 'F' vil gj|re det samme, men vil flytte 
+mark|ren bakover (venstre) i steden. ';' gjentar siste 'f' eller 'F'. ','
+virker som ';', men i motsatt retning.
+Huskeregel her er 'find'.
+
+'^F' vil rulle (scrolle) skjermen en side fram. Dersom et argument blir gitt, 
+vil dette gjelde for resten av innev{rende redigering. Det er derfor mulig 
+} scrolle f.eks. 6 sider fram ved } skrive '6^F'. For } rulle bakover brukes
+'^B'. 
+Huskeregler her er  F - Forward og B - Backward.
+
+For } rulle et visst antall linjer fram eller tilbake i fila, brukes '^D' og 
+'^U'. Begge kan ta numeriske argumenter. Et numerisk argument blir verdien 
+som '^D' og '^U' bruker for resten av redigeringssesjonen.
+Initielt vil '^D' og '^U' rulle en halv skjermside.
+Skriver du '24^D' vil skjermen rulle 24 linjer framover hver gang du trykker
+'^D'. 
+Huskeregler er D - Down og U - Up.
+
+Dersom det er behov for } rulle skjermen fram eller tilbake uten } bevege
+mark|ren bort fra innev{rende linje, brukes '^E' for } rulle framover og 
+'^Y' for bakover.
+
+For } se hvor i fila du befinner seg, bruk '^G'.
+
+Se ellers 's|ke / erstatt i teksten' for mer informasjon.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+SKRIVE INN TEKST
+
+Alle de nedenforst}ende kommandoene vil gj|re at VI skifter til tekstmodus.
+For } avslutte tekstmodus trykker du <esc>. Glemmer du dette vil du ikke 
+f} mulighet til } taste inn kommandoer. Dvs at de kommandoene du taster inn 
+vil komme fram som vanlig tekst.
+
+Til } begynne med kan det v{re vanskelig } skille mellom hvilket modus du
+er inne i. For } lette dette finnes det en mulighet til alltid } vise modus
+i statuslinja p} skjermen. For } f} fram denne linja, skriver du ':set novice'
+eller ':set showmode'.
+OBS: Ikke alle versjoner har denne opsjonen.
+
+Skal du skrive inn tekst i innev{rende mark|rposisjon, bruker du 'i'. 'I' 
+vil }pne for } skrive f|r f|rste TEGN p} linja.
+'a' }pner for skriving etter innev{rende mark|rposisjon. 'A' for } skrive 
+etter siste tegn p} linja.
+Dersom du angir et parameter, vil kommandoen gjenta seg N ganger. F.eks. 
+|nsker jeg } skrive banan 5 ganger: '5ibanan <esc>'
+Huskeregel her er i - insert og a - append.
+
+For } start en ny line bruker du 'o' for } }pne under innev{rende linje, og 
+'O' for p }pne over innev{rende linje. 
+Huskeregel her er o - open.
+
+Et '.' vil gjenta siste utf|rte kommando.
+
+Dersom 'autoindent' er satt, vil ^D virke som en venstretabulator.
+
+Se ogs} 'Forandre i teksten' for informasjon om hvordan du skriver over
+allerede eksisterenede tekst. Se ogs} 'Opsjoner og varibaler (settings)' 
+for mer informasjon om 'autoindent'.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+SLETTE TEKST
+
+For } slette tegnet som befinner seg under eller etter mark|ren brukes 
+'x'. Skal du slette tegn f|r mark|ren brukes stor 'X'. Begge kommandoene 
+kan ta et numerisk argument.
+Skal du f.eks. slette 5 tegn skriver du '5x'.
+Huskeregel her er x - eXterminate.
+
+Den viktigste slette kommandoen er 'd' etterfulgt av en kommando
+for bevegelse.
+For } slette et ord: 'dw'; 5 ord: '5dw'.
+For } slette ei line: 'dd'. Skal du slette fra innev{rende posisjon
+og til slutten av linja, brukes 'D'. Man kunne ogs} ha brukt 'd$'.
+Slette til begynnelsen av linja gj|res med 'd^'.
+Huskeregel her er d - delete.
+
+Ogs} her vil '.' gjenta siste komando.
+
+Se ellers 'Flytting av mark|r i teksten' for mer informasjon om hvilke
+kommandoer du kan bruke i forbindelse med 'd'.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+FORANDRE I TEKSTEN
+
+N}r du gir besked om en forandring, vil du se et dollartegn der hvor
+forandringen slutter. 
+
+De to enkleste m}tene } forandre tekst p} er } bruke 'r' og 'R'.
+'r' overskriver et enkelt tegn, og 'R' overskriver flere tegn.
+F.eks. skal jeg bytte ut en 'a' med en 'b', plasserer jeg mark|ren
+over 'a' og skriver 'rb'.
+Dersom jeg ikke helt vet hvor mye jeg skal forandre, bruker jeg 'R'.
+Ved 'r' vil du ikke se noe dollartegn.
+Huskeregel er  R - BIG Replace, r - little replace.
+
+Det finnes og en substitusjonskommando 'S' og 's'. Disse er dessverre 
+ikke mye i bruk. 's' substituerer enkeltbokstaver. Skal du substituere
+f.eks. 5 bokstaver framover, kan du skrive '5s'.
+'S' virker p} hele linjer.
+Huskeregel er S - BIG substitute, s - small substitute.
+
+Den vanligste kommandoen for } forandre i teksten er nok 'c'. 'c' virker p}
+samme m}te som 'd' (delte) kommandoen.
+Som 'd' kan 'c' etterf|lges av kommandoer for flytting.
+Skal du forandre til slutten av et ord, bruker du 'cw' (Change Word).
+Skal du forandre til slutten av det 5. ordet, brukes '5cw'.
+For } forandre til slutten av linja: 'c$'.
+'cc' vil forandre linjer.
+'C' virker p} innev{rende posisjon og til slutten av linja (alts} det samme
+som } bruke 'c$').
+Huskeregel her er c - change.
+
+Skal du forandre mellom sm} og store bokstaver brukes '~' (tilde).
+Du plasserer mark|ren over der du skal begynne og taster '~'. Det dumme er
+at '~' ikke kan ta numeriske argumenter eller andre flytte kommandoer.
+
+Kommandoen 'J' flytter starten av linja under til slutten av innev{rende 
+linje.  Skal du flytte i sammen flere linjer, gir du et argument til 'J'.
+'5J' vil flytte de 5 etterf|lgende linjer til hverandre.
+Huskeregel er J - Join.
+
+Ogs} her vil '.' virke for } gjenta siste kommando.
+
+Se ellers 'Flytting av mark|r i teksten' og 'S|ke / erstatt i teksten' for
+mer informasjon.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+S\KE / ERSTSTATTE I TEKSTEN
+
+Den enkleste m}ten } s|ke p} er } skrive '/' etterfulgt av en s|kestreng.
+'/enkel' vil finne f|rste forekomst av strengen "enkel" framover i teksten. 
+Skal du s|ke bakover i teksten brukes '?' etterfulgt av en s|kestreng.
+'?enkel' vil finne f|rste forekomst av "enkel" bakover i teksten.
+Skal du gjenta et '?' eller et '/' s|k brukes 'n'. 'N' virker som 'n' 
+bortsett fra at det jobber i motsatt retning.
+
+Dersom du st}r p} en parantes ( '(){}[]' ) vil '%' finne den andre passende
+parantesen i teksten. Se ogs} "showmatch i Opsjoner og variabler'.
+
+'f' etterfulgt av en bokstav vil flytte mark|ren til f|rste forkomst av bok-
+staven framover (h|yre) p} linja. 'F' vil gj|re det samme, men vil flytte 
+mark|ren bakover (venstre) i steden. ';' gjentar siste 'f' eller 'F'. ','
+virker som ';', men i motsatt retning.
+Huskeregel her er 'find'.
+
+
+For } s|ke seg fram til en forekomst av en streng og bytte ut denne er
+syntaksen slik:
+  :<adresse> s/<fra>/<til>/<opsjoner>
+
+<adresse>  - Adressen kan gies p} flere former. Noen stikkord her er flytte-
+	     kommandoer, linjenummer, s|kestrenger.
+<fra>      - Hva som det skal s|kes etter.
+<til>      - Hva <fra> skal forandres til.
+<opsjoner> - Opsjon som gies til s|ke/erstatt kommandoen.
+
+F.eks skal du erstatte "foo" med "bar" i hele fila: ':%s/foo/bar'
+':.,$ s/foo/bar' vil erstatte "foo" med "bar" fra innev{rende line og 
+til slutten av fila.
+Erstatte fra linje 34 til linje 56: '34,56 s/foo/bar'
+
+Det kan forekomme tilfeller der bare noen av s|kestrengene skal byttes ut.
+Du kan da gi opsjonen /c. F.eks. bytte ut noen "foo" med "bar" i fila:
+':%s/foo/bar/c'. VI vil da sp|rre for hver forekomst den finner ved } vise
+linja, samt ordet du skal finne. Trykk 'y' og <cr> for } endre, ellers 
+trykk 'n' og <cr>.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+ARBEIDE MED FILER
+
+':e [<filnavn>]' vil lese inn en alternativ fil i VI.
+Du b|r huske p} } ta ':w' f|r du tar ':e' kommandoen. Gj|r du ikke
+det vil du miste den siste teksten du skrev inn.
+For } bytte mellom de to filene, brukes '^^' ( CTRL-^ ).
+Du kan og bruke ':e' kommandoen dersom du vil redigere en ny fil 
+uten } forlate VI.
+
+
+Det er mulig } jobbe med flere filer etterhverandre. Start VI p} 
+f|lgende m}te: 'vi <fil1> <fil2> <fil3> <fil4> <...>'
+For } g} til neste fil i lista, bruk ':n'. Det er ikke noen mulighet
+for } g} flere filer tilbake i lista. Men det er mulighet for } g} til 
+forrige fil ved hjelp av '^^' kommandoen.
+For } komme til begynnelsen av fillista bruk ':rew'. Husk } ta ':w'
+f|rst.
+Det er mulig } se hele argumentlista du oppga til VI ved } skrive ':args'.
+Har du oppgitt flere filer, st}r innev{rende filnavn i klammeparanteser.
+
+For } lese inn en fil i innev{rende fil, brukes ':r <filnavn>'.
+<filnavn> vil bli lest inn etter innev{rende linje.
+
+For } skrive til en fil, er kommandoen ':w <filnavn>'. Det er mulig } 
+oppgi en adresse f|r 'w'. F.eks. skal du skrive linje 1 til 12 ut p} 
+filen <filnavn> skriv: ':1,12 w <filnavn>'. Skal du legge linje 1 - 12 
+til slutten av en alternativ fil, brukes ':1,12 w >> <filnavn>'.
+
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+'MAPPING', MAKROER OG FORKORTELSER
+
+Mapping eller makroer kan forenkle kompliserte VI tastetrykk. 
+Forkortelser utvider en forkortelse til et fullt ord.
+
+For } lage en makro, brukes ':map' eller ':map!'.
+map brukes for makroer i kommandomodus, og map! for makroer i tekst-
+modus.
+
+F.eks. dersom jeg bruker kommandoen ':w' ofte, kan det v{re en ide og
+legge den inn som en en-tasts kommando. Dvs at hver gang jeg trykker
+p} en spesiell tast, utf|res ':w'.
+La oss si at jeg |nsker } legge inn ':w' p} funksjonstast F1 n}r jeg er
+i kommandomodus og tast ^W (for Write) n}r jeg er i tekstmodus:
+':map #1 :w^M' legger ':w' og <cr> inn p} F1. For } f} til ^M ( <cr> )
+trykker du '^V^M'. Hver gang du da trykker F1 i kommando-modus vil inne-
+v{rende fil bli lagret og du kan fortsette redigeringen.
+For } legge inn ':w' og <cr> i tekstmodus skriver du ':map! ^W ^[:w^M'
+(^[ er CTRL-V-ESCAPE, ^W er ^V^W). N}r du trykker ^W i tekstmodus vil
+teksten bli lagret og du kan fortsette og redigere videre. 
+Dette }pner jo da muligheten for } lage en 'en modus' editor. Dvs en editor
+som du ikke trenger } trykke <esc> f|r du kan utf|re kommandoer.
+Det er smart } legge inn mye brukte makroer i ~/.exrc fila.
+
+Dersom du |nsker }  fjerne en makro, brukes ':unmap' eller ':unmap!' 
+etterfulgt av makroen. F.eks. dersom du vil fjerne ':w' p} funksjonstast F1, 
+skriver du ':unmap #1'.
+
+Forkortelser lages ved hjelp av ':ab'. Forkortelser gjelder kun i tekstmodus.
+F.eks. jeg holder p} med } skrive en oppgave som innholder strengen "Network
+Transfer Protocol". Jeg vil ha VI til } skrive denne strengen hver gang jeg
+trykker 'NTP'. Dette gj|res slik: ':ab NTP Network Tranfer Protocol'
+Har jeg behov for } bruke forkortelsen i teksten trykker jeg ^V like etter
+forkortelsen. F.eks. "... NTP^V ...".
+For } fjerne forkortelser, brukes ':unab' etterfulgt av forkortelsen. F.eks.
+jeg vil fjerne 'NTP' forkortelsen: ':unab NTP'.
+I noen VI versjoner, m} du bruke ':abbr' og ':unabbr' isteden for ':ab' og
+':unab'
+
+Eneste m}ten } l{re makroer og forkortelser p} er } lage sine egne, samt } 
+se hva andre har f}tt til. Det finnes ganske mange bra makroer for VI etter-
+hvert. Bla. EMACS-emlator, Turing-maskin, l|sing av labyrinter, oa.
+
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+BUFFERS
+
+Et buffer kan kort forklares som en tavle der VI kan skrive og fjerne 
+informasjon. 
+N}r du redigerer tekst med VI, jobber du egentlig p} et redigerings-
+buffer og ikke rett p} fila.
+
+I dette avnsittet betyr buffer sm} 'tavler' inne i VI. Dvs ikke selve
+redigerings-bufferet.
+
+Buffers i VI kan hete <a-z> og <A-Z>. I disse bufferne kan du legge
+ord, linjer, hele avsnitt oa. 
+Ved hjelp av buffers kan du enkelt kopiere eller flytte tekst mellom
+to filer og i innev{rende fil.
+
+Dersom du vil kopiere 5 linjer fra et sted i innev{rende fil til
+et annet sted i innev{rende fil bruker du '"a5yy'
+  " - betyr at VI skal bruke et buffer.
+  a - betyr buffer 'a'.
+  5yy - betyr at VI skal legge inn 5 linjer inn i bufferet.
+S} forflytter du meg til dit jeg skal ha teksten og trykker '"ap'
+  " - betyr at VI skal bruke et buffer.
+  a - betyr buffer 'a'.
+  p - betyr at VI skal putte ut bufferet i teksten.
+N}r du har en tekst inne i ett buffer blir den der til jeg avslutter VI,
+eller legger noe annet inn der.
+
+Dersom du skriver 'p' uten noen argumenter vil jeg kunne f} ut det midler-
+tidige bufferet. 
+F.eks. dersom du skal bare kopiere en gang trenger jeg ikke } legge noe inn
+i <a-z> bufferne. Det du gj|r er f|lgende: '5yy' og s} flytter du meg til
+dit du skal ha teksten og trykke 'p'.
+Denne teknikken bruker det midlertidige bufferet som ogs} undo kommandoen
+('u') bruker.
+
+Skal du flytte 5 linjer, bruker du '"a5dd' for } legge inn 5 linjer i 
+bufferet samtidig som du sletter disse ('dd' sletter jo linjer), etter 
+} ha forflyttet seg dit du skal legge linjene bruker du '"ap'.
+Det er og her mulig } la v{r } ta med buffernavn ("a), og kun bruke '5dd' og
+'p'.
+
+Skal du flytte / kopiere tekst mellom to filer l|nner det seg } legge
+teksten som skal flyttes inn et buffernavn. Dvs ikke det midlertidige
+bufferet.
+Fremgangsm}ten for } kopiere tekst mellom <fil1> og <fil2>:
+  - Start opp VI med fil1.
+  - Finn avsnittet som skal kopieres til fil2.
+  - Trykk '"ad}' for } kopiere til buffer 'a'.
+  - Skriv s} ':e fil2'.
+  - Da kommer du inn i fil2.
+  - Finn stedet hvor avsnittet i fra fil1 skal kopieres til.
+  - Skriv '"ap' for } legge bufferet ut i fil2.
+  - Skriv ':w' for } lagre fil2.
+  - Trykk '^^' (CTRL-^) for } komme tilbake til fil1
+Det finnes flere m}ter } gj|re ovenst}ende prosedyre p}, men mange ny-
+begynnere p} VI har funnet at denne 'skj|nner' de. 
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+MERKING 
+
+Du kan merke av forskjellige posisjoner i teksten. Disse merkene kan
+du henvise til i forsjellige sammenhenger.
+
+For } merke en posisjon i teksten brukes 'm' etterfulgt av en bokstav.
+For } g} til en merket posisjon, brukes ' etterfulgt av en bokstav som 
+har v{rt brukt i sammen med 'm'.
+
+OBS: Du m} ikke forveksle buffer-navn og merker. Du kan godt bruke 
+b}de '"a5yy' og 'ma'. 'a' vil bety noe annet med " foran en med ' foran.
+
+Dersom du merker to posisjoner i teksten, s} kan du slette alt mellom
+disse ved } skrive ''ad'b' hvor 'a' og 'b' er to merkede posisjoner.
+
+Du kan skrive alt i mellom to merkede posisjonene med ':'a,'b w <filnavn>'
+der 'a' og 'b' er de merkede posisjoner.
+
+Det er f.eks. mulig } legge teksten mellom to merker inn i et buffer og 
+kopiere eller flytte linjene mellom merkene.
+For } legge inn i buffer 'a' for kopiering:   "a'ay'b
+For } legge inn i buffer 'a' for flytting:    "a'ad'b
+For } putte bufferet tilbake i testen, finner du posisjonen og trykker 
+'"ap'.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+SHELL KOMMANDOER
+
+Det er mulig } utf|re UNIX kommandoer i VI. 
+Du har og muligheter for } importere resultatet av en kommando, 
+eller } sende tekst fra fila til en UNIX kommando og f} resultatet
+av dette tilbake i VI.
+
+For } utf|re en UNIX kommando brukes ':! <cmd>', der <cmd> er en UNIX
+kommando. 
+F.eks. for } se en liste over filer i innev{rende ommr}de, kan du bruke
+kommandoen ':!ls'.
+
+Dersom du vil ha resultatet av UNIX kommandoen inn i teksten trykker du
+'!! <cmd>'. <cmd> er en UNIX kommando.
+F.eks. for } importere liste over filer i innev|rende fil-omr}de: '!!ls'
+
+Det som er virkelig interessant er n}r du vil behandle en del av teksten
+ved hjelp av en UNIX kommando.
+F.eks. dersom jeg har en kolonne med tall jeg vil ha sortert i stigende
+rekkef|lge, plasserer jeg med p} begynnlesen av tallrekka og skriver inn:
+'!}sort -n'.
+F.eks. dersom du |nsker } formatere et avsnitt skriver du '!}fmt'
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+OPSJONER OG VARIABLER (SETTINGSER)
+
+VI har en mengde opsjoner og settingser. De fleste av disse trenger ikke
+en nygegynner vite om, men det er enkelte som forenkler VI-hverdagen
+ganske mye.
+
+For } se variablene som varierer fra initiell (default) verdi, bruk
+kommandoen ':set'.
+
+For } se hva alle variablene er satt til, bruk ':set all'
+
+For } gi en opsjon en verdi, er syntaksen: ':set <opsjon>=<verdi>'
+For } sl} p} en opsjon: ':set <opsjon>'
+For } sl} av en opsjon: ':set no<opsjon>'
+
+Det er vanlig } sette faste opsjoner i ~/.exrc fila. Med fast opsjoner
+menes variabler som skal settes i hver redigeringsjobb.
+
+Nedenfor f|lger noen opsjoner/variabler og hva de betyr, samt hva de kan 
+forkortes til.  Forkortelsen st}r i parantes.
+
+autoindent (ai) - Forenkler vesentlig programmering. Dersom 'ai' ikke er 
+                  satt ('noai'), vil mark|ren g} til posisjon 0 n}r du 
+                  trykker <cr>. 
+		  Er 'ai' satt, vil mark|ren legge seg under siste indenterte
+		  tekst. Dersom du vil et hakk til venstre, brukes ^D i 
+		  tekstmodus. Se ogs} 'shiftwidth'.
+		  Default: noai 
+
+autowrite (aw)  - Skriver innev{rende redigerings-buffer ut p} fila n}r du 
+		  gir :n, :rew ^^ og ! kommandoene.
+		  Default: noaw
+
+errorbells (eb) - Dersom du taster en kommando feil, vil de terminaler som 
+		  har mulighet til det, pipe. Det er sv{rt kjedelig } sitte
+		  p} et stort terminal-rom med 20 pipendes VI brukere.
+		  Default: noeb
+
+number (nu)     - Er denne satt kommer hver linje bli vist med et linjenummer.
+		  Linjenummeret er ikke en del av fila. Denne opsjonen kan
+		  v{re hendig n}r du skal redigere feil i programmer basert
+		  p} en feilutskrift.
+		  Default: nonu
+
+shiftwidth (sw) - "Soft Tabs". Brukes ved '^D' i tekstmodus n}r 'autoindent' 
+                  er satt. Dersom du alltid taster inn to mellomrom n}r du
+		  starter p} en ny programmeringsblokk, b|r 'sw' setter til 2.
+		  Trykker du '^D' p} en }pen linje, vil mark|ren bevege seg 
+		  to plasser til venstre.
+		  Default: sw=8
+
+showmatch (sm)  - Dersom du skriver inn en } eller en ), vil mark|ren hoppe
+		  til den tilsvarende { eller (. Mark|ren vil v{re der i ca
+		  ett sekun f|r den hopper tilbake.
+		  Dette er kan v{re ok dersom du programmerer i lisp eller i C.
+		  Default: nosm
+
+tabstop (tb)    - Gj|r det mulig } sette tabulatoren for inne{rende fil.
+		  Gjelder KUN for redigeringen. Fila vil fortsatt ha standard
+		  UNIX tabulator.
+		  Default: ts=8
+
+warn (wa)       - Advarsel dersom det har v{rt '[No write since last change]'
+                  ved utf|relse av enkelte kommandoer. 
+		  Default: warn
+
+wrapscan (ws)   - Dersom 'wrapscan' er satt, vil VI begynne p} begynnelsen av
+		  fila dersom den kommer til slutten ved en s|kekommando.
+		  Dette er hendig, for da trenger du ikke } g} til starten
+		  av fila hver gang du skal foreta et s|k med / eller ?.
+		  Ved ?-s|k vil mark|ren g} til slutten av fila n}r den kommer
+		  til starten.
+		  Default: ws
+
+wrapmargin (wm) - H|yre marg p} skjermen. Dersom 'wm' er satt til et tall 
+		  st|rre en 0 vil VI automatisk skifte linje dersom du
+		  skriver og kommer til h|yremargen.
+		  Default: wm=0 (Denne defaulten er i fra UCB's VI. Andre
+				 instalasjoner kan ha en annen defaultverdi.) 
+
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+TIPS
+
+Ikke les hele dette avsnittet f|r du har jobbet deg gjennom alle de fore-
+g}ende avsnittene, samt at du har brukt det du har l{rt over en periode.
+Noe av stoffet p} slutten av avsnittet kan v{re ganske tungt for nybegynnere.
+
+
+Hvordan f} piltasene til } virke p} den terminalen du n} sitter ?
+Til det bruker du :map! og :map.
+Det beste er } legge inn noen :map og :map! is ~/.exrc
+Skriv  vi ~/.exrc
+G} til slutten av fila med 'G'. ]pne ny linje under innev{rende ved
+hjelp av 'O'.
+Du skal f|rst legge inn piltastene i kommandomodus:
+  F|rst mapper vi PIL-OPP, ved } skrive:
+    map ^V<PIL-OPP> k
+  S} gjentar vi det samme med de andre piltastene
+    map ^V<PIL-NED> j 
+    map ^V<PIL-VENSTRE> h 
+    map ^V<PIL-H\YRE> l 
+
+S} skal du legge inn piltastene i tekstmodus. 
+  F|r mapper vi <PIL-OPP>, ved } skrive
+    map! ^V<PIL-OPP> ^V^[k
+  Husk at ^[ er <esc>. Husk utropstegnet. 
+  Vi gjentar for de andre piltastene:
+    map! ^V<PIL-NED> ^V^[j
+    map! ^V<PIL-VENSTRE> ^V^[h
+    map! ^V<PIL-H\YRE> ^V^[l
+
+Lagre og avslutt redigering av ~/.ecrc ved hjelp av '<esc>ZZ'.
+Hvordan du ordner det slik at du kan fortsette } skrive etter } ha brukt 
+piltastene i tekstmodus "... is an exersice for the student ..." 
+
+
+Hjelp ! Jeg f}r bare fram ':' samme hva jeg trykker ! 
+Muligheten for at du har trykket 'Q' i kommandomodus er ganske stor.  
+Trykker du 'Q' i kommando-modus, hopper du over i ex-modus. For } komme 
+tilbake til VI, skriv 'vi<cr>'.
+
+
+P} funksjonstastene kan du legge mye rart. Funksjonstastene har navn fra
+#1 til #0. Dette gjelder b}de for kommando og tekstmodus.
+Selv om du har 10 funskjonstaster p} tastaturet, er det ikke sikkert at den
+terminalen du er satt opp med har 10 funksjonstaster.
+F.eks. dersom du sitter p} en IBM-PC og jobber i vt-100 emulering, kan du
+ikke bruke alle 10 funksjonstastene. 
+For } bruke funksjonstaster som ikke er st|ttet fra terminalen, gj|r du som
+med piltastene:
+  map ^V<F-TAST> <ett eller annet>
+
+
+Forkortelser kan brukes til s} mangt. Ikke bare forkorte ord, men du
+kan og legge hele vi-sekvenser inne i forkortelser. Som regel vil 
+forkortelser v{re bedre enn } bruke ':map'.
+Eksempler p} forkortelser i ~/.exrc fila
+
+    abbr gmtdate ^M^M^[k:.!date -u^MkJ$Ja
+    abbr usdate ^M^M^[k:.!date +\%a\ \%h\ \%d\ 19\%y^MkJ$Ja
+    abbr nodate ^M^[:.!date +\%d\/\%m\ -\%y^MkJA
+
+Hvordan de forskjellige forkortelsene virker, overlater jeg til leseren.
+
+
+I ~/.exrc fila har jeg f|lgende:
+   se ai wm=0 sw=2 aw
+
+se   - en forkortelse for :set
+ai   - autoindent. Mark|ren skal plassere seg under ovenforst}ende tekst
+       ved en linjekskift.
+wm=0 - WrapMargin = 0. Dvs at vi ikke skal skifte linje n}r jeg kommer til
+       linjeslutt.
+sw=2 - ShiftWidth = 2. Ved bruk av ^D i tekstmodus, hopper mark|ren to plasser
+       til venstre.
+aw   - Autowrite. Skriver innev{rende buffer til fil ved en alternativ fil-
+       operasjon.
+
+Det hadde v{rt mulig } gi alle kommandoen p} linjer hver for seg, men for }
+spare plass, har jeg lagt alt p} ei linje.
+
+
+N}r det gjelder .exrc filer og andre VI-kommandofiler (de som kan leses
+inn ved hjelp av ':so', og utf|re kommandoer), er det enkelte ting som 
+gjelder:
+  - Kommentarer gies ved "
+  - Det er ikke n|dvendig } ha : f|r kommandoer.
+
+VI har et begrenset buffer, derfor kan det l|nne seg } ha forsjellig kommando-
+filer til forskjellige oppgaver.
+
+
+              En Innf|ring i Tekstredigering med Vi.
+
+          Copyright (C) Ove Ruben R Olsen, September 1991
+
+
+EVALUERING
+
+For } lage en s} god veldning for nye brukere som mulig, har jeg
+tatt med dette avsnittet om evaluering.
+
+   1. N}r det gjelder datamaskiner, er du en
+      a) Nybegynner.
+      b) Vanlig bruker.
+      c) "Ekspert" (dvs du liker } finne ut av ting.)
+
+   2. Har du brukt tekst-editorer tidligere ?
+      a) Nei, ikke i det hele tatt.
+      b) Litte grann.
+      c) Ja, en god del eller mye.
+
+   3. Har du brukt andre editorer en VI ?
+      a) Emacs -type.
+      b) WordStar -type.
+      c) Modus-basert type.
+      d) Andre. I s}fall Hvilken type ?
+
+   4. Hva synes du om denne innf|ringen ?
+      a) D}rlig. I s}fall hva ?
+      b) Ok.
+      c) God. Hva likte du.
+  
+   5. Hvor lang tid brukte du p} denne innf|ringen ?
+
+
+Generelle kommentarer, rettelser, oa. sendes pr eletronisk post til
+Ove.R.Olsen@ubb.uib.no
+
+
+
+Ove Ruben R. Olsen
+Bergen, September 1991
