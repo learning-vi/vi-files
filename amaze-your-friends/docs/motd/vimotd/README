@@ -1,0 +1,111 @@
+
+
+				VIMOTD Package
+
+		   By Paul Balyoz <pab@rainbow.cse.nau.edu>
+				   02/08/92
+
+
+Introduction
+
+"vimotd" is a command that is added to an "etc" directory via "make install".
+This command allows the person who runs it to modify a "global motd file",
+which is a special format message-of-the-day file.  After editing this file,
+vimotd generates individual host motd files and sends them to each host
+via NFS.  This command acts very much like "vipw" under Berkeley Unix,
+hence its name.
+
+"vimotd" can only be run by a user who has write-permission to the
+/etc/motd files on each host.  "vimotd" is a shell-script which you should
+configure before installing.  It must be able to "cd" into its working
+directory to get to its awk script and global motd file.
+
+
+Benefits of this package
+
+vimotd allows the system administrator to manipulate many host's /etc/motd
+files by maintaining only a single text file using the vi editor.
+
+The command "vimotd" is very easy to type, is shorter than actually editing
+a single /etc/motd file, and works no matter what directory you are
+currently in.
+
+The first line of each host's existing /etc/motd file is preserved when the
+new motd files are written back out to each host.
+
+NFS is used to read and write the motd files to remote hosts, although
+other facilities may be used.
+
+The ability to add a single message to existing /etc/motd files
+on one or many hosts.
+
+The ability to comment out lines in the motd file so that they aren't
+placed in the actual motd files, but can be kept around for future use.
+
+The ability to use host aliases which group a number of machines into one
+name, such as "mv" for "all microvax type computers", or "fac" for "faculty".
+
+The "ping" utility is required to sense if each remote host is accessable.
+
+All resulting motd files have an extra blank line separating each group
+of message lines, and have an extra blank line at the top and bottom of
+the file.  This makes the resulting motd files more readable for people
+when they log in.
+
+
+Installation
+
+* Edit the vimotd file and set NFSPATH to the prefix portion of the path
+  that accesses all remote host's root directories.  Example: for a remote
+  host "mv1", if the path to its root directory is /r/mv1, then put:
+	NFSPATH=/r
+
+* Edit the motd.nawk file and set up the "hosts" array as described
+  within that file.
+
+* Decide where you want to put the vimotd executable program.
+  Modify the BIN variable in the Makefile to know this.
+
+* Decide where you want the working directory for vimotd to be.
+  Modify the MOTDDIR variable in the Makefile to know this.
+  Modify the MOTDDIR variable in the vimotd shell-script to know this.
+
+* Inspect everything in the Makefile, and modify as appropriate.
+
+* Type "make install", then "make installdir" to install everything.
+
+* Test out vimotd.  If using the C-shell, you probably have to type
+  "rehash" or log out and back in for the command to be recognized.
+  Then type "vimotd" and see what happens.  You should be in vi,
+  editing the global motd file, and when you quit it should write out
+  all the individual host's motd files.
+
+
+Format of the Global Motd File
+
+The format of the global motd file you edit is as follows:
+
+	1. Lines beginning with "#" are considered comments and ignored.
+
+	2. Lines beginning with ">>" contain zero or more white-space
+	   separated hostnames or host abbreviations after it on the line.
+
+	3. Lines below the ">>" line up to the next ">>" or end-of-file
+	   are written to the motd files listed on the previous ">>" line.
+	   This includes blank lines.
+
+	4. All lines above the first ">>" line are ignored, because no hosts
+	   have been specified yet.
+
+	5. A lone ">>" on a line with no host names or abbreviations following
+	   it causes all lines below it up to the next ">>" line to be ignored.
+
+
+--------
+If you have any questions or comments, feel free to contact me any time:
+
+Paul Balyoz, Software Specialist II    pab@rainbow.cse.nau.edu
+Northern Arizona University            pab@naucse.cse.nau.edu
+PO Box 15600, Flagstaff, AZ 86011      pab@mv1.cse.nau.edu
+NICname: PB1                           ...arizona!naucse!pab
+--------
