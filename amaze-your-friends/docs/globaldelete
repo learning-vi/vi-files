@@ -1,0 +1,34 @@
+From nsrcchk@nusunix.nus.sg (Heng Kek)
+Subject: vi :g/string/d in macro buffer !working
+Date: 8 Jun 93 07:02:34 GMT
+
+Hi vi-ers,
+I'll keep this short and sweet.
+Problem:
+   :g/string/d   in macro buffer, when invoked gives the error:
+ "Can't undo in global commands"
+
+Details:
+   I open an empty line and type the following:
+              :g/string/d
+   and then I delete the line to buffer "a by entering   
+              ESC "add
+   Then I get the said error when I enter
+              @a
+
+The command works normally when I type it on the command line.
+I get the same problem with :g/string/s/string2/string3/
+Seems to be a problem with the 'g' cmd in a macro buffer.  What
+gives?  Any help will be appreciated.  Thanks.
+
+Heng Kek
+Singapore.
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: vi :g/string/d in macro buffer !working
+Date: 8 Jun 1993 18:18:40 +0200
+
+In <1v1dia$l28@nuscc.nus.sg> nsrcchk@nusunix.nus.sg (Heng Kek) writes:
+>Problem:
+>   :g/string/d   in macro buffer, when invoked gives the erro
