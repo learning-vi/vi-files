@@ -1,0 +1,186 @@
+From krisk@ux1.cso.uiuc.edu (Kris Klindworth)
+Subject: Re: Is there a spellchecker for VI?
+Date: Thu, 27 Aug 1992 15:49:15 GMT
+
+olsonkk@ucsu.Colorado.EDU (OLSON KIRK) writes:
+
+
+>Hi all... I was wondering if anyone knew if a spellchecker for VI exists
+>and or is available?  Has anyone ever heard of such a thing?
+
+>Thanks!
+
+>Kirk
+>-- 
+>Kirk Olson
+
+>olsonkk@ucsu.colorado.edu
+>olsonkir@luther.uni.edu
+
+
+If you're on a unix machine, you can pipe the lines to be
+checked through unix spell.  
+
+Ex.
+:%!spell
+
+However, this must be undone immediately or you'll lose your
+original text.  An alternative way to do this is to save the file
+and then run spell on it, reading the output into your current text file.
+
+Ex.
+:w!
+:0r !spell %
+
+This will put the misspelled words at the top of the file.
+
+
+WHAT I DO:
+
+I use the following key mappings in my .exrc file to approximate
+the word processor behavior of
+automatically moving the cursor from one misspelled word to the next. 
+
+map S :w!:0r !spell %:1,s/^/\//1G
+map F "kyy@k
+
+Then a typical sequents is to hit S to run the spell checker, and load
+the errors into the beginning of the file, hit F to load the word
+into the find buffer, hit n to move on to the next occurrence of the word,
+and dd when the cursor comes back to the first line of the file.  
+
+
+From siffert@spot.Colorado.EDU (Thunder-Thumbs)
+Subject: Spell-check program needed for vi.
+Date: Sat, 3 Jul 1993 20:28:53 GMT
+
+Is there any way, using vi (or a clone), I can put my cursor on
+a word, hit a control-key sequence, and it will check the spelling
+of that word, prompt me for a correct spelling, and correct it if
+I so desire?
+
+I basically want the same functionality as ispell, but when I try
+it with ispell, it always assumes the word is a file name and
+buggers out on me.  I haven't found a working flag.  
+
+emacs has a M-x spell-word function, but I want it in vi.  Any
+ideas?
+
+Curt
+
+
+From jansteen@cwi.nl (Jan van der Steen)
+Subject: Re: Spell-check program needed for vi.
+Date: 6 Jul 93 09:07:45 GMT
+
+siffert@spot.Colorado.EDU (Thunder-Thumbs) writes:
+
+>Is there any way, using vi (or a clone), I can put my cursor on
+>a word, hit a control-key sequence, and it will check the spelling
+>of that word, prompt me for a correct spelling, and correct it if
+>I so desire?
+
+Try "spet", and a keymapping like:
+
+	map q !!spet -v -t3^M
+
+This will spell the current line in verbose mode while ignoring
+words with less than three characters in them.
+Example:
+
+    Let's say you wroote this and hit "q"
+                  ^^^^^^                 
+
+The program spet is available from:
+
+	ftp : sun4nl.nluug.nl
+	dir : pub/textproc/txttools
+	file: spet-1.2.tar.Z
+
+Jan van der Steen
+-- 
+    -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+     Jan van der Steen                 jansteen@cwi.nl
+     Centre for Mathematics and Computer Science (CWI)
+     Kruislaan 413, 1098 SJ Amsterdam, The Netherlands
+
+
+From msc@ssigate.ssinc.com (Michael S. Cross)
+Subject: Re: Spell-check program needed for vi.
+Date: Tue, 20 Jul 1993 12:32:04 GMT
+
+ siffert@spot.Colorado.EDU (Thunder-Thumbs) writes:
+>Is there any way, using vi (or a clone), I can put my cursor on
+>a word, hit a control-key sequence, and it will check the spelling
+>of that word, prompt me for a correct spelling, and correct it if
+>I so desire?
+
+I don't know of any.
+
+>I basically want the same functionality as ispell, but when I try
+>it with ispell, it always assumes the word is a file name and
+>buggers out on me.  I haven't found a working flag.  
+
+vi is a text editor, not a word processor.  Why don't you just finish
+the "document" while the thoughts are still flowing, and run it through
+ispell when you are through.  ispell will *automaticly* replace the
+misspelled words with your word of choice.
+
+Of course this doesn't always work so well with email or netnews postings.
+
+Hope it helps (tm).
+
+Mike
+
+-- 
+Michael S. Cross    Work: msc%ssigate.UUCP@tellab5.tellabs.com    708-505-4508
+       Home: 73750.1363@CompuServe.com  (but not exactly *proud* of it)
+Systems and Synchronous Inc., 900 E. Diehl Rd, Suite 110, Naperville, IL 60563
+__________________________To Live is to risk Dying____________________________
+
+
+From ray@Celestial.COM (Ray Jones)
+Subject: Re: Spell-check program needed for vi.
+Date: Thu, 22 Jul 1993 18:55:29 GMT
+
+In <1993Jul20.123204.8641@ssigate.ssinc.com> msc@ssigate.ssinc.com (Michael S. Cross) writes:
+
+
+> siffert@spot.Colorado.EDU (Thunder-Thumbs) writes:
+>>Is there any way, using vi (or a clone), I can put my cursor on
+>>a word, hit a control-key sequence, and it will check the spelling
+>>of that word, prompt me for a correct spelling, and correct it if
+>>I so desire?
+
+>I don't know of any.
+
+>>I basically want the same functionality as ispell, but when I try
+>>it with ispell, it always assumes the word is a file name and
+>>buggers out on me.  I haven't found a working flag.  
+
+There are a couple of ways to do this.  If you want to use ispell:
+1. write the file to some tmp file
+2. run ispell on the tmp file
+3. replace the current doc with the correctly spelled tmp file.
+that will spell check the whole document.
+This can be done with the following map for function key 1
+map #1 :w %^M:!ispell  %^M^M^[:0r % ^MjdG^M
+There are a couple of extra keys in this but it does work.
+
+However, if you want put the cursor on a word, press Control-X and run
+ispell on just that word and replace the word with the correct spelling,
+then use the following map.
+
+map ^X i^M^[ea^M^[b:.w! /tmp/x^M:!ispell  /tmp/x^Mbdw:r /tmp/x^MkkJJJ^M
+
+This map grabs the word, writes it to a file (/tmp/x), runs ispell on that
+file, then replaces the word with the new contents of /tmp/x.  If you are on
+a multi-user system you may want to change the tmp file to something in your
+home directory.  This will leave tracks (/tmp/x and /tmp/x.bk) but they are
+only one word long.
+
+-- 
+INTERNET:  ray@Celestial.COM           | The probability of one or more
+Ray A. Jones; Celestial Software       | spelling errors in this missive
+8545 S.E. 68th Street                  | approaches unity. If this bothers you,
+Mercer Island, WA 98040;(206) 236-1676 | run it through y
