@@ -1,0 +1,138 @@
+
+
+From mgflax@phoenix.Princeton.EDU (Marshall G. Flax)
+Subject: Re: Command line editing in vi
+Date: 12 Aug 92 06:32:11 GMT
+
+In article <1992Aug12.021145.5902@nuscc.nus.sg> ccechk@nuscc.nus.sg (Heng Kek) writes:
+>Imagine entering something like
+>	:'a,$s/\([a-z]*\).*\([0-9]\) *[^ ]*)/\2,\1==/
+>only to find that you've missed a '('.  
+>
+>I hope there's an answer which I presume lies in macros.  
+
+One solution is to actually enter that line into your text and edit it
+until it is perfect.  Then yank it into a named buffer
+	"zdd
+and execute it
+	@z
+
+If you need to fix it, you can pull it back from the named buffer,
+	"zp
+re-edit, re-yank, and then re-execute it.
+
+
+marshall
+
+-- 
+------- (c) 1992, Marshall Gene Flax <mgflax@phoenix.Princeton.EDU> -------
+----------- 5 Joyce Lane, Woodbury, NY 11797, 516-364-9331,9379  ----------
+- c/o Jack Gelfand,Psychology Dept,Princeton U.,NJ 08544,609-258-6739 (w) -
+
+
+From ccechk@nuscc.nus.sg (Heng Kek)
+Subject: Command line editing in vi
+Date: Wed, 12 Aug 1992 02:11:45 GMT
+
+I've a feeling this question might have cropped up before.  If so, I
+apologise.  How may I 'recall' the last cmd I entered in vi in such
+a way that I can edit that command and execute it?  Something like
+the history command editing in tcsh.
+
+This feature is real useful in situations when I enter a mistyped
+command and want to reenter the corrected one.  Imagine entering
+something like ":'a,$s/\([a-z]*\).*\([0-9]\) *[^ ]*)/\2,\1==/" only
+to find that you've missed a '('.  It's not fun to retype the whole
+thing. :)
+
+I hope there's an answer which I presume lies in macros.  
+
+Kek
+
+
+
+
+From stv@ferret.uucp (Steve Manning)
+Subject: Re: Command line editing in vi
+Date: 27 Aug 92 05:21:00 GMT
+Article-I.D.: ferret.1992Aug27.052100.1716
+
+In article <1992Aug12.021145.5902@nuscc.nus.sg> ccechk@nuscc.nus.sg (Heng Kek) writes:
+>            How may I 'recall' the last cmd I entered in vi in such
+>a way that I can edit that command and execute it?  Something like
+>the history command editing in tcsh.
+>
+>This feature is real useful in situations when I enter a mistyped
+>command and want to reenter the corrected one.  Imagine entering
+>something like ":'a,$s/\([a-z]*\).*\([0-9]\) *[^ ]*)/\2,\1==/" only
+>to find that you've missed a '('.  It's not fun to retype the whole
+>thing. :)
+
+Whenever I find that I'm going to be constructing a long pattern
+such as the one you list, I will take advantage of vi's ability to
+execute the contents of a named buffer as a macro.  Typing the
+AT-symbol ('@') followed by a letter (in command mode, of course)
+will do this.  Of course, this does require you to take steps before-
+hand to do it and so is not "history command editing".
+
+Simply type the command directly into the file on a line of its
+own, delete the line into a named buffer ("add), and then execute
+the contents of that buffer (@a).  If there are any problems, simply
+undo (u), replace the buffer into the file ("ap), edit, and repeat!
+
+BTW, I've worked with older, buggier versions of vi and I've had
+them drop the contents of the buffer I try to use if there are
+certain types of errors in the command therein.  So I've gotten in
+the habit of yanking the command into two or more buffers before
+I try to execute it, just in case.
+
+Of course, you could also save the command in a file of it's own
+and execute the file with the :source command.  You shouldn't have
+to worry about vi going out and erasing the contents of your command
+file :-).
+
+Enjoy!
+-- 
+Steve Manning   stv%ferret@introl.introl.com  stv@ferret.uucp
+Milwaukee, WI       ...!introl!ferret!stv   etc., etc., etc.
+      "...but you're wrong, Steve. You see, it's only Solitaire" I.A.
+
+
+From ian@unipalm.co.uk (Ian Phillipps)
+Subject: Re: Command line editing in vi - a macro
+Date: Wed, 2 Sep 1992 12:07:42 GMT
+
+stv@ferret.uucp (Steve Manning) writes:
+
+>In article <1992Aug12.021145.5902@nuscc.nus.sg> ccechk@nuscc.nus.sg (Heng Kek) writes:
+>>            How may I 'recall' the last cmd I entered in vi in such
+>>a way that I can edit that command and execute it?  Something like
+>>the history command editing in tcsh.
+
+>Whenever I find that I'm going to be constructing a long pattern
+>such as the one you list, I will take advantage of vi's ability to
+>execute the contents of a named buffer as a macro.  Typing the
+>AT-symbol ('@') followed by a letter (in command mode, of course)
+>will do this.  Of course, this does require you to take steps before-
+>hand to do it and so is not "history command editing".
+
+I find very useful the mapping:
+:map <some key> ms"syy@s`s
+
+Which uses buffer "s" and text mark "s". It obeys the current line as a
+command, so that if I put a suitable command into the buffer, I can run
+it. It returns the cursor to the same place using mark "s" - this is a
+luxury item, but very useful if the command reads a file, for example.
+
+I've had no troubles with the old or new SunOS vi (the "new" version
+announces itself as SVR3.1).
+
+I even went through a phase of using "vi" as my normal shell.
+
+Example - the ":r!date" was typed in, then the "Insert" key pressed:
+
+:r!date
+Wed Sep  2 12:58:35 BST 1992
+
+Ian
+--
