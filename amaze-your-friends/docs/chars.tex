@@ -1,0 +1,541 @@
+% From mau@bilbo.CSELT.STET.IT Wed Jun 10 09:23:52 1992
+% Date: Wed, 10 Jun 92 09:22:15 +0200
+% From: Maurizio Codogno <mau@bilbo.CSELT.STET.IT>
+% Subject: Re: .tex version of vi_chars
+% To: Ove.R.Olsen@ubb.uib.no
+\documentstyle[fleqn,12pt]{article}
+\topmargin 0cm
+\headsep 0cm
+\footheight 0.5cm
+\footskip 1cm
+\evensidemargin 0cm
+\oddsidemargin 0.5cm
+\textwidth 16cm
+\textheight 23.5cm
+\hyphenation{li-te-ra-tu-re}
+\itemsep 0cm
+\def\^#1{{\tt \symbol{"5E}#1}}
+% the up arrow
+
+\begin{document}
+\let\ul = \underline
+
+\begin{center}
+\LARGE\ul{Character functions in {\tt vi}}
+\end{center}
+
+\vspace{2.cm}
+
+Here there are the uses the editor makes of each character. The characters are
+presented in their order in the ASCII character set: Control characters come
+first, then most special characters, then the digits, upper and then lower
+case characters.
+
+For each character we tell a meaning it has as a command and any meaning it
+has during an insert. If it has only meaning as a command, then only this is
+discussed.
+
+\begin{description}
+
+\item[\^{@}] Not a command character. If typed as the first character of an
+insertion it is replaced with the last text inserted, and the insert
+terminates. Only 128 characters are saved from the last insert; if more
+characters were inserted the mechanism is not available. A \^{@} cannot be
+part of the file due to the editor implementation.
+
+\item[\^{A}] Unused.
+
+\item[\^{B}] Backward window. A count specifies repetition. Two lines of
+continuity are kept if possible.
+
+\item[\^{C}] Unused.
+
+\item[\^{D}] As a command, scrolls down a half-window of text. A count gives
+the number of (logical) lines to scroll, and is remembered for future \^{D}
+and \^{U} commands. During an insert, backtabs over \ul{autoindent} white
+space at the beginning of a line; this white space cannot be backspaced over.
+
+\item[\^{E}] Exposes one more line below the current screen in the file,
+leaving the cursor where it is if possible. (Version 3 only.)
+
+\item[\^{F}] Forward window. A count specifies repetition. Two lines of
+continuity are kept if possible.
+
+\item[\^{G}] Equivalent to {\tt :f\sc cr}, printing the current file, whether
+it has been modified, the current line number and the number of lines in the
+file, and the percentage of the way through the file that you are.
+
+\item[\^{H} {\sc (bs)}] Same as \ul{left arrow}. (See {\tt h}). During an
+insert, eliminates the last input character, backing over it but not erasing
+it; it remains so you can see what you typed if you wish to type something
+only slightly different.
+
+\item[\^{I} {\sc (tab)}] Not a command character. When inserted it prints as
+some number of spaces. When the cursor is at a tab character it rests at the
+last of the spaces which represent the tab. The spacing of tabstops is
+controlled by the \ul{tabstop} option.
+
+\item[\^{J} {\sc (lf)}] Same as \ul{down arrow} (see {\tt j}).
+
+\item[\^{K}] Unused.
+
+\item[\^{L}] The ASCII formfeed character, this causes the screen to be cleared
+and redrawn. This is useful after a transmission error, if characters typed by
+a program other than the editor scramble the screen, or after output is
+stopped by an interrupt.
+
+\item[\^{M} {\sc (cr)}] A carriage return advances to the next line, at the
+first non-white position in the line. Given a count, it advances that many
+lines. During an insert, a CR causes the insert to continue onto another
+line.
+
+\item[\^{N}] Same as \ul{down arrow} (see {\tt j}).
+
+\item[\^{O}] Unused.
+
+\item[\^{P}] Same as \ul{up arrow} (see {\tt k}).
+
+\item[\^{Q}] Not a command character. In input mode, \^{Q} quotes the next
+character, the same as \^{V}, except that some teletype drivers will eat the
+\^{Q} so that the editor never sees it.
+
+\item[\^{R}] Redraws the current screen, eliminating logical lines not
+corresponding to physical lines (lines with only a single {\tt @} character on
+them). On hardcopy terminals in \ul{open} mode, retypes the current line.
+
+\item[\^{S}] Unused. Some teletype drivers use \^{S} to suspend output until
+\^{Q} is sent.
+
+\item[\^{T}] Not a command character. During an insert, with \ul{autoindent}
+set and at the beginning of the line, inserts \ul{shifhwidth} white space.
+
+\item[\^{U}] Scrolls the screen up, inverting \^{D} which scrolls down. Counts
+work as they do for \^{D}, and the previous scroll amount is common to both.
+On a dumb terminal, \^{U} will often necessitate clearing and redrawing the
+screen further back in the file.
+
+\item[\^{V}] Not a command character. In input mode, quotes the next character
+so that it is possible to insert non-printing and special characters into the
+file.
+
+\item[\^{W}] Not a command character. During an insert, backs up as {\tt b}
+would in command mode; the deleted characters remain on the display (see
+\^{H}).
+
+\item[\^{X}] Unused.
+
+\item[\^{Y}] Exposes one more line above the current screen, leaving the
+cursor where it is if possible. (No mnemonic value for this key; however, it
+is next to \^{U} which scrolls up a bunch.) (Version 3 only.)
+
+\item[\^{Z}] If supported by the Unix system, stops the editor, exiting to the
+top level shell. Same as {\tt :stop\sc cr}. Otherwise, unused.
+
+\item[\^{[} {\sc (esc)}] Cancels a partially formed command, such
+as a {\tt z} when no following character has yet been given; terminates inputs
+on the last line (read by commands such as {\tt :} {\tt /} and {\tt ?}); ends
+insertions of new text into the buffer. If an {\sc esc} is given when
+quiescent in command state, the editor rings the bell or flashes the screen.
+You can thus hit {\sc esc} if you don't know what is happening till the editor
+rings the bell. If you don't know if you are in insert mode you can type {\sc
+esc\tt a}, and then material to be input; the material will be inserted
+correctly whether or not you were in insert mode when you started.
+
+\item[\^{\symbol{"5C}}] Unused.
+
+\item[\^{\symbol{"5D}}] Searches for the word which is after the cursor as a
+tag. Equivalent to typing {\tt :ta}, this word, and then a CR. Mnemonically,
+this command is ``go right to''.
+
+\item[\^{$\uparrow$}] Equivalent to {\tt :e \#\sc cr}, returning to the
+previous position in the last edited file, or editing a file which you
+specified if you got a ``No write since last change'' diagnostic and do not want
+to have to type the file name again. (You have to do a {\tt :w} before
+\^{$\uparrow$} will work in this case. If you do not wish to write the file
+you should do {\tt :e!~\#\sc cr} instead).
+
+\item[\^{\_}] Unused. Reserved as the command character for the Tektronix 4025
+and 4027 terminal.
+
+\item[{\sc space}] Same as \ul{right arrow} (see {\tt l}).
+
+\item[{\tt !}] An operator, which processes lines from the buffer with
+reformatting commands. Follow {\tt !} with the object to be processed, and
+then the command name terminated by CR. Doubling {\tt !} and preceding it by a
+count causes count lines to be filtered; otherwise the count is passed on to
+the object after the {\tt !}. Thus {\tt 2!$\rbrace$\it fmt\/\sc cr} reformats
+the next two paragraphs by running them through the program {\it fmt}. If you
+are working on LISP, the command {\tt !\%\it grind\/\sc cr},\footnote{ Both
+{\it fmt} and {\it grind} are Berkeley programs and may not be present at all
+installations.} given at the beginning of a function, will run the text of the
+function through the LISP grinder. To read a file or the output of a command
+into the buffer use {\tt :r}. To simply execute a command use {\tt :!}.
+
+\item[{\tt "}] Precedes a named buffer specification. There are named buffers
+{\tt 1-9} used for saving deleted text and named buffers {\tt a-z} into which
+you can place text.
+
+\item[{\tt \#}] The macro character which, when followed by a number, will
+substitute for a function key on terminals without function keys. In input
+mode, if this is your erase character, it will delete the last character you
+typed in input mode, and must be preceded with a {\tt\symbol{"5C}} to insert
+it, since it normally backs over the last input character you gave.
+
+\item[{\tt \$}] Moves to the end of the current line. If you {\tt :se list\sc
+cr}, then the end of each line will be shown by printing a {\tt \$} after the
+end of the displayed text in the line. Given a count, advances to the count'th
+following end of line; thus {\tt 2\$} advances to the end of the following
+line.
+
+\item[{\tt \%}] Moves to the parenthesis or brace $\lbrace \rbrace$ which
+balances the parenthesis or brace at the current cursor position.
+
+\item[{\tt \&}] A synonym for {\tt :\&\sc cr}, by analogy with the {\it ex \tt
+\&} command.
+
+\item[{\tt '}] When followed by a {\tt '} returns to the previous context at
+the beginning of a line. The previous context is set whenever the current line
+is moved in a non-relative way. When followed by a letter {\tt a-z}, returns
+to the line which was marked with this letter with a {\tt m} command, at the
+first non-white character in the line. When used with an operator such as {\tt
+d}, the operation takes place over complete lines; if you use {\tt `}, the
+operation takes place from the exact marked place to the current cursor
+position within the line.
+
+\item[{\tt (}] Retreats to the beginning of a sentence, or to the beginning of
+a LISP s-expression if the \ul{lisp} option is set. A sentence ends at a {\tt
+.~!} or {\tt ?} which is followed by either the end of a line or by two
+spaces. Any number of closing {\tt ) ] "} and {\tt '} characters may appear
+after the {\tt .~!} or {\tt ?}, and before the spaces or end of line.
+Sentences also begin at paragraph and section boundaries (see
+{\tt\symbol{"7B}} and {\tt [[} below). A count advances that many sentences.
+
+\item[{\tt )}] Advances to the beginning of a sentence. A count repeats the
+effect. See {\tt (} above for the definition of a sentence.
+
+\item[{\tt *}] Unused.
+
+\item[{\tt +}] Same as {\sc cr} when used as a command.
+
+\item[{\tt ,}] Reverse of the last {\tt f F t} or {\tt T} command, looking the
+other way in the current line. Especially useful after hitting too many {\tt
+;} characters. A count repeats the search.
+
+\item[{\tt -}] Retreats to the previous line at the first non-white character.
+This is the inverse of {\tt +} and {\sc return}. If the line moved to is not
+on the screen, the screen is scrolled, or cleared and redrawn if this is not
+possible.  If a large amount of scrolling would be required the screen is also
+cleared and redrawn, with the current line at the center.
+
+\item[{\tt .}] Repeats the last command which changed the buffer. Especially
+useful when deleting words or lines; you can delete some words/lines and then
+hit {\tt .} to delete more and more words/lines. Given a count, it passes it
+on to the command being repeated. Thus after a {\tt 2dw}, {\tt 3.} deletes
+three words.
+
+\item[{\tt /}] Reads a string from the last line on the screen, and scans
+forward for the next occurrence of this string. The normal input editing
+sequences may be used during the input on the bottom line; an returns to
+command state without ever searching. The search begins when you hit {\sc cr}
+to terminate the pattern; the cursor moves to the beginning of the last line
+to indicate that the search is in progress; the search may then be terminated
+with a {\sc del} or {\sc rub}, or by backspacing when at the beginning of the
+bottom line, returning the cursor to its initial position.  Searches normally
+wrap end-around to find a string anywhere in the buffer.
+
+When used with an operator the enclosed region is normally affected. By
+mentioning an offset from the line matched by the pattern you can force whole
+lines to be affected. To do this give a pattern with a closing {\tt /} and
+then an offset {\tt +n} or {\tt -n}.
+
+To include the character {\tt /} in the search string, you must escape it with
+a preceding {\tt\symbol{"5C}}. A $\uparrow$ at the beginning of the pattern
+forces the match to occur at the beginning of a line only; this speeds the
+search. A {\tt \$} at the end of the pattern forces the match to occur at the
+end of a line only. More extended pattern matching is available; unless you
+set nomagic in your {\tt .exrc} file you will have to preceed the characters
+{\tt .~[ *} and {\tt\symbol{"7E}} in the search pattern with a
+{\tt\symbol{"5C}} to get them to work as you would naively expect.
+
+\item[{\tt 0}] Moves to the first character on the current line. Also used, in
+forming numbers, after an initial {\tt 1-9}.
+
+\item[{\tt 1-9}] Used to form numeric arguments to commands.
+
+\item[{\tt :}] A prefix to a set of commands for file and option manipulation
+and escapes to the system. Input is given on the bottom line and terminated
+with an {\sc cr}, and the command then executed. You can return to where you
+were by hitting {\sc del} or {\sc rub} if you hit {\tt :} accidentally.
+
+\item[{\tt ;}] Repeats the last single character find which used {\tt f F t}
+or {\tt T}. A count iterates the basic scan.
+
+\item[{\tt <}] An operator which shifts lines left one \ul{shiftwidth},
+normally 8 spaces. Like all operators, affects lines when repeated, as in {\tt
+<<}. Counts are passed through to the basic object, thus {\tt 3<<} shifts
+three lines.
+
+\item[{\tt =}] Reindents line for LISP, as though they were typed in with
+\ul{lisp} and \ul{autoindent} set.
+
+\item[{\tt >}] An operator which shifts lines right one \ul{shiftwidth},
+normally 8 spaces. Affects lines when repeated as in {\tt >>}. Counts repeat
+the basic object.
+
+\item[{\tt ?}] Scans backwards, the opposite of {\tt /}. See the {\tt /}
+description above for details on scanning.
+
+\item[{\tt @}] A macro character. If this is your kill character, you must
+escape it with a {\tt\symbol{"5C}} to type it in during input mode, as it
+normally backs over the input you have given on the current line.
+
+\item[{\tt A}] Appends at the end of line, a synonym for {\tt \$a}.
+
+\item[{\tt B}] Backs up a word, where words are composed of non-blank
+sequences, placing the cursor at the beginning of the word. A count repeats
+the effect.
+
+\item[{\tt C}] Changes the rest of the text on the current line; a synonym for
+{\tt c\$}.
+
+\item[{\tt D}] Deletes the rest of the text on the current line; a synonym for
+{\tt d\$}.
+
+\item[{\tt E}] Moves forward to the end of a word, defined as blanks and
+non-blanks, like {\tt B} and {\tt W}. A count repeats the effect.
+
+\item[{\tt F}] Finds a single following character, backwards in the current
+line. A count repeats this search that many times.
+
+\item[{\tt G}] Goes to the line number given as preceding argument, or the end
+of the file if no preceding count is given. The screen is redrawn with the new
+current line in the center if necessary.
+
+\item[{\tt H}] \ul{Home arrow}. Homes the cursor to the top line on the
+screen. If a count is given, then the cursor is moved to the count'th line on
+the screen. In any case the cursor is moved to the first non-white character
+on the line.  If used as the target of an operator, full lines are affected.
+
+\item[{\tt I}] Inserts at the beginning of a line; a synonym for
+$\uparrow${\tt i}.
+
+\item[{\tt J}] Joins together lines, supplying appropriate white space: one
+space between words, two spaces after a {\tt .}, and no spaces at all if the
+first character of the joined on line is {\tt )}.  A count causes that many
+lines to be joined rather than the default two.
+
+\item[{\tt K}] Unused.
+
+\item[{\tt L}] Moves the cursor to the first non-white character of the last
+line on the screen. With a count, to the first non-white of the count'th line
+from the bottom. Operators affect whole lines when used with {\tt L}.
+
+\item[{\tt M}] Moves the cursor to the middle line on the screen, at the first
+non-white position on the line.
+
+\item[{\tt N}] Scans for the next match of the last pattern given to {\tt /}
+or {\tt ?}, but in the reverse direction; this is the reverse of {\tt n}.
+
+\item[{\tt O}] Opens a new line above the current line and inputs text there
+up to an {\sc esc}. A count can be used on dumb terminals to specify a number
+of lines to be opened; this is generally obsolete, as the \ul{slowopen} option
+works better.
+
+\item[{\tt P}] Puts the last deleted text back before/above the cursor. The
+text goes back as whole lines above the cursor if it was deleted as whole
+lines. Otherwise the text is inserted between the characters before and at the
+cursor. May be preceded by a named buffer specification {\tt "\ul{x}} to
+retrieve the contents of the buffer; buffers {\tt 1-9} contain deleted
+material, buffers {\tt a-z} are available for general use.
+
+\item[{\tt Q}] Quits from {\it vi\/} to {\it ex} command mode. In this mode,
+whole lines form commands, ending with a {\sc return}. You can give all the
+{\tt :} commands; the editor supplies the {\tt :} as a prompt.
+
+\item[{\tt R}] Replaces characters on the screen with characters you type
+(overlay fashion). Terminates with an {\sc esc}.
+
+\item[{\tt S}] Changes whole lines, a synonym for {\tt cc}. A count
+substitutes for that many lines. The lines are saved in the numeric buffers,
+and erased on the screen before the substitution begins.
+
+\item[{\tt T}] Takes a single following character, locates the character
+before the cursor in the current line, and places the cursor just after that
+character. A count repeats the effect. Most useful with operators such as {\tt
+d}.
+
+\item[{\tt U}] Restores the current line to its state before you started
+changing it.
+
+\item[{\tt V}] Unused.
+
+\item[{\tt W}] Moves forward to the beginning of a word in the current line,
+where words are defined as sequences of blank/non-blank characters. A count
+repeats the effect.
+
+\item[{\tt X}] Deletes the character before the cursor. A count repeats the
+effect, but only characters on the current line are deleted.
+
+\item[{\tt Y}] Yanks a copy of the current line into the unnamed buffer, to be
+put back by a later {\tt p} or {\tt P}; a very useful synonym for {\tt yy}. A
+count yanks that many lines. May be preceded by a buffer name to put lines in
+that buffer.
+
+\item[{\tt ZZ}] Exits the editor. (Same as {\tt :x\sc cr}). If any changes
+have been made, the buffer is written out to the current file. Then the editor
+quits.
+
+\item[{\tt [[}] Backs up to the previous section boundary. A section begins at
+each macro in the \ul{sections} option, normally a {\tt.NH} or {\tt.SH} and
+also at lines which which start with a formfeed \^{L}.  Lines beginning with
+{\tt\symbol{"7B}} also stop {\tt [[}; this makes it useful for looking
+backwards, a function at a time, in C programs. If the option \ul{lisp} is
+set, stops at each {\tt (} at the beginning of a line, and is thus useful for
+moving backwards at the top level LISP objects.
+
+\item[{\tt\symbol{"5C"}}] Unused.
+
+\item[{\tt ]]}] Forward to a section boundary, see {\tt [[} for a definition.
+
+\item[{\tt $\uparrow$}] Moves to the first non-white position on the current
+line.
+
+\item[{\tt\_}] Unused.
+
+\item[{\tt `}] When followed by a {\tt `} returns to the previous context. The
+previous context is set whenever the current line is moved in a non-relative
+way. When followed by a letter {\tt a-z}, returns to the position which was
+marked with this letter with a {\tt m} command. When used with an operator
+such as {\tt d}, the operation takes place from the exact marked place to the
+current position within the line; if you use {\tt '}, the operation takes
+place over complete lines.
+
+\item[{\tt a}] Appends arbitrary text after the current cursor position; the
+insert can continue onto multiple lines by using {\sc return} within the
+insert. A count causes the inserted text to be replicated, but only if the
+inserted text is all on one line. The insertion terminates with an {\sc esc}.
+
+\item[{\tt b}] Backs up to the beginning of a word in the current line. A word
+is a sequence of alphanumerics, or a sequence of special characters. A count
+repeats the effect.
+
+\item[{\tt c}] An operator which changes the following object, replacing it
+with the following input text up to an {\sc esc}. If more than part of a
+single line is affected, the text which is changed away is saved in the
+numeric named buffers. If only part of the current line is affected, then the
+last character to be changed away is marked with a {\tt \$}. A count causes
+that many objects to be affected, thus both {\tt 3c)} and {\tt c3)} change the
+following three sentences.
+
+\item[{\tt d}] An operator which deletes the following object. If more than
+part of a line is affected, the text is saved in the numeric buffers. A count
+causes that many objects to be affected; thus {\tt 3dw} is the same as {\tt
+d3w}.
+
+\item[{\tt e}] Advances to the end of the next word, defined as for {\tt b}
+and {\tt w}. A count repeats the effect.
+
+\item[{\tt f}] Finds the first instance of the next character following the
+cursor on the current line.  A count repeats the find.
+
+\item[{\tt g}] Unused.
+
+\item[{\tt h}] \ul{Left arrow}. Moves the cursor one character to the left.
+Like the other arrow keys, either {\tt h}, the \ul{left arrow} key, or one of
+the synonyms (\^{H}) has the same effect. On v2 editors, arrow keys on certain
+kinds of terminals (those which send escape sequences, such as vt52, c100, or
+hp) cannot be used. A count repeats the effect.
+
+\item[{\tt i}] Inserts text before the cursor, otherwise like {\tt a}.
+
+\item[{\tt j}] \ul{Down arrow}. Moves the cursor one line down in the same
+column. If the position does not exist, {\it vi\/} comes as close as possible
+to the same column. Synonyms include \^{J} (linefeed) and \^{N}.
+
+\item[{\tt k}] \ul{Up arrow}. Moves the cursor one line up. \^{P} is a
+synonym.
+
+\item[{\tt l}] \ul{Right arrow}. Moves the cursor one character to the right.
+{\sc space} is a synonym.
+
+\item[{\tt m}] Marks the current position of the cursor in the mark register
+which is specified by the next character {\tt a-z}. Return to this position or
+use with an operator using {\tt `} or {\tt '}.
+
+\item[{\tt n}] Repeats the last {\tt /} or {\tt ?} scanning commands.
+
+\item[{\tt o}] Opens new lines below the current line; otherwise like {\tt O}.
+
+\item[{\tt p}] Puts text after/below the cursor; otherwise like {\tt P}.
+
+\item[{\tt q}] Unused.
+
+\item[{\tt r}] Replaces the single character at the cursor with a single
+character you type. The new character may be a {\sc return}; this is the
+easiest way to split lines. A count replaces each of the following count
+characters with the single character given; see {\tt R} above which is the
+more usually useful iteration of {\tt r}.
+
+\item[{\tt s}] Changes the single character under the cursor to the text which
+follows up to an {\sc esc}; given a count, that many characters from the
+current line are changed. The last character to be changed is marked with {\tt
+\$} as in {\tt c}.
+
+\item[{\tt t}] Advances the cursor upto the character before the next
+character typed. Most useful with operators such as {\tt d} and {\tt c} to
+delete the characters up to a following character. You can use {\tt .} to
+delete more if this doesn't delete enough the first time.
+
+\item[{\tt u}] Undoes the last change made to the current buffer. If repeated,
+will alternate between these two states, thus is its own inverse.  When used
+after an insert which inserted text on more than one line, the lines are saved
+in the numeric named buffers.
+
+\item[{\tt v}] Unused.
+
+\item[{\tt w}] Advances to the beginning of the next word, as defined by {\tt
+b}.
+
+\item[{\tt x}] Deletes the single character under the cursor. With a count
+deletes deletes that many characters forward from the cursor position, but
+only on the current line.
+
+\item[{\tt y}] An operator, yanks the following object into the unnamed
+temporary buffer. If preceded by a named buffer specification, {\tt "\ul{x}},
+the text is placed in that buffer also. Text can be recovered by a later {\tt
+p} or {\tt P}.
+
+\item[{\tt z}] Redraws the screen with the current line placed as specified by
+the following character: {\sc return} specifies the top of the screen, {\tt .}
+the center of the screen, and {\tt -} at the bottom of the screen. A count may
+be given after the {\tt z} and before the following character to specify the
+new screen size for the redraw. A count before the {\tt z} gives the number of
+the line to place in the center of the screen instead of the default current
+line.
+
+\item[{\tt\symbol{"7B}}] Retreats to the beginning of the beginning of the
+preceding paragraph. A paragraph begins at each macro in the \ul{paragraphs}
+option, normally {\tt .IP}, {\tt .LP}, {\tt .PP}, {\tt .QP} and {\tt .bp}.  A
+paragraph also begins after a completely empty line, and at each section
+boundary (see {\tt [[} above).
+
+\item[{\tt |}] Places the cursor on the character in the column specified by
+the count.
+
+\item[{\tt\symbol{"7D}}] Advances to the beginning of the next paragraph. See
+{\tt\symbol{"7B}} for the definition of paragraph.
+
+\item[{\tt\symbol{"7E}}] Unused.
+
+\item[\^{?} {\sc (del)} ] Interrupts the editor, returning it to command
+accepting state.
+
+\end{description}
+\end{document}
+
+% Maurizio Codogno               Internet: mau@bilbo.cselt.stet.it
+% CSELT                            DECNET: 39452::UZ6000::URCM
+% UF/D/U dept.                     BITNET: LAFTESI1@ITOPOLI
+% Via Reiss Romoli, 274              uucp: ...!mcsun!i2unix!cselt!codogno
+% I-10148 Torino ITALY              Telex: 220539 CSELT I
+% Phone: +39 11 2286 132              Fax: +39 11 2286 190
