@@ -1,0 +1,47 @@
+From alf.uib.no!aun.uninett.no!sunic!mcsun!uunet!cs.utexas.edu!hermes.chpc.utexas.edu!news.utdallas.edu!convex!tchrist Thu Aug 27 19:16:33 MET DST 1992
+Article: 4966 of comp.editors
+Newsgroups: comp.editors
+Path: alf.uib.no!aun.uninett.no!sunic!mcsun!uunet!cs.utexas.edu!hermes.chpc.utexas.edu!news.utdallas.edu!convex!tchrist
+From: Tom Christiansen <tchrist@convex.COM>
+Subject: Re: Is there a spellchecker for VI?
+Originator: tchrist@pixel.convex.com
+Sender: usenet@news.eng.convex.com (news access account)
+Message-ID: <1992Aug27.142604.11111@news.eng.convex.com>
+Date: Thu, 27 Aug 1992 14:26:04 GMT
+Reply-To: tchrist@convex.COM (Tom Christiansen)
+References: <1992Aug27.034210.1134@ucsu.Colorado.EDU>
+Nntp-Posting-Host: pixel.convex.com
+Organization: Convex Computer Corporation, Colorado Springs, CO
+X-Disclaimer: This message was written by a user at CONVEX Computer
+              Corp. The opinions expressed are those of the user and
+              not necessarily those of CONVEX.
+Lines: 26
+
+>From the keyboard of olsonkk@ucsu.Colorado.EDU (OLSON KIRK):
+:Hi all... I was wondering if anyone knew if a spellchecker for VI exists
+:and or is available?  Has anyone ever heard of such a thing?
+
+I use these macros:
+
+"       SPELL MACROS
+"
+map \s :w^Mgo^V^[:$r!spell %^M
+"       spell the file, placing errors at bottom, use \n to find
+map \n Gdd\/
+"       for find next spelling error
+map \/ dePo/\<^V^[pA\>^V^["wdd@w
+"       find current word, uses w buffer
+
+
+Of course, the ^V should be literal control-V's, etc.
+
+
+--tom
+
+-- 
+    Tom Christiansen      tchrist@convex.com      convex!tchrist
+Let's give out a bootable, stand-alone version of GNU emacs, then come 
+back in 9 months and find whoever's using it -- and kill them.  
+		    --Keith Bostic
+
+
