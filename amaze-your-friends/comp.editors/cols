@@ -1,0 +1,25 @@
+From kevinl@tisdec.tis.tandy.com
+Date: 18 Aug 92 09:08 CDT
+Subject: Re: Switching cols in VI
+
+
+	If you don't want to worry about how many columns you have,
+you can use the following awk program.
+
+
+{
+	for( i = 0; i < NF; i++ ) {
+		printf "%s", $(NF - i)
+		if( i != NF - 1 )
+			printf " "
+	}
+	print ""
+
+}
+
+It just starts at the end and works backwards.  The 'if' is there
+so that it doesn't put spaces at the end of your lines.  Hope this
+helps you out. 8-)
+
+
+
