@@ -1,0 +1,36 @@
+" From: pckizer@tamsun.tamu.edu (Philip Kizer)
+" Subject: Re: Is there a spellchecker for VI?
+" Organization: Texas A&M University, College Station
+" Date: Thu, 27 Aug 1992 19:24:49 GMT
+" Lines: 28
+" 
+" olsonkk@ucsu.Colorado.EDU (OLSON KIRK) writes:
+" >Hi all... I was wondering if anyone knew if a spellchecker for VI exists
+" >and or is available?  Has anyone ever heard of such a thing?
+" 
+" 
+" Of course, Tom's solution is the best I've seen using standardly availably
+" utilities...but we have ispell (interactive spell) installed here that I
+" like to use.
+" 
+" 
+" My macro goes like:
+map \s :w! /tmp/spl%:!ispell /tmp/spl%:%!cat /tmp/spl%:!rm /tmp/spl%
+" 
+" 
+" Still possible for name collision, etc... (i.e. far from perfect), but I
+" like it. I've forgotten, though, the character for a macro that says "Eat
+" the next pause" for the "Press Return to Continue" prompt.  I've seen it
+" before, and heard that it is better that just sending an extra <cr>, but
+" none of the manuals/docs have it, and I didn't see it in any of the macro
+" files on the vi archive...anyone know/remember?
+" 
+" 
+" -philip
+" 
+" 
+" _____Philip Kizer______________________________________pckizer@tamu.edu_____
+"        "Singing is a trick to get people to listen to music
+"         for longer than they would ordinarily."    -D.Byrne
+" 
+" 
