@@ -1,0 +1,123 @@
+.TH BED 1 "15 June 1985"
+.SH NAME
+bed \- an editor for binary files
+.SH SYNOPSIS
+.B bed [-c] [-r#] [-b#] [-l#] file
+.SH DESCRIPTION
+.B Bed
+is an editor for binary files.
+It converts the binary file to a textual format,
+allows the user to edit that textual format,
+then converts the textual format back into binary format.
+.SH OPTIONS
+.PP
+The following options are recognised, and may be run together,
+e.g. "bed -l120 -c" and "bed -l120c" are equivalent:
+.TP 8
+-c
+Set initial mode to ascii.
+.TP 8
+-a
+Same as above.
+.TP 8
+-r#
+Set initial radix to #.
+.TP 8
+-b#
+Set initial word size to # bits.
+.TP 8
+-l#
+Set initial record length (in bytes) to #.
+.SH COMMANDS
+.PP
+Once
+.B bed
+has validated everything,
+it takes a copy of the data file and enters command mode.
+The following commands are recognised:
+.TP 8
+h
+Print out help and current modes.
+.TP 8
+?
+Same as above.
+.TP 8
+c
+Toggle ascii mode.
+.TP 8
+a
+Same as above.
+.TP 8
+r #
+Set radix to #.
+.TP 8
+b #
+Set word size to # bits.
+.TP 8
+l #
+Set record length (in bytes) to #.
+.TP 8
+e
+Converts the data file to text format and calls up an editor on the text file.
+When the editor terminates and, if the file has been modified,
+.B bed
+will convert the text file back into the temporary copy of the binary.
+.TP 8
+w
+Updates the original binary file from the copy and exits.
+.TP 8
+q
+Exits without updating the original.
+.TP 8
+v
+Prints version number.
+.SH NOTES
+The user must have read/write access to the original file
+.I and
+its parent directory.
+This is because a "rename" system call is used to update the original
+(for atomicity).
+Spaces in the text file given to the editor (even at the end of lines)
+are significant.
+Each line in the text file format contains the number of characters which
+correspond to the
+.I record
+size.
+.PP
+The following escape sequences are used in ascii mode:
+.nf
+
+\\b	backspace
+\\t	horizontal tab
+\\f	form feed
+\\n	newline
+\\r	carriage return
+\\\\	'\\' character
+\\nnn	the ascii character whose code is given (in octal)
+.fi
+.SH ENVIRONMENT
+.TP 8
+VISUAL
+The editor to be used.
+.TP 8
+EDITOR
+The editor to be used if VISUAL is not defined.
+.PP
+If neither of these are defined, a default editor will be used.
+.SH BUGS
+.PP
+The
+.I word size
+can only have values of 8, 16 or 32.
+The
+.I radix
+can only have values between 2 and 16 inclusive.
+.PP
+Mail bugs to "dcl-cs!stephen".
+.SH FILES
+.nf
+Dbed??????	working copy of original data file
+Tbed??????	as above but in text format
+.fi
+.SH AUTHOR
+Stephen J. Muir, University of Lancaster, U.K.
