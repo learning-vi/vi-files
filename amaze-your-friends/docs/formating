@@ -1,0 +1,165 @@
+From rliles@spuds.mlb.semi.harris.com (Ray Liles)
+Subject: Vi Formating without using fmt
+Date: 4 Oct 92 18:31:59 GMT
+
+I hate to take up bandwidth with what appears to be obvious to veteran vi
+users, but I can't seem to find *formating* documentation in any books.
+Directions to FAQs/sites would be appreciated.
+
+1. How do you insert text into an existing paragraph AND reformat/fill that
+   paragraph so that all text observes the wrapmargin, without part of a word
+   on one line and the rest of the word on the next?
+
+2. How do you justify text for both the left AND right margins without running
+   through fmt?
+
+Ray
+-------------------------------------------------------------------------------
+  \  \  \                                         |  Harris Semiconductor     
+   \--\--\                                        |  Mail Stop 58-032         
+    \ |\  \                                       |  P.O. Box 883             
+      |      WA4VME                               |  Melbourne, Florida 32902 
+      |      Ray H. Liles                         |  407-729-4640 (Office)    
+      |      rliles@heimdall.mlb.semi.harris.com  |  407-729-4029 (FAX)       
+-------------------------------------------------------------------------------
+
+
+From jxh@math.ksu.edu (James C. Hu)
+Subject: Re: Vi Formating without using fmt
+Date: 4 Oct 92 19:21:10 GMT
+
+rliles@spuds.mlb.semi.harris.com (Ray Liles) writes:
+
+>I hate to take up bandwidth with what appears to be obvious to veteran vi
+>users, but I can't seem to find *formating* documentation in any books.
+>Directions to FAQs/sites would be appreciated.
+
+>1. How do you insert text into an existing paragraph AND reformat/fill that
+>   paragraph so that all text observes the wrapmargin, without part of a word
+>   on one line and the rest of the word on the next?
+>2. How do you justify text for both the left AND right margins without running
+>   through fmt?
+
+Certainly, there are editors with this capability, and VI is even one
+of them, but not without calling external programs to reformat the
+current line.  Also, it requres remapping keys and defining macros to
+make these calls.  While this makes it transparent to the user of VI
+that external calls are being made, they are still there.
+Additionally, I don't like remapping what the RETURN key does, since I
+would feel like I would lose control over how the editor behaves.
+
+-- 
+James C. Hu (jxh@math.ksu.edu), 1804 Denholm Dr., Manhattan, KS 66502
+I speak for me, the whole me, and nothing but for me.  So help me me.
+
+
+From thanasis@ucsb.edu (Athanassios S. Poulakidas)
+Subject: Formatting text in vi?
+Date: 15 Jul 1993 20:46:36 GMT
+
+I would like to have a specified number of lines formatted according to
+the current wrap margin. I tried something like
+
+	:map T JIa^["add@a
+
+but when then there was a long line stored in register a, I got the error
+message "Register too long to fit in memory"
+
+Do you know any other way to solve this problem?
+
+Thanks for any help,
+
+Thanassis
+(thanasis@cs.ucsb.edu)
+
+
+PS. Ideally I would like to have all the lines till the end of the paragraph
+    formatted, but I couldn't figure out a way to do it.
+
+
+From ray@Celestial.COM (Ray Jones)
+Subject: Re: Formatting text in vi?
+Date: Fri, 16 Jul 1993 19:17:41 GMT
+
+In <224fnc$agm@ecifs2.ucsb.edu> thanasis@ucsb.edu (Athanassios S. Poulakidas) writes:
+
+>I would like to have a specified number of lines formatted according to
+>the current wrap margin. I tried something like
+
+>	:map T JIa^["add@a
+
+>but when then there was a long line stored in register a, I got the error
+>message "Register too long to fit in memory"
+
+>Do you know any other way to solve this problem?
+
+The following map function (in my .exrc) marks the begining of a paragraph,
+then moves to and marks the end of the paragraph.  Then sends the whole
+paragraph to the "fmt" or text format program.
+
+map #1 mz}^Mbmx:'z,'x!fmt^M
+
+
+if you don't have "fmt" but do have "nroff" you can use the following
+substitute "fmt" shell script.
+
+
+echo "" >/tmp/.xy
+echo ".na
+.ll 7.5i" >/tmp/\(co
+cat - >>/tmp/\(co
+nroff /tmp/\(co|sed -e "/^$/d" |cat - /tmp/.xy
+rm /tmp/\(co /tmp/.xy
+
+-- 
+INTERNET:  ray@Celestial.COM           | The probability of one or more
+Ray A. Jones; Celestial Software       | spelling errors in this missive
+8545 S.E. 68th Street                  | approaches unity. If this bothers you,
+Mercer Island, WA 98040;(206) 236-1676 | run it through your spell checker!
+
+
+From dattier@genesis.MCS.COM (David W. Tamkin)
+Subject: Re: Formatting text in vi?
+Date: 17 Jul 1993 15:50:44 -0500
+Reply-To: dattier@genesis.mcs.com (DWT)
+
+ray@Celestial.COM (Ray Jones) wrote in <1993Jul16.191741.24756@celestial.com>:
+
+| The following map function (in my .exrc) marks the begining of a paragraph,
+| then moves to and marks the end of the paragraph.  Then sends the whole
+| paragraph to the "fmt" or text format program.
+| 
+| map #1 mz}^Mbmx:'z,'x!fmt^M
+
+map whatever !}fmt^M
+
+[As with Ray's suggestion, ^M is a hard CR typed with ctrl-V ctrl-M.]
+
+does it without clobbering any existing marks you may have.  Actually, each
+version formats from the curreFrom dylan@ibmpcug.co.uk (Matthew Farwell)
+Subject: Re: Reformating paragraphs in vi
+Date: 22 May 92 22:35:35 GMT
+
+In article <1992May22.192904.92@degsyd.syd.deg.csiro.au> ip_boss@degsyd.syd.deg.csiro.au (Jack Churchill) writes:
+>Is there a magical sequence of commands to reformat a paragraph in vi
+>like the tpu editor "f p" command?  Thanks.
+
+Taken directly from the FAQ....
+
+07) How do I reformat paragraphs in vi?
+
+Rather than write a set of macros to do this for you, it's usually
+easier just to use an external program to do it for you.  If you have
+fmt(1), then {!}fmt will reformat the paragraph under the cursor.  This
+can be fitted into a macro easily enough.
+
+If you don't have fmt, then you can use nroff(1) similarly (with a few
+caveats about getting rid of trailing blank lines).
+
+A format program is also to be found inside the EX/VI archives.  The
+filename is vi.reformat.tar.Z.  It claims to be a WordStar reformat.
+
+Dylan.
+-- 
+It it no coincidence that in no known language does the phrase 'As
+pretty as a
