@@ -1,0 +1,141 @@
+From: eeh@dixie.com (Ed Howland)
+Subject: Questions about buffer-gap (not in FAQ)
+Keywords: emacs, buffer-gap, editor implementaions
+Date: 3 Jul 92 20:16:47 GMT
+Organization: Dixie Communications Public Access.  The Mouth of the South.
+Lines: 44
+
+
+
+   Could someone explain some things about buffer-gap to me? I know of three
+types of implementation: buffer-gap, paged buffer-gap and gap-lists. First
+my question about buffer-gap. I understand that there are two ways to 
+manage this: one where the point moves, the characters jump across the
+gap, and insertion/deletion merely shrinks/expands the gap. I believe it
+has been pointed out that this is inefficient when long jumps of the point
+are involved (moving from the beginning to the end of the file for ex.) The 
+alternative is to move the point as needed, only aligning the gap when an
+insertion/deletion is needed. This is how emacs does it I believe. Has anyone
+ever implemented at least one obvious optimization of this? Namely use gap
+move with point if the point delta is small (left right = 1 char move) (up
+down = ~80 (avg?) char moves), anything else just move the point (page-up/down).
+Is this any better than move point, then move gap if needed? Also what happens
+when the gap is exhausted? If I understand the literature correctly, the buffer
+is reallocated to (old-buffer-size + size-of-max-gap). Doesn't this seem 
+inefficient in terms of memory operations? Does emacs use this method ...
+
+... OR does it use paged-buffer gap? I presume that in paged buffer-gap some
+linked list of smaller buffers (each with their own little gaps, I guess)
+represents the full buffer. This has a number of advantages right off. First
+no memory move operation is ever longer than size-of-buffer - size-of-gap. 
+(Assuming a jump from a page to the end of some other page where the gap is 
+must be moved from the front to the back) (Also assuming that each gap stays
+where it is in the page when the point moves and that insert/delete operations
+only move the local gap) Are these assumptions right? Another advantage I 
+see is the use of virtual buffers (some kind of LRU allocation strategy)
+that can be swapped to disk as needed. I think that the case of gap exhaustion
+requires the exhausted page to be split into two pages each with new buffer
+gaps. Is this right and if it is, how is the split accomplished so that the
+new pages get an even distribution of bytes from the old page?
+
+  And third can someone explain what is meant by a linked list of gaps?
+(as used in the new "joe" editor?)
+
+   Thanks for your help.
+
+Ed
+-- 
+Ed Howland                   | 'I know, its only Rock & Roll, but I like it.'
+eeh@dixie.com                | Member in good standing:   Reverse Bytesex Order
+..[uunet|emory]!rsiatl!eeh   | Motto: We shall prevail over unjust patent suits.
+Howland's Corallary to Pournelle's Law: One pixel, at least one CPU.
+
+
+From: rcarter@parrot.WPI.EDU (Randolph Carter <Joseph H. Allen>)
+Newsgroups: comp.editors
+Subject: Re: Questions about buffer-gap (not in FAQ)
+Keywords: emacs, buffer-gap, editor implementaions
+Date: 7 Jul 92 14:39:13 GMT
+Organization: Worcester Polytechnic Institute
+Lines: 78
+
+eeh@dixie.com (Ed Howland) writes:
+>   Could someone explain some things about buffer-gap to me? I know of three
+>types of implementation: buffer-gap, paged buffer-gap and gap-lists. First
+>my question about buffer-gap. I understand that there are two ways to 
+>manage this: one where the point moves, the characters jump across the
+>gap, and insertion/deletion merely shrinks/expands the gap. I believe it
+>has been pointed out that this is inefficient when long jumps of the point
+>are involved (moving from the beginning to the end of the file for ex.) The 
+>alternative is to move the point as needed, only aligning the gap when an
+>insertion/deletion is needed. This is how emacs does it I believe. Has anyone
+>ever implemented at least one obvious optimization of this? Namely use gap
+>move with point if the point delta is small (left right = 1 char move) (up
+>down = ~80 (avg?) char moves), anything else just move the point (page-up/down).
+>Is this any better than move point, then move gap if needed?
+
+I'd have to do some real statistical analysis to see if this will make any
+difference.  My guess is that it won't or will make it worse by adding
+complexity to the buffer management primitives (although you could make the
+simplication of always moving the point, but also update the gap position
+occasionally).  The only time it would make a difference is when the user
+slowly (line-by-line) searches through the file to a distant place where he
+then starts inserting/deleting.  I not sure how often that occures.
+
+>Also what happens
+>when the gap is exhausted? If I understand the literature correctly, the buffer
+>is reallocated to (old-buffer-size + size-of-max-gap). Doesn't this seem 
+>inefficient in terms of memory operations? Does emacs use this method ...
+
+Yep, and from what I've seen of the code, it's not going to change any time
+soon.  VI uses a page-based virtual memory method, but it limits the line
+length.  And from what I've seen of that code...  Now what does 'ed' use?  I
+saw its code a while ago but I was not able to make sense of it then.  I
+think it has a small internal buffer and rewrites a temporary file as you
+move around, but I'm not completely sure.
+
+>... OR does it use paged-buffer gap? I presume that in paged buffer-gap some
+>linked list of smaller buffers (each with their own little gaps, I guess)
+>represents the full buffer. This has a number of advantages right off. First
+>no memory move operation is ever longer than size-of-buffer - size-of-gap. 
+>(Assuming a jump from a page to the end of some other page where the gap is 
+>must be moved from the front to the back) (Also assuming that each gap stays
+>where it is in the page when the point moves and that insert/delete operations
+>only move the local gap) Are these assumptions right? Another advantage I 
+>see is the use of virtual buffers (some kind of LRU allocation strategy)
+>that can be swapped to disk as needed. I think that the case of gap exhaustion
+>requires the exhausted page to be split into two pages each with new buffer
+>gaps.
+
+>  And third can someone explain what is meant by a linked list of gaps?
+>(as used in the new "joe" editor?)
+
+Same as what you described as paged-buffer gap.  That's exactly the new
+version of joe will have- with the virtual buffers.  Also it's going to get
+demand or background loading for when you first edit a file (the file is
+read in as completly filled buffer-gap pages).  
+
+Right now my virtual memory system doesn't use an LRU algorithm.  It just
+picks a random non-dirty page when it's out of free pages.  I'm not
+convinced that an LRU algorithm will make much of a difference.  When it's
+completely out of pages, it writes back all of the dirty pages.  I'm
+thinking of changing this to write back only a fraction of the dirty pages
+so that there won't be too long of a delay.
+
+>Is this right and if it is, how is the split accomplished so that the
+>new pages get an even distribution of bytes from the old page?
+
+I split the pages exactly in half when they get full.  For large insertions,
+the in-between pages will be completely full, only the ends get split.  I
+think this will work out all right, wasting 50% or less memory for single
+character inserts probably isn't bad since I don't image that people type
+a lot in a single session.  I'm also thinking of adding some code to
+coalesce underful pages together after deletions.  I want to get the editor
+completely working before I start with this tuning though.
+-- 
+/*  rcarter@wpi.wpi.edu */      /* Amazing */             /* Joseph H. Allen */
+int a[1817];main(z,p,q,r){for(p=80;q+p-80;p-=2*a[p])for(z=9;z--;)q=3&(r=time(0)
++r*57)/7,q=q?q-1?q-2?1-p%79?-1:0:p%79-77?1:0:p<1659?79:0:p>158?-79:0,q?!a[p+q*2
+]?a[p+=a[p+=q]=q]=q:0:0;for(;q++-1817;)printf(q%79?"%c":"%c\n"," #"[!a[q-1]]);}
+
+
