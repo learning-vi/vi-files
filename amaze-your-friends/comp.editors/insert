@@ -1,0 +1,132 @@
+From saunders@luther.che.wisc.edu (Brian E. Saunders)
+Subject: vi insert question
+Date: 28 May 92 16:20:16 GMT
+
+Say I have 1000 lines of text.  Before each line, I want to insert a
+specific character.  How do I do this with 1 command?
+
+Note:  each line before the character is inserted does not begin with the
+same character, so I can't do a simple substitution command.
+-- 
+
+Brian E. Saunders			saunders@luther.che.wisc.edu
+
+
+From snk@fork.bae.bellcore.com (Samuel N Kamens)
+Subject: Re: vi insert question
+Date: 28 May 92 17:58:31 GMT
+Reply-To: snk@bae.bellcore.com
+
+In article <1992May28.112017.21007@doug.cae.wisc.edu>, saunders@luther.che.wisc.edu (Brian E. Saunders) writes:
+> Say I have 1000 lines of text.  Before each line, I want to insert a
+> specific character.  How do I do this with 1 command?
+> 
+> Note:  each line before the character is inserted does not begin with the
+> same character, so I can't do a simple substitution command.
+> -- 
+
+
+Try this:
+
+
+:1,$s/^/c/
+
+This says:
+
+     :1,$  (for every line in the file)
+     s/^/c/  (replace the regular expression ^, which means 
+	      "beginning of line", with the character c).
+
+Sam
+
+-- 
+Sam Kamens					Bell Communications Research
+snk@bae.bellcore.com				Phone: (908) 699-7509
+444 Hoes Lane  Room RRC 1D-210
+Piscataway, NJ 08854
+
+
+From soh@andromeda.trl.OZ.AU (Kam Hung Soh)
+Subject: Re: vi insert question
+Date: Thu, 28 May 1992 22:02:42 GMT
+
+snk@fork.bae.bellcore.com (Samuel N Kamens) writes:
+
+>In article <1992May28.112017.21007@doug.cae.wisc.edu>, saunders@luther.che.wisc.edu (Brian E. Saunders) writes:
+>> Say I have 1000 lines of text.  Before each line, I want to insert a
+>> specific character.  How do I do this with 1 command?
+
+>:1,$s/^/c/
+>     :1,$  (for every line in the file)
+>     s/^/c/  (replace the regular expression ^, which means 
+>	      "beginning of line", with the character c).
+
+``%'' is the abbreviation for ``1,$'' - the entire buffer.  I.e:
+
+:%s/^/c/
+
+This works for vi under SunOS and vim on the Amiga.  For more vi
+discussion, read comp.editors.
+
+Regards,
+
+
+Soh, Kam Hung, Network Management Research,     |  h.soh@trl.oz.au  
+TRL, POB 249 Clayton, Victoria 3168, Australia  |  +61 3 253 6638
+
+
+From buck@pool.info.sunyit.edu (Jesse Buckley)
+Subject: Re: vi insert question
+Date: Thu, 28 May 1992 19:51:45 GMT
+
+In article <1992May28.112017.21007@doug.cae.wisc.edu> saunders@luther.che.wisc.edu (Brian E. Saunders) writes:
+>Say I have 1000 lines of text.  Before each line, I want to insert a
+>specific character.  How do I do this with 1 command?
+>
+>Note:  each line before the character is inserted does not begin with the
+>same character, so I can't do a simple substitution command.
+
+Actually you can.  Try this...
+
+:1,$ s/^/XXXX/
+
+It works on my system.  (ULTRIX 4.2)
+
+-- 
+=) Buck (buck@sunyit.edu)
+"I believe in getting into hot water; it keeps you clean."
+  -- G. K. Chesterton
+
+
+From esaffle@gmuvax2.gmu.edu (L. Ron Hoover)
+Subject: Re: vi insert question
+Date: 29 May 92 03:07:13 GMT
+
+In article <1992May28.112017.21007@doug.cae.wisc.edu> saunders@luther.che.wisc.edu (Brian E. Saunders) writes:
+>Say I have 1000 lines of text.  Before each line, I want to insert a
+>specific character.  How do I do this with 1 command?
+>
+>Note:  each line before the character is inserted does not begin with the
+>same character, so I can't do a simple substitution command.
+
+if EVERY line has to have something inserted before it, meaning at the start
+of every line, try this:
+
+:g/^/s//what you want inserted/
+
+type it as show, substituting in the text you want instead of "what you want
+inserted", of course.
+
+Ed
+
+
+From agc@bnr.ca (Alan Carter)
+Subject: Re: vi insert question
+Date: Fri, 29 May 1992 09:40:48 GMT
+
+In article <1992May28.112017.21007@doug.cae.wisc.edu>, saunders@luther.che.wisc.edu (Brian E. Saunders) writes:
+|> Say I have 1000 lines of text.  Before each line, I want to insert a
+|> specific character.  How do I do this with 1 command?
+|> 
+|> Note:  each line before the character is inserted does not begin with the
+|> same character, so I can't do a simple substitution command
