@@ -1,0 +1,492 @@
+From: michael@garfield.UUCP (Mike Rendell)
+Subject: v02i055: Diffs for a tag stack in vi (v3.7)
+Date: 11 Feb 88 01:00:52 GMT
+Sender: allbery@ncoast.UUCP
+
+Comp.sources.misc: Volume 2, Issue 55
+Submitted-By: "Mike Rendell" <michael@garfield.UUCP>
+Archive-Name: vi-tag-stack
+
+[I held on to this while trying to post to comp.bugs.4bsd on r$'s suggestion.
+Alas, ncoast never heard of it and our news admin isn't interested.  ++bsa]
+
+After using vi on the sun, which has a tag stack, I decided to hack it into
+our vaxen's vi (4.3bsd).  The following are the resulting patches for
+ex_tagio.c, ex_vmain.c, ex_cmds.c and ex_cmdsub.c.
+
+For those of you who don't have suns and don't know what I'm talking about
+[and probably most of you with suns, as this feature seems to be
+undocumented] this is what the tag stack does:  When you tag something, your
+current file (and your current position) are saved on a stack.  When you
+want to get back to the previous file(s) you hit ^T.  This is similar to
+^^ except that you can go back multiple levels.  Also I have added a ":push"
+command that acts like ":next" except that it pushes the current file on the
+tag stack. ":pop" is the same as ^T (really visa versa, for those who know
+how vi does these things...). By the way, ^T can take a count to indicate
+how many levels to pop.
+
+This feature is invaluable when poking around large programs with many
+source files.
+
+				Mike Rendell
+				cdnnet: michael@garfield.mun.cdn
+				uucp: michael@garfield
+					{uunet,utai}!garfield!michael
+
+Index: ex_tagio.c
+
+*** /tmp/,RCSt1014586	Thu Nov  5 17:45:30 1987
+--- /tmp/,RCSt2014586	Thu Nov  5 17:45:34 1987
+***************
+*** 14,19 ****
+--- 14,23 ----
+  
+  #include <sys/file.h>
+  #include "ex.h"
++ #ifdef	TAGSTACK
++ #include "ex_temp.h"
++ #include "ex_vis.h"
++ #endif	/* TAGSTACK */
+  
+  static long offset = -1;
+  static long block = -1;
+***************
+*** 102,105 ****
+--- 106,242 ----
+  	block = -1;
+  	bcnt = 0;
+  }
++ # ifdef	TAGSTACK
++ 
++ #define	TSTACKMEMSIZE	(10*1024)		/* 10k should suffice */
++ 
++ typedef struct tstack_str Tstack;
++ struct tstack_str {
++ 	char	*t_file;
++ 	line	t_dot;
++ 	int	t_cursor;
++ 	Tstack	*t_prev;
++ };
++ 
++ int		tstack_cnt = 1;
++ static char	tstack_mem[TSTACKMEMSIZE];
++ static char	*tstack_ptr = tstack_mem;
++ static Tstack	*tstack = (Tstack *) 0;
++ 
++ /*
++  * save current file/lineno/cursor
++  */
++ tag_push(fname)
++ 	char	*fname;
++ {
++ 	int		len;
++ 	Tstack		*tp;
++ 
++ 	/* Don't bother if there is no current file */
++ 	if (fname[0] == '\0')
++ 		return;
++ 
++ 	/* See how much space we will need */
++ 	len = sizeof(Tstack) + strlen(fname) + 1;
++ 	/* keep things word aligned */
++ 	len += len & 3;
++ 	if (tstack_ptr + len >= &tstack_mem[TSTACKMEMSIZE]) {
++ 		lprintf("[Tag stack full] ");
++ 		return;
++ 	}
++ 	tp = (Tstack *) tstack_ptr;
++ 	tp->t_prev = tstack;
++ 	tp->t_file = tstack_ptr + sizeof(Tstack);
++ 	(void) strcpy(tp->t_file, fname);
++ 	tp->t_dot = lineDOT();
++ 	tp->t_cursor = inopen ? cursor - linebuf : 0;
++ 	tstack_ptr += len;
++ 	tstack = tp;
++ }
++ 
++ tag_pop(bang)
++ 	int	bang;
++ {
++ 	Tstack		*tp;
++ 	line		*addr;
++ 	bool		samef = 1;
++ 	int		i;
++ 
++ 	/* Do this first so tstack_cnt will be reset regardless */
++ 	i = tstack_cnt;
++ 	tstack_cnt = 1;
++ 
++ 	if (!tstack)
++ 		error("Tag stack empty");
++ 
++ 	for (tp = tstack ; --i > 0 && tp ; tp = tp->t_prev)
++ 		;
++ 	if (!tp)
++ 		error("Tag stack not that deep");
++ 
++ 	if (strcmp(tp->t_file, savedfile) || !edited) {
++ 		char cmdbuf2[sizeof(savedfile) + 10];
++ 		char *oglobp;
++ 		int omagic;
++ 		char opeek;
++ 
++ 		if (!bang) {
++ 			ckaw();
++ 			if (chng && dol > zero)
++ 				error("No write@since last change (:pop! overrides)");
++ 		}
++ 		omagic = value(MAGIC);
++ 		oglobp = globp;
++ 		strcpy(cmdbuf2, "e! ");
++ 		strcat(cmdbuf2, tp->t_file);
++ 		globp = cmdbuf2;
++ 		opeek = peekc; ungetchar(0);
++ 		commands(1, 1);
++ 		peekc = opeek;
++ 		globp = oglobp;
++ 		value(MAGIC) = omagic;
++ 		samef = 0;
++ 	}
++ 	/*
++ 	 * Update these now that we know everything is ok
++ 	 */
++ 	tstack = tp->t_prev;
++ 	tstack_ptr = (char *) tp;
++ 
++ 	/*
++ 	 *	Try to find the line that we were on
++ 	 */
++ 	addr = zero + tp->t_dot;
++ 
++ 	/*
++ 	 *	Line is gone?
++ 	 */
++ 	if (addr <= zero || addr > dol)
++ 		addr = one;
++ 	/*
++ 	 * Try to find position on the line
++ 	 */
++ 	if (inopen) {
++ 		char	*s;
++ 
++ 		if (samef && addr != dot)
++ 			markDOT();
++ 		getline(*addr);
++ 		s = linebuf + (inopen ? tp->t_cursor : 0);
++ 		if (s >= linebuf && s < strend(linebuf)) {
++ 			char	tbuf[8]; /* 001024 (max line) + ' ' + \0 */
++ 
++ 			if (s != linebuf)
++ 				(void) sprintf(tbuf, "00%d ", s - linebuf);
++ 			else
++ 				tbuf[0] = '0', tbuf[1] = '0', tbuf[2] = '\0';
++ 			macpush(tbuf, 0);
++ 		}
++ 	}
++ 	dot = addr;
++ 	if (ospeed > B300)
++ 		hold |= HOLDWIG;
++ 	return;
++ }
++ # endif	TAGSTACK
+  #endif
+
+Index: ex_cmds.c
+
+*** /tmp/,RCSt1014564	Thu Nov  5 17:45:06 1987
+--- /tmp/,RCSt2014564	Thu Nov  5 17:45:19 1987
+***************
+*** 410,418 ****
+  		case 'P':
+  			switch (peekchar()) {
+  
+- /* put */
+  			case 'u':
+  				tail("put");
+  				setdot();
+  				c = cmdreg();
+  				eol();
+--- 410,439 ----
+  		case 'P':
+  			switch (peekchar()) {
+  
+  			case 'u':
++ #ifdef	TAGSTACK
++ /* push */
++ 				ignchar();
++ 				if (peekchar() == 's') {
++ 					tail2of("push");
++ 					setnoaddr();
++ 					ckaw();
++ 					ignore(quickly());
++ 					if (getargs())
++ 						makargs();
++ 					next();
++ 					tag_push(altfile);
++ 					c = 'e';
++ 					filename(c);
++ 					goto doecmd;
++ 
++ 				}
++ /* put */
++ 				tail2of("put");
++ #else	/* TAGSTACK */
++ /* put */
+  				tail("put");
++ #endif	/* TAGSTACK */
+  				setdot();
+  				c = cmdreg();
+  				eol();
+***************
+*** 437,442 ****
+--- 458,482 ----
+  				tail2of("print");
+  				break;
+  
++ #ifdef	TAGSTACK	
++ 			case 'o':
++ /* pop */
++ 				{
++ 					int	bang;
++ 
++ 					tail("pop");
++ 					setnoaddr();
++ 					bang = exclam();
++ 					eol();
++ 					tag_pop(bang);
++ 					if (!inopen)
++ 						lchng = chng - 1;
++ 					else
++ 						nochng();
++ 					continue;
++ 				}
++ #endif	TAGSTACK
++ 	
+  			default:
+  				tail("print");
+  				break;
+
+Index: ex_cmdsub.c
+
+*** /tmp/,RCSt1014573	Thu Nov  5 17:45:40 1987
+--- /tmp/,RCSt2014573	Thu Nov  5 17:45:54 1987
+***************
+*** 623,628 ****
+--- 623,631 ----
+  				}
+  			}
+  			strcpy(cmdbuf, cp);
++ #ifdef	TAGSTACK
++ 			tag_push(savedfile);
++ #endif	/* TAGSTACK */
+  			if (strcmp(filebuf, savedfile) || !edited) {
+  				char cmdbuf2[sizeof filebuf + 10];
+  
+
+Index: ex_vmain.c
+
+*** /tmp/,RCSt1014581	Thu Nov  5 17:45:46 1987
+--- /tmp/,RCSt2014581	Thu Nov  5 17:46:02 1987
+***************
+*** 844,850 ****
+--- 844,866 ----
+  				globp = "e #";
+  			goto gogo;
+  
++ #ifdef	TAGSTACK
+  		/*
++ 		 *	Pop a tag off the stack
++ 		 */
++ 		case CTRL(t):
++ 			if (hadcnt) {
++ 				extern int tstack_cnt;
++ 
++ 				tstack_cnt = cnt;
++ 			}
++ 			vsave();
++ 			oglobp = globp;
++ 			globp = "pop";
++ 			goto gogo;
++ #endif	/* TAGSTACK */
++ 
++ 		/*
+  		 * ^]		Takes word after cursor as tag, and then does
+  		 *		tag command.  Read ``go right to''.
+  		 */
+
+
+
+
+
+
+
+
+
+######################################
+
+From: leres@surf.ee.lbl.gov (Craig Leres)
+Subject: Re: v02i055: Diffs for a tag stack in vi (v3.7)
+Date: 22 Dec 89 06:23:28 GMT
+Reply-To: leres@helios.ee.lbl.gov (Craig Leres)
+
+I recently tried Mike Rendell's tag stack code on a sparc and it core
+dumped pretty quickly. The problem is that a word alignment calculation
+is broken. Appended are context diffs that fix this problem and also
+implements a new "stack" command that displays what's on the tags stack
+(crude but effective).
+
+		Craig
+------
+RCS file: RCS/ex_tagio.c,v
+retrieving revision 1.3
+diff -c -r1.3 ex_tagio.c
+*** /tmp/,RCSt1a03612	Thu Dec 21 22:18:42 1989
+--- ex_tagio.c	Thu Dec 21 22:17:18 1989
+***************
+*** 143,149 ****
+  	/* See how much space we will need */
+  	len = sizeof(Tstack) + strlen(fname) + 1;
+  	/* keep things word aligned */
+! 	len += len & 3;
+  	if (tstack_ptr + len >= &tstack_mem[TSTACKMEMSIZE]) {
+  		lprintf("[Tag stack full] ");
+  		return;
+--- 143,149 ----
+  	/* See how much space we will need */
+  	len = sizeof(Tstack) + strlen(fname) + 1;
+  	/* keep things word aligned */
+! 	len += (~len + 1) & 3;
+  	if (tstack_ptr + len >= &tstack_mem[TSTACKMEMSIZE]) {
+  		lprintf("[Tag stack full] ");
+  		return;
+***************
+*** 241,246 ****
+--- 241,264 ----
+  	if (ospeed > B300)
+  		hold |= HOLDWIG;
+  	return;
++ }
++ 
++ tag_list()
++ {
++ 	Tstack *ts;
++ 	int multiple;
++ 
++ 	if (tstack == 0)
++ 		return;
++ 	eol();
++ 	multiple = (tstack->t_prev != 0);
++ 	if (inopen && multiple)
++ 		pofix();
++ 	for (ts = tstack; ts; ts = ts->t_prev) {
++ 		ex_printf("%-7d %s", ts->t_dot, ts->t_file);
++ 		if (!inopen || multiple)
++ 			putNFL();
++ 	}
+  }
+  #endif
+  #endif
+
+
+RCS file: RCS/ex_cmds.c,v
+retrieving revision 1.2
+diff -c -r1.2 ex_cmds.c
+*** /tmp/,RCSt1a03428	Thu Dec 21 21:38:49 1989
+--- ex_cmds.c	Thu Dec 21 00:13:42 1989
+***************
+*** 410,416 ****
+  			switch (peekchar()) {
+  
+  			case 'u':
+! #ifdef	TAGSTACK
+  /* push */
+  				ignchar();
+  				if (peekchar() == 's') {
+--- 410,416 ----
+  			switch (peekchar()) {
+  
+  			case 'u':
+! #ifdef TAGSTACK
+  /* push */
+  				ignchar();
+  				if (peekchar() == 's') {
+***************
+*** 429,438 ****
+  				}
+  /* put */
+  				tail2of("put");
+! #else	/* TAGSTACK */
+  /* put */
+  				tail("put");
+! #endif	/* TAGSTACK */
+  				setdot();
+  				c = cmdreg();
+  				eol();
+--- 429,438 ----
+  				}
+  /* put */
+  				tail2of("put");
+! #else
+  /* put */
+  				tail("put");
+! #endif
+  				setdot();
+  				c = cmdreg();
+  				eol();
+***************
+*** 457,463 ****
+  				tail2of("print");
+  				break;
+  
+! #ifdef	TAGSTACK	
+  			case 'o':
+  /* pop */
+  				{
+--- 457,463 ----
+  				tail2of("print");
+  				break;
+  
+! #ifdef TAGSTACK	
+  			case 'o':
+  /* pop */
+  				{
+***************
+*** 474,480 ****
+  						nochng();
+  					continue;
+  				}
+! #endif	TAGSTACK
+  	
+  			default:
+  				tail("print");
+--- 474,480 ----
+  						nochng();
+  					continue;
+  				}
+! #endif
+  	
+  			default:
+  				tail("print");
+***************
+*** 628,634 ****
+--- 628,645 ----
+  #ifdef SIGTSTP
+  /* stop, suspend */
+  			case 't':
++ #ifdef TAGSTACK
++ 				ignchar();
++ 				if (peekchar() == 'a') {
++ 					tail2of("stack");
++ 					setnoaddr();
++ 					tag_list();
++ 					continue;
++ 				}
++ 				tail2of("stop");
++ #else
+  				tail("stop");
++ #endif
+  				goto suspend;
+  			case 'u':
+  				tail("suspend");
+
+
