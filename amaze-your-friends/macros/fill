@@ -1,0 +1,17 @@
+" From: s-fujii@ext46.sra.co.jp (Seigo Fujii)
+" Subject: Re: Stupid pet tricks (for vi)
+" Date: 27 May 92 10:28:27 GMT
+" Reply-To: s-fujii@ext46.sra.co.jp ()
+"
+"	fill text
+"	usage:	Type #f in the paragrarh.
+"	bugs:	Can not process large paragraph.
+"		The paragraph must be divided by blank line.
+"
+map	#f	{jmm}k:'m,.j#F
+map	#F	72|lhhhElhaF
+map	F	#F
+set autoindent
+"
+"
+" Seigo Fujii (Software Research Associates, Inc., Japan)
