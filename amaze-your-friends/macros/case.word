@@ -1,0 +1,22 @@
+" From: bdewbank@ihlpb.ATT.COM (Ewbank)
+" Subject: vi macros to convert the case of a word
+" Date: 6 Sep 88 18:03:28 GMT
+" 
+" Recently, there was a question about how to convert the case of a word in vi.
+" Just for fun, I tried to write a macro...and succeeded!
+" 
+" Convert ^X to <cntl>X in the sequences below, and :so the file into your
+" editor session.  This will map the <cntl>T key into the case conversion
+" operation.
+" 
+" Enjoy.
+" 
+" --- start of macro ---
+"     Macro to reverse the case of the word starting at current letter
+map  iEa-y$Pa-:s/./\~/g"zd$+@z--4J
+" --- end of macro ---
+"
+" Bryan Ewbank, AT&T Bell Labs, bdewbank@ihlpb.ATT.COM
+" === the opinions included herein are mine, not my employer's ===
+
+
