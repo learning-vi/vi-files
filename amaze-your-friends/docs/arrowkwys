@@ -1,0 +1,121 @@
+From simonm@koel.mel.dit.CSIRO.AU (Simon McClenahan)
+From: simonm@koel.mel.dit.CSIRO.AU (Simon McClenahan)
+Newsgroups: comp.sys.sgi.bugs,comp.editors
+Subject: Re: FAQ Alert: Mode Change for Pressing Arrow Keys in vi editor
+Date: Tue, 14 Dec 93 03:58:28 GMT
+Organization: CSIRO DIT (Melb.)
+Lines: 39
+
+In <1993Dec12.010048.23782@brl.mil> "RANDOLPH J. HERBER, HERBER@FNALA.FNAL.GOV, +1 708 840 2966, CD/HQ - CDF" <HERBER@fnalv.fnal.gov> writes:
+
+>  > From: Jia-Yu Chiu <jychiu@cscs.ch>
+>  
+>  > I have this problem only on SGI machine.  Other machines like
+>  > SUN are alright.
+>  
+>  > When I edit a file with 'vi' editor under xterm environment,
+>  > the edit mode quickly change from one to another when I press
+>  > the up/down/right/left arrow keys to move a few places.
+>  > (eg down key generates a 'B' character). It is very annoying as
+>  > I have to hit the 'esc' key to change mode frequently.
+>  
+>  > Is it a bug or environment setting ?
+
+
+>  When using the vi editor over a network of any kind or speed, keep your
+>  fingers off of the arrow keys!  Use the h, j, k, and l keys instead.
+
+[explanation of why this happens, deleted]
+
+Try putting this in your .exrc file
+
+map! ^[OA ^[ka
+map! ^[OB ^[ja
+map! ^[OC ^[la
+map! ^[OD ^[ha
+
+Where ^[ is the Esape character (^V Escape)
+
+
+Anyone else have any handy hints like this?
+
+cheers,
+--
+Simon.McClenahan@mel.dit.csiro.au ::::: CSIRO Supercomputing Support Group
+CSIRO Division of Information Technology ::::::::::::: tel: +61 3 282 2623
+723 Swanston St, Carlton 3053 AUSTRALIA :::::::::::::: fax: +61 3 282 2600
+                  Why is "abbreviated" such a long word?
+
+From Paul.Terray,,F426,,5-2@aedi.insa-lyon.fr (Paul Terray)
+From: Paul.Terray,,F426,,5-2@aedi.insa-lyon.fr (Paul Terray)
+Newsgroups: comp.sys.sgi.bugs,comp.editors
+Subject: Re: FAQ Alert: Mode Change for Pressing Arrow Keys in vi editor
+Date: 14 Dec 1993 10:48:44 GMT
+Organization: INSA Lyon - Computer Science Dept / France
+Lines: 14
+
+
+Sometimes, when you are in command mode,  you  will  notice  that
+arrow key insert 'B', or 'C', or other letters. It comes from the
+fact that your arrow keys give the sequence ^[OA (or B,C,D),  but
+too slowly to be understood. Try to set the timeout variable:
+
+:set notimeout (or :set noto)
+
+You will notice that when  you  press  Esc  key  after  that,  vi
+doesn't switch immediatly. You just have to keep on typing, so vi
+see that you are not using arrow keys.
+
+Paul TERRAY
+popaul@aedi.insa-lyon.fr
+
+From sadkins@bigbird.cs.ohiou.edu (Scott W. Adkins)
+From: sadkins@bigbird.cs.ohiou.edu (Scott W. Adkins)
+Newsgroups: comp.sys.sgi.bugs,comp.editors
+Subject: Re: FAQ Alert: Mode Change for Pressing Arrow Keys in vi editor
+Date: Wed, 15 Dec 1993 14:46:47 GMT
+Organization: Computer Science Dept., Ohio University, Athen Oh.
+Lines: 41
+
+In article <1993Dec14.035828.15600@mel.dit.csiro.au> Simon.McClenahan@mel.dit.CSIRO.AU writes:
+>In <1993Dec12.010048.23782@brl.mil> "RANDOLPH J. HERBER, HERBER@FNALA.FNAL.GOV, +1 708 840 2966, CD/HQ - CDF" <HERBER@fnalv.fnal.gov> writes:
+>
+>>  > From: Jia-Yu Chiu <jychiu@cscs.ch>
+>>  
+>>  > I have this problem only on SGI machine.  Other machines like
+>>  > SUN are alright.
+>>  
+>>  > When I edit a file with 'vi' editor under xterm environment,
+>>  > the edit mode quickly change from one to another when I press
+>>  > the up/down/right/left arrow keys to move a few places.
+>>  > (eg down key generates a 'B' character). It is very annoying as
+>>  > I have to hit the 'esc' key to change mode frequently.
+>>  
+>>  > Is it a bug or environment setting ?
+>
+>
+>>  When using the vi editor over a network of any kind or speed, keep your
+>>  fingers off of the arrow keys!  Use the h, j, k, and l keys instead.
+>
+>[explanation of why this happens, deleted]
+>
+>Try putting this in your .exrc file
+>
+>map! ^[OA ^[ka
+>map! ^[OB ^[ja
+>map! ^[OC ^[la
+>map! ^[OD ^[ha
+
+Also, put in a similar set of lines for other types of terminals:
+
+map! ^[[A ^[ka
+map! ^[[B ^[ja
+map! ^[[C ^[la
+map! ^[[D ^[ha
+
+Scott.
+-- 
+         Scott W. Adkins           Internet: sadkins@ohiou.edu
+         ~~~~~~~~~~~~~~~                     ak323@cleveland.freenet.edu
+    Ohio University of Athens        Bitnet: adkins@ouaccvma.bitnet
+
