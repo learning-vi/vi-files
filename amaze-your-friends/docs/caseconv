@@ -1,0 +1,68 @@
+From prasad@cmie.ernet.in (Prasad Khurd)
+Subject: Help ! - Converting Proper case to Upper case in Vi.
+Date: Thu, 3 Jun 1993 11:51:58 GMT
+
+Hi there
+
+	i read of a way to convert ALL upper case letters to lower case in the 
+	file in VI in one shot (not using ~ which works per charater) on the 
+	net somewhere but forgot it. i shall be very grateful if someone mails 
+	me how to do that.
+
+	thanx
+	Prasad Khurd.
+
+______________________________________________________________________________
+prasad@cmie.ernet.in
+Centre for Monitoring Indian Economy, Bombay.
+______________________________________________________________________________
+
+
+From edwin@integow.integrity.nl (Edwin Koedam)
+Subject: Re: Help ! - Converting Proper case to Upper case in Vi.
+Date: 4 Jun 93 06:52:47 GMT
+
+Prasad Khurd writes:
+> Hi there
+> 
+> 	i read of a way to convert ALL upper case letters to lower case in the 
+> 	file in VI in one shot (not using ~ which works per charater) on the 
+> 	net somewhere but forgot it. i shall be very grateful if someone mails 
+> 	me how to do that.
+> 
+
+You should use:
+
+	:%s/./\u&/g
+
+Hope this helps,
+
+Edwin.
+-- 
+  UUCP: ..!uunet!mcsun!sun4nl!integow!edwin or INTERNET: edwin@integrity.nl
+      Edwin Koedam, software engineer, Integrity software consultants, 
+            Pelmolenlaan 2, 3447 GW  Woerden, The Netherlands.
+                  tel +31 3480 30131, fax +31 3480 30182
+
+
+From edwin@integow.integrity.nl (Edwin Koedam)
+Subject: Re: Help ! - Converting Proper case to Upper case in Vi.
+Date: 4 Jun 93 06:54:19 GMT
+
+Prasad Khurd writes:
+> Hi there
+> 
+> 	i read of a way to convert ALL upper case letters to lower case in the 
+> 	file in VI in one shot (not using ~ which works per charater) on the 
+> 	net somewhere but forgot it. i shall be very grateful if someone mails 
+> 	me how to do that.
+
+Sorry, in my previous response, I converted all characters to uppercase.
+To convert them to lower case, use:
+
+	:%s/./\l&/g
+
+Edwin.
+-- 
+  UUCP: ..!uunet!mcsun!sun4nl!integow!edwin or INTERNET: edwin@integrity.nl
+      Edwin Koedam, s
