@@ -1,0 +1,157 @@
+From saunders@luther.che.wisc.edu (Brian E. Saunders)
+Subject: VI Mapping Help
+Date: 11 Sep 92 18:24:32 CDT
+
+I am using remapping commands to do some common tasks in vi in a smaller
+amount of time.  If I place the map commands in the .exrc file, or the
+.login file, these keyboard remappings work when I edit a file in my home
+directory, but somehow they don't show up if I'm working in any
+subdirectory.  Can any of you gurus tell me why this is happenning?  My
+setting commands in the .exrc file and .login file (e.g. wrapmargin = n)
+translate to the subdirectories, so this is very confusing behavior.
+-- 
+
+Brian E. Saunders			saunders@luther.che.wisc.edu
+
+
+From marak@alcor.concordia.ca ( Mike Marak)
+Subject: Re: VI Mapping Help
+Date: Sat, 12 Sep 1992 04:36:50 GMT
+
+In article <1992Sep11.182433.25903@doug.cae.wisc.edu> saunders@luther.che.wisc.edu (Brian E. Saunders) writes:
+>I am using remapping commands to do some common tasks in vi in a smaller
+>amount of time.  If I place the map commands in the .exrc file, or the
+>.login file, these keyboard remappings work when I edit a file in my home
+>directory, but somehow they don't show up if I'm working in any
+
+One of the guys in the lab here showed us how to do this. Try this in your
+.login:
+
+    setenv EXINIT 'set wm=o [any other options] | source ~/.exrc'
+
+This works for ULTRIX (csh), abd should work for other flavors of unix.
+
+
+	Hope this helps
+	    Mike
+
+******************************************************************
+*  Mike Marak            * mike@emc2.concordia.ca *              *
+*  Lab Manager           * (514)848-3118          *    SPACE     *
+*  EMC Lab               * Room CC-109            *     FOR      *
+*  Loyola Campus         * 7141 Sherbrooke St. W. *     RENT     *
+*  Concordia University  * Montreal, Canada       *              *
+******************************************************************
+
+
+
+From tgtcmv@rwa.urc.tue.nl (Martien Verbruggen)
+Subject: Re: VI Mapping Help
+Date: 14 Sep 92 08:16:30 GMT
+Reply-To: tgtcmv@urc.tue.nl
+
+saunders@luther.che.wisc.edu (Brian E. Saunders) writes:
+
+>I am using remapping commands to do some common tasks in vi in a smaller
+>amount of time.  If I place the map commands in the .exrc file, or the
+>.login file, these keyboard remappings work when I edit a file in my home
+>directory, but somehow they don't show up if I'm working in any
+>subdirectory.  Can any of you gurus tell me why this is happenning?  My
+>setting commands in the .exrc file and .login file (e.g. wrapmargin = n)
+>translate to the subdirectories, so this is very confusing behavior.
+>-- 
+
+>Brian E. Saunders			saunders@luther.che.wisc.edu
+
+Normally vi looks for a .exrc in the current directory first, then, if it
+doesn't find one, in the directory that is contained by the environment
+variable HOME (your home-directory), and then executes.
+When you set the EXINIT variable, it will always execute the contents of this,
+then look for a .exrc in the current dir, but it doesn't look in your home
+directory anymore. (at least the vi versions I worked with didn't).
+It took me a very long time to figure this out. Nowadays I don't set EXINIT,
+but only keep a .exrc in my home and every other directory where it has to be
+different (fortran, c, and so on).
+This means that vi always uses the .exrc in my home, except when the current
+directory contains one.
+
+Hope this helps.
+-- 
+Martien Verbruggen (tgtcmv@chem.tue.nl) | 
+                                        | If two wrongs don't make a right,
+Eindhoven University of technology      |     try three.
+Department of Chemical Engineering      |
+
+From DSTEIS01@ulkyvm.louisville.edu (Donald S. Teiser)
+Subject: map in .exrc versus via :map in vi itself
+Date: Fri, 9 Jul 1993 14:32:30 GMT
+
+I have a question that is probably yet another vi FAQ:
+ 
+When I do the following in vi, it works for mapping "]" to "^D"
+ 
+    :map ] ^V^D
+ 
+However, when I add the following line to my .exrc file, I end up with
+the infamous "RHS missing" error when I :so .exrc
+ 
+     map ] ^V^D
+ 
+I do not have this problem when mapping "[" to "^U".  Any suggestions?
+ 
+*********************************************************************
+    **    Donald S. Teiser                 voice: (502) 588-7994     *
+    **    Tech Support for VMS & Ultrix    fax:   (502) 588-8896     *
+    **    University of Louisville         Louisville, KY 40292      *
+    **    dsteis01@ulkyvm.louisville.edu                             *
+*********************************************************************
+ 
+
+
+From Lowe@Fwva.Saic.Com
+Subject: Vi mapping
+Date: Wed, 21 Jul 1993 14:25:05 GMT
+
+Hi all.  I have a problem.  I created the following map in vi:
+x j 4dd h dd k P h x d2w x J h r <tab>.  I mapped these to g.
+When I invoke g, however, it chokes.  Any ideas why?  Thanks for any
+and all help.
+ 
+grant
+
+
+From hrjoist@immd4.informatik.uni-erlangen.de (Holger Joist)
+Subject: Re: Vi mapping
+Date: Wed, 21 Jul 1993 15:21:21 GMT
+
+Lowe@Fwva.Saic.Com writes:
+
+>Hi all.  I have a problem.  I created the following map in vi:
+>x j 4dd h dd k P h x d2w x J h r <tab>.  I mapped these to g.
+>When I invoke g, however, it chokes.  Any ideas why?  Thanks for any
+>and all help.
+
+After '4dd' the cursor is at the beginning of the line, so 'h' doesn't work.
+
+Did you check the above sequence without mapping?
+
+Bye,
+  Holger
+---
+Snail: Holger Joist, Neue Strasse 29, 8520 Erlangen, Germany
+Email: hrjoist@immd4.informatik.uni-erlangen.de
+
+
+From DSTEIS01@ulkyvm.louisville.edu (Donald S. Teiser)
+Subject: Re: map in .exrc versus via :map in vi itself
+Date: Fri, 9 Jul 1993 20:05:12 GMT
+
+Oh, now I see what is happening.  The ^D is being interpreted as an EndOfFile
+mark for the .exrc file.  Any workarounds possible folks?
+ 
+*********************************************************************
+    **    Donald S. Teiser                 voice: (502) 588-7994     *
+    **    Tech Support for VMS & Ultrix    fax:   (502) 588-8896     *
+    **    University of Louisville         Louisville, KY 40292      *
+    **    dsteis01@ulkyvm.louisville.edu                             *
+**********************************************************
