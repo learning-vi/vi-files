@@ -1,0 +1,914 @@
+From bhoughto@sedona.intel.com (Blair P. Houghton)
+Subject: Re: vi (cut and paste)
+Date: Mon, 17 Aug 1992 17:04:16 GMT
+
+In article <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+>    Does anyone know how you cut a range of text to one
+>    of the named buffers, where the range does not cover
+>   an integer number of lines, i.e., 
+>  How do i cut from here > text  text text ..........
+>  ............... n number of lines .....
+> ...... to here <  into the named buffer "a for example?
+
+Go to one end of the range and set a mark, then go to the
+other end and buffer-yank-to-marked-character, using
+double-quote and back-tick; for example, (the mark is "a"
+and the buffer is "f", the first letter in the range is the
+"b" in "bazz" and the last is the double-quote before the
+"b" in "bar"):
+
+	/bazz
+	ma			<-- set the mark
+	/bar
+	"fy`a			<-- yank to marked character
+	/result
+	nn"fp
+
+The result is:
+The rbazz" and the last is the double-quote before the
+"b" in "esult is:
+
+
+				--Blair
+				  "Cake."
+
+
+From bibb@s912%bnf.com (Ken Bibb)
+Subject: Re: vi (cut and paste)
+Date: 17 Aug 92 20:01:49 GMT
+
+In <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+
+
+> hi, 
+>    Does anyone know how you cut a range of text to one
+>   
+>    of the named buffers, where the range does not cover
+> 
+>   an integer number of lines, i.e., 
+
+>  How do i cut from here > text  text text ..........
+
+>  ............... n number of lines .....
+
+> ...... to here <  into the named buffer "a for example?
+
+>    Cheers,
+
+>              Dave.
+
+In the following texT:
+
+aaabbbbbb
+bbbbbbbbb
+bbbbccccc
+
+I'll assume you want to cut the b's out and save them into buffer a.
+
+1) position the cursor at the beginning of the range to be cut (1Gfb will work
+   in this example).
+2) ma (mark the location with marker a)
+3) move to the end of the range (Gfc will work in this example)
+4) "ad`a will cut the range and put it into buffer a
+
+--
+ken@bnf.com		jester@crash.cts.com
+-- 
+bnf!s912!ken@crash.cts.com	"The Fire and the Rose are one"--T.S.Eliot
+
+
+From sgr@alden.UUCP (Stan Ryckman)
+Subject: Re: vi (cut and paste)
+Date: 19 Aug 92 16:40:04 GMT
+
+In article <1992Aug17.200149.7817@s912%bnf.com> bibb@s912%bnf.com (Ken Bibb) writes:
+>In <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+>> hi, 
+>>    Does anyone know how you cut a range of text to one
+>>    of the named buffers, where the range does not cover
+>>   an integer number of lines, i.e., 
+>>  How do i cut from here > text  text text ..........
+>>  ............... n number of lines .....
+>> ...... to here <  into the named buffer "a for example?
+>>    Cheers,
+>>              Dave.
+>In the following texT:
+>aaabbbbbb
+>bbbbbbbbb
+>bbbbccccc
+>
+>I'll assume you want to cut the b's out and save them into buffer a.
+>1) position the cursor at the beginning of the range to be cut (1Gfb will work
+>   in this example).
+>2) ma (mark the location with marker a)
+>3) move to the end of the range (Gfc will work in this example)
+>4) "ad`a will cut the range and put it into buffer a
+
+NOT!
+
+This grabs all three full lines.  (I tried it!  Did you?)
+
+Dave presumably wants to have the remaining text be:
+aaaccccc
+
+and the buffer to contain:
+bbbbbb
+bbbbbbbbb
+bbbb
+
+"Mark" (the "m" command) only marks the line, NOT the cursor
+position within the line.
+
+In this trivial example, the following works:
+1) position to the beginning as Ken suggests (1Gfb);
+2) type the command "ad/c
+   which will delete up to the first "c" character, putting the
+   deletions into the buffer.
+
+However, in the general case this doesn't work; suppose you
+want all the b's PLUS the first c to be cut.  Then,
+   "ad2/c
+won't work (vi doesn't allow a number before the / command).
+Yes, here you could do
+   "ad/cccc$
+and, in most cases, something can be found to work.  But to my
+mind, there's no way to put the cursor at one arbitrary mid-line
+point, type something, then position to another arbitrary mid-line
+point, and then delete the in-between-text into a named buffer.
+
+Am cross-posting to comp.editors, since someone there may know
+for sure whether there _is_ a way to do this, and if I'm wrong I'd
+like to know.  But please, _TRY_ it before posting!
+
+Stan.
+--
+This .signature has expired.  Call 1-900-YOU-FOOL to find out why.
+    Stan Ryckman   sgr@alden.UUCP
+
+
+From asoper@wyvern.twuug.com (Aubrey Soper)
+Subject: Re: vi (cut and paste)
+Date: 18 Aug 92 20:34:41 GMT
+
+phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+
+
+> hi, 
+>    Does anyone know how you cut a range of text to one
+>   
+>    of the named buffers, where the range does not cover
+> 
+>   an integer number of lines, i.e., 
+
+>  How do i cut from here > text  text text ..........
+
+>  ............... n number of lines .....
+
+> ...... to here <  into the named buffer "a for example?
+
+>    Cheers,
+
+>              Dave.
+
+"ad/<
+
+should do it.  You can also mark the end and delete to
+that mark.  I'd recommend that you get a book on vi, such
+as UNIX Text Processing by Hayden Books.  With only the
+UNIX docs, you'll probably wind up hating vi...
+
+aubrey soper
+
+
+From sgr@alden.UUCP (Stan Ryckman)
+Subject: Re: vi (cut and paste)
+Date: 19 Aug 92 16:40:04 GMT
+
+In article <1992Aug17.200149.7817@s912%bnf.com> bibb@s912%bnf.com (Ken Bibb) writes:
+>In <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+>> hi, 
+>>    Does anyone know how you cut a range of text to one
+>>    of the named buffers, where the range does not cover
+>>   an integer number of lines, i.e., 
+>>  How do i cut from here > text  text text ..........
+>>  ............... n number of lines .....
+>> ...... to here <  into the named buffer "a for example?
+>>    Cheers,
+>>              Dave.
+>In the following texT:
+>aaabbbbbb
+>bbbbbbbbb
+>bbbbccccc
+>
+>I'll assume you want to cut the b's out and save them into buffer a.
+>1) position the cursor at the beginning of the range to be cut (1Gfb will work
+>   in this example).
+>2) ma (mark the location with marker a)
+>3) move to the end of the range (Gfc will work in this example)
+>4) "ad`a will cut the range and put it into buffer a
+
+NOT!
+
+This grabs all three full lines.  (I tried it!  Did you?)
+
+Dave presumably wants to have the remaining text be:
+aaaccccc
+
+and the buffer to contain:
+bbbbbb
+bbbbbbbbb
+bbbb
+
+"Mark" (the "m" command) only marks the line, NOT the cursor
+position within the line.
+
+In this trivial example, the following works:
+1) position to the beginning as Ken suggests (1Gfb);
+2) type the command "ad/c
+   which will delete up to the first "c" character, putting the
+   deletions into the buffer.
+
+However, in the general case this doesn't work; suppose you
+want all the b's PLUS the first c to be cut.  Then,
+   "ad2/c
+won't work (vi doesn't allow a number before the / command).
+Yes, here you could do
+   "ad/cccc$
+and, in most cases, something can be found to work.  But to my
+mind, there's no way to put the cursor at one arbitrary mid-line
+point, type something, then position to another arbitrary mid-line
+point, and then delete the in-between-text into a named buffer.
+
+Am cross-posting to comp.editors, since someone there may know
+for sure whether there _is_ a way to do this, and if I'm wrong I'd
+like to know.  But please, _TRY_ it before posting!
+
+Stan.
+--
+This .signature has expired.  Call 1-900-YOU-FOOL to find out why.
+    Stan Ryckman   sgr@alden.UUCP
+
+
+From ianh@nmpd.oz.au (Ian Holland)
+Subject: Re: vi (cut and paste)
+Reply-To: ianh@nmpd.oz.au
+Date: 20 Aug 92 03:04:48 GMT
+
+sgr@alden.UUCP (Stan Ryckman) writes:
+
+>In article <1992Aug17.200149.7817@s912%bnf.com> bibb@s912%bnf.com (Ken Bibb) writes:
+>>In <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+>>> hi, 
+>>>    Does anyone know how you cut a range of text to one
+>>>    of the named buffers, where the range does not cover
+>>>   an integer number of lines, i.e., 
+>>>  How do i cut from here > text  text text ..........
+>>>  ............... n number of lines .....
+>>> ...... to here <  into the named buffer "a for example?
+>>>    Cheers,
+>>>              Dave.
+>>In the following texT:
+>>aaabbbbbb
+>>bbbbbbbbb
+>>bbbbccccc
+>>
+>>I'll assume you want to cut the b's out and save them into buffer a.
+>>1) position the cursor at the beginning of the range to be cut (1Gfb will work
+>>   in this example).
+>>2) ma (mark the location with marker a)
+>>3) move to the end of the range (Gfc will work in this example)
+>>4) "ad`a will cut the range and put it into buffer a
+
+>NOT!
+
+I think I have worked out the English translation for this exclamation :-)
+
+>This grabs all three full lines.  (I tried it!  Did you?)
+
+The given example works with SunOS's vi.  Perhaps you have an inferior
+version (though this makes me sick in the stomack when I think about it),
+or maybe (just maybe) you used ' instead of `.
+
+	.
+	.
+	.
+
+>"Mark" (the "m" command) only marks the line, NOT the cursor
+>position within the line.
+
+This is totally incorrect.
+
+>Am cross-posting to comp.editors, since someone there may know
+>for sure whether there _is_ a way to do this, and if I'm wrong I'd
+>like to know.  But please, _TRY_ it before posting!
+
+Yes I did try the original (valid) suggestion before you read this.
+
+best of luck,
+--
+
+- ian...
+
+Ian Holland. NMPD, Telecom. % Ph:  +61 7 837 5075 % Explicit hoc totum,
+E-Mail: ianh@nmpd.oz.au     % Fax: +61 7 837 5253 % Pro Christo da mihi potum!
+
+
+
+From smr@hitkw14.pki-nbg.philips.de (S.Riehm)
+Subject: Re: vi (cut and paste)
+Date: 20 Aug 92 07:03:22 GMT
+
+phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+
+
+> hi, 
+>    Does anyone know how you cut a range of text to one
+>   
+>    of the named buffers, where the range does not cover
+> 
+>   an integer number of lines, i.e., 
+
+>  How do i cut from here > text  text text ..........
+
+>  ............... n number of lines .....
+
+> ...... to here <  into the named buffer "a for example?
+
+as soon as you mention the word "lines" in vi you get complete lines
+only!
+
+However, You can specify a search pattern, or any movement pattern, so
+you could move the cursor to the start position, then type;
+"ay/<  into/^M
+
+using your examply above. This will yank everything up to but not
+including the string in the search pattern.
+
+you could also do stupid things like:
+"ay120W
+which would yank the next 120 blank separated words.
+
+This works for delete, change, >> << etc etc also.
+
+good luck
+
+-----------------------------------------------------------------
+Stephen Riehm		Configuration Management	   _-_|\ 
+smr@pki-nbg.philips.de	Philips Kommunikations Industrie  /     \
+Work: +49 911 526 2975	Nuernberg, Germany		  \_.-.*/
+Fax:  +49 911 526 2095	"I was there, now I am here!"	       v 
+"My company speaks another language, I CAN'T speak on it's behalf"
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: vi (cut and paste)
+Date: Thu, 20 Aug 1992 15:35:18 GMT
+
+In <515@alden.UUCP> sgr@alden.UUCP (Stan Ryckman) writes:
+>In article <1992Aug17.200149.7817@s912%bnf.com> bibb@s912%bnf.com (Ken Bibb) writes:
+>>In the following texT:
+>>aaabbbbbb
+>>bbbbbbbbb
+>>bbbbccccc
+>>
+>>I'll assume you want to cut the b's out and save them into buffer a.
+>>1) position the cursor at the beginning of the range to be cut (1Gfb will work
+>>   in this example).
+>>2) ma (mark the location with marker a)
+>>3) move to the end of the range (Gfc will work in this example)
+>>4) "ad`a will cut the range and put it into buffer a
+
+>NOT!
+
+>This grabs all three full lines.  (I tried it!  Did you?)
+
+Yes.  It works.   What you did was "ad'a which indeed grabs three full lines.
+
+Maybe you have a problem distinguishing quote (') from backquote(`).  They're
+very similar on some displays.
+If you use quote ('), you'll grab whole lines; if you use backquote(`), you'll
+only grab the appropriate parts of the first and last lines.
+
+--
+Hope this helps
+
+Hans Mulder			hansm@cs.kun.nl
+
+
+From bhoughto@sedona.intel.com (Blair P. Houghton)
+Subject: Re: vi (cut and paste)
+Date: Thu, 20 Aug 1992 01:35:31 GMT
+
+In article <515@alden.UUCP> sgr@alden.UUCP (Stan Ryckman) writes:
+>"Mark" (the "m" command) only marks the line, NOT the cursor
+>position within the line.
+
+Just what sort of vi(1) are you using?
+
+The backtick (`) command would be useless unless the mark
+(m) command marked the precise location of the cursor, and
+both have worked just fine for me on the dozen or so UNIXen
+on which I've had the opportunity to run vi(1).
+
+				--Blair
+				  "No, I won't make a crude
+				   remark about how silly
+				   this argument would be
+				   in EMACS."
+
+
+From Tom Christiansen <tchrist@convex.COM>
+Subject: Re: vi (cut and paste)
+Date: Thu, 20 Aug 1992 18:17:06 GMT
+Reply-To: tchrist@convex.COM (Tom Christiansen)
+              Corp. The opinions expressed are those of the user and
+              not necessarily those of CONVEX.
+
+>From the keyboard of sgr@alden.UUCP (Stan Ryckman):
+:Well, I learned something new about vi.  I'll add ` to my list of
+:useful but undocumented commands.
+
+The ` is certainly documented!
+
+--tom
+-- 
+    Tom Christiansen      tchrist@convex.com      convex!tchrist
+
+Perle, plesaunte to prynces paye/ To clanly clos in golde so clere,
+Oute of oryent, I hardyly saye/ Ne proued I neuer her precios pere.
+
+
+From dawson@intelhf.hf.intel.com (Bryan Dawson)
+Subject: Re: vi (cut and paste)
+Date: Thu, 20 Aug 92 17:49:52 GMT
+
+sgr@alden.UUCP (Stan Ryckman) writes:
+
+>In article <1992Aug17.200149.7817@s912%bnf.com> bibb@s912%bnf.com (Ken Bibb) writes:
+>>In <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+>>In the following texT:
+>>aaabbbbbb
+>>bbbbbbbbb
+>>bbbbccccc
+>>
+>>I'll assume you want to cut the b's out and save them into buffer a.
+>>1) position the cursor at the beginning of the range to be cut (1Gfb will work
+>>   in this example).
+>>2) ma (mark the location with marker a)
+>>3) move to the end of the range (Gfc will work in this example)
+>>4) "ad`a will cut the range and put it into buffer a
+
+>NOT!
+
+WAY!
+Note the subtle distinction between the ' single quote and the ` back quote
+which is sometimes difficult to see...  VI uses the ` back quote to mean
+"treat the marks as character positions rather than line positions".
+
+>This grabs all three full lines.  (I tried it!  Did you?)
+
+I just did and he probably did also... certainly works fine for me.
+
+>aaaccccc
+
+>and the buffer to contain:
+>bbbbbb
+>bbbbbbbbb
+>bbbb
+
+>"Mark" (the "m" command) only marks the line, NOT the cursor
+>position within the line.
+
+As noted above, mark DOES mark the "cursor" (character) position but 
+the 'standard' access to marks using the ' single quote accesses entire
+lines.  Use the ` back quote to access character positions...
+
+>for sure whether there _is_ a way to do this, and if I'm wrong I'd
+>like to know.  But please, _TRY_ it before posting!
+
+>Stan.
+>--
+>This .signature has expired.  Call 1-900-YOU-FOOL to find out why.
+>    Stan Ryckman   sgr@alden.UUCP
+
+_________Thanks and Regards from: _____________________________
+
+>>  Bryan_Dawson_at_jfccm1@ccm.hf.intel.com      (me @ work)
+>>  (503) 696-4231   >> dawson@pdaxs.techbook.com  (me @ play)
+At the bank he was shocked to see such a den of equity.
+_______________________________________________________________
+
+
+
+From mvp@hsv3.lsil.com (Mike Van Pelt)
+Subject: Re: vi (cut and paste)
+Date: Fri, 21 Aug 1992 18:37:41 GMT
+
+In article <515@alden.UUCP> sgr@alden.UUCP (Stan Ryckman) writes:
+>In article <1992Aug17.200149.7817@s912%bnf.com> bibb@s912%bnf.com (Ken Bibb) writes:
+>>In <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+>>>  How do i cut from here > text  text text ..........
+>>>  ............... n number of lines .....
+>>> ...... to here <  into the named buffer "a for example?
+
+>>1) position the cursor at the beginning of the range to be cut (1Gfb will work
+>>   in this example).
+>>2) ma (mark the location with marker a)
+>>3) move to the end of the range (Gfc will work in this example)
+>>4) "ad`a will cut the range and put it into buffer a
+>
+>NOT!
+>This grabs all three full lines.  (I tried it!  Did you?)
+
+I just tried it, and it worked for me.
+
+Did you use d`a or d'a?  'a moves to the beginning of the
+marked line, `a moves to the marked character.
+
+I'm in vi now, and trying it.
+
+Here's my test case:
+
+------------------------------
+cut everything from < to the
+corresponding end marker
+character > in another line.
+------------------------------
+
+OK, copy it, and try it out.
+ma and mb are set on the < and > characters.
+Then I type `a"a`b and here's the result.
+
+------------------------------
+cut everything from > in another line.
+------------------------------
+
+The trailing marker character is not cut, so this must
+affect your selection of where to set the ending mark.
+
+Here's the contents of "a
+
+------------------------------
+< to the
+corresponding end marker
+character 
+------------------------------
+-- 
+Let's face it, when it comes to utilities,  Microsoft has | Mike Van Pelt
+performed about as well as a savings and loan.  These are | Headland Tech.
+the guys,  remember,  who put BACKUP and RESTORE - not to | mvp@hsv3.lsil.com
+mention EDLIN - on your hard disk.  - Lincoln Spector     +----
+
+
+From stuart@austin.ibm.com (Stuart R. Yoder)
+Subject: Re: vi (cut and paste)
+Date: 20 Aug 92 19:50:25 GMT
+Reply-To: stuart@piobe.austin.ibm.com
+
+
+In article <515@alden.UUCP>, sgr@alden.UUCP (Stan Ryckman) writes:
+> In article <1992Aug17.200149.7817@s912%bnf.com> bibb@s912%bnf.com (Ken Bibb) writes:
+> >In <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+>
+> >I'll assume you want to cut the b's out and save them into buffer a.
+> >1) position the cursor at the beginning of the range to be cut (1Gfb will work
+> >   in this example).
+> >2) ma (mark the location with marker a)
+> >3) move to the end of the range (Gfc will work in this example)
+> >4) "ad`a will cut the range and put it into buffer a
+> 
+> NOT!
+> 
+> This grabs all three full lines. 
+ 
+NOT!  I just tried it and it works great.  I'm running
+AIX 3.2.  I guess different versions of vi work differently.
+
+> 
+> Dave presumably wants to have the remaining text be:
+> aaaccccc
+> 
+> and the buffer to contain:
+> bbbbbb
+> bbbbbbbbb
+> bbbb
+> 
+> "Mark" (the "m" command) only marks the line, NOT the cursor
+> position within the line.
+> 
+Depends on your version of vi.
+
+>
+> and, in most cases, something can be found to work.  But to my
+> mind, there's no way to put the cursor at one arbitrary mid-line
+> point, type something, then position to another arbitrary mid-line
+> point, and then delete the in-between-text into a named buffer.
+
+Depends on your version of vi.
+> 
+> 
+> Stan.
+> --
+> This .signature has expired.  Call 1-900-YOU-FOOL to find out why.
+>     Stan Ryckman   sgr@alden.UUCP
+-- 
+-Stuart
+-----------------------------------------------------------
+My opinions are mine and not those of my employer.
+-----------------------------------------------------------
+
+
+From smr@hitkw14.pki-nbg.philips.de (S.Riehm)
+Subject: Re: vi (cut and paste)
+Date: 25 Aug 92 11:15:30 GMT
+
+sgr@alden.UUCP (Stan Ryckman) writes:
+
+>In article <1992Aug17.200149.7817@s912%bnf.com> bibb@s912%bnf.com (Ken Bibb) writes:
+>>In <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+>>> hi, 
+>>>    Does anyone know how you cut a range of text to one
+>>>    of the named buffers, where the range does not cover
+>>>   an integer number of lines, i.e., 
+>>>  How do i cut from here > text  text text ..........
+>>>  ............... n number of lines .....
+>>> ...... to here <  into the named buffer "a for example?
+>>>    Cheers,
+>>>              Dave.
+>>In the following text:
+>>aaabbbbbb
+>>bbbbbbbbb
+>>bbbbccccc
+>>
+>>I'll assume you want to cut the b's out and save them into buffer a.
+>>1) position the cursor at the beginning of the range to be cut (1Gfb will work
+>>   in this example).
+>>2) ma (mark the location with marker a)
+>>3) move to the end of the range (Gfc will work in this example)
+>>4) "ad`a will cut the range and put it into buffer a
+
+>NOT!
+
+>This grabs all three full lines.  (I tried it!  Did you?)
+
+in a REAL vi, using the grave (`) should work only on character
+positions, and more or less ignore lines. Try setting a mark (a) in a line
+and then moving somewhere else, then type 'a ( normal single quote ),
+you will be put to the start of the line, if this was used with a
+delete, it would delete the whole line! If however, you use the
+backquote or grave character, ie: `a, this will put you on exactly
+the same character that was under the cursor when you created the
+mark, this when combined with deletes etc works TO THE CHARACTER, and
+not on the whole line! Whether the marked character is included or not
+I am unsure, I don't know what the official definition says.
+
+catchya
+
+-----------------------------------------------------------------
+Stephen Riehm		Configuration Management	   _-_|\ 
+smr@pki-nbg.philips.de	Philips Kommunikations Industrie  /     \
+Work: +49 911 526 2975	Nuernberg, Germany		  \_.-.*/
+Fax:  +49 911 526 2095	"I was there, now I am here!"	       v 
+"My company speaks another language, I CAN'T speak on it's behalf"
+
+
+From martelli@cadlab.sublink.org (Alex Martelli)
+Subject: Re: vi (cut and paste)
+Date: 2 Sep 92 13:40:55 GMT
+
+sgr@alden.UUCP (Stan Ryckman) writes:
+
+:In article <1992Aug17.200149.7817@s912%bnf.com> bibb@s912%bnf.com (Ken Bibb) writes:
+:>In <3815@keele.keele.ac.uk> phd85@seq1.keele.ac.uk (D.H. Holden) writes:
+:>> hi, 
+:>>    Does anyone know how you cut a range of text to one
+:>>    of the named buffers, where the range does not cover
+:>>   an integer number of lines, i.e., 
+:>>  How do i cut from here > text  text text ..........
+:>>  ............... n number of lines .....
+:>> ...... to here <  into the named buffer "a for example?
+:>>    Cheers,
+:>>              Dave.
+:>In the following texT:
+:>aaabbbbbb
+:>bbbbbbbbb
+:>bbbbccccc
+:>
+:>I'll assume you want to cut the b's out and save them into buffer a.
+:>1) position the cursor at the beginning of the range to be cut (1Gfb will work
+:>   in this example).
+:>2) ma (mark the location with marker a)
+:>3) move to the end of the range (Gfc will work in this example)
+:>4) "ad`a will cut the range and put it into buffer a
+:
+:NOT!
+:
+:This grabs all three full lines.  (I tried it!  Did you?)
+
+You are wrong.  Yes, I did try Ken's suggestion, and it works perfectly!
+Your mistake is probably that sub 4), where Ken specifies a ` (reverse
+quote) you used a ' (quote); THAT would grab the three full lines!
+
+:Dave presumably wants to have the remaining text be:
+:aaaccccc
+:
+:and the buffer to contain:
+:bbbbbb
+:bbbbbbbbb
+:bbbb
+
+Which is EXACTLY what Ken's 
+
+
+From tede@alcor.concordia.ca ( TED EWANCHYNA )
+From: tede@alcor.concordia.ca ( TED EWANCHYNA )
+Newsgroups: comp.editors
+Subject: Re: cut and paste in vi problem
+Date: Tue, 14 Dec 1993 19:11:19 GMT
+Organization: Concordia University, Montreal, Quebec
+Lines: 57
+
+In article <CHDF54.9J@newsflash.concordia.ca> tede@alcor.concordia.ca ( TED EWANCHYNA ) writes:
+>I am trying to solve an annoying problem that I have had with vi
+>for some time now. This problem occurred "sporadically" but I now
+>think I can pinpoint the problem (not the solution).
+>
+>My goal: delete a block and move it to a new location in the file.
+>My method: .,$d, followed by p
+>Result: it works..., but if I deleted a line or word (dd, dw respectively)
+>before I delete with .,$d, I end up with that buffer, not the 'ex' buffer
+>when I try and put (p) the buffer back into the new file position.
+>I figure my problem is mixing ex with vi style commands. So I tried
+>to use :pu instead of p - lo and behold  - same problem. 
+>
+>I may get suggestions to do a cut and paste differently, but I LIKE
+>using relative references for deleting, so is there any way to 
+>find out what/why this is occurring? Maybe I can work arounf this problem.
+>I'd also like to know if I can examine the cut buffer. I am using a 
+>DECStation/Ultrix box. I seem to recall having a similiar problem on a Sun 
+>though.
+
+It's me again. Thanks to all who posted and e-mailed answers. Since my initial
+post I have read some documentation (O'Reilly's Learning the VI Editor,
+HP's excellent the Ultimate Guide to VI, various files from one of the
+vi archive mirror sites). I have also applied some of the suggestions.
+
+I am happy with how I do moves and copies of text blocks (I like
+dG and the p, but what I really like is that the target (G) can be
+changed to any target, ie the d<target> method allows me to use
+the current position + the <target> to delineate a block to delete
+and the target is any line movement command (eg, G, /<pattern, +n, etc
+that I already know). Reading the books put together 2 pieces of information
+that I already had known but had not thought of. 
+
+This leads me t the following 2 points.
+
+1) Why is the Unix documentation on vi SO BAD. Why did I have to read 3rd
+party sources to really learn how to use an editor that I have been
+using for years. Everyone should really be able to read a good book
+like any of the 2 I mentioned above, without going through so much
+trouble. It seems I have to learn everything about vi just to answer
+anything. Anyone who has not read one of these books does not know vi.
+Even if you think you know vi, these books will really bring together
+a lot - you'll hear yourself saying "of course, how obvious" and wonder
+why after all these years you never did it another (a better) way before.
+
+2) I still don't understand why when I delete a word (dw) then I delete a 
+block with an ex command (:.d), that when I use the put (p) command
+to move (what I think is the last delete) I get the dw buffer back 
+and not the text from the :.d. I implore anyone to give me an answer
+- is this a bug??!!  The only bug I read about in vi is the c'd command
+when your backreference the d (type md then move past it and issue c'd,
+you get a core dump everytime! but only if you use d, nothing else).
+Back to my 'bug'... I can't find where the text of the ex delete went.
+I look through each numbered buffer, nada, where does this text go?
+
+Who can I write to to establish if this really is a bug or not?
+
+
+From ray@Celestial.COM (Ray Jones)
+From: ray@Celestial.COM (Ray Jones)
+Newsgroups: comp.editors
+Subject: Re: cut and paste in vi problem
+Date: Thu, 16 Dec 1993 17:56:54 GMT
+Organization: Celestial Software, Mercer Island, WA
+Lines: 68
+
+In <CI1HAv.MIw@newsflash.concordia.ca> tede@alcor.concordia.ca ( TED EWANCHYNA ) writes:
+
+>In article <CHDF54.9J@newsflash.concordia.ca> tede@alcor.concordia.ca ( TED EWANCHYNA ) writes:
+
+>It's me again. Thanks to all who posted and e-mailed answers. Since my initial
+>post I have read some documentation (O'Reilly's Learning the VI Editor,
+>HP's excellent the Ultimate Guide to VI, various files from one of the
+>vi archive mirror sites). I have also applied some of the suggestions.
+
+>I am happy with how I do moves and copies of text blocks (I like
+>dG and the p, but what I really like is that the target (G) can be
+>changed to any target, ie the d<target> method allows me to use
+>the current position + the <target> to delineate a block to delete
+>and the target is any line movement command (eg, G, /<pattern, +n, etc
+>that I already know). Reading the books put together 2 pieces of information
+>that I already had known but had not thought of. 
+
+>This leads me t the following 2 points.
+
+>1) Why is the Unix documentation on vi SO BAD. Why did I have to read 3rd
+>party sources to really learn how to use an editor that I have been
+>using for years. Everyone should really be able to read a good book
+>like any of the 2 I mentioned above, without going through so much
+>trouble. It seems I have to learn everything about vi just to answer
+>anything. Anyone who has not read one of these books does not know vi.
+>Even if you think you know vi, these books will really bring together
+>a lot - you'll hear yourself saying "of course, how obvious" and wonder
+>why after all these years you never did it another (a better) way before.
+
+The editor, vi, is tacked on by Unix os vendors, it is mostly unsupported.
+It was written by Bill Joy (VP Sun) while he was at the University of Calif
+at Berkeley = public domine.  Every vendor twiques it a little here and
+there so little bugs or differences get in.  No one seems to document it
+because "everyone know it" (NOT).  This has lead to a cottage industry of
+"How to" books on vi.
+
+>2) I still don't understand why when I delete a word (dw) then I delete a 
+>block with an ex command (:.d), that when I use the put (p) command
+>to move (what I think is the last delete) I get the dw buffer back 
+>and not the text from the :.d. I implore anyone to give me an answer
+>- is this a bug??!!  The only bug I read about in vi is the c'd command
+
+Don't know where your delete goes, but you might try yanking into a buffer
+prior to your delete.  This will retain the information in the buffer until
+you close vi.  The contents can be "put" at any time, even if you go to the
+next file.
+"a4yy
+will yank 4 lines into buffer "a"
+You can delete (4dd) if you like or just copy (paste?) those line after the
+cursor (anywhere in this file or the "next" file) with
+"ap
+There are 26 of these buffers (a-z).  BTW, if you use
+"A4yy
+this will append to buffer "a" instead of overwritting the buffer.
+
+>when your backreference the d (type md then move past it and issue c'd,
+>you get a core dump everytime! but only if you use d, nothing else).
+>Back to my 'bug'... I can't find where the text of the ex delete went.
+>I look through each numbered buffer, nada, where does this text go?
+
+>Who can I write to to establish if this really is a bug or not?
+It may be on the version on your machine but may not be reproducable on the
+next (different version of the os).
+-- 
+INTERNET:  ray@Celestial.COM           | The probability of one or more
+Ray A. Jones; Celestial Software       | spelling errors in this missive
+8545 S.E. 68th Street                  | approaches unity. If this bothers you,
+Mercer Island, WA 98040;(206) 236-1676 | run it through your spell checker!
+
+From afsypng@cmcws75.cmc.aes.doe.ca (Jacques Marcoux)
+From: afsypng@cmcws75.cmc.aes.doe.ca (Jacques Marcoux)
+Newsgroups: comp.editors
+Subject: Re: cut and paste in vi problem
+Date: Fri, 17 Dec 1993 11:55:12 GMT
+Organization: Centre Meteorologique Canadien
+Lines: 14
+
+   >In article <CHDF54.9J@newsflash.concordia.ca> tede@alcor.concordia.ca ( TED EWANCHYNA ) writes:
+
+... [stuff deleted]
+
+   >2) I still don't understand why when I delete a word (dw) then I delete a 
+   >block with an ex command (:.d), that when I use the put (p) command
+   >to move (what I think is the last delete) I get the dw buffer back 
+   >and not the text from the :.d. I implore anyone to give me an answer
+   >- is this a bug??!!  The only bug I read about in vi is the c'd command
+
+Seems to vary with the vi incarnation, on HP-UX (p) put the last deleted
+block of text, on some other  however it seems  that  there is  separate
+unnamed  buffer  for vi and for ex.  So if you delete  text with :.d you
+have to use :pu to put it back.
+
+From syklb@osiris.giss.nasa.gov (Ken Bell)
+From: syklb@osiris.giss.nasa.gov (Ken Bell)
+Newsgroups: comp.editors
+Subject: Re: cut and paste in vi problem
+Date: 17 Dec 1993 15:00:35 -0500
+Organization: NASA Goddard Institute for Space Studies, NYC
+Lines: 17
+
+In article <AFSYPNG.93Dec17065513@cmcws75.cmc.aes.doe.ca>,
+Jacques Marcoux <afsypng@cmcws75.cmc.aes.doe.ca> wrote:
+
+>Seems to vary with the vi incarnation, on HP-UX (p) put the last deleted
+>block of text, on some other  however it seems  that  there is  separate
+>unnamed  buffer  for vi and for ex.  So if you delete  text with :.d you
+>have to use :pu to put it back.
+
+I find that if I delete or yank text via "dd", ":d", "yy", or ":y"
+commands, and then issue an "o" or "O", followed by <Esc>, neither
+"p" nor ":pu" commands find any text in the buffer.  Is this "normal"?
+
+(FWIW, on RS/6000 running AIX 3.2)
+
+-- 
+Ken Bell
+syklb@nasagiss.giss.nasa.gov / syklb@nasagiss.bitnet / (212)-678-5545
+
