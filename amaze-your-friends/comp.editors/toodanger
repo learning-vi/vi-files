@@ -1,0 +1,30 @@
+From fuenf@aldebaran.cs.uni-sb.de (Stefan Fuenfrocken)
+Subject: "too dangerous to map that"
+Date: 27 Jan 1993 09:05:45 GMT
+PathPath: aldebaran!fuenf
+
+Hi,
+
+Under what circumstance do i get the " too dangerous to map that" message?
+
+There were a few times vi refused to map something.
+e.g. perform search for fixed patten
+:map xx /pattern
+
+Does this mean, that i probably will run into conflict with 'internal' vi mappings?
+
+Is there a way to do the mapping anyway.
+e.g: space bar mapping (well, bad example, since it is not too dangerous to map ;) )
+
+map ^V  something
+
+an then redefine the mappings for 's' and '~', which use the spacebar-mapping, 
+accordingly with the 'l' as substitute.
+
+
+Another question:
+
+-) is there a way to use the 'unmapped' meaning of mapped symbols?
+   suppose you map! the ESC-key to somthing (a stupid thing, i know ;) ), which 
+   leaves you with (almost) no possibility to return from any insert/appand/open mode;
+   the only thing a can imagine, is to map! an other key to ESC ( with noremap 
