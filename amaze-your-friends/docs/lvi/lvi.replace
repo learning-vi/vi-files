@@ -1,0 +1,22 @@
+You have typed 'r' or 'R'.  The one you typed is now activated.
+
+r     replace the character at the cursor position with the 
+      character that you input immediately after the command.  
+
+R     substitute the following text with the text you input
+      immediately after the command. End text replacement
+      with <ESC>. 
+
+Use this text for harmless practicing.  Undo last change with 'u'.  Examples:
+
+    rX              replace the current character by the character 'X'.
+
+    R5char          replace the current and 4 following characters by "5char".
+
+
+
+
+
+-------------------------------------------------------------------bt 88/01/25
+Type '^c' to continue editing or 'v' to visit old buffer. Type 'q' to quit.
+
