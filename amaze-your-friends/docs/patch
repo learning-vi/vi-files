@@ -1,0 +1,136 @@
+From: jbm@uncle.UUCP (John B. Milton)
+Subject: Re: Weird problem with vi... "Not that many lines in buffer"
+Keywords: vi, bug checker
+Date: 3 Oct 88 15:56:01 GMT
+Reply-To: jbm@uncle.UUCP (John B. Milton)
+
+In article <132@conrad.UUCP> sac@conrad.UUCP (Steven A. Conrad) writes:
+>In article <508@icus.islp.ny.us> Lenny Tropiano writes:
+...
+
+This does make one think, now that everone knows that this can be done!
+HP took care of it in their vi, you just can't do it; no switch to enable or
+anything. It is indeed a big security hole. NEVER vi a user file from root,
+you never know what might be in it! Below is a program "vick", which will
+scan stdin or a list of files for these commands. It only looks at the first
+four and the last four lines, and for ex, ei, vi and vx. The command passed to
+vi seems to be from the : after "vi" to the LAST colon on the line. If you are
+not using this on a UNIXpc, check your local vi and tune it accordingly.
+Always look for strange vi behavior, it can come from: the environment variable
+EXINIT, from ./.exrc, /.exrc, these imbedded vi:: commands, functions and 
+aliases picked up here and there, weirdness from shelling out of other programs.
+
+P.S. HP correctly fixed the problem with a :set modelines defaulted to no
+
+---cut---cut---cut---cut---cut---cut---cut---
+/* vi:set ai sm ts=2 sw=2: */
+
+#include <stdio.h>
+#include <string.h>
+
+extern int errno;
+extern int optind;
+extern char *optarg;
+
+#define VIMAXLINESIZE 1000
+
+static char *me,Verbose=0;
+
+void perrorf(format,a1,a2,a3,a4,a5,a6,a7,a8,a9)
+char *format,*a1,*a2,*a3,*a4,*a5,*a6,*a7,*a8,*a9;
+{
+	char line[200];
+
+	sprintf(line,format,a1,a2,a3,a4,a5,a6,a7,a8,a9);
+	perror(line);
+}
+
+static int HasExCmd(s)
+char *s;
+{ /* sort of-> [ev][ix]:.*: */
+	int i;
+	char *colon;
+
+	if ((colon=strchr(s,':'))==NULL)
+		return(0); /* no colon */
+	if (colon-s<2)
+		return(0); /* colon too close to beginning to have vi */
+	colon--;
+	if (*colon!='i' && *colon!='x')
+		return(0); /* character before : is not i|x */
+	colon--;
+	if (*colon!='v' && *colon!='e')
+		return(0); /* character before : is not v|e */
+	if (strchr(colon+3,':')==NULL)
+		return(0); /* no second colon, command ignored */
+	else {
+		if (Verbose) {
+			fputs(s,stdout);
+			for (i=0; i<colon-s; i++)
+				putchar(' ');
+			puts("^");
+		}
+		return(1); /* GOT ONE! */
+	}
+}
+
+static int filt(f)
+FILE *f;
+{
+	int i;
+	long int l=0;
+	char line[4][VIMAXLINESIZE];
+
+	while (fgets(line[l%4],VIMAXLINESIZE,f)!=NULL) {
+		if (l<4 && HasExCmd(line[l%4])) /* will ALWAYS eval left to right! */
+			return(1);
+		l++;
+	}
+	if (l>4)
+		for (i=l-4; i<l; i++)
+			if (i>=4)
+				if (HasExCmd(line[i%4]))
+					return(1);
+	return(0);
+}
+
+static char *usage="Usage: %s\n";
+
+int main(argc,argv)
+int argc;
+char *argv[];
+{
+	int bad=0,i,opt;
+	FILE *f;
+
+	me=argv[0];
+	while ((opt=getopt(argc,argv,"v?"))!=EOF)
+		switch (opt) {
+			case 'v':
+				Verbose=1;
+				break;
+			case '?':
+			default:
+				fprintf(stderr,usage,me);
+				exit(1);
+				break;
+		}
+	if (argc==optind)
+		bad+=filt(stdin);
+	else
+		for (i=optind; i<argc; i++)
+			if ((f=fopen(argv[i],"r"))==NULL)
+				perrorf("%s: open %s for reading",me,argv[i]);
+			else {
+				bad+=filt(f);
+				fclose(f);
+			}
+	return(bad);
+}
+
+John
+-- 
+John Bly Milton IV, jbm@uncle.UUCP, n8emr!uncle!jbm@osu-cis.cis.ohio-state.edu
+home (614) 294-4823, work (614) 764-4272; ei:wq!: (isn't vi fun?)
+
+
