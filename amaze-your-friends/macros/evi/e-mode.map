@@ -1,0 +1,14 @@
+map! ^B ^[hli
+map! ^F ^[la
+map ^A I
+map ^B bA
+map ^E A
+map ^F +I
+map ^K ddi
+map ^V^H k$Ja
+map ^N ji
+map ^P ki
+map M-a (i
+map M-d dwi
+map M-f +I
+map M-k d)i
