@@ -1,0 +1,92 @@
+From: csg021@cch.coventry.ac.uk (Micky J.)
+Newsgroups: comp.editors
+Subject: SUMMARY: Information on writing text editors
+Date: 3 Feb 93 12:45:28 GMT
+Organization: Coventry University
+Lines: 82
+Nntp-Posting-Host: cc_sysh
+
+
+A couple of weeks ago I requested some information on where I could find
+information on writing text editors. Enclosed is a summary of the information
+I received. Unfortunately I haven't had time to check any of these references
+(although I have a printout of the "sam" paper yet to be read).
+
+Thankyou to all who mailed me.
+
+P.S.  I'm a fair way thru writing the basic parts of the text editor already!
+
+------------------------------------------------------------------------------
+From: snead@com.mot.comm.mdd (Gregory Snead)
+
+Dr. Dobb's "C Programming", September - December 1988, takes you
+through building TWRP (Tiny Word Processor).  It's a good place
+to start. TWRP was a subproject in the SMALLCOM (Small
+Communicatons Software) project.
+
+Call this BBS: 415-358-8641.  They have all of the Dr. Dobb's
+stuff an more from other magazines.
+
+------------------------------------------------------------------------------
+From: john@au.oz.su.physiol (John Mackin)
+
+Read Pike's "sam" paper from Software Practice & Experience.
+You can ftp it from research.att.com, dist/plan9man/07sam.ps.Z.
+
+------------------------------------------------------------------------------
+From: "Craig A. Finseth" <fin@edu.umn.unet>
+
+Title:		The Craft of Text Editing: Emacs for the Modern World
+Author(s):	Craig A. Finseth
+Publisher:	Springer-Verlag
+Size:		220pp, 10 chapters, 5 appendices
+ISBN:		0-387-97616-7, 3-540-97616-7
+Price:		$39.95
+
+------------------------------------------------------------------------------
+From: jsmith@com.spectro (Jerry Smith)
+
+I did a book a couple of years ago with a text editor(s) as a
+project.  The (now defunct) C Gazette picked it as a must buy,
+so it is apparently useful to certain groups.  Considerations:
+
+- main theme is C and C++ software engineering, not the editor
+- slightly DOS oriented
+- because it not strictly an editor book, it uses simple buffer
+  management, rather than a split buffer design, etc.
+
+If you're still interested the info is:  Reusability and Software
+Construction:  C and C++, by Jerry Smith, John Wiley & Sons, 1990.
+
+ISBM 0-471-52411-5.
+Jerry Smith
+Iris Computing Laboratories
+The Spectro Group, Inc.
+1219 Luisa Street
+Suite 9
+Santa Fe, New Mexico 87501  USA
+
+Phone:  +1-505-988-2670
+Fax:    +1-505-988-2489
+Email:  jsmith@spectro.com
+
+------------------------------------------------------------------------------
+From: pds@edu.csun.secs.ms (Peter Smith)
+
+I expect you will get a few pointers to the following:
+
+pds
+
+%A C. A. Finseth
+%T The craft of text editing: Emacs for the modern world
+%I Springer-Verlag
+%C New York, NY
+%D 1991
+
+-- 
+%%%  %%% &&&&  %%%%% &&  && %%    %%       &&&&&&    >> I'm an angst of sub- 
+%%%%%%%%  &&  %%%    && &&   %%  %%          &&      >> emotional post-modern
+%% %% %%  &&  %%%    &&&&      %%   ===      &&      >> wave of erm....yeah.
+%%    %% &&&&  %%%%% && &&     %%         &&&&   %%  >> csg021@cck.cov.ac.uk
+
+
