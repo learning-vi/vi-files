@@ -1,0 +1,16 @@
+
+In the above $CLEAR, $TSL and $REV are strings containing necessary escape
+sequences, evaluated at login time, for clearing the screen, moving to the
+status line and entering reverse video mode, respectively.  Similarly, $SGR0
+and $FSL unsets graphics rendition and moves the cursor back from the status
+line.  All these strings are to be provided at your discretion through suitable
+tput(1) calls.  If not provided, the help text will appear in the next line
+on the screen.  Their absence will not affect the functionality of 'evi'.
+
+For some obscure reason (at least for me) certain mappings/unmappings
+cannot be done in the script itself but have to be introduced by a :source
+command (see lines containing ":so" above).  Here follows all source files
+needed (each filtered through 'cat -tv' to make them e-mailable):
+
+
+
