@@ -1,0 +1,79 @@
+" From s325@brems.ii.uib.no Sat Oct 17 14:02:38 1992
+"
+" # I got these from a friend \yvind Brusevold. Translation to english is
+" # done by me.
+" # He was doning a CS course, using pascal.
+" # English translation done by me. - Ruben
+" 
+" Halloen!
+" 
+" Har foerloepig disse makroene:
+" 
+" Perfekt fungerende if-then, og if-then-else. Jeg har satt tab til 
+" 3 mellomrom, og shiftwidth deretter. Har ogsaa to begin-end makroer:
+" en med semikolon, og en uten. Dessuten makroer for kommentar
+" (en linje av gangen.)
+" 
+"
+" Hello !
+"
+" I have at the present created these macros:
+"
+" Perfect workin if-the, and if-then-else. I have set tab to 3 spaces,
+" and shiftwidth the same. I have also to kind of begin-end marcos:
+" one with semicolon, and one without. At least there are macrso for
+" komments (one line at the time).
+" 
+" 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Forsoek paa aa lage pascal makroer til litt mer effektiv kodeskriving.
+" Dato: Fri Oct 16 14:57:18 GMT 1992
+"
+" Av Oyvind Brusevold.
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Map!er om tabulator til tre mellomrom. (kan justeres for egen smak)
+" Tab to three spaces.
+"
+map! 	    
+"
+"Viser matchende parenteser
+set showmatch
+set shiftwidth=3
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Makro for if <predikat> then 
+" Macro for if <predicate> then
+"
+abbrev ift Iif A then	cbeg xxa
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"Makro for if <predikat> then else
+" Macro for if <predicate> then else
+"
+abbrev ife Iif A thenelse	cbeg 3ko	beg xxa
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Makro for begin end
+" Macro for begin/end
+"
+abbrev beg beginendko
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Makro for begin end med semikolon
+" Macro for begin/end with semicolon
+"
+abbrev cbeg beginend;ko
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Makro for kommentarsetning
+" Macro for commenting
+"
+map! (* (* *)hhha
+map! { (* *)hhha
+"
+"Ikke saa store greine, men litt ok!
+" Not much, but a bit nice.
+"
+"Enjoy!
+"
