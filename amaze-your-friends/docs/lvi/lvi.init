@@ -1,0 +1,21 @@
+> Welcome to 'lvi' - the learner's interface to the visual screen editor 'vi' < 
+-------------------------------------------------------------------------------
+At any point you get a list of all standard 'vi' commands by typing '^a' (=hold
+down <CTRL> and type 'a').  All of them can be used in 'lvi'.  However, at this
+point all dangerous commands are inactive.   Some will invoke a tutorial before
+they become active.   Others will not become active until you start the editing
+of your file(s) by typing '^c'.   Go ahead and try to find the active commands!
+This is perfectly safe unless you use a command starting with a ':' (colon).
+
+In addition to the standard 'vi' commands, the following special 'lvi' commands
+are available:
+
+   ^a (<CTRL>-a)    get Assistance. 
+   ^c (<CTRL>-c)    Continue editing.
+   v                Visit the buffer you just left.  Original text restored.
+   q                Quit. 
+
+To get complete information on 'vi', type ':! man vi' (this may be very slow).
+
+-------------------------------------------------------------------bt 88/01/25
+Type 'v' to visit old buffer, 'q' to quit, or any standard 'vi' command.
