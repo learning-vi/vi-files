@@ -1,0 +1,33 @@
+From: wcs@ho95e.ATT.COM (#Bill.Stewart)
+Subject: Re: Replacing tabs in vi
+Date: 23 Jan 87 03:52:20 GMT
+Reply-To: wcs@ho95e.UUCP (Bill Stewart 1-201-949-0705 ihnp4!ho95c!wcs HO 2G202)
+
+In article <3050001@hplsdlw.HP.COM> was@hplsdlw.UUCP writes:
+>randy@tekla.UUCP (Randy Gibbons) asks:
+>> Is there a way in vi to have spaces rather than tabs placed in the
+>text.
+>Unfortunately, vi has an annoying tendency to auto-indent using tabs.  I
+>don't know of a way to disable this (mis) feature.  However, once the
+>tabs are in the file, you can remove them [.......]
+> .....	!Gcol -x    (replace contents of file with detabbed output of col -x)
+
+(I happen to think tabs are a "good thing"; I'd much rather work in vi
+ where you get tabs too often than the rand editor which *always*
+ trashes tabs, even if they were in the original file.  The usual
+ reasons for NOT wanting tabs are that you prefer non-equal tab
+ settings, or that you use other programs which don't default right.)
+
+To make vi not do tabs when you autoindent, do
+	:set tabstop=0
+This has the negative effect of displaying files with tabs in them a
+bit weird (i.e. C programs.), but it means that vi will use spaces
+instead of tabs to indent with.
+	If your real complaint is that you don't like tab stops of size
+8, you can set ts=4 sw=4 and then print your programs using options to
+expand tabs by +4 (e.g. pr -e4 foo.c)
+
+-- 
+# Bill Stewart, AT&T Bell Labs 2G-202, Holmdel NJ 1-201-949-0705 ihnp4!ho95c!wcs
+
+
