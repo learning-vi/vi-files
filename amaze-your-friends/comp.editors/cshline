@@ -1,0 +1,62 @@
+From: fisher@inls1.ucsd.edu (Yuval Fisher)
+Newsgroups: comp.editors
+Subject: Vi/Ex:  command line editor? - Yes!
+Date: 16 Sep 92 17:14:48 GMT
+Organization: Institute for Nonlinear Science
+Lines: 54
+
+Quite some time ago  ian@unipalm.uucp (Ian Phillipps) wrote
+about a handy way to set up a csh command line editor using vi.
+I have been using it faithfully, until my vi changed from 
+"Version 3.7, 6/7/85." to "Version SVR3.1". Now, things are screwy
+and it basically doesn't work. Does anyone know how to fix this 
+problem (other than switch away from csh or change vi) ? Incidentally, 
+I consider this command line editor thingy to be the best thing since, 
+say, money subplanted bartering ? 
+
+I include Ian's posting below, since it is short:
+
+The following works with the C-shell. It was posted about two years ago
+on Usenet, and the poster then said that its origin was lost in the
+mists of time. Here goes:
+
+You need an alias in your normal setup, thuswise:
+
+    alias r source ~/cmd/redo
+
+Type "r" and you'll be in "vi" open mode, editing the last command. You can
+use any vi/ex commands (even go into visual mode): when you hit Return, the
+current line will be executed by the C shell.
+
+The "redo" file is as follows. **IMPORTANT NOTE** To avoid mangling in
+the posting, I've replaced a Carriage Return with "^M" and an ESC with "^["
+in ex's "map" command:
+
+----cut here and replace control characters---
+# Edit history list at line containing last command (open mode).
+# Get up to 22 most recent commands.
+# To work properly, put in .login:  alias r source /usr/local/bin/redo
+# Author unknown.
+history -h 22 >! /tmp/redo.$$
+
+# Make CR map to :wq! and start ex quietly at 2nd to last line in open mode.
+ex - '+map ^M :.wq\!^[|set redraw|$-1 open' /tmp/redo.$$
+
+# Insert into history without executing.
+source -h /tmp/redo.$$
+
+# Clear out temporaries.
+/bin/rm -f /tmp/redo.$$
+
+# If thing chosen to redo is the redo alias itself then DON'T redo it.
+if (!-2:0 != !!:0) !!
+----cut here----
+
+
+---------------------------------------------------------------------
+Yuval Fisher                                 e-mail: yfisher@ucsd.edu
+Institute for Non-Linear Science 0402                               
+University of California, San Diego                                  
+La Jolla, CA 92093                                                  
+---------------------------------------------------------------------
+
