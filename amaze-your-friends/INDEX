@@ -1,0 +1,298 @@
+#
+#  Index of archive:    alf.uib.no (129.177.30.3)
+#  Filearea:            /pub/vi
+#  Archive maintainer:  Ove Ruben R Olsen ruben@uib.no
+#  Archive updated:     Sat May 20 11:55:33 GMT 1995 
+#  Mirroring archives:  utsun.s.u-tokyo.ac.jp (133.11.11.11)
+#                       cs.uwp.edu (131.210.1.4)
+#                       ftp.uu.net (192.48.96.9)
+#                       monu6.cc.monash.edu.au (130.194.1.106)
+#
+
+If one of the mirror-archives are closer to you, plase get the files
+from there.
+
+There are 4 directories:
+  docs           - Documentation on VI, also some comp.editors postings
+  macros         - VI macros
+  comp.editors   - Various materials posted to comp.editors
+  programs       - VI's for various platforms (and programs).
+
+
+UCB = University of California, Berkley. (Hometown of vi)
+CED = Comp.editors discussion/article in NetNews.
+
+################################################################################
+DIRECTORY: pub/vi/
+
+INDEX            This file. 
+HELP             Help file for the Emailserver.
+POINTERS         Pointers to other interesting stuff. (VI resemblence).
+WHO              A 'thank you' too all who have submitted to the archive.
+comp.editors.ARC Comp.Editors FAQ VI/EX archivelist.
+comp.editors.EDS Comp.Editors FAQ list of editors.
+comp.editors.FAQ Comp.Editors FAQ.
+comp.editors2    The other file posted to comp.editors once in a while.
+comp.editors3    Standard reply for info. requests on C.E. 
+
+
+################################################################################
+DIRECTORY: pub/vi/docs
+
+8bit.Z           CED: 8 bit clean implies what?
+advocasy.Z       Advocating VI by Martin Weitzel.
+apwh.ms.Z        VI Command & Function Reference. UCB-dist.
+arrowkeys.Z      Arrow keys in VI.
+bed.tar.Z        A frontend to VI for edtiting binary files. Version: 1.0 
+beginers.Z       VI beginers guide.
+books.Z          A short note on books on VI.
+bugs.Z           Bugs and explanation of those.
+capitalize.Z     Capitalizing first [a-z] letter in sentence in vi
+card.tex.Z       VI reference card in TeX. Found inside learn-vi.tar.Z
+caseconv.Z       Converting Proper case to Upper case in Vi.
+casesr.Z         Changing case during search and replace in VI.
+chars.Z          Appendix: character functions. UCB-dist. A Must.
+chars.tex.Z      A \LaTeX fyed version of vi.chars.Z. Maurizio Codogno.
+ckv.Z            Diary/Log editing and C-programming.
+ckv2.Z           RCS-maintaining and Shell programing. 
+course.Z         A course on using VI. Paper.
+course.tar.Z     A course package on using VI. Paper.
+crypt.Z          Tips and macros on handling crypted files/mail. M. Wyle. 
+ctags.Z          Various stuff about Ctags and VI.
+e2.tar.Z         A File history interface. A must. Version: 1.3
+editech.1.Z      General techiques on editor implementation.
+editech.2.Z      Updating the screen in a buffer-gap editor.
+editech.3.Z      How to 'store' the file in memory. Buffer GAP method.
+editech.4.Z      Buffer management in the Poplog editor VED.
+editech.5.Z      Questions (and answers) about buffer-gap implementations.
+editech.books.Z  Information on writing text editors
+elvis.Z          Laitest ELVIS (1.5) doc - The VI clone that run on most OS.
+ex.changes.Z     EX changes from version to version. UCB-dist.
+ex.fix.Z         An Encore EX fix.
+ex.reference.Z   EX Reference Manual. UCB-dist. A Must.
+ex.summary.Z     EX Command Summary. UCB-dist.
+formating.Z      Textformating inside vi wiht or without external program.
+globaldelete.Z   :g/string/d in macro buffer !working
+help.Z           VI recerence card. Found inside learn-vi.tar.Z
+innforing.Z      A NORWEGIAN introduction to VI. Version 1.3-160.
+intro.Z          Introduction on Display Editing with VI. UCB-dist. A Must.
+intro.ps.Z       vi.intro in PostScript format. UCB-dist.
+jl.ex.ref.Z      Another reference for VI.
+keybind.Z        Tips on binding keys (map/map!). CED -posting.
+keymapings.Z     About key-mappings.
+keys.Z           What key's to map in VI. Table. Followed by a CED. 
+love.Z           A colletions of "Why do you love vi ?" from comp.editors.
+lvi.tar.Z        The Learners Introduction to VI. Interactive. Bo Thide.
+macroDoc.tar.Z   Two docs describing macros in VI. Sample exrc file incl.
+macros.Z         Macros, Abbrevitations, and Buffers.
+macrotips.Z      Various macrotips.
+man.tut.Z        VI manual-page with a tutor.
+mks.ant.Z        Tips on macros in the MKS version of VI. Anthony C Howe.
+motd.tar.Z       Global /etc/motd file editor.
+move.Z           Hints file: Move Text from One File to Another. Dr. L. Leff
+multfile.Z       A doc on how to work with multiple files in VI.
+mvi.c.Z          Direcotry utility using VI.
+nvi.tar.Z        Novice VI. Bo Thide.
+online-200.tar.Z VI ON-LINE HELP with 'windows for vi'. Version 2.00
+passwd.Z         A script for "secure" editing of /etc/passwd.
+passwd.fix.Z     A fix to vi.passwd.fix.Z
+patch.Z          Patch to fix a "security" hole in VI.
+quick.Z          VI Quick reference card.
+rcut.tar.Z       Rectangular cut and paste for VI. Robert Colon. Good.
+ref.Z            UNIX VI quick reference card.
+refchrt.Z        VI reference chart.
+reference.Z      VI reference. Version 8.  Maarten Litmaath. A Must. 
+reference.ms.Z   VI reference for typesetters.
+sections.Z       Sections in VI.
+shell-101.BetaA.Z   Conversion table between different shells.
+sigint.fix.Z     A src fix for VI dealing with 'sigint'.
+song.Z           A song about VI. 
+ss.qrf.Z         Super Short quick reference card. Fits on a 80x24 screen.
+summary.Z        VI / EX Quick reference. UCB-dist.
+tabd.Z           Tabs and Blanks - Infavor of 8 column tabs. John E. Davis
+tagStack.Z       Patch for vaxen to make tag stack avail. Fixes for sun.
+tags.Z           A paper on a tag-technique. Using tags like macros.
+terse.help.Z     Extremely terse VI reference notes. Michael A. Crowley
+tips.Z           Beginer's tips on VI.
+tutor.Z          The tutor-file from vi.tutor.tar.Z (tutor.vi). 
+tutor.tar.Z      An interactive tutor for VI. (Ver: 1.3) Beginner's choice.
+tutor.tex.Z      A exellent documet to use with vi.tutor.Z. Beginner's choice
+ucb.tar.Z*       The whole UCB-dist package.
+vi.1.Z           VI formated help manual. BEWARE: Not a "real" manual. 
+vifs.tar.Z       Edit-file stack. CTAGS and VI effectively. Seigo Fujii. CED
+vilearn.tar.Z    A interactive VI tutorial in 5 movements.
+vms.Z            Information about VI for the VMS environment (DEC-VAX).
+
+
+* DO  *_N_O_T_*  try to fetch this file via the Email interface. Most UUCP
+  mailers do NOT like files with more than 100000 bytes. A uuencoded version
+  of this file is 2833 lines long and 175445 bytes big. The contenst of this
+  tar archive is spread around as several files. I will under NO circumstances
+  ever implement a mail spliting in the mailserver. I have other more usefull
+  things to do.
+
+
+Beginner's in VI should fetch the following files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The following is a 'must' for starters:
+intro.Z          Introduction on Display Editing with VI. UCB-dist. A Must.
+reference.Z      VI reference. Version 8.  Maarten Litmaath. A Must. 
+beginers.Z       VI beginers guide.
+tutor.Z          The tutor-file from vi.tutor.tar.Z (tutor.vi). 
+card.tex.Z       VI reference card in TeX. Found inside learn-vi.tar.Z
+tutor.Z          The tutor-file from vi.tutor.tar.Z (tutor.vi). 
+
+
+
+################################################################################
+DIRECTORY: pub/vi/macros
+
+
+README             - A readmefile about the macros in this archive.
+ball.tar.Z         - Bouncing ball macro. Gadepalli, Balu, Subramanian.
+blocks             - Block- delte, move and copy. Sep 24 1991. Geoff Clare.
+blocks.d.Z         - Explanation of the blocks-macros. Sep 24 1991.
+c.template.Z       - Vi C-mode. Mitchell Wyle.
+case               - Convert case on word/line. * Bryan Ewbank.
+case.word          - Another word-case converter... Bryan Ewbank.
+case.word2         - An improved case.word. * Jon Eiseman.
+cases.d.Z          - CED about vi and caseconversions.
+caseword           - Convert case on word. Eelco van Asperen.
+center             - Center text, spell check. Dave Beyerl.
+cil.tc             - Comment, Invert, Lint. Tom Christiansen.
+cmacros            - Small and quick C-macros. CED.
+commentC.tar.Z     - Very good way to do C-comments. Rob Hutten.
+complete           - Word completions using CTRL-Keys. E. Bowles.
+complete.ext       - Some extensions to 'complete'
+complete.new       - New version of complete.
+cvi.Z              - C Syntax Sensitive editing. Bo Thide.
+emacs.style        - Emacs style editing. Steve Kinzler.
+evi.tar.Z          - Full Blown Emacs emulator. Bo Thide.
+execute            - Easy way to execute exsternal commands. Stephen Reihm.
+exrc.ach           - "The Super .exrc File" compiled by Anthony C Howe.
+exrc.brp           - A nice exrc file from Bill "Rock" Petro.
+fill               - An easy way to fill a paragraph. Seigo Fujii.
+fold.tar.Z         - A folding package E. Bowles..
+folding            - The macro from folding.d.Z.
+folding.d.Z        - CED about "fold-editing" with vi.
+generals           - General, text, mail, C, Modula-2. Compiled by M. Lamoureux
+generals.2         - EXRC and Pascal. Bradford L Knowles.
+goodies.tar.Z      - Find prev word, emacs-mode, C-mode and others. M. Neitzel.
+hanoi              - VI solves the infamous 'Towers of hanoi'. Greg McFarlane.
+ispell             - Spellcheckig for VI with ispell. Philip Kizer.
+jl.ex              - Some 'beginer' macros. Joel Loo Peing Ling.
+latex              - Latex mode. (Wery few, but promising) Mitchell Wyle.
+latex2             - Latex mode. Oeyvind Flaam.
+mail.enc.Z	   - Working with encrypted mail. Good. Mitchell Wyle.
+man                - Manpage lookup. Untested.
+markring           - Marking places in the text the easy way. Daniel Smith.
+maze.tar.Z         - Maze solving with vi. Greg McFarlane.
+modula2            - Modula-2 macro package. Mitchell Wyle.
+modula2.new        - Modula-2 macro package. Roland Bickel.
+morse              - Write morsekode. Hugh McGuinness.
+mymorse            - Exchangement to 'morse'. No map!ings of lowercase.
+pascal             - Pascal mode. {\O}yvind Brusevold.
+perl               - Perl mode. Kenneth C Rich.
+rcs                - RCS vi macros. Phil Male.
+ruler              - Rulermacro. Bill Petro.
+srm                - Search and Replace macro. Very HEAVY stuff.. :-) D Wallach
+turing.tar.Z       - A turing machine with vi. Dave Hitz.
+upcase             - Turn your last typed word in to uppercase letters. L. Quin.
+vogel.tar.Z        - The Karl Vogel collection. Cmode. Logfile. SHmode. RSChelp.
+wordsearch         - Macro from wordsearch.d.Z. Elliott C Winslow.
+wordsearch.d.Z     - CED about searching for word under cursor.
+ws                 - Word Star emulator. Version 0.00. Ove Ruben R Olsen.
+
+*  I have not got this to work.
+
+
+
+################################################################################
+DIRECTORY: /pub/vi/comp.editors
+
+8bit.Z           CED: 8 bit clean implies what?
+append.Z         Appending to external file with vi. 
+blankline.Z      Removing / inserting blank lines in vi
+blockdel.Z       Deleting a block of text
+blocks.Z         Macros for block copy/move
+buffer.Z         View Content of Buffer
+buffera.Z        Clearing anon vi buffers (in Elvis) using :e command.
+ced.tips.1.Z     Comp.Editors tips collection. October 91 issue.
+ced.tips.2.Z     Comp.Editors tips collection. November 91 issue.
+ced.tips.3.Z     Comp.Editors tips collection. December 91 issue.
+ced.tips.4.Z     Comp.Editors tips collection. January 92 issue.
+ced.tips.5.Z     Comp.Editors tips collection. February 92 issue.
+ced.tips.6.Z     Comp.Editors tips collection. March 92 issue.
+ced.tips.7.Z     Comp.Editors tips collection. April 92 issue.
+ced.tips.Inx.Z   Comp.Editors tips collections INDEX file.
+cmdline.Z        EX-mode command line editing in vi
+cols.Z           Switching cols in VI
+columedit.Z      Using vi to edit columns
+counter.Z        Counter in VI
+countwords.Z     How to count words 
+crlf.Z           How do I remove new-lines [CR,LF] in vi ?
+cshline.Z        A csh command line editor using vi. Ian Phillipps.
+ctrl.Z           How to enter CTRL-sequences in VI. Escape seq. also.
+currfn.Z         Grab current Filename in VI?
+cutpaste.Z       Cut and Paste with VI.
+demyst.Z         Demystifying vi one step further.. A CED discussion.
+executing.Z      About !shell, piping and unix commands inside VI.
+history.Z        Various "historical" aspects of VI.
+insert.Z         About inserting text.
+interface.Z      Interfaces to vi.
+linetolong.Z     The infamous 'Line too Long' - What can be done. No answer.
+macrolimits.Z    Macro limitation
+mapping.Z        Various about mappings.
+mapspace.Z       How to map <SPACE>.
+maptab.Z         How to map <TAB>.
+misc.Z           Misc stuff.
+modeline.Z       About modeline and modeline -> Modified
+multiple.Z       CED: Editing multiple files in VI
+nthoccurance.Z   Finding the nth occurance of a string
+octal.Z          How does one deal with characters like \331 ?
+paragraph.Z      Paragraphs and VI.
+parawrap.Z       Paragraph wrapping in VI.
+readin.Z         Reading just a part of a file into current file.
+regexp.Z         Regular Expression Question (with answer).
+repeatcmd.Z      Repeating a command.
+replace.Z        Replacement prompting in vi
+sandr.Z          CED posting about Search and Replace. 
+spellcheck.Z     The file to read if you wanna use spellchekkers with VI.
+startup.Z        Starting VI. Cmdline options and .exrc files. CED.
+tab2space.Z      How to map <TAB> to <SPACE>.
+tabs.Z           A tip on tabs in VI.
+tabing.Z         CED: Tabs and VI.
+tabs.Z           A tip on tabs in VI.
+termcap.Z        Termcap/VI problem...
+toodanger.Z      "too dangerous to map that" - No solution yet.
+toomuch.Z        Too much macro text  - Soltuion.
+transfer.Z       Transferring lines between files in VI
+undo.Z           A short note about the UNDO mechanism in vi and vile.
+vim.Z            Some CED postings about the VIM.
+vs.emacs.Z       Vi vs EMACS and C-editing. Mostly objective opinios. CED
+windowrez.Z      Vi handling window resizing - No solution yet.
+wordwrap.Z       Wordwraping and VI.
+writeout.Z       Writing out a section of a file to another file with vi.
+
+
+################################################################################
+DIRECTORY: pub/vi/programs
+
+This directory has several subdirectories, one for each platfrom
+
+Readme.vim       Readme file for the VIM editor.
+Readme.xvi       Readme file for the XVI editor.
+
+msdos:
+  calvin21.zip    Calvin 2.1 - Formerly "FREE VI".
+  vim127x.zip     Vi IMitator exectuable and docsumentation for MS-DOS.
+  xvidoc.zip      XVI 2.15 documentation for MS-DOS.
+  xviexe.zip      XVI 2.15 executable for MS-DOS.
+
+unix:
+  bined.tar.Z      Filters for edit of binary files. OK for too-long lines.
+  bvi.tar.Z        Binary editor with VI command subset. Excelent ! A must !
+  reformat.tar.Z   A WordStar like reformat. Better than fmt (1) ?
+  rvi.tar.Z        Remote screen editor based on vi
+  vi-buffer.el.Z   Invoke VI inside emacs. 
+  xvi.tar.Z        XVI 2.15 source for UNIX (and others).
