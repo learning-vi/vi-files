@@ -1,0 +1,9 @@
+unmap! ^B
+unmap! ^F
+unmap ^B
+unmap ^E
+unmap ^F
+unmap ^V^H
+unmap ^N
+unmap ^P
+unmap M-d
