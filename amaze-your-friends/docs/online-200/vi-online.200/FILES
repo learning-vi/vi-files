@@ -1,0 +1,17 @@
+The FILES and their size:
+
+-rw-rw-r--  1 buboo        1091 Jul 21 22:48 COPYRIGHT
+-rw-rw-r--  1 buboo        1501 Jul 21 22:34 README
+-rwxr-xr-x  1 buboo        2919 Jul 21 22:43 install
+-rw-rw-r--  1 buboo        1553 Jul 21 22:42 readme
+-rw-rw-r--  1 buboo         806 Jul 21 22:44 vi-setup.1
+-rw-rw-r--  1 buboo        2989 Jul 21 22:45 vi-setup.2
+-rwxr-xr-x  1 buboo         551 Jul 21 21:42 vi.ADVANCED
+-rwxr-xr-x  1 buboo        8350 Jul 21 21:47 vi.BASIC
+-rwxr-xr-x  1 buboo         476 Jul 21 22:46 vi.ende
+-rwxr-xr-x  1 buboo        2234 Jul 21 22:46 vi.olh.1
+-rw-rw-r--  1 buboo          67 Jul 21 22:46 vi.olh.2
+-rwxr-xr-x  1 buboo         209 Jul 21 22:46 vi.olh.ADVANCED.o
+-rwxr-xr-x  1 buboo         202 Jul 21 21:49 vi.olh.BASIC.o
+
+
