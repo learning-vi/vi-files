@@ -1,0 +1,136 @@
+From govind@infonode.ingr.com (Govind Vadvadgi)
+Subject: vi: How to type S and ^Q in ascii file?
+Date: Wed, 22 Jul 1992 20:34:18 GMT
+
+I was wondering if there is way to type Q ( Cntrl-Q ) and S ( Cntrl-S )
+in an ascii file. ( I can type other charecters like , , etc. ) 
+
+Thanks in advance.
+-- 
+-Govind.
+ govind@infonode.ingr.com
+
+
+From hello@cs.utwente.nl (Ronald Hello)
+Subject: Re: vi: How to type S and ^Q in ascii file
+Reply-To: hello@cs.utwente.nl
+Date: Wed, 29 Jul 1992 11:30:43 GMT
+
+In article JFn@news.cso.uiuc.edu, gordon@osiris.cso.uiuc.edu (John Gordon) writes:
+rh>
+rh>	In vi, to enter any control character, first type Control-V, then
+rh>the desired control character.  For example, to enter a Control-Y, you
+rh>would type: Control-V Control-Y
+
+Seems to me he asked especially about Control-Q and Control-S, not about your
+average Control character. Try it on a Sun, in vi with Control-S. I posted this
+as a question here some time ago and it seems it's NOT possible on HP's and
+Sun's for Control-S. Some machines will do it though. The Sun will do
+it in the csh and sh (don't know about other shells) but not in vi, the
+HP won't do it at all.
+
+rh>
+rh>---
+rh>John Gordon                        My incredibly witty saying has been 
+rh>gordon@osiris.cso.uiuc.edu         Politically Corrected into oblivion.
+
+Ronald.
+
+
+---
+__
+// Ronald Hello  (hello@cs.utwente.nl)
+// Department of Computer Science
+// University of Twente
+// The Netherlands
+
+
+
+From lange@obelix.pcs.dec.com (Ralf Lange Digital-PCS GmbH)
+Subject: Re: Q: Inputting an Escape Sequence w/VI
+Reply-To: lange@obelix.pcs.dec.com (Ralf Lange Digital-PCS GmbH)
+Date: Wed, 14 Jul 1993 13:06:55 GMT
+
+
+go into insert mode and type
+
+^V^[
+
+every time you want to place the escape character
+in your text. '^V' means CTRL-V and '^[' is the Escape key.
+
+Ralf
+
+
+From hansm@wsinti06.info.win.tue.nl (Hans Mulder)
+Subject: Re: Q: Inputting an Escape Sequence w/VI
+Date: 14 Jul 1993 16:50:33 +0200
+
+In <147620001@capella.cup.hp.com> alicef@capella.cup.hp.com (Alice Farrelly) writes:
+
+>Hi ,
+
+>This is a quick question,
+
+>How do I put escape sequences in a file using vi?
+
+Type a control-V before the escape.
+
+>I want to add the following sequence to highlight some lines.
+>ESC&dA  ([&dA)
+
+That won't work on most terminals.  Most terminals want something
+like ESC[7m .  If you want to write something that works on many
+terminals, you'll have to extract the appropriate escape sequence
+from the termcap (or terminfo) database.  Or put a _ and a backspace
+in front of every highlighted character, and let a program like more
+(or ul, or less) figure it out.
+
+To put a backspace in a file using vi, you have to type a control-V
+before the backspace.
+
+HansM
+
+
+From ray@Celestial.COM (Ray Jones)
+Subject: Re: Q: Inputting an Escape Sequence w/VI
+Date: Wed, 14 Jul 1993 16:27:20 GMT
+
+In <147620001@capella.cup.hp.com> alicef@capella.cup.hp.com (Alice Farrelly) writes:
+
+>Hi ,
+
+>This is a quick question,
+
+>How do I put escape sequences in a file using vi?
+
+>I want to add the following sequence to highlight some lines.
+>ESC&dA  ([&dA)
+
+
+This is the vary standard way to include any unprintable character in a 
+vi file.  While in the input mode, enter a Control-V, followed by the
+charater you wish to enter.  For your example:
+Control-V ESC &dA
+and it will look like
+^[&dA
+-- 
+INTERNET:  ray@Celestial.COM           | The probability of one or more
+Ray A. Jones; Celestial Software       | spelling errors in this missive
+8545 S.E. 68th Street                  | approaches unity. If this bothers you,
+Mercer Island, WA 98040;(206) 236-1676 | run it through your spell checker!
+
+
+From brandari@anl433.uucp (Paul Brandariz x6546)
+Subject: Re: Q: Inputting an Escape Sequence w/VI
+Date: Wed, 14 Jul 1993 15:47:36 GMT
+
+Control-V  will tell vi to take the next character as is.  This is how
+you can enter the ESC character.
+
+--
+___________________________________________________________________________
+Paul R. Brandariz		E-mail Internet: paul.brandariz@kla.com
+KLA Instruments Corp		
+P.O. Box 49055			Voice: (408) 456-6546
+San Jose, CA 95161-90
