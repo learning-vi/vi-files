@@ -1,0 +1,40 @@
+"	special key mappings for vt100/220
+"
+" you'll LOVE this one: the escape key on its "right" place
+map! ` 
+map ` 
+"
+" If we are logged in as vt100, but the terminal actually sends
+" vt220 escape sequences, these will keep vi quiet:
+map! [23~ 
+map! [24~ 
+map [23~ 
+map [24~ 
+"
+" Do something reasonable with the vt220 special keys (those above
+" the cursor keys.
+map [1~ /
+map [2~ i
+map [3~ x
+map [4~ ma
+map [5~ 
+map [6~ 
+"
+"
+map #0 :write! 
+map #1 :so /usr/local/lib/vi/
+map #2 :vi 
+map #3 :q!
+map #4 :next
+map #5 :next!
+map #6 :write:next
+map #7 :map 
+map #8 :map! 
+map #9 :ab 
+"
+" Cursor keys in insert mode:
+map! OA ka
+map! OB ja
+map! OC la
+map! OD i
+map!  bi
