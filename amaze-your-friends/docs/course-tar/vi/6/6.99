@@ -1,0 +1,51 @@
+
+
+
+			Summary Of VI Commands
+		
+                        o  a  - appends after cursor
+                        o  b  - back up a word
+                        o  c  - changes text
+                        o  d  - deletes text
+                        o  e  - forward to end of word
+                        o  h  - 1 space back
+                        o  i  - insert before cursor
+                        o  j  - 1 space down
+                        o  k  - 1 space up
+                        o  l  - 1 space forward
+                        o  o  - Open a line below cursor
+                        o  p  - put text after cursor or line
+                        o  r  - replaces a character
+                        o  u  - undoes last change
+                        o  w  - forward to next word
+                        o  y  - yank text
+
+
+                        o  A  - appends at end of line
+                        o  B  - back up a word
+                        o  C  - changes to end of line
+                        o  D  - deletes to end of line
+                        o  E  - forward to end of word
+                        o  G  - last line of file
+                        o  H  - Home or 1st Line
+                        o  I  - insert at beginning of line
+                        o  L  - Last Line
+                        o  J -  join next line with cursor line
+                        o  P -  put text before cursor or line
+                        o  M  - Middle Line
+                        o  O  - Open a line above cursor
+                        o  R  - overwrites text
+                        o  U  - undoes all changes to line
+                        o  W  - forward to next word
+                        o  Y -  yank to end of line
+
+                        o  CTRL-B - Back a screen
+                        o  CTRL-D - Forward 1/2 screen
+                        o  CTRL-E - scroll window down 1 line
+                        o  CTRL-F - Forward a screen
+                        o  CTRL-G - Displays current info
+                        o  CTRL-U - Back 1/2 screen
+                        o  CTRL-V - insert control characters
+                        o  CTRL-Y - scroll window up 1 line
+
+
