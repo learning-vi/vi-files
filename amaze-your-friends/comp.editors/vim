@@ -1,0 +1,138 @@
+From alf.uib.no!trane.uninett.no!sunic!pipex!uunet!usc!sdd.hp.com!col.hp.com!csn!boulder!ucsu!spot.Colorado.EDU!siffert Thu Jul 15 18:23:34 MET DST 1993
+Article: 7246 of comp.editors
+Newsgroups: comp.editors
+Path: alf.uib.no!trane.uninett.no!sunic!pipex!uunet!usc!sdd.hp.com!col.hp.com!csn!boulder!ucsu!spot.Colorado.EDU!siffert
+From: siffert@spot.Colorado.EDU (Thunder-Thumbs)
+Subject: Re: VIM: Does it provide :ab[breviate] command ?
+Message-ID: <1993Jul11.082004.9176@ucsu.Colorado.EDU>
+Sender: news@ucsu.Colorado.EDU (USENET News System)
+Nntp-Posting-Host: spot.colorado.edu
+Organization: Thunder-Thumbs, Inc.
+References: <1993Jul9.095130.8521@philce.ce.philips.nl>
+Date: Sun, 11 Jul 1993 08:20:04 GMT
+Lines: 23
+
+i323856@indus.cad-sg.ce.philips.nl ( DEWENDRA SHASTRI     ) scribes:
+>
+>Hi Netters,
+>I am having a problem in switching from standarad vi to Vi iMitation (VIM)
+>editor. I have lots of abbreaviations in .exrc file, vim cribs about them as
+>"Invalid command". I did not find any referrence to this problem in the
+>reference.doc supplied with the editor. Moreover differences.doc also
+>doesnot talk about this. If any body has any information about this, it
+>will be nice. 
+>Thanx in advans
+>Devendra Shastri (i323856@cad-sg.ce.philips.nl)
+
+The abbreviate command counts as an Ex command, which isn't supported
+fully in VIM.  I got around this by remapping my abbr stuff to escape
+key sequences.  It's not a big deal.
+
+Incidentally, I didn't even realize that capability until recently.
+In escape mode (both vi and vim), you can map something like esc-s
+and it's a valid command if you do it fast enough.  No wonder there's
+that one-second lag before vi beeps at you on a double-escape... it's
+making sure it's not a real command!  pretty nifty.
+
+Curt (siffert@spot.colorado.edu)
+
+
+From alf.uib.no!trane.uninett.no!sunic!uunet!news.cnri.reston.va.us!newsserver.jvnc.net!howland.reston.ans.net!math.ohio-state.edu!cs.utexas.edu!csc.ti.com!tilde.csc.ti.com!ra.csc.ti.com!process!frc Wed Jul 21 10:10:25 MET DST 1993
+Article: 7324 of comp.editors
+Newsgroups: comp.editors
+Path: alf.uib.no!trane.uninett.no!sunic!uunet!news.cnri.reston.va.us!newsserver.jvnc.net!howland.reston.ans.net!math.ohio-state.edu!cs.utexas.edu!csc.ti.com!tilde.csc.ti.com!ra.csc.ti.com!process!frc
+From: frc@process (Robert Colon)
+Subject: Re: VIM:Does it provide :ab[breviate] command ?
+Message-ID: <CA24rF.9nr@csc.ti.com>
+Sender: usenet@csc.ti.com
+Nntp-Posting-Host: process.dadd.ti.com
+Organization: Texas Instruments
+X-Newsreader: TIN [version 1.1 PL9]
+References: <21kpa9INNqa6@darkstar.UCSC.EDU>
+Distribution: inet
+Date: Mon, 12 Jul 1993 15:09:15 GMT
+Lines: 37
+
+> In <1993Jul9.095130.8521@philce.ce.philips.nl> i323856@indus.cad-sg.ce.philips.nl ( DEWENDRA SHASTRI     ) writes:
+
+> >Hi Netters,
+> >I am having a problem in switching from standarad vi to Vi iMitation (VIM)
+> >editor. I have lots of abbreaviations in .exrc file, vim cribs about them as
+
+> It doesn't seem to be there, at least in 1.27.  I was somewhat annoyed
+> too, maybe :ab will be in a future version.  On the other hand, the extra
+> features have convinced me to donate a significant portion of my quota to
+> vim + docs, even though this system as a perfectly good "real" vi.  As
+> long as I'm not connected at speeds below 9600 baud, I can live w/o ":ab"
+
+> As a temporary measure, a :map! might help you out...
+> -- 
+> Maurice S. Barnum --- I consult, therefore I am:
+> msb@cats.ucsc.edu, mbarnum@eis.calstate.edu, mbarnum@nyx.cs.du.edu
+
+vim version 1.28, which is now in beta, definitely supports :ab along with
+some other nice new features like a toggle between line wrap and horizontal
+scrolling.  I too have switched from using commercial vi (which is going
+nowhere) to vim.  vim has enough new extensions (cut/paste [including by
+columns] indicated by reverse video, multi-level undo/redo, ability to edit
+long lines and binary files, etc.), handles all my complex macros, fixes
+several vi annoyances, and is robust enough that I have adopted it as my
+standard editor.  Plus, if one is not aware of the new features, vim works
+"just like vi".  PLUS, one has the source code!  As importantly, the author,
+Bram Moolenaar, has been quite responsive to users reporting bugs and
+requesting new features.  (Ever try doing that with vi?)
+
+The 1.28 version probably won't be available for a few months yet but will be
+worth the wait.
+
+--
+Robert Colon                              EMAIL: frc@dadd.ti.com
+Texas Instruments, Inc.                   MSGID: FRC
+Design Automation Division  MS 3937       PHONE: 214/917-3644
+P.O. Box 650311  Dallas, Tx 75265           FAX: 214/917-7966
+
+
+From alf.uib.no!trane.uninett.no!sunic!uunet!europa.eng.gtefsd.com!howland.reston.ans.net!agate!darkstar.UCSC.EDU!cats.ucsc.edu!msb Wed Jul 21 10:11:07 MET DST 1993
+Article: 7326 of comp.editors
+Path: alf.uib.no!trane.uninett.no!sunic!uunet!europa.eng.gtefsd.com!howland.reston.ans.net!agate!darkstar.UCSC.EDU!cats.ucsc.edu!msb
+From: msb@cats.ucsc.edu (Maurice S Barnum)
+Newsgroups: comp.editors
+Subject: Re: VIM:Does it provide :ab[breviate] command ?
+Date: 21 Jul 1993 00:12:07 GMT
+Organization: University of California, Santa Cruz
+Lines: 28
+Distribution: inet
+Message-ID: <22i1knINN3g1@darkstar.UCSC.EDU>
+References: <21kpa9INNqa6@darkstar.UCSC.EDU> <CA24rF.9nr@csc.ti.com>
+NNTP-Posting-Host: am.ucsc.edu
+
+
+In <CA24rF.9nr@csc.ti.com> frc@process (Robert Colon) writes:
+
+>standard editor.  Plus, if one is not aware of the new features, vim works
+>"just like vi".  PLUS, one has the source code!  As importantly, the author,
+>Bram Moolenaar, has been quite responsive to users reporting bugs and
+>requesting new features.  (Ever try doing that with vi?)
+
+A few things about vim that are NOT "just like vi":
+
+o   screen refresh is abysmally slow.  Too much text is being moved around
+    in cases where a line scroll would be sufficient.
+
+o   there is no :set redraw, which I find essential on slow connections,
+    even more so with vim than with vi.  :(
+
+o   vim doesn't deal well with tvi-type terminals.  ^H and ^K get
+    interpreted as arrow movements.  I don't know if this is a termcap
+    problem, or a vim problem, but vi and everyting else works just fine.
+
+hrm.  I would have sent them in as bug reports, but didn't know where.
+
+
+-- 
+Maurice S. Barnum		The errors of great men are venerable
+msb@cats.ucsc.edu		becauxse they are more fruitful than
+mbarnum@eis.calstate.edu	the truths of little men....
+mbarnum@nyx.cs.du.edu		 --- F. Nietzsche
+
+
