@@ -1,0 +1,40 @@
+
+
+
+
+
+
+
+
+
+
+			Reading
+
+
+
+
+
+
+
+
+
+
+		o  :r file  - will read file into the buffer
+                after the cursor.
+
+		o  :xr file - will read file into the buffer
+	        after line x.
+
+		o  :r !program - will read into the buffer after the
+		cursor the output of executing program.
+
+		o  :xr !program - will read into the buffer after
+		line x the output of executing program.
+
+		o  :x,y! program - will replace lines x through y
+		with the output of executing program with input 
+                of lines x through y.
+
+		o  :x,y! fmt - reformat these lines.
+
+
