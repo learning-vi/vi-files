@@ -1,0 +1,29 @@
+
+This file contain POINTERS to other archives that have stuff not
+included here.
+
+Since this archive is mainly stuffed with League for Programming Freedom,
+and VI stuff there is a limit of what other types of stuff I can include.
+
+Of course I would gladly include a lot of other material for text editing,
+editor constructions, VI-clones, etc.etc.
+Instead of using a lot of disk, a lot of my time beeing updated I will
+put pointers to this kind of products/files.
+
+
+On ftp.uu.net:
+
+archive/comp/sources.unix/volume3
+   ctags			ctags source
+
+archive/comp/sources.unix/volume8
+   se/part[01-07]		Georgia Tech 'se' Screen Editor
+   se/patch1			SE patches for 4.2 and USG Unices
+
+archive/comp/sources.unix/volume13
+   bpatch.2			Binary file editor
+
+archive/comp/sources.unix/volume15
+   stevie/part[01-04]		Stevie, an "aspiring" VI clone for Unix...
+   stevie/patch1		Missing header file for "stevie" editor, Patch1
+
