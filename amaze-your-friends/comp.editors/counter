@@ -1,0 +1,50 @@
+From jimr@applix.com (Jim Rouleau [ext 256])
+Subject: Counter in VI?
+Date: 13 Aug 92 14:15:38 GMT
+
+Is there any way to implement a counter in VI?
+What I'd like to do is take something like this:
+
+  #define a 1
+  #define b 2
+  #define c 3
+    .
+    .
+  #define z 26
+
+  to become
+
+  #define a 0
+  #define b 1
+  #define c 2
+    .
+    .
+  #define z 25
+
+Any way to do this besides manually??
+
+   jimr
+
+
+From mgflax@phoenix.Princeton.EDU (Marshall G. Flax)
+Subject: Re: Counter in VI?
+Date: Thu, 13 Aug 1992 17:02:13 GMT
+
+In article <1623@applix.com> jimr@applix.com (Jim Rouleau [ext 256]) writes:
+>What I'd like to do is take something like this:
+>
+>  #define z 26
+>  to become
+>  #define z 25
+
+Pipe the relevant lines through awk!  (Although, if you're really only
+concerned with changing #defines, compilers will generate exactly the
+same code given
+	#define z (26-1)
+as if they received
+	#define z 25
+and the addition of the parenthesis et.al. can clearly be done within vi.)
+
+marshall
+-- 
+------- (c) 1992, Marshall Gene Fla
