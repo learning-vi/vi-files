@@ -1,0 +1,10 @@
+" std -- vanilla standard package
+"
+"so /usr/local/lib/vi/fkeys
+so /usr/local/lib/vi/std.ck
+so /usr/local/lib/vi/std.ab
+so /usr/local/lib/vi/std.ik
+so /usr/local/lib/vi/std.se
+"
+" 
+map @ :so /usr/local/lib/vi/std.mc:unmap @
