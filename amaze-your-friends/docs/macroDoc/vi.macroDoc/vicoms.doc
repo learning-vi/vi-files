@@ -1,0 +1,297 @@
+		commands for the editor VI
+
+		command mode (hit escape (ESC))
+
+	cursor positioning
+
+h	left
+j	down
++	down
+l	right
+k	up
+-	up
+<space>	right
+<return>down one line
+
+H	home line (top of window, not necessarily file)
+M	middle line of window
+L	last line of window
+
+b	back a word
+B	back a word (real words, punctuation doesn't count)
+w	next word
+W	next word (real words, punctuation doesn't count)
+3w	skip three words
+0	beginning of line
+$	end of line
+^	(caret character)...first non-blank character on the line.
+{	previous paragraph, section
+}	next paragraph, section
+^D	scroll half screen down		note: (use control key when you 
+^F	screen down			see '^' and a letter, and
+^U	scroll half screen up		press both at the same time, you do not
+^B	screen up			press the shift key)
+					('x' means type x)
+
+1G	top of file
+(any number)G...go to (any line) of file -- ex: 5g goes to line 5
+G	end of file
+''	(two single quotes)...return to previous line or mark (long distance)
+``	(two back quotes)..return to same place in a line "   "
+t	forward to just before a character
+T	backward to just after a character
+	These are handy for things such as:
+
+	dto	(delete all of the characters on this line up to (but
+		not including) the letter 'o')
+
+^G	what line am I on? shows file, status, line number, total lines, %
+
+	searches
+
+/text	search for "text"
+	hit 'n' for next occcurence
+	hit 'N' for previous occcurence
+?text	?text search backwards for "text"
+	?  by itself, change from forwards <-> backwards search
+
+	local searches (usually used on same line as you are on)
+
+fx	search forwards for the next letter "x"..use a semicolon ";" or ","
+	to keep searching (the "," reverses direction of search)
+Fx	search backwards for the next letter "x"..use a semicolon ";" ","
+	to keep searching (the "," reverses direction of search)
+
+	undo
+
+u	is undo, and you can undo an undo...
+U	is "undo everything that I have done to this line since I have
+	landed on it..."
+
+	marking and returning
+
+m(any alpha character)	mark a place
+'(any alpha character)	return to a place (line)
+`(any alpha character)	return to a place exactly (see below)
+	hit "ma" to set up a mark with the letter "a"
+	to get back...'a
+	'a takes you back to the first non-blank space on that line, while `a
+	takes you to that character exactly
+
+marks can be used to specify the scope of a change...such as d'a or >'a
+more on that later...
+
+	buffers...
+
+all changes are saved into a buffer, and are retrieved with an undo (u or U)
+or a put (p or P)
+
+y, c, and d are for yank, change, and delete, and are operators
+yy, cc, and dd affect entire lines
+
+w, b, 0, $, {, }, are how you determine the extent (scope) of 
+	  a change, as well as any motion operator such as H, M, L, etc.
+
+/ and ? are used for searches, and can be used to delete, yank, or change
+up to the phrase you specify.
+
+	example: d/would<return> deletes up to (but
+	not including) the next occurrence of the word "would". If you
+	want to make it line specific (go to the line of the word "would")
+	you would use d/would/+0<return> (d/dog/+10 would delete up to the line
+	with "dog", plus the 10 lines that follow)
+
+changes or copies are set up by [optional number][operator][scope]
+such as 2d}...which would delete the next two paragraphs
+
+examples:
+
+x	delete character
+xp	transpose characters
+ddp	transpose lines
+yy	yank line
+15yy	yank 15 lines
+yM	yank from here to the middle line of window
+yw	yank word to end
+yb	yank word to beginning
+y0	yank to beginning of line   ...all yanks and x's go into buffer 1
+y$	yank to end of line
+p	put buffer on line below
+P	put buffer on line above
+cc	change line
+cw	change word
+3dw	delete 3 words (goes into the temporary buffer)
+dd	delete line     "    "     "     "
+5dd	delete 5 lines  "    "     "     "
+dH	delete from here to the top line of the window (top of screen)
+dL	delete from here to the bottom line of the window (bottom of screen)
+3yy	yank three lines     "     "     "
+
+	numbered and named buffers
+
+The last 9 changes you have made are saved in the buffers named 1-9.
+For example, you would retrieve the change before last by entering "2p
+(use the quote) to dump out whatever is in buffer 2. As a special case,
+you can repeatedly press the dot key '.' and dump out all the buffers
+until you run out of saves or get to buffer 9, whichever happens first.
+
+example: "1p........  would dump all of the last 9 deletions that you have
+	 made.
+
+	alpha named buffers
+
+setting up.."[alpha named buffer][optional number][delete or yank operation]
+example..."add   delete a line INTO buffer "a"
+	  "b5yy  yank 5 lines INTO buffer "b"
+
+using the buffer..."[name you gave the buffer][p or P]
+example..."ap    put contents of buffer "a" below
+
+appending to a buffer... you can gather text from many locations into one 
+	named buffer, just capitalize the name of the buffer:
+
+	"Ayy	...now, move somewhere else, then...
+	"Ayy	...move somewhere else, and try:
+	"ap
+
+	you should see the lines from the two different locations.
+
+	When using named buffers, choose letters that have some mnemonic
+value to you. If I were yanking the line "The quick young dolphin jumped
+over the lazy bagpipes", I would probably use "nyy - the 'n' for "nonsense".
+
+Named buffers and numbered buffers are quick ways to transfer text between
+files if you are switching back and forth between two or more. (unmap the
+home key via :unmap ^^ (home key or control caret), and you can toggle
+between two files by hitting the home key. This would be the last thing in
+your .exrc)
+
+	example: moving text between two files...
+
+	have the home key unmapped (in .exrc "unmap ^^" (type ^V<home key>
+	or ^V<control caret> while editing .exrc... you should see "^^")...
+	go into a scratch file...start up another file (:e fooby)... notice
+	that you can toggle between the two files by typing the home
+	key (usually if a terminal doesn't have one, control caret (a shifted
+	'6'  for most terminals) will do it)... toggle between the two files
+	a few times to get familiar with it... go to one of the files,
+	and delete a few lines into a buffer via:
+
+	"a3dd
+
+	...then toggle into the other file, and enter:
+
+	"ap
+
+	If all went well, you have just transferred lines from one file to
+	another. The same works for yanks ("a3yy). I found out only recently
+	that using the buffers 1-9 works too:
+
+	3dd, toggle with home key, then "1p
+
+	I find it handy to mark a place very quickly via mm (mark this spot,
+to be referenced by 'm), go to another place, and to use a named buffer via:
+
+	"ay'm	(yank into buffer 'a' whatever is between here and the mark 'm')
+
+	quick changes
+
+r	replace single character
+R	replace mode...type over old text and clobber it
+2s	substitute whatever I type (until I hit ESC) for the next two characters
+xs	I'm going to change the next "x" characters, you may type more than 
+	"x" characters in your substitution.
+S	is synonomous with "cc"...change effects an entire line.
+tilde '~'	change case of current char.
+>>	shift current line over right by a shiftwidth (usually a tab)
+<<	shift current line over left by a shiftwidth (usually a tab)
+	>L would shift all of the lines from where you are to the bottom of
+	the screen to the right...
+	50<< left shifts 50 lines...
+
+	getting into text input mode
+
+a	append
+A	append at the end of line
+i	insert
+I	insert at first non blank character of line 
+o	open line below
+O	open line above
+
+	Using things like s, S, cc, C, etc... are also ways of getting
+	into text input mode.
+
+^D	backtab (insert mode only)
+^V	follow it with a control combination to insert a control char. into text
+ESC	hit to get back into command mode
+
+	file manipulations and others...all from command mode
+
+:w	write file
+:wq	write file and quit
+ZZ	another way to write file and quit
+:e	filename   edit file
+:e!	filename   insist on editing file, a way to start with a fresh
+		copy of the current file name, WITHOUT any of the changes
+		that you may have just made.
+
+:r	read in a file after the current line (merge)
+:q	quit
+:q!	really quit! don't save changes!
+:w!	overwrite a protected file
+:n	edit next file in arg list (:se ar gives the list of files)
+:rew	rewind back to first file 
+:!<shell command> you don't have to leave vi to do something like
+	finding out the date or compiling a program.
+	The second time you do the same command, you can say ":!!"
+	to repeat that command.
+
+:1,$!fmt..pipe the text through the formatting program "fmt", if you
+	don't like what you see, hit 'u' for undo...
+	this works for many commands, you can do something like
+	:40,50!nroff -ms to see how lines 40 through 50 will format
+	with the program "nroff" using the "ms" macro package.
+	You could also do something like :'a,'b!nroff -ms if you
+	have a mark 'a' and a mark 'b'. (first address must be lower
+	than the second as far as which line it refers to in the buffer)
+
+:%!fmt....A shorthand for doing the same thing as above. If '%" is being
+	used as an address, then it means "the whole file", otherwise
+	it expands to be the filename of the current buffer...
+
+	try:
+
+	:!wc %
+
+	now try: (read below first...)
+
+	:%!wc
+
+	(*here*) remember...'u' is undo, and 'U' is "undo everything that I
+	have done to this line since I have landed on it..."
+
+!! two exclamations given from command mode. You follow this with
+   a unix command that has some output, and the output is inserted into
+   your text, clobbering the current line. You should set up a blank line
+   before calling this mechanism. See below for a different way of doing this.
+
+   ex: open a blank line, then hit escape, then enter "!!date"
+
+   Actually, if you want to read the output of a command into the file,
+   :r !command works  (it runs the command and puts the output into your
+   buffer).  There is also the opposite, :w !command, which sends the buffer
+   as input for the command (useful for :w !more, or something like that).
+
+			notes
+
+"^" and a letter and means to use and the control key...ex: ^D means "control d"
+I haven't mentioned a lot, and this file needs to be better organized and
+more comprehensive, on the other hand, this should keep a
+beginner->intermediate level VI user going for a little while :-)
+
+	mail comments to "island!daniel", special thanks to David Vezie (dv) for
+clarification and spotting gremlins.
+
+dan smith, island graphics, marin co., ca  | "My opinions: you can borrow them,
+uucp: ..!ucbvax!ucbcad!island!daniel       |  but don't take them out bowling"
+uucp: ..!ptsfa!unicom!daniel !well!daniels |  (415) 332 FAST (h) 491 1000 (w)
