@@ -1,0 +1,45 @@
+" From: evas@euraiv1.UUCP (Eelco van Asperen)
+" Newsgroups: comp.editors
+" Subject: Re: re: Case Reversing Macros in vi
+" Date: 18 Sep 88 12:49:15 GMT
+" 
+" 
+" Here's my macro to change the case of the current word;
+" the one posted by Bryan Ewbank has the disadvantage that
+" it substitutes a tab that may follow the word by a space.
+" (This is done by the Join-command.)
+" Beware: neither version works for single character words
+" like 'a' !
+" 
+map  lBio-y$+P0Eaxd$:s/./\~/g"zdd-@z--J
+" 
+" Here's how it works;
+" 
+" lB	
+" 	Go to the start of the word. The 'l' is done in case
+" 	we're on the first letter of the word; just 'B' would
+" 	move us back to the start of the previous word...
+" i^M^[
+" 	Split line; word to convert is now at start of next line.
+" o^[
+" 	Create an empty line below it.
+" -y$+P
+" 	Move up one line, yank its contents, go to empty line,
+" 	and insert yank-buffer.
+" 0Eax^[
+" 	Move to the start of the line, then to the end of the
+" 	word and append an 'x'. This is necessary when the word
+" 	to be converted is the last word on a line; otherwise,
+" 	'd$' would erase the last character of the word.
+" d$
+" 	Delete remainder of line, starting at the 'x' we just added.
+" :s/./\~/g^M
+" 	substitute every character in the word by the '~' character.
+" "zdd
+" 	Delete line into buffer z.
+" -@z
+" 	Move up one line and use contents of buffer z as a Vi-command.
+" 	'~' is the Vi-command to convert the case of a single character.
+" --J
+" 	Move back to original line and combine it with the modified part.
+" 
