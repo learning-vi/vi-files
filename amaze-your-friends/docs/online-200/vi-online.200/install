@@ -1,0 +1,104 @@
+#! /bin/csh -f
+#                       VI ON-LINE HELP SYSTEM 
+#                       ######################
+#
+#      Copyright (C) by Ove Ruben R Olsen (rubenro@viggo.blh.no)
+#                       All rights reserved
+#
+# The author is NOT responsible for any damage this package may make.
+# 
+# You may freely distribute this system as long as you don't get
+# paid for doing so. This system is FREE. 
+# 
+# All copyright info on all files must be intact.
+#
+# You are may NOT change this files without mailing the author
+# your changes for inclusion in later editions/versions.
+#
+# Please mail all bug-reports, suggestions et.al to rubenro@viggo.blh.no
+#
+# You may find this package on anon. ftp: alf.uib.no (129.177.30.3)
+#    pub/lpf/misc/vi.online-200.tar.Z 
+#
+#
+# This is the instalation file for the VI ON-LINE HELP system.
+# To install the system, type csh install, or just intstall.
+#
+#
+clear
+echo ""
+echo "VI ON-LINE HELP installation procedure."
+echo ""
+echo "You may interupt the installation procedure anytime, hitting CTRL-C."
+echo "You MUST have write access to the paths you want to install the"
+echo "VI ON-LINE HELP system in."
+echo ""
+echo "If this is a upgrade, the program will overwrite old files."
+echo ""
+echo ""
+echo -n "Path to install the HELP-FILES [/usr/local/lib] >"
+set viipath = "`line`"
+if ( $viipath == "" ) set viipath = "/usr/local/lib"
+echo ""
+echo ""
+echo ""
+echo "Shall users be allowed to run the vi-setup program ?"
+echo "The vi-setup program will make changements to their "
+echo "~/.profile, ~/.cshrc and their ~/.exrc file." 
+echo "If not, the users must make the propper changements themselves."
+echo "It is recomended that you install the vi-setup program."
+echo ""
+echo -n "User setup [Y/n] >"
+set setup = "`line | cut -c1`"
+set sepath = "(NONE)"
+if ( ($setup == "Y") || ($setup == "" ) ) then
+  set setup = "y"
+  echo -n "Path to install the vi-setup program [/usr/local/bin] >"
+  set sepath = "`line`"
+  if ( $sepath == "" ) set sepath = "/usr/local/bin"
+endif 
+echo ""
+echo ""
+if (-w $viipath && -w $sepath) then
+else
+  echo ""
+  echo "Sorry Dave, can't proceed due to human error..."
+  echo ""
+  exit
+endif
+echo ""
+echo ""
+echo "Installing vi-online help in: $viipath"
+echo "Installing vi-setup procedure in: $sepath"
+echo ""
+echo ""
+echo -n "PRESS CTRL-C NOW TO ABORT. PRESS ENTER TO INSTALL VI-ONLINE HELP."
+line
+
+foreach fil ( BASIC ADVANCED )
+  set file = $viipath/vi.olh.$fil
+
+  cat vi.olh.1 >! $file
+  cat vi.olh.$fil.o >> $file
+  cat vi.olh.2 >> $file
+  echo "map q :source $viipath/vi.ende" >> $file
+  echo "w\!" >> $file
+  echo "e\! $viipath/vi.$fil" >> $file
+  cp vi.$fil $viipath
+end 
+
+cp vi.ende $viipath
+
+chmod 755 $viipath/vi.*
+
+if ($setup == "y") then
+  cat vi-setup.1 >! $sepath/vi-setup
+  echo "set filer = $viipath" >> $sepath/vi-setup
+  cat vi-setup.2 >> $sepath/vi-setup
+endif
+
+chmod 755 $sepath/vi-setup
+
+echo ""
+echo "Installation end."
+echo ""
