@@ -1,0 +1,174 @@
+From: mschee@bcarh600.bnr.ca (Michael SamChee)
+Subject: Solutions to using CTAGS in VI..
+Keywords: recursive call, pop, stack
+Date: 19 Aug 92 22:31:46 GMT
+Organization: Bell-Northern Research, Ottawa, Canada
+
+Hi there,
+
+A few days ago I sent the following news item asking for help on
+using CTAGS in VI:
+
+> Hi,
+> 
+> Please, I need some help! using CTAGs in unix:
+> 
+> If I recursively invoke tags (by typing "CNTRL ]" on each
+> identifier I wish to search for), say 3 times, I am unable
+> to "pop back" to the file where I *first* invoked tags. 
+> 
+> When I was on campus, it used to work the way I wanted 
+> it to, but now on my job, when I create a tags file and
+> invoke it in a nested (recursive) fashion, I'm only able
+> to "pop back" to the *previous* file where tags was invoked.
+> 
+> Also, invoking tags seem to be case sensitive ie. identifier
+> "Ct" is not treated the same as "ct". Is there a way to make it
+> case insensitive?
+> 
+> Anybody ever had these experiences, or knows how to
+> overcome these problems ?
+> 
+> Your help will be very much appreciated !
+> 
+> 
+> Thanks,
+> Michael.
+
+
+Based on email and newsgroup replies, I would like to share
+the following solution with you:
+
+First of all, it seem to be general concensus that tag stacking 
+is only available on newer versions of vi. 
+
+Since we don't have access to the source for vi, the following
+solution, given by
+
+           "s-fujii@sramha.sra.co.jp (Seigo Fujii)"
+
+can be used to solve the problem:
+
+First,
+
+Map a key (say ^Y) to push the file on the stack and invoke tags:
+    map ^Y  :1,.w !exec vifs push %^M^M^]
+
+Map a key (say ^P) to pop the previous file from the stack:
+    map ^P  :!exec vifs pop^M:so ~/tmp/vifs_pop.ex^M^M
+
+Create a directory called "tmp" in your home directory,
+and put the following perl script program (given at the end
+of this news item) in a file and name it "vifs".
+
+You can now use ^Y to invoke tags and ^P to pop back
+to the *previous* file where tags was invoked.
+
+As for the last problem in the original posting, no one was
+able to give a solution to making tags case insensitive..
+
+Cheers,
+Michael.
+
+
+--------------start of vifs file--------------------
+####
+#
+# Extracted by the archive maintainer as   vifs.pl
+#
+####
+-----------end of vifs file--------------------
+
+
+From: s-fujii@sra.co.jp (Seigo Fujii)
+Subject: Re: Help need in using CTAGS !
+Keywords: vi, unix, ctags, vifs
+Reply-To: s-fujii@sramha.sra.co.jp (Seigo Fujii)
+Organization: Software Research Associates, Inc., Japan
+Date: Mon, 10 Aug 1992 11:01:11 GMT
+Lines: 143
+
+
+I try to post in broken english. Sorry...
+
+In article <1992Aug6.152330.28607@bnr.ca> mschee@bcarh600.bnr.ca (Michael SamChee) writes:
+>Hi,
+>
+>Please, I need some help! using CTAGs in unix:
+>
+>If I recursively invoke tags (by typing "CNTRL ]" on each
+>identifier I wish to search for), say 3 times, I am unable
+>to "pop back" to the file where I *first* invoked tags. 
+>
+>When I was on campus, it used to work the way I wanted 
+>it to, but now on my job, when I create a tags file and
+>invoke it in a nested (recursive) fashion, I'm only able
+>to "pop back" to the *previous* file where tags was invoked.
+
+I just wrote a edit-file stack macro set and perl script to do it.
+
+>Also, invoking tags seem to be case sensitive ie. identifier
+>"Ct" is not treated the same as "ct". Is there a way to make it
+>case insensitive?
+
+But, I can not solve this problem.
+
+
+#####
+#
+# Extracted as    vifs.qrf
+#
+#####
+
+macro usage:
+    #+	: push edit file name and current line number.
+    #-	: pop back to last pushed file and line.
+    #=	: show edit file stack.
+    #^]	: push and tag jump.
+    #^^	: synonym of #-.
+
+vifs command usage:
+    vifs, vifs show	: printout stack to stdout.
+	# Each vi process use different workfile by pid.
+    vifs push FILE	: push FILE.
+	Count line of stdin then write file name and line number
+	to workfile. 
+    vifs pop		: pop back.
+	Pop file name and line number from workfile then make a
+	ex command file to back to poped file. 
+    vifs clear		: clear stack.
+    vifs clean		: remove all workfiles.
+	# If you don't "vifs clean", some day system remove # files.
+
+
+---- cat -v stack.ex ---------------------------------------------------
+"
+" edit-file stack ( #+:push, #-:pop, #=:list, #^^:pop, #^]:push & tag )
+"
+map	#+	:1,.w !exec vifs push %^M^M
+map	#-	:!exec vifs pop^M:so ~/tmp/vifs_pop.ex^M^M
+map	#=	:!exec vifs^M
+map	#^]	:1,.w !exec vifs push %^M^M^]
+map	#^^	:!exec vifs pop^M:so ~/tmp/vifs_pop.ex^M^M
+------------------------------------------------------------------------
+# If you set shell=/bin/sh, change ~ in the macros to $HOME.
+
+---- uuencode stack.ex -------------------------------------------------
+#####
+#
+# Extracted by the maintainer to    stack.ex
+#
+#####
+------------------------------------------------------------------------
+
+---- vifs perl script --------------------------------------------------
+#####
+#
+# Extracted by the maintainer to    vifs.pl
+#
+#####
+------------------------------------------------------------------------
+--
+Seigo
+
+
