@@ -1,0 +1,311 @@
+.TH E P "November 16, 1988"
+.SH NAME
+e \- command line preprocessor for the vi(1) editor. 
+.SH SYNOPSIS
+.B e
+[
+.B option
+] [
+.B file
+] ...
+.SH DESCRIPTION
+.I e 
+is an interface to 
+.IR vi (1)
+that maintains a history of the most recently 
+.IR e 'ed
+files for each directory. 
+Using the history, it is both fast and simple to re-edit
+previously 
+.IR e 'ed
+files.
+.PP
+In addition, 
+.I e
+does spelling corrections on its arguments,
+fast lookup and editing of files in other directories, and allows for
+the inheritance of .exrc
+files in other directories. It also closes the modeline security hole,
+making it possible to ensure that no .exrc file 
+that you don't own is ever seen by 
+.IR vi .
+.PP
+.SH INVOCATION
+The invocation syntax is (almost) a superset of that of 
+.IR vi .
+A list of the interesting command line variations is given below.
+[x] indicates that "x" is optional. "cmd" means an
+.IR ex (1)
+command.
+.TP 18
+.B e           
+Invokes 
+.I vi 
+on the last file that was 
+.IR e 'ed
+in this directory.
+.TP 18
+.B e \-
+Prints the history for this directory and allows fast selection
+of a previous file - or a new one.
+.TP 18
+.B e .
+Prints the history for this directory without asking for input.
+.TP 18
+.B e \-pat
+.IR vi 's 
+the last file that was 
+.IR e 'ed
+with the string "pat" on
+the command line.
+.TP 18
+.B e +[cmd]
+.IR vi 's 
+the last file that was 
+.IR e 'ed
+in this directory, but executes
+command "cmd" on entering
+.IR vi .
+.TP 18
+.B e [+[cmd]] file  
+.IR vi 's 
+the file and adds it to the history list. Minor spelling
+corrections are suggested if "file" does not exist but is close 
+(in spelling) to some file that does.
+.TP 18
+.B e [+[cmd]] files 
+.IR vi 's 
+the files and adds them as a single entry to the history.
+.PP
+The 
+.IR vi (1)
+options \-r, \-v, \-x, \-w and \-R are all passed as is to 
+.I vi
+and so behave as would be expected.
+.SH EXAMPLE
+Assume here that you are in the directory /tmp/mydir and that it
+contains (only) the files "death", "main.c", "pete.c", "bigmac"
+and "fries"; and that your 
+.I e 
+history file contains
+.PP
+.in 0.5i
+.B /tmp/mydir
+.in 1.0i
+.B death
+.br
+.B +/main.c pete.c
+.br
+.B bigmac
+.br
+.B fries
+.br
+.PP
+"\fBe .\fR" will show you the history...
+.PP
+.in 1.0i
+.B [3]: death
+.br
+.B [2]: +/main pete.c
+.br
+.B [1]: bigmac
+.br
+.B [0]: fries
+.br
+.PP
+"\fBe\fR" by itself will get you immediately back into "fries".
+.PP
+"\fBe \-\fR" will present the same as shown for "\fBe .\fR",
+but will ask for a number or another filename.
+Carriage return is equivalent to zero (i.e. the last filename),
+backspace or interrupt will quit.
+.PP
+"\fBe -2\fR" will get you immediately into "pete.c", searching for
+"main" on entering 
+.IR vi .
+.PP
+"\fBe \-ath\fR" searches for the pattern "ath", finds it in "death",
+and that's what you get.
+.PP
+"\fBe +10\fR"
+will get you into "fries" on line 10 (assuming it has 10 lines).
+.SH "THE HISTORY"
+A single history file is kept. Its default location is $HOME/.e but this
+can be changed with the VIHIST environment variable.
+The history is rearranged with each use to place the last
+.IR e 'ed
+file at the end of the list. Duplicate entries are removed.
+The number of history items kept for each directory is 8. Seeing as the
+list is ordered by use, this number is ample.
+.PP
+The history file consists of entries composed of a directory name followed by
+lines of file names (oldest to newest). Each filename is preceded by a 
+single TAB character. The directory names are all absolute pathnames.
+.SH "FILENAME CORRECTION"
+If you make a simple spelling mistake when typing a file name,
+.I e
+will detect it, ask whether it was really what you meant, and offer
+suggestions.
+Errors that are detected are: wrong character, omitted character, 
+interchanged characters and extra character.
+.PP
+In the above example,
+"\fBe bigamc\fR"
+will prompt you with 
+.br
+.in 1.0i
+"correct to bigmac [y]?"
+.PP
+Answering "n" will not do the correction, "Q" or "q" will quit.
+If there is more than one possible correction, 
+you will be prompted for each in
+turn. A response of "N" means that you really want what you typed, and no
+further corrections will be offered.
+Any other response (e.g. a RETURN) will do the correction for you.
+.SH "CROSS-DIRECTORY EDITING"
+The environment variable VIPATH can be used to enable fast lookup and 
+editing of files
+in different directories. It should contain a list of directories that you want
+searched when 
+.I e
+cannot find the file you request in the current
+directory. Here is an example:
+.PP
+Suppose you are in the directory /bin with VIPATH set to /usr/include/sys
+.PP
+"\fBe inode.h\fR"
+will prompt you with 
+.br
+.in 1.0i
+"/usr/include/sys/inode.h [y]?"
+.PP
+since /bin/inode.h does not exist, but /usr/include/sys/inode.h does.
+You can say "n" or "q" to reject or quit. 
+"N" will reject the current suggestion and
+searching for further ones will be stopped.
+Any other response (e.g. a RETURN) is taken as a yes.
+.PP
+It is handy to have $HOME in your VIPATH, this gives you easy access
+from anywhere to commonly used files.
+.PP
+If you accept a suggestion, then the file is put into the history. 
+Spelling corrections are not suggested across directories.
+There is (of course) no need to put "." in your VIPATH. Doing so will just slow
+things down and cannot possibly be of help.
+This should be clear, "." is always searched first for the given filename.
+Putting it into your VIPATH will have it searched twice. The directory names
+in VIPATH may be separated by white space (including newlines) and colons.
+.SH ".exrc INHERITANCE"
+If you set the environment variable "VIINHERIT", 
+.I e
+will look for 
+a .exrc file in the directory where the (first) file you are about to edit 
+resides. If it finds
+one, it arranges to read it as though it were in the directory from which you
+issued the 
+.I e
+command. This is very useful as many people 
+have specialised .exrc files in their directory trees. 
+.PP
+For instance, in a directory of C source
+you might like to set autoindent and showmatch, whereas in a directory that
+contained correspondence, you might want neither of these, but wrapmargin and
+ignorecase instead. Inherited .exrc files allow you to 
+.I e
+files in other
+directories and get the results intended by the .exrc files in them.
+.PP
+There is a drawback however. 
+.I vi
+has an option called "modeline"
+which makes it possible for a malicious user to leave a trojan-horse type file
+in a directory with a specially prepared .exrc file that turns on "modeline".
+As a result, if you cd to that directory and 
+.I vi
+the wrong file, then the modeline feature allows the other user to execute
+commands as you. Not nice.
+.PP
+If you set "VISAFEINHERIT", 
+.I e
+will make sure that you never get caught by
+this one. In short, it notices when this could happen and changes directory
+to avoid the .exrc. There is no need to have "VIINHERIT" set if all you want to
+do is avoid the security problem. But setting them both gives you the best of
+both worlds. (See the NOTES for the drawback...)
+.SH NOTES
+When using "e -", the terminal is put into cbreak mode. If the first
+character typed is a digit (in the acceptable range of history items)
+then you will get that history item without further ado. Thus if you
+have a file called 4play and you try to type "4play" from within an "e -", 
+then you'll probably end up in the wrong place.
+This is to say you'll get the file that was the 4th last in the history.
+.PP
+The history length must be less than or equal to 9 (the code sets
+it to 8 at present). 
+The problem with having more is that with "e -" you go into cbreak and the 
+first digit entered (say 
+.I n
+) is taken to mean 
+"I want the 
+.IR n th 
+last file". This saves the need for hitting return, but also means that
+two digit numbers can't be done.
+.PP
+When "VISAFEINHERIT" is set and your command would have resulted in 
+.I vi
+going through a foreign .exrc, 
+.I e
+will change the name
+of the file you want to its full path name, and change directory underneath
+you to your home directory. For example, if user joe says "e file" in /tmp and
+user mary owns /tmp/.exrc, then the result will be as though joe had typed "e
+/tmp/file" from his home directory. Of course when he exits 
+.I vi 
+he will still 
+be in /tmp. Perhaps this could be considered a bug. If you don't like it, 
+you can live with the modeline problem.
+.PP
+The same problem with the directory changing underneath you happens when
+.I e
+inherits a .exrc for you (via "VIINHERIT") \- you get changed to that 
+directory while you are in vi.
+.SH FILES
+$HOME/.e \- the default e history file.
+.SH "ENVIRONMENT VARIABLES"
+VIHIST \- The location used by e for the history.
+.br
+VIPATH \- Search directories.
+.br
+VIINHERIT \- If set,
+.I e
+tries to inherit .exrc files.
+.br
+VISAFEINHERIT \- Ensures you don't inadvertently go through someone
+else's .exrc file.
+.SH BUGS
+The first character on a select line cannot be backspaced over.
+.br
+The
+.I vi
+option "\-" is not available. I should have chosen another letter.
+.SH "SEE ALSO"
+ex(1), edit(1).
+.SH AUTHOR
+Terry Jones
+.br
+Department of Computer Science
+.br
+University of Waterloo
+
+.\"
+.\" Man page for e. Version 1.3
+.\"
+.\"    ------------------------------------------------------------------------
+.\"    Terry Jones, Department Of Computer Science, University Of Waterloo
+.\"         Waterloo Ontario Canada N2L 3G1
+.\"
+.\"    {ihnp4,allegra,decvax,utzoo,utcsri,clyde}!watmath!watdragon!tcjones
+.\"    tcjones@dragon.waterloo.{cdn,edu} tcjones@WATER.bitnet
+.\"    tcjones%watdragon@waterloo.csnet 
+.\"    -------------------------------------------------------------------------
+.\"
