@@ -1,0 +1,80 @@
+From ray@hebron.connected.com (Ray Berry)
+From: ray@hebron.connected.com (Ray Berry)
+Newsgroups: comp.editors
+Subject: clearing anon vi buffers
+Date: 16 Dec 1993 11:01:45 -0800
+Organization: Ascendant Systems
+Lines: 10
+
+   I happily encountered 'elvis' the other day which seems a fairly
+high quality effort at a vi clone.  I was a bit surprised however
+at the fact that it clears the anon buffers when you change files
+via :e etc.  From a philosophical point of view I can see how this
+behavior might be defended.  But alas, transporting text between files
+with the default cut buffer is a habit I had fallen into.
+   I'm wondering if there is any formal rule on this point. 
+I appeal to the vi mavens here for a clarification.
+-- 
+ray berry kb7ht rjberry@eskimo.com ray@connected.com 73407.3152@compuserve.com
+
+From creider@taptet.sscl.uwo.ca (Chet Creider)
+From: creider@taptet.sscl.uwo.ca (Chet Creider)
+Newsgroups: comp.editors
+Subject: Re: clearing anon vi buffers
+Date: Thu, 16 Dec 1993 21:22:53 GMT
+Organization: University of Western Ontario, London
+Lines: 15
+
+In article <ray.756068063@connected.com> ray@hebron.connected.com (Ray Berry) writes:
+>   I happily encountered 'elvis' the other day which seems a fairly
+>high quality effort at a vi clone.  I was a bit surprised however
+>at the fact that it clears the anon buffers when you change files
+>via :e etc.  From a philosophical point of view I can see how this
+>behavior might be defended.  But alas, transporting text between files
+>with the default cut buffer is a habit I had fallen into.
+>   I'm wondering if there is any formal rule on this point. 
+
+Elvis' behaviour is standard.  You should use the letter buffers as
+these are not cleared.  E.g. "a10yy to put 10 lines into buffer a,
+and then (in another file) "ap or "aP.
+
+Chet Creider
+<creider@csd.uwo.ca>
+
+From ray@Celestial.COM (Ray Jones)
+From: ray@Celestial.COM (Ray Jones)
+Newsgroups: comp.editors
+Subject: Re: clearing anon vi buffers
+Date: Fri, 17 Dec 1993 19:21:37 GMT
+Organization: Celestial Software, Mercer Island, WA
+Lines: 28
+
+In <ray.756068063@connected.com> ray@hebron.connected.com (Ray Berry) writes:
+
+>   I happily encountered 'elvis' the other day which seems a fairly
+>high quality effort at a vi clone.  I was a bit surprised however
+>at the fact that it clears the anon buffers when you change files
+>via :e etc.  From a philosophical point of view I can see how this
+>behavior might be defended.  But alas, transporting text between files
+>with the default cut buffer is a habit I had fallen into.
+>   I'm wondering if there is any formal rule on this point. 
+>I appeal to the vi mavens here for a clarification.
+
+I am not sure what you mean by "anon" buffers in vi.  If you are refering to
+the "unnamed" buffer, all vi's that I know of clear this buffer between file
+when you 
+:e etc
+To transport buffers between files you need to use any of the 26 "named"
+buffers [a-z].  To yank text into a named buffer (a in this example)
+"a4yy       -> yank 4 lines into buffer a
+then you can
+:e etc
+and use 
+"ap
+to put the contents of buffer a into file "etc"
+-- 
+INTERNET:  ray@Celestial.COM           | The probability of one or more
+Ray A. Jones; Celestial Software       | spelling errors in this missive
+8545 S.E. 68th Street                  | approaches unity. If this bothers you,
+Mercer Island, WA 98040;(206) 236-1676 | run it through your spell checker!
+
