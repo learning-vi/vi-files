@@ -1,0 +1,27 @@
+
+
+
+
+
+		Editing Multiple Files
+
+
+
+
+
+
+
+
+
+
+	
+			o vi file1 file2 file3
+
+			o :n - will allow you to edit next file
+
+			o :e  file 
+			o :e! file  - change file to file
+			o :e! %     - start over
+
+
+
