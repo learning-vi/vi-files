@@ -1,0 +1,34 @@
+
+
+
+
+
+
+
+
+
+			Regular Expressions
+
+
+
+
+
+		A Regular Expression is used to specify parts of a
+	line.  It is used in search, substitute, and delete commands.  The
+	concept is also used in many other UNIX commands, to include grep,
+	sed, and jove.
+
+
+
+
+
+		o  ^ - beginning of line.
+
+		o  $ - end of line.
+
+		o  . - matches any character.
+
+		o  \ - delimits special characters.
+
+		o [] - range of characters.
+
