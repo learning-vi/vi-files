@@ -1,0 +1,33 @@
+From skf26@cas.org (Scott Frost)
+Subject: Vi handling window resizing, how?
+Date: Tue, 11 Aug 1992 11:59:44 GMT
+
+Currently, on my SunOS 4.2 version of VI, I have to do the following
+after I resize a window in which vi is running to get it to recognize the
+new window size,
+
+   Qset term=xterm^Mvi^M
+
+I've tried mapping this to a macro,
+but once the Q key is hit to leave VI, the rest of the macro is ignored.
+Is there any way around this?
+
+
+-- 
+Scott K. Frost                  UUCP: osu-cis!chemabs!skf26
+Same Mbox: BITNET: skf26@cas    INET: skf26%cas.BITNET@CUNYVM.CUNY.Edu
+Personal: 2753 Shrewsbury Rd, Upper Arlington Oh 43221 
+
+
+From skf26@cas.org (Scott Frost)
+Subject: Resizing VI - Trying again
+Date: Fri, 14 Aug 1992 12:23:55 GMT
+
+Earlier I posted an inquiry about how to create a macro to perform the 
+following,
+
+    Qset term=xterm^Mvi^M
+
+The vi on SUN 0S 4.1.2 does not recognize a window resize.  Quitting vi,
+resetting the term, and reinvoking vi works.  The problem is that I can't
+seem to map a macro to per
