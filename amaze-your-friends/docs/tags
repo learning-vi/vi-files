@@ -1,0 +1,150 @@
+Article 571 of comp.editors:
+Path: chemabs!osu-cis!tut.cis.ohio-state.edu!cwjcc!ukma!rutgers!att!ihlpe!woods
+From: woods@ihlpe.ATT.COM (Swan)
+Newsgroups: comp.editors
+Subject: vi "tag macros"
+Keywords: vi tags macros long academic
+Message-ID: <3727@ihlpe.ATT.COM>
+Date: 3 Nov 88 20:31:36 GMT
+Distribution: na
+Organization: AT&T Bell Laboratories - Naperville, Illinois
+Lines: 136
+
+
+Playing around with vi's tags mechanism, I've discovered that you can use
+tags to implement ex-mode (as opposed to vi's input or edit mode) macros.
+Yes, they are more line-oriented, instead of character oriented.
+
+Actually, at this stage of the game, "tag macros" are more of an academic
+exercise than practical, since I have noted some of the problems (listed
+below) associated with using them.
+
+Heres how to create a trial tag macro named trial:
+vi the file named "tags" (in the current directory) and enter the following
+line:
+
+trial   %       5
+      {^ tabs  ^ not spaces}
+
+If the tags file already existed, place this tag in the proper place.
+Tags must be kept sorted lexicographically.
+
+If your terminal has programmable function keys, program one of them to
+spit out the following:
+:ta 
+  {^ one space after the :ta}
+
+Now edit a junk file with several lines in it (more than 5, say).
+Press the above function key and type in trial and press RETURN.
+vi "switches to" the new file named %, which is expanded to the current
+file's name.  vi automatically writes the current file EVEN IF AUTOWRITE
+IS NOT ON, and performs the ex command, 5, on the "new" file.  This
+positions vi to line 5 of the file.  (Try typing :5<RETURN> from vi some
+day.)
+
+Here's a more useful one:
+
+compile %       !cc -Oo`basename % .c` % -lPW -lCC
+      {^ tabs  ^ not spaces              ^ libraries here}
+
+Now edit a one-file C program.  Then press your function key and type
+compile and RETURN.  Ta dah!
+
+Sometimes the ex command may actually be several commands separated by
+vertical bars.
+rew     %       rewind|f|"Go back to first file
+
+PROBLEMS:
+1. After writing the old file (even if autowrite was off), it goes to
+   the first line of the "new" (same) file before executing the ex
+   command.  So your "tag macro" may act on the wrong line.
+   Apparently % and # expansion are done AFTER it checks to see if the
+   switched TO filename is the same as the switched FROM file.  Since
+   it thinks they're different, it switches to the "new" file and
+   positions to line 1.
+
+   HACK:
+   Use the actual current file's name in place of the % in the filename
+   field.  As long as you're already editing that file, using the tag
+   won't autowrite or go to the first line.
+   This hack is not the correct solution, because using the actual file
+   name defeats the purpose of making the "tag macro."
+
+2. Because of #1, if % is used in the filename field, using the "tag
+   macro" causes % and # (the "alternate" file) to be the same.
+   In fact, vi sets up both buffers to be the same file.  I'm not sure
+   of all the implications yet, but I know when I use control ` to
+   return to the previous file, vi actually returns to the place in the
+   current file where it was before the "tag macro" was used.
+   Repeatedly using control ` toggles between the two "files" (actually
+   the same file, but to two different places).
+
+3. The ex command in the second field is executed with nomagic set.  If
+   everything goes OK, vi sets magic back to whatever it was before the
+   tag was used.  However, if the ex command fails, nomagic remains set.
+
+4. Also because of the nomagic, every character that is to be treated as
+   magic must be backslashed.  (s/\.\*/\U\&/ to capitalize a line.)
+
+   SOLUTION:
+   upper   %       set magic|%s/.*/\U&/
+   This "tag macro" upper cases the entire file.  Nomagic users will find
+   that it correctly resets nomagic.
+
+5. Now that we understand #4, let's go back to #1.  This "tag macro":
+   upline  %      set magic|s/.*/\U&/
+   capitalizes the first line of the current file, rather than the current
+   line at the time of the :ta upline.
+
+6. This also effect position commands.  This "tag macro":
+   rev     %      /REV/
+   Goes to the next line that contains REV in the "new" file.  Repeatedly
+   using the rev tag produces strange results.
+
+There are other problems, some of which I don't even know yet.  But...
+
+CONCLUSION:
+"Tag macros" can be used for whole-file types of things (such as "compile
+this file," or "transform this file"), or for absolute positioning.
+Relative positioning commands are currently worthless.
+
+Most of these problems would go away if vi cleared up problem #1.  That
+is, vi should check to see if the tag is taking it to a new file AFTER
+doing % and # expansion.
+
+WHY "TAG MACROS"?
+
+Why am I fiddling with "tag macros" when vi already has a macro feature?
+Because these problems exist with the current macros:
+
+A. vi/ex is limited as to how much macro text it allows.  Even on the large
+   processor UNIX(tm) machines I've used, vi sometimes complains that there
+   is "too much macro text" (or some sort of thing) when I get too eloquent
+   with my macros.  Usually this happens when I've redefined a hairy macro
+   several times, and leads me to believe that vi doesn't reclaim macro text
+   space (correctly).
+
+B. multiple character macro names (should/must) start with a special
+   character, since most of the letters have been used up for editing
+   purposes.  Thus, one could :map #fold ...., but not :map fold ....
+   ("Too dangerous to map that.")
+
+C. One must type macro names (such as #fold) blindly without making a typo.
+   ("Tag macros" can be seen while being typed.)  For example, typing
+   #foid (sic) would cause the next character typed to be treated as a
+   motion for a pending d command!  (I tried this.)
+   When the #fo was typed, vi still thought it might be the beginning of
+   the #fold macro.  When the i was pressed, instead of l, vi canceled the
+   macro scan and threw out the i (on my machine).  Thus the final d
+   becomes the first character of a d<motion> command.
+
+Any fellow vi-hackers out there have some solutions?  Anyone want to dig
+into the vi code to fix problem #1?  It might open up a whole new world
+to vi users, to further blow away emacs.
+
+Warren D. Swan  (WooDS)     Y n n ____  __
+AT&T Bell Laboratories     -(((((([__]_)__]
+Naperville, Illinois       /o-O-O-O oo  oo
+ihlpe!woods             #####################
+
+
