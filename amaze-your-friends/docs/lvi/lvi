@@ -1,0 +1,36 @@
+
+#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#
+# @(#)lvi 1.1 Bourne shell script 88/01/25 23:20:34 
+#
+# This script invokes vi(1) with a set of macros and 
+# settings that, hopefully, provides a tutorial interface
+# for the totally unexperienced vi(1) learner.
+#
+#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+#
+# Author:
+#
+#   Bo Thide'
+#   Swedish Institute of Space Physics
+#   S-755 90 Uppsala, Sweden
+#   UUCP: ...enea!kuling!irfu!bt
+#
+#:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+
+if [ $# = 0 ]
+  then echo "Usage: `basename $0` <filename>"
+  exit 1
+fi 
+if [ ! -s $1 ]
+  then echo '' > $1
+fi
+MORE='-cd23'
+export MORE
+# EXINIT="se noaw report=1 showmode magic tags=/usr/local/lib/vi/tags/LVI\
+EXINIT="se noaw report=1 magic tags=/usr/local/lib/vi/tags/LVI\
+|map  :!clear;more /usr/local/lib/vi/vi.help\
+|`cat /usr/local/lib/vi/lvi.map`\
+"
+export EXINIT
+exec /usr/ucb/vi -t init $*
