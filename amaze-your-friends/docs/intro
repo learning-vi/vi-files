@@ -1,0 +1,2310 @@
+
+
+
+
+
+
+
+
+
+         An Introduction to Display Editing with Vi
+
+
+                        William Joy
+
+              _R_e_v_i_s_e_d _f_o_r _v_e_r_s_i_o_n_s _3._5/_2._1_3 _b_y
+                        Mark Horton
+
+                 Computer Science Division
+ Department of Electrical Engineering and Computer Science
+             University of California, Berkeley
+                    Berkeley, Ca.  94720
+
+
+
+                          _A_B_S_T_R_A_C_T
+
+
+          _V_i (visual) is a display oriented interactive
+     text  editor.   When  using  _v_i the screen of your
+     terminal acts as a window into the file which  you
+     are  editing.   Changes which you make to the file
+     are reflected in what you see.
+
+          Using _v_i you can insert new text any place in
+     the file quite easily.  Most of the commands to _v_i
+     move the cursor around in  the  file.   There  are
+     commands  to  move the cursor forward and backward
+     in units of characters, words, sentences and para-
+     graphs.   A  small  set  of  operators, like _d for
+     delete and _c for change,  are  combined  with  the
+     motion  commands to form operations such as delete
+     word or change paragraph, in a simple and  natural
+     way.   This regularity and the mnemonic assignment
+     of commands to keys makes the editor  command  set
+     easy to remember and to use.
+
+          _V_i will work on a  large  number  of  display
+     terminals,  and  new  terminals  are easily driven
+     after editing a terminal description file.   While
+     it is advantageous to have an intelligent terminal
+     which can locally  insert  and  delete  lines  and
+     characters from the display, the editor will func-
+     tion quite well on dumb terminals over slow  phone
+     lines.   The  editor  makes  allowance for the low
+     bandwidth in these  situations  and  uses  smaller
+     window  sizes and different display updating algo-
+     rithms to make  best  use  of  the  limited  speed
+     available.
+
+          It is also possible to use the command set of
+
+
+
+
+
+
+
+
+
+                           - ii -
+
+
+     _v_i   on  hardcopy  terminals,  storage  tubes  and
+     ``glass tty's'' using a one line  editing  window;
+     thus  _v_i'_s  command set is available on all termi-
+     nals.  The full command set  of  the  more  tradi-
+     tional,  line  oriented  editor  _e_x  is  available
+     within _v_i; it is quite simple  to  switch  between
+     the two modes of editing.
+
+
+
+July 21, 1991
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+
+
+
+
+
+
+         An Introduction to Display Editing with Vi
+
+
+                        William Joy
+
+              _R_e_v_i_s_e_d _f_o_r _v_e_r_s_i_o_n_s _3._5/_2._1_3 _b_y
+                        Mark Horton
+
+                 Computer Science Division
+ Department of Electrical Engineering and Computer Science
+             University of California, Berkeley
+                    Berkeley, Ca.  94720
+
+
+
+_1.  _G_e_t_t_i_n_g _s_t_a_r_t_e_d
+
+     This document provides  a  quick  introduction  to  _v_i.
+(Pronounced _v_e_e-_e_y_e.) You should be running _v_i on a file you
+are familiar with while you are  reading  this.   The  first
+part  of  this document (sections 1 through 5) describes the
+basics of using _v_i.  Some topics  of  special  interest  are
+presented in section 6, and some nitty-gritty details of how
+the editor functions  are  saved  for  section  7  to  avoid
+cluttering the presentation here.
+
+     There is also a short appendix here,  which  gives  for
+each character the special meanings which this character has
+in _v_i.  Attached to this document should be a  quick  refer-
+ence  card.   This  card  summarizes the commands of _v_i in a
+very compact format.  You should have the card  handy  while
+you are learning _v_i.
+
+_1._1.  _S_p_e_c_i_f_y_i_n_g _t_e_r_m_i_n_a_l _t_y_p_e
+
+     Before you can start _v_i you must tell the  system  what
+kind  of  terminal  you  are  using.  Here is a (necessarily
+incomplete) list of terminal type codes.  If  your  terminal
+does  not  appear  here,  you should consult with one of the
+staff members on your system to find out the code  for  your
+terminal.  If your terminal does not have a code, one can be
+assigned and a description for the terminal can be created.
+
+
+    Code       Full name                    Type
+8   _____________________________________________________
+    2621       Hewlett-Packard 2621A/P      Intelligent
+_________________________
+The financial support of an IBM Graduate Fellowship and
+the  National  Science  Foundation  under grants MCS74-
+07644-A03 and MCS78-07291 is gratefully acknowledged.
+9
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 2 -
+
+
+    2645       Hewlett-Packard 264x         Intelligent
+    act4       Microterm ACT-IV             Dumb
+    act5       Microterm ACT-V              Dumb
+    adm3a      Lear Siegler ADM-3a          Dumb
+    adm31      Lear Siegler ADM-31          Intelligent
+    c100       Human Design Concept 100     Intelligent
+    dm1520     Datamedia 1520               Dumb
+    dm2500     Datamedia 2500               Intelligent
+    dm3025     Datamedia 3025               Intelligent
+    fox        Perkin-Elmer Fox             Dumb
+    h1500      Hazeltine 1500               Intelligent
+    h19        Heathkit h19                 Intelligent
+    i100       Infoton 100                  Intelligent
+    mime       Imitating a smart act4       Intelligent
+    t1061      Teleray 1061                 Intelligent
+    vt52       Dec VT-52                    Dumb
+
+
+     Suppose for example that  you  have  a  Hewlett-Packard
+HP2621A terminal.  The code used by the system for this ter-
+minal is `2621'.  In this case you can use one of  the  fol-
+lowing  commands  to tell the system the type of your termi-
+nal:
+
+        % setenv TERM 2621
+
+This command works with the shell _c_s_h on both version 6  and
+7  systems.   If  you are using the standard version 7 shell
+then you should give the commands
+
+        $ TERM=2621
+        $ export TERM
+
+
+     If you want to arrange to have your terminal  type  set
+up  automatically when you log in, you can use the _t_s_e_t pro-
+gram.  If you dial in on a _m_i_m_e,  but  often  use  hardwired
+ports,  a typical line for your ._l_o_g_i_n file (if you use csh)
+would be
+
+        setenv TERM `tset - -d mime`
+
+or for your ._p_r_o_f_i_l_e file (if you use sh)
+
+        TERM=`tset - -d mime`
+
+_T_s_e_t knows which terminals are hardwired to  each  port  and
+needs only to be told that when you dial in you are probably
+on a _m_i_m_e.  _T_s_e_t is usually used to  change  the  erase  and
+kill characters, too.
+
+_1._2.  _E_d_i_t_i_n_g _a _f_i_l_e
+
+     After telling the system which  kind  of  terminal  you
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 3 -
+
+
+have,  you  should  make  a  copy of a file you are familiar
+with, and run _v_i on this file, giving the command
+
+        % vi _n_a_m_e
+
+replacing _n_a_m_e with the name  of  the  copy  file  you  just
+created.   The screen should clear and the text of your file
+should appear on the  screen.   If  something  else  happens
+refer to the footnote.++
+
+_1._3.  _T_h_e _e_d_i_t_o_r'_s _c_o_p_y: _t_h_e _b_u_f_f_e_r
+
+     The editor does not directly modify the file which  you
+are  editing.  Rather, the editor makes a copy of this file,
+in a place called the _b_u_f_f_e_r, and remembers the file's name.
+You  do not affect the contents of the file unless and until
+you write the changes you make back into the original file.
+
+_1._4.  _N_o_t_a_t_i_o_n_a_l _c_o_n_v_e_n_t_i_o_n_s
+
+     In our examples, input which must be typed as  is  will
+be  presented  in  bold  face. Text which should be replaced
+with appropriate input will be given in  _i_t_a_l_i_c_s.   We  will
+represent special characters in SMALL CAPITALS.
+
+_1._5.  _A_r_r_o_w _k_e_y_s
+
+     The editor command set is independent of  the  terminal
+you  are  using.   On most terminals with cursor positioning
+keys, these keys will also work within the editor.   If  you
+don't  have  cursor positioning keys, or even if you do, you
+can use the h j k and l  keys  as  cursor  positioning  keys
+_________________________
+++ If you gave the system an  incorrect  terminal  type
+code  then  the editor may have just made a mess out of
+your screen.  This happens when it sends control  codes
+for  one  kind of terminal to some other kind of termi-
+nal.  In this case hit the keys :q  (colon  and  the  q
+key)  and then hit the RETURN key.  This should get you
+back to the command level interpreter.  Figure out what
+you  did  wrong (ask someone else if necessary) and try
+again.
+     Another thing which can go wrong is that you typed
+the  wrong file name and the editor just printed an er-
+ror diagnostic.  In this case  you  should  follow  the
+above  procedure for getting out of the editor, and try
+again this time spelling the file name correctly.
+     If the editor doesn't seem to respond to the  com-
+mands  which you type here, try sending an interrupt to
+it by hitting the DEL or RUB key on your terminal,  and
+then  hitting  the  :q command again followed by a car-
+riage return.
+
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 4 -
+
+
+(these are labelled with arrows on an _a_d_m_3_a).*
+
+     (Particular note for the HP2621: on this  terminal  the
+function  keys must be _s_h_i_f_t_e_d (ick) to send to the machine,
+otherwise they only act locally.  Unshifted use  will  leave
+the cursor positioned incorrectly.)
+
+_1._6.  _S_p_e_c_i_a_l _c_h_a_r_a_c_t_e_r_s: _E_S_C, _C_R _a_n_d _D_E_L
+
+     Several of these special characters are very important,
+so  be  sure  to find them right now.  Look on your keyboard
+for a key labelled ESC or ALT.  It should be near the  upper
+left  corner  of  your terminal.  Try hitting this key a few
+times.  The editor will ring the bell to indicate that it is
+in a quiescent state.++ Partially formed commands  are  can-
+celled  by ESC, and when you insert text in the file you end
+the text insertion with ESC.  This key is a fairly  harmless
+one to hit, so you can just hit it if you don't know what is
+going on until the editor rings the bell.
+
+     The CR or RETURN key is important because it is used to
+terminate certain commands.  It is usually at the right side
+of the keyboard, and is the same command used at the end  of
+each shell command.
+
+     Another very useful key is the DEL or  RUB  key,  which
+generates  an  interrupt, telling the editor to stop what it
+is doing.  It is a forceful way of making the editor  listen
+to  you, or to return it to the quiescent state if you don't
+know or don't like what is going on.  Try  hitting  the  `/'
+key  on  your  terminal.   This key is used when you want to
+specify a string to be searched for.  The cursor should  now
+be positioned at the bottom line of the terminal after a `/'
+printed as a prompt.  You can get the  cursor  back  to  the
+current  position  by  hitting  the DEL or RUB key; try this
+now.* From now on we will simply refer to hitting the DEL or
+RUB key as ``sending an interrupt.''**
+
+     The editor often echoes your commands on the last  line
+of  the terminal.  If the cursor is on the first position of
+this last line, then the editor is performing a computation,
+_________________________
+* As we will see later, _h moves back to the left  (like
+control-h  which  is a backspace), _j moves down (in the
+same column), _k moves up (in the same  column),  and  _l
+moves to the right.
+++  On smart terminals where it is possible, the editor
+will quietly flash the screen rather than  ringing  the
+bell.
+* Backspacing over the `/' will also cancel the search.
+**  On  some  systems, this interruptibility comes at a
+price: you cannot type ahead when the editor is comput-
+ing with the cursor on the bottom line.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 5 -
+
+
+such as computing a new position in the file after a  search
+or  running  a command to reformat part of the buffer.  When
+this is happening you can stop  the  editor  by  sending  an
+interrupt.
+
+_1._7.  _G_e_t_t_i_n_g _o_u_t _o_f _t_h_e _e_d_i_t_o_r
+
+     After you have worked  with  this  introduction  for  a
+while,  and  you wish to do something else, you can give the
+command ZZ to the editor.  This will write the  contents  of
+the  editor's  buffer back into the file you are editing, if
+you made any changes, and then quit from  the  editor.   You
+can also end an editor session by giving the command :q!CR;+
+this is a dangerous but occasionally essential command which
+ends the editor session and discards all your changes.   You
+need  to  know  about  this  command  in case you change the
+editor's copy of a file you wish only to look at.   Be  very
+careful  not  to  give  this command when you really want to
+save the changes you have made.
+
+_2.  _M_o_v_i_n_g _a_r_o_u_n_d _i_n _t_h_e _f_i_l_e
+
+_2._1.  _S_c_r_o_l_l_i_n_g _a_n_d _p_a_g_i_n_g
+
+     The editor has a number of commands for  moving  around
+in  the file.  The most useful of these is generated by hit-
+ting the control and D keys at the same time, a control-D or
+`^D'.  We will use this two character notation for referring
+to these control keys from now  on.   You  may  have  a  key
+labelled `^' on your terminal.  This key will be represented
+as `|^' in this document; `^' is exclusively used as part  of
+the `^x' notation for control characters.++
+
+     As you know now if you tried hitting ^D,  this  command
+scrolls down in the file.  The D thus stands for down.  Many
+editor commands are mnemonic and this makes them much easier
+to  remember.   For instance the command to scroll up is ^U.
+Many dumb terminals can't scroll up at all,  in  which  case
+hitting  ^U  clears  the screen and refreshes it with a line
+which is farther back in the file at the top.
+
+     If you want to see more of the  file  below  where  you
+are, you can hit ^E to expose one more line at the bottom of
+the screen, leaving the cursor where it is.  ++++  The  com-
+mand ^Y (which is hopelessly non-mnemonic, but next to ^U on
+the keyboard) exposes one  more  line  at  the  top  of  the
+_________________________
++ All commands which read from the  last  display  line
+can also be terminated with a ESC as well as an CR.
+++  If  you  don't have a `^' key on your terminal then
+there is probably a key labelled `|^'; in any case these
+characters are one and the same.
+++++ Version 3 only.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 6 -
+
+
+screen.
+
+     There are other ways to move around in  the  file;  the
+keys ^F and ^B ++ move forward and backward a page,  keeping
+a  couple  of lines of continuity between screens so that it
+is possible to read through a file using these  rather  than
+^D and ^U if you wish.
+
+     Notice the difference between scrolling and paging.  If
+you  are  trying  to  read the text in a file, hitting ^F to
+move forward a page will leave you only a little context  to
+look  back at.  Scrolling on the other hand leaves more con-
+text, and happens more smoothly.  You can continue  to  read
+the text as scrolling is taking place.
+
+_2._2.  _S_e_a_r_c_h_i_n_g, _g_o_t_o, _a_n_d _p_r_e_v_i_o_u_s _c_o_n_t_e_x_t
+
+     Another way to position yourself in the file is by giv-
+ing the editor a string to search for.  Type the character /
+followed by a string of characters terminated  by  CR.   The
+editor  will  position  the cursor at the next occurrence of
+this  string.   Try  hitting  n  to  then  go  to  the  next
+occurrence  of  this  string.   The  character ? will search
+backwards from where you are, and is otherwise like /.+
+
+     If the search string you give the editor is not present
+in  the  file the editor will print a diagnostic on the last
+line of the screen, and the cursor will be returned  to  its
+initial position.
+
+     If you wish the search to match only at  the  beginning
+of a line, begin the search string with an |^.  To match only
+at the end of a line, end the search string with a $.   Thus
+/|^searchCR  will  search for the word `search' at the begin-
+ning of a line, and /last$CR searches for the word `last' at
+the end of a line.*
+
+_________________________
+++ Not available in all v2 editors due to  memory  con-
+straints.
++ These searches will normally wrap around the  end  of
+the file, and thus find the string even if it is not on
+a line in the direction you search provided it is  any-
+where  else  in  the  file.   You can disable this wra-
+paround  in   scans   by   giving   the   command   :se
+nowrapscanCR, or more briefly :se nowsCR.
+*Actually,  the  string you give to search for here can
+be a _r_e_g_u_l_a_r _e_x_p_r_e_s_s_i_o_n in the  sense  of  the  editors
+_e_x(1) and _e_d(1).  If you don't wish to learn about this
+yet, you can disable this more general facility by  do-
+ing :se nomagicCR; by putting this command in EXINIT in
+your environment, you can have this always be in effect
+(more about _E_X_I_N_I_T later.)
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 7 -
+
+
+     The command G, when preceded by a number will  position
+the  cursor at that line in the file.  Thus 1G will move the
+cursor to the first line of the file.   If  you  give  G  no
+count, then it moves to the end of the file.
+
+     If you are near the end of the file, and the last  line
+is  not  at  the bottom of the screen, the editor will place
+only the character `~' on each remaining line.   This  indi-
+cates  that the last line in the file is on the screen; that
+is, the `~' lines are past the end of the file.
+
+     You can find out the state of the file you are  editing
+by  typing  a  ^G.  The editor will show you the name of the
+file you are editing, the number of the  current  line,  the
+number of lines in the buffer, and the percentage of the way
+through the buffer which you are.  Try doing this  now,  and
+remember  the  number of the line you are on.  Give a G com-
+mand to get to the end and then another  G  command  to  get
+back where you were.
+
+     You can also get back to a previous position  by  using
+the  command  `` (two back quotes).  This is often more con-
+venient than G because it requires no  advance  preparation.
+Try  giving a G or a search with / or ? and then a `` to get
+back to where you were.  If you accidentally hit  n  or  any
+command which moves you far away from a context of interest,
+you can quickly get back by hitting ``.
+
+_2._3.  _M_o_v_i_n_g _a_r_o_u_n_d _o_n _t_h_e _s_c_r_e_e_n
+
+     Now try just moving the cursor around  on  the  screen.
+If  your  terminal  has  arrow keys (4 or 5 keys with arrows
+going in each direction) try them and convince yourself that
+they  work.   (On  certain  terminals using v2 editors, they
+won't.) If you don't have working arrow keys, you can always
+use  _h,  _j,  _k, and _l.  Experienced users of _v_i prefer these
+keys to arrow keys, because they are  usually  right  under-
+neath their fingers.
+
+     Hit the + key.  Each time you do, notice that the  cur-
+sor  advances  to  the  next  line in the file, at the first
+non-white position on the line.  The - key  is  like  +  but
+goes the other way.
+
+     These are very common keys for moving up and down lines
+in  the  file.   Notice that if you go off the bottom or top
+with these keys then the screen will scroll down (and up  if
+possible)  to  bring a line at a time into view.  The RETURN
+key has the same effect as the + key.
+
+     _V_i also has commands to take you to the top, middle and
+bottom  of  the  screen.   H will take you to the top (home)
+line on the screen.  Try preceding it with a  number  as  in
+3H.   This  will  take  you to the third line on the screen.
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 8 -
+
+
+Many _v_i commands take preceding numbers and  do  interesting
+things with them.  Try M, which takes you to the middle line
+on the screen, and L, which takes you to the  last  line  on
+the  screen.   L also takes counts, thus 5L will take you to
+the fifth line from the bottom.
+
+_2._4.  _M_o_v_i_n_g _w_i_t_h_i_n _a _l_i_n_e
+
+     Now try picking a word on some line on the screen,  not
+the  first  word  on the line.  move the cursor using RETURN
+and - to be on the line where the word is.  Try hitting  the
+w key.  This will advance the cursor to the next word on the
+line.  Try hitting the b key to back up words in  the  line.
+Also  try  the  e  key  which advances you to the end of the
+current word rather than to the beginning of the next  word.
+Also try SPACE (the space bar) which moves right one charac-
+ter and the BS (backspace or ^H) key which  moves  left  one
+character.   The key h works as ^H does and is useful if you
+don't have a BS key.  (Also, as noted  just  above,  l  will
+move to the right.)
+
+     If the line had punctuation in it you may have  noticed
+that that the w and b keys stopped at each group of punctua-
+tion.  You can also go back and forwards words without stop-
+ping  at  punctuation by using W and B rather than the lower
+case equivalents.  Think of  these  as  bigger  words.   Try
+these on a few lines with punctuation to see how they differ
+from the lower case w and b.
+
+     The word keys wrap around the end of line, rather  than
+stopping  at  the end.  Try moving to a word on a line below
+where you are by repeatedly hitting w.
+
+_2._5.  _S_u_m_m_a_r_y
+
+
+     SPACE    advance the cursor one position
+     ^B       backwards to previous page
+     ^D       scrolls down in the file
+     ^E       exposes another line at the bottom (v3)
+     ^F       forward to next page
+     ^G       tell what is going on
+     ^H       backspace the cursor
+     ^N       next line, same column
+     ^P       previous line, same column
+     ^U       scrolls up in the file
+     ^Y       exposes another line at the top (v3)
+     +        next line, at the beginning
+     -        previous line, at the beginning
+     /        scan for a following string forwards
+     ?        scan backwards
+     B        back a word, ignoring punctuation
+     G        go to specified line, last default
+     H        home screen line
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 9 -
+
+
+     M        middle screen line
+     L        last screen line
+     W        forward a word, ignoring punctuation
+     b        back a word
+     e        end of current word
+     n        scan for next instance of / or ? pattern
+     w        word after this word
+
+
+_2._6.  _V_i_e_w ++
+
+     If you want to use the editor to look at a file, rather
+than to make changes, invoke it as _v_i_e_w instead of _v_i.  This
+will set the _r_e_a_d_o_n_l_y option which  will  prevent  you  from
+accidently overwriting the file.
+
+_3.  _M_a_k_i_n_g _s_i_m_p_l_e _c_h_a_n_g_e_s
+
+_3._1.  _I_n_s_e_r_t_i_n_g
+
+     One of the most useful commands is the i (insert)  com-
+mand.   After  you type i, everything you type until you hit
+ESC is inserted into the file.  Try this now; position your-
+self  to some word in the file and try inserting text before
+this word.  If you are on an dumb terminal it will seem, for
+a minute, that some of the characters in your line have been
+overwritten, but they will reappear when you hit ESC.
+
+     Now try finding a word which can, but does not, end  in
+an  `s'.  Position yourself at this word and type e (move to
+end of word), then a for append and then `sESC' to terminate
+the  textual  insert.  This sequence of commands can be used
+to easily pluralize a word.
+
+     Try inserting and appending a few times  to  make  sure
+you understand how this works; i placing text to the left of
+the cursor, a to the right.
+
+     It is often the case that you want to add new lines  to
+the file you are editing, before or after some specific line
+in the file.  Find a line where this makes  sense  and  then
+give  the  command o to create a new line after the line you
+are on, or the command O to create a  new  line  before  the
+line  you  are on.  After you create a new line in this way,
+text you type up to an ESC is inserted on the new line.
+
+     Many related editor commands are invoked  by  the  same
+letter  key  and differ only in that one is given by a lower
+case key and the other is given by an upper  case  key.   In
+these cases, the upper case key often differs from the lower
+_________________________
+++ Not available in all v2 editors due to  memory  con-
+straints.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 10 -
+
+
+case key in its sense of direction, with the upper case  key
+working  backward  and/or up, while the lower case key moves
+forward and/or down.
+
+     Whenever you are typing in  text,  you  can  give  many
+lines  of  input  or just a few characters.  To type in more
+than one line of text, hit a RETURN at the  middle  of  your
+input.   A  new  line  will be created for text, and you can
+continue to type.  If you are on a slow  and  dumb  terminal
+the  editor  may  choose  to  wait to redraw the tail of the
+screen, and will let  you  type  over  the  existing  screen
+lines.   This  avoids the lengthy delay which would occur if
+the editor attempted to keep the tail of the  screen  always
+up  to  date.   The tail of the screen will be fixed up, and
+the missing lines will reappear, when you hit ESC.
+
+     While you are inserting new text, you can use the char-
+acters you normally use at the system command level (usually
+^H or #) to backspace over  the  last  character  which  you
+typed,  and  the character which you use to kill input lines
+(usually @, ^X, or ^U) to erase the input you have typed  on
+the current line.+ The character ^W will erase a whole  word
+and leave you after the space after the previous word; it is
+useful for quickly backing up in an insert.
+
+     Notice that when you backspace during an insertion  the
+characters  you  backspace  over  are not erased; the cursor
+moves backwards, and the characters remain on  the  display.
+This  is  often  useful if you are planning to type in some-
+thing similar.  In any case the  characters  disappear  when
+when  you  hit  ESC;  if you want to get rid of them immedi-
+ately, hit an ESC and then a again.
+
+     Notice also that you can't erase characters  which  you
+didn't  insert,  and that you can't backspace around the end
+of a line.  If you need to back up to the previous  line  to
+make  a correction, just hit ESC and move the cursor back to
+the previous line.  After  making  the  correction  you  can
+return  to  where you were and use the insert or append com-
+mand again.
+
+_3._2.  _M_a_k_i_n_g _s_m_a_l_l _c_o_r_r_e_c_t_i_o_n_s
+
+     You can make small corrections in existing  text  quite
+easily.  Find a single character which is wrong or just pick
+any character.  Use the arrow keys to find the character, or
+get  near  the  character with the word motion keys and then
+either backspace (hit the BS key or ^H or even  just  h)  or
+SPACE  (using  the  space  bar)  until  the cursor is on the
+_________________________
++ In fact, the character ^H (backspace) always works to
+erase the last input character here, regardless of what
+your erase character is.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 11 -
+
+
+character which is wrong.  If the character  is  not  needed
+then  hit  the  x  key;  this deletes the character from the
+file.  It is analogous to the way you x out characters  when
+you  make  mistakes  on  a  typewriter  (except  it's not as
+messy).
+
+     If the character is incorrect, you can replace it  with
+the  correct  character by giving the command r_c, where _c is
+replaced by the correct character.  Finally if the character
+which is incorrect should be replaced by more than one char-
+acter, give the command s  which  substitutes  a  string  of
+characters,  ending  with ESC, for it.  If there are a small
+number of characters which are wrong you can precede s  with
+a  count of the number of characters to be replaced.  Counts
+are also useful with x to specify the number  of  characters
+to be deleted.
+
+_3._3.  _M_o_r_e _c_o_r_r_e_c_t_i_o_n_s: _o_p_e_r_a_t_o_r_s
+
+     You already know almost enough to  make  changes  at  a
+higher  level.   All  you need to know now is that the _d key
+acts as a delete operator.  Try the command _d_w to  delete  a
+word.   Try hitting . a few times.  Notice that this repeats
+the effect of the dw.  The command . repeats the  last  com-
+mand  which  made  a change.  You can remember it by analogy
+with an ellipsis `...'.
+
+     Now try db.  This deletes a word backwards, namely  the
+preceding  word.  Try dSPACE.  This deletes a single charac-
+ter, and is equivalent to the x command.
+
+     Another very useful operator is _c or change.  The  com-
+mand  _c_w thus changes the text of a single word.  You follow
+it by the replacement text ending with an ESC.  Find a  word
+which  you  can change to another, and try this now.  Notice
+that the end of the text to be changed was marked  with  the
+character  `$' so that you can see this as you are typing in
+the new material.
+
+_3._4.  _O_p_e_r_a_t_i_n_g _o_n _l_i_n_e_s
+
+     It is often the case that you want to operate on lines.
+Find  a  line  which  you want to delete, and type dd, the _d
+operator twice.  This will delete the line.  If you are on a
+dumb  terminal,  the  editor  may just erase the line on the
+screen, replacing it with a line with only an @ on it.  This
+line  does not correspond to any line in your file, but only
+acts as a place holder.  It helps to avoid a lengthy  redraw
+of  the rest of the screen which would be necessary to close
+up the hole created by the deletion on a terminal without  a
+delete line capability.
+
+     Try repeating the _c operator twice; this will change  a
+whole line, erasing its previous contents and replacing them
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 12 -
+
+
+with text you type up to an ESC.+
+
+     You can delete or change more than one line by  preced-
+ing  the  _d_d  or  _c_c with a count, i.e. 5dd deletes 5 lines.
+You can also give a command like dL to delete all the  lines
+up  to  and including the last line on the screen, or d3L to
+delete through the third from the  bottom  line.   Try  some
+commands like this now.* Notice that  the  editor  lets  you
+know when you change a large number of lines so that you can
+see the extent of the change.  The editor will  also  always
+tell  you when a change you make affects text which you can-
+not see.
+
+_3._5.  _U_n_d_o_i_n_g
+
+     Now suppose that the last change  which  you  made  was
+incorrect;  you could use the insert, delete and append com-
+mands to put the correct material back.  However,  since  it
+is  often  the case that we regret a change or make a change
+incorrectly, the editor  provides  a  _u  (undo)  command  to
+reverse  the  last  change  which  you made.  Try this a few
+times, and give it twice in a row to notice that an  _u  also
+undoes a _u.
+
+     The undo command lets you reverse only a single change.
+After you make a number of changes to a line, you may decide
+that you would rather have the original state  of  the  line
+back.   The _U command restores the current line to the state
+before you started changing it.
+
+     You can recover text which you  delete,  even  if  undo
+will  not  bring it back; see the section on recovering lost
+text below.
+
+_3._6.  _S_u_m_m_a_r_y
+
+
+     SPACE    advance the cursor one position
+     ^H       backspace the cursor
+     ^W       erase a word during an insert
+     erase    your erase (usually ^H or #), erases a character during an insert
+     kill     your kill (usually @, ^X, or ^U), kills the insert on this line
+     .        repeats the changing command
+_________________________
++ The command S is a convenient synonym for for cc,  by
+analogy  with  s.  Think of S as a substitute on lines,
+while s is a substitute on characters.
+*  One  subtle  point  here involves using the / search
+after a d.  This will normally delete  characters  from
+the  current  position  to  the point of the match.  If
+what is desired is to delete whole lines including  the
+two  points,  give  the  pattern as /pat/+0, a line ad-
+dress.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 13 -
+
+
+     O        opens and inputs new lines, above the current
+     U        undoes the changes you made to the current line
+     a        appends text after the cursor
+     c        changes the object you specify to the following text
+     d        deletes the object you specify
+     i        inserts text before the cursor
+     o        opens and inputs new lines, below the current
+     u        undoes the last change
+
+
+_4.  _M_o_v_i_n_g _a_b_o_u_t; _r_e_a_r_r_a_n_g_i_n_g _a_n_d _d_u_p_l_i_c_a_t_i_n_g _t_e_x_t
+
+_4._1.  _L_o_w _l_e_v_e_l _c_h_a_r_a_c_t_e_r _m_o_t_i_o_n_s
+
+     Now move the cursor to a line where there is a punctua-
+tion  or  a  bracketing character such as a parenthesis or a
+comma or period.  Try the command f_x where _x is this charac-
+ter.   This  command finds the next _x character to the right
+of the cursor in the current line.  Try then  hitting  a  ;,
+which  finds  the  next  instance of the same character.  By
+using the f command and then a sequence of ;'s you can often
+get  to a particular place in a line much faster than with a
+sequence of word motions or SPACEs.  There is also a F  com-
+mand, which is like f, but searches backward.  The ; command
+repeats F also.
+
+     When you are operating on the text  in  a  line  it  is
+often  desirable  to deal with the characters up to, but not
+including, the first instance of a character.  Try  df_x  for
+some _x now and notice that the _x character is deleted.  Undo
+this with u and then try dt_x;  the t  here  stands  for  to,
+i.e.  delete up to the next _x, but not the _x.  The command T
+is the reverse of t.
+
+     When working with the text of a single line, an |^ moves
+the  cursor to the first non-white position on the line, and
+a $ moves it to the end of the line.  Thus  $a  will  append
+new text at the end of the current line.
+
+     Your file may have tab (^I) characters  in  it.   These
+characters  are  represented as a number of spaces expanding
+to a tab stop, where tab stops are every 8 positions.*  When
+the  cursor  is at a tab, it sits on the last of the several
+spaces which represent that tab.  Try moving the cursor back
+and forth over tabs so you understand how this works.
+
+     On rare occasions, your file may have nonprinting char-
+acters in it. These characters are displayed in the same way
+_________________________
+* This is settable by a command of the form :se ts=_xCR,
+where  _x is 4 to set tabstops every four columns.  This
+has effect on the screen representation within the edi-
+tor.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 14 -
+
+
+they are represented in this document, that is  with  a  two
+character code, the first character of which is `^'.  On the
+screen non-printing  characters  resemble  a  `^'  character
+adjacent  to  another,  but  spacing or backspacing over the
+character will reveal that the two characters are, like  the
+spaces representing a tab character, a single character.
+
+     The  editor  sometimes  discards  control   characters,
+depending  on  the character and the setting of the _b_e_a_u_t_i_f_y
+option, if you attempt to insert them in your file.  You can
+get  a  control character in the file by beginning an insert
+and then typing a ^V before the control character.   The  ^V
+quotes  the  following  character, causing it to be inserted
+directly into the file.
+
+
+_4._2.  _H_i_g_h_e_r _l_e_v_e_l _t_e_x_t _o_b_j_e_c_t_s
+
+     In working with a document it is often advantageous  to
+work  in  terms of sentences, paragraphs, and sections.  The
+operations ( and ) move to the beginning of the previous and
+next  sentences  respectively.   Thus  the  command  d) will
+delete the rest of the current sentence;  likewise  d(  will
+delete  the previous sentence if you are at the beginning of
+the current sentence, or the current sentence  up  to  where
+you  are if you are not at the beginning of the current sen-
+tence.
+
+     A sentence is defined to end at a `.', `!' or `?' which
+is  followed  by either the end of a line, or by two spaces.
+Any number of closing `)', `]', `"' and `''  characters  may
+appear after the `.', `!' or `?' before the spaces or end of
+line.
+
+     The operations { and } move  over  paragraphs  and  the
+operations [[ and ]] move over sections.+
+
+     A paragraph begins after each empty line, and  also  at
+each of a set of paragraph macros, specified by the pairs of
+characters in the definition of  the  string  valued  option
+_p_a_r_a_g_r_a_p_h_s.  The default setting for this option defines the
+paragraph macros of the -_m_s and -_m_m macro packages, i.e. the
+`.IP', `.LP', `.PP' and `.QP', `.P' and `.LI' macros.++ Each
+_________________________
++ The [[ and ]] operations require the operation  char-
+acter  to  be  doubled because they can move the cursor
+far from where it currently is.  While it  is  easy  to
+get  back  with  the  command  ``, these commands would
+still be frustrating if they were easy to hit  acciden-
+tally.
+++  You  can easily change or extend this set of macros
+by assigning a different string to the  _p_a_r_a_g_r_a_p_h_s  op-
+tion in your EXINIT.  See section 6.2 for details.  The
+`.bp' directive is also considered  to  start  a  para-
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 15 -
+
+
+paragraph boundary is also a sentence  boundary.   The  sen-
+tence  and paragraph commands can be given counts to operate
+over groups of sentences and paragraphs.
+
+     Sections in the editor begin after each  macro  in  the
+_s_e_c_t_i_o_n_s  option, normally `.NH', `.SH', `.H' and `.HU', and
+each line with a formfeed ^L in the first  column.   Section
+boundaries are always line and paragraph boundaries also.
+
+     Try experimenting with the sentence and paragraph  com-
+mands until you are sure how they work.  If you have a large
+document, try looking through it using the section commands.
+The  section  commands interpret a preceding count as a dif-
+ferent window size in which to redraw the screen at the  new
+location,  and  this  window size is the base size for newly
+drawn windows until another size is specified.  This is very
+useful  if  you are on a slow terminal and are looking for a
+particular section. You can give the first section command a
+small count to then see each successive section heading in a
+small window.
+
+_4._3.  _R_e_a_r_r_a_n_g_i_n_g _a_n_d _d_u_p_l_i_c_a_t_i_n_g _t_e_x_t
+
+     The editor has a single unnamed buffer where  the  last
+deleted  or  changed  away text is saved, and a set of named
+buffers a-z which you can use to save copies of text and  to
+move text around in your file and between files.
+
+     The operator _y yanks a copy of the object which follows
+into the unnamed buffer.  If preceded by a buffer name, "_xy,
+where _x here is replaced by a letter a-z, it places the text
+in  the  named buffer.  The text can then be put back in the
+file with the commands _p and _P; p puts  the  text  after  or
+below  the cursor, while P puts the text before or above the
+cursor.
+
+     If the text which you yank forms a part of a  line,  or
+is  an  object such as a sentence which partially spans more
+than one line, then when you put the text back, it  will  be
+placed  after  the  cursor (or before if you use P).  If the
+yanked text forms whole lines, they  will  be  put  back  as
+whole  lines,  without  changing  the current line.  In this
+case, the put acts much like a o or O command.
+
+     Try the command YP.  This makes a copy of  the  current
+line and leaves you on this copy, which is placed before the
+current line.  The command Y is  a  convenient  abbreviation
+for yy.  The command Yp will also make a copy of the current
+line, and place it after the current line.  You can give Y a
+count  of  lines  to yank, and thus duplicate several lines;
+try 3YP.
+_________________________
+graph.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 16 -
+
+
+     To move text within the buffer, you need to  delete  it
+in one place, and put it back in another.  You can precede a
+delete operation by the name of a buffer in which  the  text
+is  to be stored as in "a5dd deleting 5 lines into the named
+buffer _a.  You can then move  the  cursor  to  the  eventual
+resting  place of the these lines and do a "ap or "aP to put
+them back.  In fact, you can switch and  edit  another  file
+before  you  put  the lines back, by giving a command of the
+form :e _n_a_m_eCR where _n_a_m_e is the name of the other file  you
+want  to  edit.  You will have to write back the contents of
+the current editor buffer (or discard them) if you have made
+changes  before  the editor will let you switch to the other
+file.  An ordinary delete command  saves  the  text  in  the
+unnamed  buffer,  so  that an ordinary put can move it else-
+where.  However, the unnamed buffer is lost when you  change
+files,  so  to move text from one file to another you should
+use an unnamed buffer.
+
+_4._4.  _S_u_m_m_a_r_y.
+
+
+     |^        first non-white on line
+     $        end of line
+     )        forward sentence
+     }        forward paragraph
+     ]]       forward section
+     (        backward sentence
+     {        backward paragraph
+     [[       backward section
+     f_x       find _x forward in line
+     p        put text back, after cursor or below current line
+     y        yank operator, for copies and moves
+     t_x       up to _x forward, for operators
+     F_x       f backward in line
+     P        put text back, before cursor or above current line
+     T_x       t backward in line
+
+
+_5.  _H_i_g_h _l_e_v_e_l _c_o_m_m_a_n_d_s
+
+_5._1.  _W_r_i_t_i_n_g, _q_u_i_t_t_i_n_g, _e_d_i_t_i_n_g _n_e_w _f_i_l_e_s
+
+     So far we have seen how to enter _v_i and  to  write  out
+our  file  using either ZZ or :wCR. The first exits from the
+editor, (writing if changes were made),  the  second  writes
+and stays in the editor.
+
+     If you have changed the editor's copy of the  file  but
+do  not wish to save your changes, either because you messed
+up the file or decided that the changes are not an  improve-
+ment  to  the  file,  then you can give the command :q!CR to
+quit from the editor without writing the changes.   You  can
+also reedit the same file (starting over) by giving the com-
+mand :e!CR.  These commands should be used only rarely,  and
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 17 -
+
+
+with  caution,  as it is not possible to recover the changes
+you have made after you discard them in this manner.
+
+     You can edit a different file without leaving the  edi-
+tor  by giving the command :e _n_a_m_eCR.  If you have not writ-
+ten out your file before you try to do this, then the editor
+will  tell  you this, and delay editing the other file.  You
+can then give the command :wCR to save your  work  and  then
+the  :e _n_a_m_eCR  command again, or carefully give the command
+:e! _n_a_m_eCR,  which  edits  the  other  file  discarding  the
+changes you have made to the current file.  To have the edi-
+tor automatically save changes,  include  _s_e_t  _a_u_t_o_w_r_i_t_e  in
+your EXINIT, and use :n instead of :e.
+
+_5._2.  _E_s_c_a_p_i_n_g _t_o _a _s_h_e_l_l
+
+     You can get to a shell to execute a single  command  by
+giving  a  _v_i  command of the form :!_c_m_dCR.  The system will
+run the single command _c_m_d and when  the  command  finishes,
+the  editor  will ask you to hit a RETURN to continue.  When
+you have finished looking at the output on the  screen,  you
+should  hit  RETURN and the editor will clear the screen and
+redraw it.  You can then continue  editing.   You  can  also
+give  another  :  command  when it asks you for a RETURN; in
+this case the screen will not be redrawn.
+
+     If you wish to execute more than  one  command  in  the
+shell,  then you can give the command :shCR.  This will give
+you a new shell, and when you finish with the shell,  ending
+it by typing a ^D, the editor will clear the screen and con-
+tinue.
+
+     On systems which support it, ^Z will suspend the editor
+and  return  to  the  (top level) shell.  When the editor is
+resumed, the screen will be redrawn.
+
+_5._3.  _M_a_r_k_i_n_g _a_n_d _r_e_t_u_r_n_i_n_g
+
+     The command `` returned to the previous place  after  a
+motion  of  the  cursor by a command such as /, ? or G.  You
+can also mark lines in the file with single letter tags  and
+return to these marks later by naming the tags.  Try marking
+the current line with the command m_x, where you should  pick
+some  letter for _x, say `a'.  Then move the cursor to a dif-
+ferent line (any way you like) and hit `a.  The cursor  will
+return to the place which you marked.  Marks last only until
+you edit another file.
+
+     When using operators such as _d and referring to  marked
+lines,  it  is  often desirable to delete whole lines rather
+than deleting to the exact position in the line marked by m.
+In  this  case you can use the form '_x rather than `_x.  Used
+without an operator, '_x will move  to  the  first  non-white
+character  of  the  marked  line;  similarly '' moves to the
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 18 -
+
+
+first non-white character of the line containing the  previ-
+ous context mark ``.
+
+_5._4.  _A_d_j_u_s_t_i_n_g _t_h_e _s_c_r_e_e_n
+
+     If the screen image is messed up because of a transmis-
+sion  error  to your terminal, or because some program other
+than the editor wrote output to your terminal, you can hit a
+^L, the ASCII form-feed character, to cause the screen to be
+refreshed.
+
+     On a dumb terminal, if there are @ lines in the  middle
+of  the screen as a result of line deletion, you may get rid
+of these lines by typing ^R to cause the  editor  to  retype
+the screen, closing up these holes.
+
+     Finally, if you wish to place a  certain  line  on  the
+screen  at  the  top middle or bottom of the screen, you can
+position the cursor to that line, and then give a z command.
+You  should  follow  the z command with a RETURN if you want
+the line to appear at the top of the window, a . if you want
+it at the center, or a - if you want it at the bottom.  (z.,
+z-, and z+ are not available on all v2 editors.)
+
+_6.  _S_p_e_c_i_a_l _t_o_p_i_c_s
+
+_6._1.  _E_d_i_t_i_n_g _o_n _s_l_o_w _t_e_r_m_i_n_a_l_s
+
+     When you are on a slow terminal,  it  is  important  to
+limit the amount of output which is generated to your screen
+so that you will not suffer long  delays,  waiting  for  the
+screen to be refreshed.  We have already pointed out how the
+editor optimizes the updating of the  screen  during  inser-
+tions  on  dumb  terminals  to limit the delays, and how the
+editor erases lines to @ when they are deleted on dumb  ter-
+minals.
+
+     The use of the slow terminal  insertion  mode  is  con-
+trolled by the _s_l_o_w_o_p_e_n option.  You can force the editor to
+use this mode even on faster terminals by giving the command
+:se  slowCR.   If  your system is sluggish this helps lessen
+the amount of output coming to your terminal.  You can  dis-
+able this option by :se noslowCR.
+
+     The editor can simulate an intelligent  terminal  on  a
+dumb  one.  Try giving the command :se redrawCR.  This simu-
+lation generates a great deal of  output  and  is  generally
+tolerable only on lightly loaded systems and fast terminals.
+You can disable this by giving the command
+ :se noredrawCR.
+
+     The editor also makes  editing  more  pleasant  at  low
+speed by starting editing in a small window, and letting the
+window expand as you edit.  This works particularly well  on
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 19 -
+
+
+intelligent  terminals.   The  editor  can expand the window
+easily when you insert in the middle of the screen on  these
+terminals.   If  possible,  try the editor on an intelligent
+terminal to see how this works.
+
+     You can control the size of the window which is redrawn
+each  time  the  screen is cleared by giving window sizes as
+argument to the commands which cause large screen motions:
+
+        :  /  ?  [[  ]]  `  '
+
+Thus if you are searching for a  particular  instance  of  a
+common  string  in  a  file you can precede the first search
+command by a small number, say 3, and the editor  will  draw
+three  line windows around each instance of the string which
+it locates.
+
+     You can easily expand or contract the  window,  placing
+the  current  line  as you choose, by giving a number on a z
+command, after the z and before the following RETURN,  .  or
+-.  Thus the command z5. redraws the screen with the current
+line in the center of a five line window.+
+
+     If the editor is redrawing or otherwise updating  large
+portions  of the display, you can interrupt this updating by
+hitting a DEL or RUB as usual.  If you do this you may  par-
+tially  confuse  the  editor  about what is displayed on the
+screen.  You can still edit the text on the  screen  if  you
+wish;  clear  up  the  confusion by hitting a ^L; or move or
+search again, ignoring the current state of the display.
+
+     See section 7.8 on _o_p_e_n mode for another way to use the
+_v_i command set on slow terminals.
+
+_6._2.  _O_p_t_i_o_n_s, _s_e_t, _a_n_d _e_d_i_t_o_r _s_t_a_r_t_u_p _f_i_l_e_s
+
+     The editor has a set of options,  some  of  which  have
+been  mentioned above.  The most useful options are given in
+the following table.
+
+     The options  are  of  three  kinds:   numeric  options,
+string options, and toggle options.  You can set numeric and
+string options by a statement of the form
+
+
+
+
+
+
+
+_________________________
++ Note that the command 5z. has an  entirely  different
+effect, placing line 5 in the center of a new window.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 20 -
+
+
+
+Name         Default               Description
+8______________________________________________________________________________________
+autoindent   noai                  Supply indentation automatically
+autowrite    noaw                  Automatic write before :n, :ta, ^|^, !
+ignorecase   noic                  Ignore case in searching
+lisp         nolisp                ( { ) } commands deal with S-expressions
+list         nolist                Tabs print as ^I; end of lines marked with $
+magic        nomagic               The characters . [ and * are special in scans
+number       nonu                  Lines are displayed prefixed with line numbers
+paragraphs   para=IPLPPPQPbpP LI   Macro names which start paragraphs
+redraw       nore                  Simulate a smart terminal on a dumb one
+sections     sect=NHSHH HU         Macro names which start new sections
+shiftwidth   sw=8                  Shift distance for <, > and input ^D and ^T
+showmatch    nosm                  Show matching ( or { as ) or } is typed
+slowopen     slow                  Postpone display updates during inserts
+term         dumb                  The kind of terminal you are using.
+
+
+        set _o_p_t=_v_a_l
+
+and toggle options can be set or unset by statements of  one
+of the forms
+
+        set _o_p_t
+        set no_o_p_t
+
+These statements can  be  placed  in  your  EXINIT  in  your
+environment,  or given while you are running _v_i by preceding
+them with a : and following them with a CR.
+
+     You can get a  list  of  all  options  which  you  have
+changed  by  the  command  :setCR,  or the value of a single
+option by the command :set _o_p_t?CR.  A list of  all  possible
+options  and  their  values is generated by :set allCR.  Set
+can be abbreviated se.  Multiple options can  be  placed  on
+one line, e.g.  :se ai aw nuCR.
+
+     Options set by the set command only last while you stay
+in the editor.  It is common to want to have certain options
+set whenever you use the editor.  This can  be  accomplished
+by creating a list of _e_x commands+ which are to be run every
+time  you start up _e_x, _e_d_i_t, or _v_i.  A typical list includes
+a set command, and possibly a few map commands (on  v3  edi-
+tors).   Since  it is advisable to get these commands on one
+line, they can be separated with the | character, for  exam-
+ple:
+
+        set ai aw terse|map @ dd|map # x
+
+which sets the options _a_u_t_o_i_n_d_e_n_t,  _a_u_t_o_w_r_i_t_e,  _t_e_r_s_e,  (the
+_s_e_t  command),  makes  @ delete a line, (the first _m_a_p), and
+_________________________
++ All commands which start with : are _e_x commands.
+9
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 21 -
+
+
+makes # delete a character, (the second _m_a_p).  (See  section
+6.9  for  a description of the map command, which only works
+in version 3.) This string should be placed in the  variable
+EXINIT  in  your environment.  If you use _c_s_h, put this line
+in the file ._l_o_g_i_n in your home directory:
+
+        setenv EXINIT 'set ai aw terse|map @ dd|map # x'
+
+If you use the standard v7 shell, put  these  lines  in  the
+file ._p_r_o_f_i_l_e in your home directory:
+
+        EXINIT='set ai aw terse|map @ dd|map # x'
+        export EXINIT
+
+On a version 6 system, the concept of  environments  is  not
+present.   In  this  case, put the line in the file ._e_x_r_c in
+your home directory.
+
+        set ai aw terse|map @ dd|map # x
+
+Of course, the particulars of the line would depend on which
+options you wanted to set.
+
+_6._3.  _R_e_c_o_v_e_r_i_n_g _l_o_s_t _l_i_n_e_s
+
+     You might have a serious problem if you delete a number
+of  lines  and  then regret that they were deleted.  Despair
+not, the editor saves the last 9 deleted blocks of text in a
+set  of numbered registers 1-9.  You can get the _n'th previ-
+ous deleted text back in your file by the command "_np.   The
+" here says that a buffer name is to follow, _n is the number
+of the buffer you wish to try (use the number  1  for  now),
+and  _p  is  the  put  command, which puts text in the buffer
+after the cursor.  If this doesn't bring back the  text  you
+wanted,  hit  _u  to undo this and then .  (period) to repeat
+the put command.  In general the .  command will repeat  the
+last change you made.  As a special case, when the last com-
+mand refers to a numbered text buffer, the . command  incre-
+ments the number of the buffer before repeating the command.
+Thus a sequence of the form
+
+        "1pu.u.u.
+
+will, if repeated long enough, show you all the deleted text
+which  has  been saved for you.  You can omit the _u commands
+here to gather up all this text in the buffer, or stop after
+any  .  command  to  keep just the then recovered text.  The
+command _P can  also  be  used  rather  than  _p  to  put  the
+recovered text before rather than after the cursor.
+
+_6._4.  _R_e_c_o_v_e_r_i_n_g _l_o_s_t _f_i_l_e_s
+
+     If the system crashes, you can  recover  the  work  you
+were  doing  to  within  a  few  changes.  You will normally
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 22 -
+
+
+receive mail when you next login giving you the name of  the
+file which has been saved for you. You should then change to
+the directory where you were when  the  system  crashed  and
+give a command of the form:
+
+        % vi -r _n_a_m_e
+
+replacing _n_a_m_e with the name of  the  file  which  you  were
+editing.   This will recover your work to a point near where
+you left off.+
+
+     You can get a listing of the files which are saved  for
+you by giving the command:
+
+        % vi -r
+
+If there is more than one  instance  of  a  particular  file
+saved,  the  editor  gives you the newest instance each time
+you recover it.  You can thus get an older saved  copy  back
+by first recovering the newer copies.
+
+     For  this  feature  to  work,  _v_i  must  be   correctly
+installed  by a super user on your system, and the _m_a_i_l pro-
+gram must exist to receive mail.  The invocation  ``_v_i  -_r''
+will  not  always  list  all  saved  files,  but they can be
+recovered even if they are not listed.
+
+_6._5.  _C_o_n_t_i_n_u_o_u_s _t_e_x_t _i_n_p_u_t
+
+     When you are typing in large amounts of text it is con-
+venient to have lines broken near the right margin automati-
+cally.  You can cause this to happen by giving  the  command
+:se  wm=10CR.  This causes all lines to be broken at a space
+at least 10 columns from the right hand edge of the screen.*
+
+     If the editor breaks an input line and you wish to  put
+it  back  together you can tell it to join the lines with J.
+You can give J a count of the number of lines to  be  joined
+as  in 3J to join 3 lines.  The editor supplies white space,
+if appropriate, at the juncture of  the  joined  lines,  and
+leaves  the  cursor  at  this white space.  You can kill the
+_________________________
++ In rare cases, some of the lines of the file  may  be
+lost.   The  editor  will give you the numbers of these
+lines and the text of the lines will be replaced by the
+string `LOST'.  These lines will almost always be among
+the last few which you changed.  You can either  choose
+to discard the changes which you made (if they are easy
+to remake) or to replace the few lost lines by hand.
+* This feature is not available on some v2 editors.  In
+v2  editors  where  it is available, the break can only
+occur to the right of the specified boundary instead of
+to the left.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 23 -
+
+
+white space with x if you don't want it.
+
+_6._6.  _F_e_a_t_u_r_e_s _f_o_r _e_d_i_t_i_n_g _p_r_o_g_r_a_m_s
+
+     The editor has a number of commands  for  editing  pro-
+grams.   The  thing  that most distinguishes editing of pro-
+grams from editing of text is the desirability of  maintain-
+ing  an  indented structure to the body of the program.  The
+editor has a _a_u_t_o_i_n_d_e_n_t facility for  helping  you  generate
+correctly indented programs.
+
+     To enable this facility you can give  the  command  :se
+aiCR.  Now try opening a new line with o and type some char-
+acters on the line after a  few  tabs.   If  you  now  start
+another line, notice that the editor supplies white space at
+the beginning of the line to line it up  with  the  previous
+line.   You  cannot backspace over this indentation, but you
+can use ^D key to backtab over the supplied indentation.
+
+     Each time you type ^D you back up  one  position,  nor-
+mally to an 8 column boundary.  This amount is settable; the
+editor has an option called _s_h_i_f_t_w_i_d_t_h which you can set  to
+change  this  value.   Try giving the command :se sw=4CR and
+then experimenting with autoindent again.
+
+     For shifting lines in the program left and right, there
+are  operators  <  and >.  These shift the lines you specify
+right or left by one _s_h_i_f_t_w_i_d_t_h.  Try << and >> which  shift
+one  line  left or right, and <_L and >_L shifting the rest of
+the display left and right.
+
+     If you have a complicated expression and  wish  to  see
+how the parentheses match, put the cursor at a left or right
+parenthesis and hit %.  This  will  show  you  the  matching
+parenthesis.  This works also for braces { and }, and brack-
+ets [ and ].
+
+     If you are editing C programs, you can use the  [[  and
+]]  keys  to advance or retreat to a line starting with a {,
+i.e. a function declaration at a time.  When ]] is used with
+an  operator it stops after a line which starts with }; this
+is sometimes useful with y]].
+
+_6._7.  _F_i_l_t_e_r_i_n_g _p_o_r_t_i_o_n_s _o_f _t_h_e _b_u_f_f_e_r
+
+     You can run system commands over portions of the buffer
+using the operator !.  You can use this to sort lines in the
+buffer, or  to  reformat  portions  of  the  buffer  with  a
+pretty-printer.   Try  typing in a list of random words, one
+per line and ending them with a blank line.  Back up to  the
+beginning  of  the list, and then give the command !}sortCR.
+This says to sort the next paragraph of  material,  and  the
+blank line ends a paragraph.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 24 -
+
+
+_6._8.  _C_o_m_m_a_n_d_s _f_o_r _e_d_i_t_i_n_g _L_I_S_P+
+
+     If you are editing a LISP program you  should  set  the
+option  _l_i_s_p  by doing :se lispCR.  This changes the ( and )
+commands to move backward and  forward  over  s-expressions.
+The  {  and  }  commands  are like ( and ) but don't stop at
+atoms.  These can be used to  skip  to  the  next  list,  or
+through a comment quickly.
+
+     The _a_u_t_o_i_n_d_e_n_t option works differently for LISP,  sup-
+plying  indent  to  align  at the first argument to the last
+open list.  If there is no such argument then the indent  is
+two spaces more than the last level.
+
+     There is another option which is useful for  typing  in
+LISP,  the  _s_h_o_w_m_a_t_c_h  option.  Try setting it with :se smCR
+and then try typing a `(' some words and then a `)'.  Notice
+that  the cursor shows the position of the `(' which matches
+the `)' briefly. This happens only if the matching `(' is on
+the  screen,  and  the  cursor  stays  there for at most one
+second.
+
+     The editor also has an  operator  to  realign  existing
+lines as though they had been typed in with _l_i_s_p and _a_u_t_o_i_n_-
+_d_e_n_t set.  This is the = operator.  Try the  command  =%  at
+the  beginning  of  a  function.   This will realign all the
+lines of the function declaration.
+
+     When you are editing LISP,, the [[ and ]]  advance  and
+retreat  to  lines  beginning  with  a (, and are useful for
+dealing with entire function definitions.
+
+_6._9.  _M_a_c_r_o_s++
+
+     _V_i has a parameterless macro facility, which  lets  you
+set  it up so that when you hit a single keystroke, the edi-
+tor will act as though you had hit some longer  sequence  of
+keys.   You  can set this up if you find yourself typing the
+same sequence of commands repeatedly.
+
+     Briefly, there are two flavors of macros:
+
+a)   Ones where you put the macro body in a buffer register,
+     say  _x.  You can then type @x to invoke the macro.  The
+     @ may be followed by  another  @  to  repeat  the  last
+     macro.
+
+b)   You can use the _m_a_p command from _v_i (typically in  your
+_________________________
++ The LISP features are not available on some  v2  edi-
+tors due to memory constraints.
+++ The macro feature is available only in version 3 ed-
+itors.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 25 -
+
+
+     _E_X_I_N_I_T) with a command of the form:
+
+             :map _l_h_s _r_h_sCR
+
+     mapping _l_h_s into  _r_h_s.   There  are  restrictions:  _l_h_s
+     should  be  one  keystroke  (either  1 character or one
+     function key) since  it  must  be  entered  within  one
+     second  (unless _n_o_t_i_m_e_o_u_t is set, in which case you can
+     type it as slowly as you wish, and _v_i will wait for you
+     to  finish  it before it echoes anything).  The _l_h_s can
+     be no longer than 10 characters, the _r_h_s no longer than
+     100.   To  get  a space, tab or newline into _l_h_s or _r_h_s
+     you should escape them with a ^V.  (It may be necessary
+     to double the ^V if the map command is given inside _v_i,
+     rather than in _e_x.) Spaces and tabs inside the _r_h_s need
+     not be escaped.
+
+     Thus to make the q key write and exit the  editor,  you
+can give the command
+
+        :map q :wq^V^VCR CR
+
+which means that whenever you type q, it will be  as  though
+you  had  typed the four characters :wqCR.  A ^V's is needed
+because without it the CR would end the  :  command,  rather
+than  becoming  part  of  the _m_a_p definition.  There are two
+^_V's because from within _v_i, two ^_V's must be typed  to  get
+one.  The first CR is part of the _r_h_s, the second terminates
+the : command.
+
+     Macros can be deleted with
+
+        unmap lhs
+
+
+     If the _l_h_s of a macro is ``#0''  through  ``#9'',  this
+maps  the particular function key instead of the 2 character
+``#'' sequence.  So that terminals without function keys can
+access  such definitions, the form ``#x'' will mean function
+key _x on all terminals (and need not  be  typed  within  one
+second.) The character ``#'' can be changed by using a macro
+in the usual way:
+
+        :map ^V^V^I #
+
+to use tab, for example.  (This won't affect  the  _m_a_p  com-
+mand,  which  still  uses  #,  but  just the invocation from
+visual mode.
+
+     The undo command reverses an entire  macro  call  as  a
+unit, if it made any changes.
+
+     Placing a `!' after the word _m_a_p causes the mapping  to
+apply  to  input  mode,  rather than command mode.  Thus, to
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 26 -
+
+
+arrange for ^T to be the same as 4 spaces in input mode, you
+can type:
+
+        :map ^T ^Vb/b/b/b/
+
+where _b/ is a blank.  The ^V  is  necessary  to  prevent  the
+blanks  from  being taken as white space between the _l_h_s and
+_r_h_s.
+
+_7.  _W_o_r_d _A_b_b_r_e_v_i_a_t_i_o_n_s ++++
+
+     A feature similar to  macros  in  input  mode  is  word
+abbreviation.  This allows you to type a short word and have
+it expanded into a longer word or words.  The  commands  are
+:_a_b_b_r_e_v_i_a_t_e  and  :_u_n_a_b_b_r_e_v_i_a_t_e  (:ab and :_u_n_a) and have the
+same syntax as :_m_a_p.  For example:
+
+        :ab eecs Electrical Engineering and Computer Sciences
+
+causes the word `eecs' to always be changed into the  phrase
+`Electrical Engineering and Computer Sciences'.  Word abbre-
+viation is different from macros in that  only  whole  words
+are  affected.   If  `eecs'  were  typed as part of a larger
+word, it would be left alone.  Also,  the  partial  word  is
+echoed as it is typed.  There is no need for an abbreviation
+to be a single keystroke, as it should be with a macro.
+
+_7._1.  _A_b_b_r_e_v_i_a_t_i_o_n_s
+
+     The editor has a number of short commands which  abbre-
+viate  longer  commands  which we have introduced here.  You
+can find these commands easily on the quick reference  card.
+They  often  save  a bit of typing and you can learn them as
+convenient.
+
+_8.  _N_i_t_t_y-_g_r_i_t_t_y _d_e_t_a_i_l_s
+
+_8._1.  _L_i_n_e _r_e_p_r_e_s_e_n_t_a_t_i_o_n _i_n _t_h_e _d_i_s_p_l_a_y
+
+     The editor folds long logical lines onto many  physical
+lines  in the display.  Commands which advance lines advance
+logical lines and will skip over all the segments of a  line
+in one motion.  The command | moves the cursor to a specific
+column, and may be useful for getting near the middle  of  a
+long  line  to split it in half.  Try 80| on a line which is
+more than 80 columns long.+
+
+     The editor only puts full  lines  on  the  display;  if
+there  is  not  enough  room on the display to fit a logical
+_________________________
+++++ Version 3 only.
++ You can make long lines very easily  by  using  J  to
+join together short lines.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 27 -
+
+
+line, the editor leaves the  physical  line  empty,  placing
+only  an  @  on the line as a place holder.  When you delete
+lines on a dumb terminal, the editor will often  just  clear
+the  lines to @ to save time (rather than rewriting the rest
+of the screen.) You can always maximize the  information  on
+the screen by giving the ^R command.
+
+     If you wish, you can have the editor place line numbers
+before  each line on the display.  Give the command :se nuCR
+to enable this, and the command :se nonuCR to turn  it  off.
+You  can  have  tabs represented as ^I and the ends of lines
+indicated with `$' by giving the  command  :se  listCR;  :se
+nolistCR turns this off.
+
+     Finally, lines consisting of only the character `~' are
+displayed when the last line in the file is in the middle of
+the screen.  These represent physical lines which  are  past
+the logical end of file.
+
+_8._2.  _C_o_u_n_t_s
+
+     Most _v_i commands will use a preceding count  to  affect
+their  behavior  in some way.  The following table gives the
+common ways in which the counts are used:
+
+
+        new window size      :  /  ?  [[  ]]  `  '
+        scroll amount        ^D  ^U
+        line/column number   z  G  |
+        repeat effect        most of the rest
+
+
+
+     The editor maintains a notion of  the  current  default
+window  size.  On terminals which run at speeds greater than
+1200 baud the editor uses the full terminal screen.  On ter-
+minals  which  are  slower than 1200 baud (most dialup lines
+are in this group) the editor uses 8 lines  as  the  default
+window size.  At 1200 baud the default is 16 lines.
+
+     This size is the size used when the editor  clears  and
+refills  the screen after a search or other motion moves far
+from the edge of the current  window.   The  commands  which
+take  a  new window size as count all often cause the screen
+to be redrawn.  If you anticipate this, but do not  need  as
+large  a  window as you are currently using, you may wish to
+change the screen size by specifying  the  new  size  before
+these  commands.   In  any case, the number of lines used on
+the screen will expand if you move off the top with a  -  or
+similar  command  or  off  the bottom with a command such as
+RETURN or ^D.  The window will revert to the last  specified
+size the next time it is cleared and refilled.+
+_________________________
++ But not by a ^L which just redraws the screen  as  it
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 28 -
+
+
+     The scroll commands ^D and  ^U  likewise  remember  the
+amount of scroll last specified, using half the basic window
+size initially.  The simple insert commands use a  count  to
+specify a repetition of the inserted text.  Thus 10a+----ESC
+will insert a grid-like string of text.  A few commands also
+use a preceding count as a line or column number.
+
+     Except for a few commands which ignore any counts (such
+as ^R), the rest of the editor commands use a count to indi-
+cate a simple repetition of their effect.  Thus 5w  advances
+five  words on the current line, while 5RETURN advances five
+lines.  A very useful instance of a count as a repetition is
+a  count  given  to  the  .  command, which repeats the last
+changing command.  If you do dw and then 3., you will delete
+first  one  and  then  three words.  You can then delete two
+more words with 2..
+
+_8._3.  _M_o_r_e _f_i_l_e _m_a_n_i_p_u_l_a_t_i_o_n _c_o_m_m_a_n_d_s
+
+     The following table lists the  file  manipulation  com-
+mands which you can use when you are in _v_i.
+
+
+        :w           write back changes
+        :wq          write and quit
+        :x           write (if necessary) and quit (same as ZZ).
+        :e _n_a_m_e      edit file _n_a_m_e
+        :e!          reedit, discarding changes
+        :e + _n_a_m_e    edit, starting at end
+        :e +_n        edit, starting at line _n
+        :e #         edit alternate file
+        :w _n_a_m_e      write file _n_a_m_e
+        :w! _n_a_m_e     overwrite file _n_a_m_e
+        :_x,_yw _n_a_m_e   write lines _x through _y to _n_a_m_e
+        :r _n_a_m_e      read file _n_a_m_e into buffer
+        :r !_c_m_d      read output of _c_m_d into buffer
+        :n           edit next file in argument list
+        :n!          edit next file, discarding changes to current
+        :n _a_r_g_s      specify new argument list
+        :ta _t_a_g      edit file containing tag _t_a_g, at _t_a_g
+
+
+All of these commands are followed by a CR or ESC.  The most
+basic commands are :w and :e.  A normal editing session on a
+single file will end with a ZZ command.  If you are  editing
+for a long period of time you can give :w commands occasion-
+ally after major amounts of editing, and then finish with  a
+ZZ.    When you edit more than one file, you can finish with
+one with a :w and start editing a new file by  giving  a  :e
+command, or set _a_u_t_o_w_r_i_t_e and use :n <file>.
+
+_________________________
+is.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 29 -
+
+
+     If you make changes to the editor's copy of a file, but
+do  not  wish  to  write  them back, then you must give an !
+after the command you would otherwise use; this  forces  the
+editor to discard any changes you have made.  Use this care-
+fully.
+
+     The :e command can be given a + argument  to  start  at
+the  end  of  the file, or a +_n argument to start at line _n.
+In actuality, _n may be any editor command not  containing  a
+space,  usefully a scan like +/_p_a_t or +?_p_a_t.  In forming new
+names to the e command, you can use the character % which is
+replaced  by the current file name, or the character # which
+is replaced by the alternate file name.  The alternate  file
+name  is  generally  the  last name you typed other than the
+current file.  Thus if you try to do a :e and get a diagnos-
+tic  that  you  haven't  written the file, you can give a :w
+command and then a :e # command to redo the previous :e.
+
+     You can write part of the buffer to a file  by  finding
+out  the  lines that bound the range to be written using ^G,
+and giving these numbers after  the  :  and  before  the  w,
+separated  by ,'s.  You can also mark these lines with m and
+then use an address of the form '_x,'_y on the w command here.
+
+     You can read another file into  the  buffer  after  the
+current  line  by  using  the :r command.  You can similarly
+read in the output from a command, just use !_c_m_d instead  of
+a file name.
+
+     If you wish to edit a set of files in  succession,  you
+can  give  all  the names on the command line, and then edit
+each one in turn using the command :n.  It is also  possible
+to respecify the list of files to be edited by giving the :n
+command a list of file names, or a pattern to be expanded as
+you would have given it on the initial _v_i command.
+
+     If you are editing large programs, you  will  find  the
+:ta  command  very useful.  It utilizes a data base of func-
+tion names and their locations, which can be created by pro-
+grams  such  as _c_t_a_g_s, to quickly find a function whose name
+you give.  If the :ta command will  require  the  editor  to
+switch files, then you must :w or abandon any changes before
+switching.  You can repeat the :ta command without any argu-
+ments  to  look for the same tag again.  (The tag feature is
+not available in some v2 editors.)
+
+_8._4.  _M_o_r_e _a_b_o_u_t _s_e_a_r_c_h_i_n_g _f_o_r _s_t_r_i_n_g_s
+
+     When you are searching for strings in the file  with  /
+and  ?, the editor normally places you at the next or previ-
+ous occurrence of the string.  If you are using an  operator
+such as d, c or y, then you may well wish to affect lines up
+to the line before the line containing the pattern.  You can
+give  a search of the form /_p_a_t/-_n to refer to the _n'th line
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 30 -
+
+
+before the next line  containing  _p_a_t,  or  you  can  use  +
+instead  of - to refer to the lines after the one containing
+_p_a_t.  If you don't give a line offset, then the editor  will
+affect  characters  up to the match place, rather than whole
+lines; thus use ``+0'' to affect to the line which matches.
+
+     You can have the editor ignore the case of words in the
+searches  it  does by giving the command :se icCR.  The com-
+mand :se noicCR turns this off.
+
+     Strings given  to  searches  may  actually  be  regular
+expressions.   If you do not want or need this facility, you
+should
+
+        set nomagic
+
+in your EXINIT.  In this case, only the characters |^  and  $
+are  special in patterns.  The character \ is also then spe-
+cial (as it is most everywhere in the system),  and  may  be
+used  to  get  at the an extended pattern matching facility.
+It is also necessary to use a \ before a / in a forward scan
+or a ? in a backward scan, in any case.  The following table
+gives the extended forms when magic is set.
+
+
+        |^        at beginning of pattern, matches beginning of line
+        $        at end of pattern, matches end of line
+        .        matches any character
+        \<       matches the beginning of a word
+        \>       matches the end of a word
+        [_s_t_r]    matches any single character in _s_t_r
+        [|^_s_t_r]   matches any single character not in _s_t_r
+        [_x-_y]    matches any character between _x and _y
+        *        matches any number of the preceding pattern
+
+
+If you use nomagic mode, then the . [ and *  primitives  are
+given with a preceding \.
+
+_8._5.  _M_o_r_e _a_b_o_u_t _i_n_p_u_t _m_o_d_e
+
+     There are a number of characters which you can  use  to
+make corrections during input mode.  These are summarized in
+the following table.
+
+
+
+
+
+
+
+
+
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 31 -
+
+
+
+
+        ^H      deletes the last input character
+        ^W      deletes the last input word, defined as by b
+        erase   your erase character, same as ^H
+        kill    your kill character, deletes the input on this line
+        \       escapes a following ^H and your erase and kill
+        ESC     ends an insertion
+        DEL     interrupts an insertion, terminating it abnormally
+        CR      starts a new line
+        ^D      backtabs over _a_u_t_o_i_n_d_e_n_t
+        0^D     kills all the _a_u_t_o_i_n_d_e_n_t
+        |^^D     same as 0^D, but restores indent next line
+        ^V      quotes the next non-printing character into the file
+
+
+
+     The most usual way of making corrections to input is by
+typing ^H to correct a single character, or by typing one or
+more ^W's to back over incorrect words.  If  you  use  #  as
+your erase character in the normal system, it will work like
+^H.
+
+     Your system kill character, normally @, ^X or ^U,  will
+erase  all the input you have given on the current line.  In
+general, you can neither erase  input  back  around  a  line
+boundary  nor  can  you  erase  characters which you did not
+insert with this insertion command.  To make corrections  on
+the  previous line after a new line has been started you can
+hit ESC to end the insertion, move over and make the correc-
+tion,  and  then  return to where you were to continue.  The
+command A which appends at the end of the  current  line  is
+often useful for continuing.
+
+     If you wish to type in your  erase  or  kill  character
+(say  # or @) then you must precede it with a \, just as you
+would do at the normal system command level.  A more general
+way  of  typing  non-printing characters into the file is to
+precede them with a ^V.  The ^V echoes as a |^  character  on
+which  the  cursor  rests.   This  indicates that the editor
+expects you to type a control character.  In  fact  you  may
+type  any character and it will be inserted into the file at
+that point.*
+_________________________
+* This is not quite true.  The  implementation  of  the
+editor does not allow the NULL (^@) character to appear
+in files.  Also the LF (linefeed or  ^J)  character  is
+used by the editor to separate lines in the file, so it
+cannot appear in the middle of a line.  You can  insert
+any  other character, however, if you wait for the edi-
+tor to echo the |^ before you type  the  character.   In
+fact, the editor will treat a following letter as a re-
+quest for the corresponding control character.  This is
+the only way to type ^S or ^Q, since the system normal-
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 32 -
+
+
+     If you are using _a_u_t_o_i_n_d_e_n_t you can  backtab  over  the
+indent which it supplies by typing a ^D.  This backs up to a
+_s_h_i_f_t_w_i_d_t_h boundary.  This only works immediately after  the
+supplied _a_u_t_o_i_n_d_e_n_t.
+
+     When you are using _a_u_t_o_i_n_d_e_n_t you may wish to  place  a
+label  at  the  left  margin  of a line.  The way to do this
+easily is to type |^ and then ^D.  The editor will  move  the
+cursor to the left margin for one line, and restore the pre-
+vious indent on the next.  You can also type  a  0  followed
+immediately  by  a ^D if you wish to kill all the indent and
+not have it come back on the next line.
+
+_8._6.  _U_p_p_e_r _c_a_s_e _o_n_l_y _t_e_r_m_i_n_a_l_s
+
+     If your terminal has only upper case, you can still use
+_v_i  by using the normal system convention for typing on such
+a terminal.  Characters which you  normally  type  are  con-
+verted to lower case, and you can type upper case letters by
+preceding them with a \.  The characters { ~ } | `  are  not
+available  on  such terminals, but you can escape them as \(
+\|^ \) \!  \'.   These  characters  are  represented  on  the
+display in the same way they are typed.++ ++
+
+_8._7.  _V_i _a_n_d _e_x
+
+     _V_i is actually one mode of editing  within  the  editor
+_e_x.   When  you  are  running  _v_i you can escape to the line
+oriented editor of _e_x by giving the command Q.  All of the :
+commands  which  were  introduced above are available in _e_x.
+Likewise, most _e_x commands can be invoked from _v_i  using  :.
+Just give them without the : and follow them with a CR.
+
+     In rare instances, an internal error may occur  in  _v_i.
+In  this  case  you will get a diagnostic and be left in the
+command mode of _e_x.  You can then save your work and quit if
+you  wish by giving a command x after the : which _e_x prompts
+you with, or you can reenter _v_i by giving _e_x a _v_i command.
+
+     There are a number of things  which  you  can  do  more
+easily  in  _e_x  than  in  _v_i.   Systematic  changes  in line
+oriented material are particularly easy.  You can  read  the
+advanced  editing  documents for the editor _e_d to find out a
+lot more about this style  of  editing.   Experienced  users
+often  mix  their use of _e_x command mode and _v_i command mode
+to speed the work they are doing.
+_________________________
+ly uses them to suspend and  resume  output  and  never
+gives them to the editor to process.
+++  The  \  character  you give will not echo until you
+type another key.
+++ Not available in all v2 editors due to  memory  con-
+straints.
+
+
+
+
+                       July 21, 1991
+
+
+
+
+
+                           - 33 -
+
+
+_8._8.  _O_p_e_n  _m_o_d_e:  _v_i  _o_n  _h_a_r_d_c_o_p_y  _t_e_r_m_i_n_a_l_s  _a_n_d  ``_g_l_a_s_s
+_t_t_y'_s'' |=
+
+     If you are on a hardcopy terminal or a  terminal  which
+does  not  have a cursor which can move off the bottom line,
+you can still use the command set of _v_i, but in a  different
+mode.   When you give a _v_i command, the editor will tell you
+that it is using _o_p_e_n mode.  This name comes from  the  _o_p_e_n
+command in _e_x, which is used to get into the same mode.
+
+     The only difference between _v_i_s_u_a_l mode and  _o_p_e_n  mode
+is the way in which the text is displayed.
+
+     In _o_p_e_n mode the editor uses a single line window  into
+the file, and moving backward and forward in the file causes
+new lines to be displayed, always below  the  current  line.
+Two  commands of _v_i work differently in _o_p_e_n: _z and ^R.  The
+_z command does not take parameters, but rather draws a  win-
+dow  of context around the current line and then returns you
+to the current line.
+
+     If you are on a hardcopy terminal, the ^_R command  will
+retype the current line.  On such terminals, the editor nor-
+mally uses two lines to represent  the  current  line.   The
+first  line is a copy of the line as you started to edit it,
+and you work on the line below this line.  When  you  delete
+characters, the editor types a number of \'s to show you the
+characters which are deleted.  The editor also reprints  the
+current  line  soon  after  such changes so that you can see
+what the line looks like again.
+
+     It is sometimes useful to use this mode  on  very  slow
+terminals which can support _v_i in the full screen mode.  You
+can do this by entering _e_x and using an _o_p_e_n command.
+
+
+_A_c_k_n_o_w_l_e_d_g_e_m_e_n_t_s
+
+     Bruce Englar encouraged the early development  of  this
+display  editor.   Peter Kessler helped bring sanity to ver-
+sion 2's command layout.  Bill Joy wrote versions 1 and  2.0
+through 2.7, and created the framework that users see in the
+present editor.  Mark Horton added macros and other features
+and  made the editor work on a large number of terminals and
+Unix systems.
+
+
+
+
+
+
+
+
+
+
+
+
+                       July 21, 1991
+
+
