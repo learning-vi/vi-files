@@ -1,0 +1,46 @@
+Newsgroups: comp.editors
+From: bowles@mizar.s.u-tokyo.ac.jp (Eric E. Bowles)
+Subject: Re: completion in vi
+Organization: Dept of Info Sci, University of Tokyo, Japan
+Date: Mon, 18 May 1992 07:32:50 GMT
+Lines: 37
+
+"Julian L. Ho" <jh6j+@andrew.cmu.edu> writes:
+: Eric Bowles word completion macros (file "complete" in the vi FTP
+: archive) would not work on the version of vi shipped with Ultrix
+: (Version 3.7, 18-Oct-85).  I have what I think is a working version of
+: "Komplete".  "Next" and "Previous" still don't work. 
+: 
+: Comments are welcome.
+: 
+: :map! ^K ^[a. ^[hbmzi?\<^[2h"zdt.@z^Mmxii^["zdwu`z@z^[bea ^[dwbis^["zdt.x@z
+: 
+: -J
+
+I found out that the original ^N (next) and ^P (previous) macros didn't work
+properly with the SunOS 4.1 vi ("Version SVR3.1").  Apparently the editor
+forgets the `m marker initially set while executing ^K (komplete).  Here's 
+what I currently use:
+
+    " Word completion (Komplete, Next, Previous).
+    map! ^K ^[a. ^[hbmmi?\<^[2h"zdt.@z^Mywmx`mPbea ^[dwbis^["zdt.x@z
+    map! ^N ^[a. ^[hbdwmm`xnywmx`mPbea ^[dwbis^["zdt.x@z
+    map! ^P ^[a. ^[hbdwmm`xNywmx`mPbea ^[dwbis^["zdt.x@z
+
+(Remember to convert ^K to ctrl-K, etc., because the above has been filtered
+through "cat -v".)
+
+I can't comment on whether the above macros work with Ultrix vi; they
+do work with Sun's "Version SVR3.1" and "Version 3.7, 6/7/85".
+
+By the way, has anybody ever tabulated all the vi versions 
+in existence, noting any incompatibilities?  It seems there are 
+subtle differences even among the "Version 3.7"s.
+
+--eric
+-------------------------------------------------------------------------------
+Eric Edward Bowles              Department of Information Science
+<bowles@is.s.u-tokyo.ac.jp>     Faculty of Science, University of Tokyo
++81-3-3812-2111 ext 4096        7-3-1 Hongo, Bunkyo-ku, Tokyo, 113, Japan.
+
+
