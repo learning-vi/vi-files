@@ -1,0 +1,34 @@
+	Wow. Enough mail reached me to justify posting this. This is
+a shar of a vi summary and a short tutorial on writing macros. I have
+also included a sample .exrc file that I use for programming.
+
+	Thank Yous:
+
+	I owe thanks to a couple of people who recently posted vi info
+to the net. A good summary came from: (very well laid out)
+
+	maart@cs.vu.nl (Maarten Litmaath)
+	VU Informatica, Amsterdam
+
+	A macro package with lots of files also was helpful. Thanks also
+to:
+
+Greg McGary --		gmcgary@ecd.sun.com
+			gmcgary@suneast.uu.net
+
+	For developing mkid, gid, aid, eid, and co. My macros allow you
+to quickly use the ID database that mkid generates.
+
+	Forward:
+
+	It's amazing how much power there is in vi, once you get past
+the initial learning bunny slope :-) There are many complete summaries
+out there, but fewer sources of info about macros. I'd like to help
+change that... I'll update this soon, but want to post what I have
+now.
+
+			dan
+
+dan smith, island graphics, marin co., ca  | "My opinions: you can borrow them,
+uucp: ..!ucbvax!ucbcad!island!daniel       |  but don't take them out bowling"
+uucp: ..!ptsfa!unicom!daniel !well!daniels |  (415) 332 FAST (h) 491 1000 (w)
