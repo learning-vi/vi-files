@@ -1,0 +1,1033 @@
+From dberg@informix.com (David I. Berg)
+Newsgroups: comp.editors
+Subject: Re: In vi: How to delete from str1 to str2 ?
+Date: 6 Oct 91 20:42:49 GMT
+Status: O
+
+In article <1991Oct6.073919.9071@acsu.buffalo.edu> xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+>Suppose I have 
+>
+>blabla string1 more blabla string2 
+>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>
+>and Now I wnat to delete all the underlined ( from string1 to string2 )
+>or replace it by something else, how do I do it in vi ? 
+
+You can delete/change/yank from the cursor position up to but not
+including a character string. If, for instance, the character string
+following string2 was " string3", you would position your cursor on the
+first character you wish to delete/change/yank and enter 'd/ string3<cr>'
+to delete the underscored string in your example. (You would use 'y' to
+yank, and 'c' to change the string.) You can do this across several lines,
+eg. position your cursor on "instance" above and 'd/ example<cr>'. In the
+special case where you wish to delete/change/yank through the end of the
+line, just plain 'D' will delete and 'C' will change through the end of
+the line. If you wish to yank throuh the end of the line, you must 'y$'.
+
+  ___                   ___              Consultant, Client Srvcs Engineering
+  /  ) __      . __/    /_ ) _       __  Informix Software Inc. (303) 850-0210
+_/__/ (_(_ (/ / (_(_  _/__> (-' -/~ (_-  5299 DTC Blvd #740 Englewood CO 80111
+{uunet|pyramid}!infmx!dberg       The opinions expressed herein are mine alone.
+
+
+From hrjoist@immd4.informatik.uni-erlangen.de (Holger Joist)
+Newsgroups: comp.editors
+Subject: Re: In vi: How to delete from str1 to str2 ?
+Date: 7 Oct 91 12:26:40 GMT
+Status: O
+
+xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+
+>Suppose I have 
+
+>blabla string1 more blabla string2 
+>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+>and Now I wnat to delete all the underlined ( from string1 to string2 )
+>or replace it by something else, how do I do it in vi ? 
+
+How about:
+:s/string1.*string2/somethingelse/
+
+where somethingelse can be an empty string.
+
+Holger
+---
+Name  : Holger Joist
+E-Mail: hrjoist@medusa.informatik.uni-erlangen.de
+
+
+From soh@andromeda.trl.OZ.AU (Kam Hung Soh)
+Newsgroups: comp.editors
+Subject: Re: In vi: How to delete from str1 to str2 ?
+Date: 7 Oct 91 22:12:04 GMT
+Status: O
+
+>Suppose I have 
+
+>blabla string1 more blabla string2 
+>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+>and Now I wnat to delete all the underlined ( from string1 to string2 )
+>or replace it by something else, how do I do it in vi ? 
+
+You can try: 4cE
+              ^^
+              ||
+              |+--- End of space-delimited word
+              +---- Change
+
+``E'' can be substituted with ``W'' in this case. 
+
+If you have the following line instead (C and C++ programming for
+accessing a member of a structure or record):
+
+blabla string1.more.blabla.string2
+
+You will have to type: ``7cw'' or ``7ce'' or ``cW'' or ``cE''.  The
+lowercase range is used when words are not space delimited.  You can
+also type ``C'' (in the same vein as ``D'' for delete until end of
+line) when you have to change all words until the end of the line.
+
+Regards,
+
+---
+Soh, Kam Hung      email: h.soh@trl.oz.au     tel: +61 3 541 6836 
+Telecom Research Laboratories, POB 249 Clayton, Victoria 3168, Australia 
+
+
+From dylan@ibmpcug.co.uk (Matthew Farwell)
+Newsgroups: comp.editors
+Subject: Re: In vi: How to delete from str1 to str2 ?
+Date: 7 Oct 91 08:21:53 GMT
+Reply-To: dylan@ibmpcug.co.uk (Matthew Farwell)
+Status: O
+
+In article <1991Oct6.073919.9071@acsu.buffalo.edu> xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+>Suppose I have 
+>blabla string1 more blabla string2 
+>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>and Now I wnat to delete all the underlined ( from string1 to string2 )
+>or replace it by something else, how do I do it in vi ? 
+
+:s/string1.*string2/wobble wobble im a gertrude/
+
+Dylan.
+-- 
+dylan@ibmpcug.co.uk || ...!uunet!uknet!ibmpcug!dylan
+Just follow the simple rule - Rob Pike
+
+
+From bill@camco.Celestial.COM (Bill Campbell)
+Newsgroups: comp.editors
+Subject: Re: In vi: How do I put line numbers in frant of each line ?
+Date: 8 Oct 91 04:04:53 GMT
+Status: O
+
+1:In <1991Oct6.214237.2266@acsu.buffalo.edu> xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+2:>Suppose I have 
+3:>bla
+4:>blabla
+5:>blablabla
+6:>......
+7:>I would like to change it to 
+8:>1 bla
+9:>2 blabla
+10:>3 blablabla
+11:>......
+12:>Is there a way to do this automatically in vi ? 
+13:One way to do this within vi would be to put the cursor at the
+14:beginning of the first line and press !Ggrep -n '^.*$'  As I did
+15:here (except that I put it at the beginning of the body of the
+16:message).  This gives line number separated by ':'
+17:
+18:Bill
+-- 
+INTERNET:  bill@Celestial.COM   Bill Campbell; Celestial Software
+UUCP:   ...!thebes!camco!bill   6641 East Mercer Way
+             uunet!camco!bill   Mercer Island, WA 98040; (206) 947-5591
+
+
+From roger@quantime.co.uk (Roger Phillips)
+Newsgroups: comp.editors
+Subject: Re: writing from buffers
+Date: 11 Oct 91 16:02:41 GMT
+Status: O
+
+In article <1991Oct10.081809.16080@apricot.co.uk>,
+peters@apricot.co.uk (Peter Smith) writes:
+> Is is possible in vi to write from named buffers?
+> This seems a perfectly acceptable thing to do,
+> but attempts using ":'aw filename" do not appear to work.
+                       ^^
+The single quote means "the line marked 'a'".
+In vi, you refer to named buffers using "a (for example).
+But in ex (the mode you're in for a command starting with ':'),
+the " is a comment symbol, so
+:"aw filename
+is simply a comment, with no effect.
+Named buffers are purely a vi-mode thing, I think,
+so, no, you can't refer to them in any ex-mode commands
+(such as :w).
+
+However, since you have what you want in a named buffer,
+you can use
+:e filename<RETURN>"ap
+that is, edit the new file and 'put' the buffer contents.
+
+-- 
+Roger Phillips                          roger@quantime.co.uk
+
+
+From mitchell@mdd.comm.mot.com (Bill Mitchell)
+Newsgroups: comp.editors
+Subject: Re: How to disable 'vi' beep?
+Keywords: beep bell dope vi
+Date: 21 Oct 91 15:43:01 GMT
+Status: O
+
+In article <1665@baby.and.nl> jos@and.nl (Jos Horsmeier) writes:
+>In article <1991Oct18.172458.17044@ux1.cso.uiuc.edu> d-lewart@uiuc.edu (Daniel S. Lewart) writes:
+>|There is a novice 'vi' user in my office.  Every two seconds a beep emanates
+>|from his terminal.  How can this beep be disabled?  Typing 'set noerrorbells'
+>|does not disable the beep one gets from pressing the 'Escape' key ten times.
+>
+>I would have loved to know the answer to that! Years ago I worked at a 
+>university with lots of newbies. All these beeps worked like a chinese
+>water torture! We ended up, cutting all the wires from the speakers ...
+>We couldn't stand it no more 8^)
+>
+>Jos aka jos@and.nl
+
+You might try having novice users invoke vi thru a shell script like
+the following:
+
+    vi x | tr -d '\007'
+-- 
+mitchell@mdd.comm.mot.com (Bill Mitchell)
+
+
+From mitchell@mdd.comm.mot.com (Bill Mitchell)
+Newsgroups: comp.editors
+Subject: Re: How to disable 'vi' beep?
+Keywords: beep bell dope vi
+Date: 21 Oct 91 16:11:32 GMT
+Status: O
+
+In article <1991Oct21.154301.12900@mdd.comm.mot.com> mitchell@mdd.comm.mot.com (Bill Mitchell) writes:
+>
+>You might try having novice users invoke vi thru a shell script like
+>the following:
+>
+>    vi x | tr -d '\007'
+
+Let me be the first to take myself to task for posting this in haste.
+
+1.  This worked at a quick trial from the command line, and I posted.
+
+2.  After seeing it appear (oops), I tried it as a script with "$1"
+    instead of "x".  Suprise - it didn't work.  BELs got through.
+    Seems my shell issues BELs at multiple escapes, and tr isn't placed to
+    filter these BELs off.
+
+3.  This approach might have problems anyway (and might not) depending
+    on what type of terminal the user is using.  On some terminals, the
+    '\007' might show up other than as a BEL character - as part of a
+    cursor positioning sequence for example.
+
+Anyway, it might be worth trying
+
+    vi filename | tr -d '\007'
+
+from the command line.  If that works, maybe it'll work as an alias.
+
+-- 
+mitchell@mdd.comm.mot.com (Bill Mitchell)
+
+
+From ruhtra@turing.toronto.edu (Arthur Tateishi)
+Newsgroups: comp.editors
+Subject: Re: Tabs as spaces in VI.
+Date: 22 Oct 91 04:25:58 GMT
+Status: O
+
+In article <1991Oct21.221438.223@acsu.buffalo.edu> xiaofei@acsu.buffalo.edu (XiaoFei Wang) writes:
+>/* From the keyboard of eric@tfs.com (Eric Smith) */:
+>* I'm not sure what the original poster wanted, but can someone tell me
+>* how to disable vi's usage of tab as a fill character?  i.e., when it
+>* does autoindent, it uses a mixture of tabs and spaces.  I just want it
+>* to use spaces.
+>
+>In my opinion, TABs are just a group of spaces and I prefer spaces and
+>use TABs as less as possible.
+>
+>To answer your question as how to disable vi's usage TAB as filling 
+>character, you need to
+>
+>set tabstop=1
+>
+>This will set TAB = a single space. I have tested and it worked. 
+
+Not quite. It looks right in vi but what you have really done is
+cause lots and lots of tabs to be inserted into the document in
+order to get indenting. Instead, use:
+set tabstop=200
+So that vi thinks it can't use tabs to get the required small amount
+of indent. Of course, this now becomes dangerous when you actually
+hit tab or load in files with tabs already present. Therefore,
+you may also consider mapping tab in insert mode to ^D which does
+the desired thing a lot of the time.
+map! ^V^I ^D
+
+-- 
+"The first fact to face is that UNIX was not developed with security, in any
+reliable sense, in mind; this fact alone guarantees a vast number of holes."
+    -- "On the Security of UNIX", Dennis M. Ritchie
+Arthur Tateishi                 ruhtra@turing.utoronto.ca
+
+
+From krisk@ux1.cso.uiuc.edu (Kris Klindworth)
+Newsgroups: comp.editors
+Subject: Re: vi question, replace second occurence
+Keywords: vi, s-e
+Date: 24 Oct 91 16:24:54 GMT
+Status: O
+
+hess@rosun1.informatik.uni-hamburg.de (Hauke Hess) writes:
+
+>Hi,
+
+>I'm working on a TeXnification of the jargon file.  That's not too difficult,
+>but there is one thing I would like to do by Search&Replace, which I don't
+>know how:
+
+>In the Jargonfile are many words enclosed in ", like the following sentence
+
+>the "slow" brown fox jumps over the "crazy" dog.
+
+>I want to change that sentence in:
+
+>the ``slow'' brown fox jumps over the ``crazy'' dog.
+
+>for the sake of typographical correctness. In other words: how do I replace
+>each second occurence of a string with another, with not respect to lineends 
+>between the words?
+>So a sentence like
+
+>there is a "problem
+>extraordinaire" in here.
+
+>should be replaced as well.
+
+>I thought it would have somthing to do with "finding the Nth occurrence" 
+>as asked a few letters ago, but the answers on that weren't that helpfull.
+
+
+For this problem you can use
+:%s/"\</``/
+and
+:%s/\>"/''/
+
+The special pattern \< matches the beginning of what vi considers a word
+and \> matches the end.  You'll still have to check the file to resolve
+the cases that vi didn't consider words, but this should handle the 
+bulk of your changes.
+
+
+------------------------------------------------------------------------------
+Kris Klindworth                    Internet: krisk@ux1.cso.uiuc.edu
+Database Programmer/Analyst        Phone   : (217)244-7120
+Illinois State Water Survey        US Mail : 2204 Griffith Dr
+                                             Champaign, IL 61820
+
+
+From gwc@root.co.uk (Geoff Clare)
+Newsgroups: comp.editors
+Subject: Re: vi question - am I so different?
+Date: 24 Oct 91 18:07:31 GMT
+Status: O
+
+In <28900002@teecs.UUCP> belkin@teecs.UUCP (Hershel Belkin) writes:
+
+>Thanks for the attempted answers, but no cigar yet!!
+>Any other suggestions, or should I start looking for
+>a _real_ editor?
+
+Here's a macro that provides repeated "n" commands.
+
+	:map ^N In^V^[l"zd^@z
+
+where ^V, ^N and ^[ are CTRL-V, CTRL-N and ESC (but ^@ is ^ then @).
+
+To use it, search for the first occurrence of the string, then type
+
+	<number> CTRL-N
+
+E.g. to search for the 96th occurrence of the string "xyz", type:
+
+	/xyz^M96^N
+
+The reason this has a 96 instead of a 95 is that the macro actually
+searches from the beginning of the current line, not from the cursor, so
+it finds the first match again (unless it's at the beginning of the line!)
+You just have to be a bit careful when there are multiple matches on a
+line, otherwise it works OK.
+
+If anyone can think of a way round the "beginning of line" problem, I'd
+like to hear it!
+-- 
+Geoff Clare <gwc@root.co.uk>  (USA UUCP-only mailers: ...!uunet!root.co.uk!gwc)
+UniSoft Limited, London, England.   Tel: +44 71 729 3773   Fax: +44 71 729 3273
+
+
+From krisk@ux1.cso.uiuc.edu (Kris Klindworth)
+Newsgroups: comp.editors
+Subject: Re: vi question - am I so different?
+Date: 24 Oct 91 22:48:08 GMT
+Status: O
+
+gwc@root.co.uk (Geoff Clare) writes:
+
+>In <28900002@teecs.UUCP> belkin@teecs.UUCP (Hershel Belkin) writes:
+
+>>Thanks for the attempted answers, but no cigar yet!!
+>>Any other suggestions, or should I start looking for
+>>a _real_ editor?
+
+>Here's a macro that provides repeated "n" commands.
+
+>	:map ^N In^V^[l"zd^@z
+
+>where ^V, ^N and ^[ are CTRL-V, CTRL-N and ESC (but ^@ is ^ then @).
+
+>If anyone can think of a way round the "beginning of line" problem, I'd
+>like to hear it!
+
+Cool solution.  Much better than the one I was about to post.  I  
+got around the beginning of line problem by marking the beginning position
+first and then returning to it before running the @z.
+Your macro would be something like this
+
+	:map ^N mzIn^V^[l"zd^`z@z
+
+------------------------------------------------------------------------------
+Kris Klindworth                    Internet: krisk@ux1.cso.uiuc.edu
+Database Programmer/Analyst        Phone   : (217)244-7120
+Illinois State Water Survey        US Mail : 2204 Griffith Dr
+                                             Champaign, IL 61820
+
+
+From malte@techfak.uni-bielefeld.de (Malte Uhl)
+Newsgroups: comp.editors
+Subject: Re: vi question - am I so different?
+Date: 25 Oct 91 10:17:39 GMT
+Status: O
+
+In article <3553@root44.co.uk>, gwc@root.co.uk (Geoff Clare) writes:
+|> 
+|> Here's a macro that provides repeated "n" commands.
+|> 
+|> 	:map ^N In^V^[l"zd^@z
+|> 
+|> where ^V, ^N and ^[ are CTRL-V, CTRL-N and ESC (but ^@ is ^ then @).
+|> 
+|> To use it, search for the first occurrence of the string, then type
+|> 
+|> 	<number> CTRL-N
+|> 
+|> E.g. to search for the 96th occurrence of the string "xyz", type:
+|> 
+|> 	/xyz^M96^N
+|> 
+|> The reason this has a 96 instead of a 95 is that the macro actually
+|> searches from the beginning of the current line, not from the cursor, so
+|> it finds the first match again (unless it's at the beginning of the line!)
+|> You just have to be a bit careful when there are multiple matches on a
+|> line, otherwise it works OK.
+|> 
+|> If anyone can think of a way round the "beginning of line" problem, I'd
+|> like to hear it!
+
+Here it is:
+ 	:map ^N In^V^[l"zd^n@z
+
+just add another n to it.
+
+One could also do some experiments with ``, which means "go back to the letter
+you were before the last command". I'm not familiar with this command; I
+usually use '', which goes back to the line before the last command.
+
+
+Article: 3325 of comp.editors
+From lshaw@ccwf.cc.utexas.edu (Logan Shaw)
+Subject: Re: vi question, replace second occurence
+Keywords: vi, s-e
+Date: 26 Oct 91 01:08:15 GMT
+
+hess@rosun1.informatik.uni-hamburg.de (Hauke Hess)
+
+wants to change 
+
+	the "slow" brown fox jumps over the "crazy" dog.
+
+to
+
+	the ``slow'' brown fox jumps over the ``crazy'' dog.
+
+>So a sentence like
+>
+>there is a "problem
+>extraordinaire" in here.
+>
+>should be replaced as well.
+
+His approach to the problem was to replace every _other_ occurence
+of the double quote character ('"').
+
+I'd like to suggest a different approach.  Replace the quote characters
+one of the two replacement strings, determining which to replace
+them with by the surrounding characters.
+
+If the quote is at the beginning of the line, it should be a beginning
+quote.  If at the end of the line, and end quote.  This assumes
+you're not going to have a sentence like this:
+
+	His name was "Phroed
+	" and he was green.
+
+nor like this:
+
+	I'm watching the TV program "
+	Matlock."
+
+If a quote has a alphanumeric character before it, and not after it,
+it should be replaced with and ending quote, and vice versa.  If it
+has a space before it and not after it, an ending quote, and vice versa.
+
+The regexp's for this would be something like:
+
+:%s/^"/``/
+:%s/"$/''/
+:%s/ "\([^ ]\)/ ``\1/g
+:%s/\([^ ]\)" /\1'' /g
+:%s/\([a-z0-9]\)"\([^a-z0-9]\)/\1''\2/g
+:%s/\([^a-z0-9]\)"\([a-z0-9]\)/\1``\2/g
+
+Hope this helps...
+
+Adios,
+  Logan
+-- 
+:     Our trial is which car to buy.  Temptation is that extra dessert.     :
+|In the land of orange juice you're better off with the right kind of shirt.|
+|        But take away the naivete; expose the sources of our fears.        |
+:We'll run to missiles if we're pushed too far- proceed to blow it all away.:
+
+
+From gast@oahu.cs.ucla.edu (David Gast)
+Newsgroups: comp.editors
+Subject: Re: vi question, replace second occurence
+Keywords: vi, s-e
+Date: 28 Oct 91 00:13:51 GMT
+Status: O
+
+In article <hess.688300281@rosun1> hess@rosun1.informatik.uni-hamburg.de (Hauke Hess) writes:
+
+> how do I replace each second occurence of a string with another [ignoring]
+> lineends.
+
+>there is a "problem
+>extraordinaire" in here.
+
+>should be replaced as well.
+
+First off, I am not sure that 100% automated process will work correctly.
+There is a chance that a problem will develop.  For example, there could
+be a " missing, or an extra one inserted in the wrong place.  Additionally,
+at some point, " could be used by itself as in this sentence.
+
+I would first check for some of the above and I would see if you have any
+"' or '" pairs.  Assuming that everything is as it should be, then I suggest
+the following.  It is not the fastest way possible, but you can look at
+the screen and make sure that everything appears to be working properly.
+
+1. /"    (that is, search for a ")
+2. put the cursor before the current position in file)
+
+3. Define the following maps.  You can use any lefthand side character that
+   you want.
+  
+  :map b ns``^V^M
+  :map e ns''^V^M
+  :map g bebebebebebebebebebebebebebebebebebebebebebebebebebebebebebebebebe
+
+4. Now type g as many times as necessary.  You could do something like
+
+  :map G ggggggggggggggggggggggggggggggggggggggggggggg
+
+  and then type G as many times as necessary.
+
+If you save your file frequently, then when something goes wrong, you have
+the problem isolated to a relatively small area.  Perhaps I am being
+pessimistic, but I suspect there is at least one typo in a file that
+has over one meg in it.
+
+David
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Newsgroups: comp.editors
+Subject: Re: removing first field from a number of lines with vi
+Date: 29 Oct 91 17:52:28 GMT
+Status: O
+
+In <5561@julian.uwo.ca> creider@taptet.sscl.uwo.ca (Chet A. Creider) writes:
+>I know this is easily done with awk, but would like to know if it
+>can be done with vi--if one has a file with data in tab-separated
+>fields and wants to remove the first field from each line (in other
+>words a dw done at the beginning of each line in the file), how
+>can this be done? 
+
+Those are two different questions.
+
+If you want to delete everything up to and including the first tab,
+you could do 
+
+:%s/[^	]*	//
+       ^    ^ those are tab characters
+
+If, on the other hand, you want the equivalent of a dw at the beginning of
+each line, you would say:
+
+:%s/[a-zA-Z0-9_]*[	 ]*//
+		  ^tab  ^space	
+
+You can leave off trailing slashes on a :s command if you hate wearing out
+your '/' key.  (Or you can use another punctuation character ;-)
+
+I don't see any obvious way to get either of these effects by filtering
+the buffer through awk.  But if you know an awk command that does what you
+want, you can say from within vi
+
+1G!G awk 'whatever'
+
+and it ought to work.
+
+--
+Hope this helps,
+
+Hans Mulder	hansm@cs.kun.nl
+
+From s887212@minyos.xx.rmit.oz.au (S.Riehm)
+Newsgroups: comp.editors
+Subject: Re: Smart 'C' editors?!?
+Date: 29 Oct 91 22:36:49 GMT
+Status: O
+
+valley@gsbsun.uchicago.edu (Doug Dougherty) writes:
+
+>A couple of (presumably dumb) questions:
+>	1) What does map! do (as opposed to plain ol' map) ?
+>	2) What do things like /*, ca', and ei' mean as map! targets?
+>	   (They sure don't look like keys to me)
+
+1: map! defines mappings for keys while in insert mode
+2: you can map strings, vi will give you time to type the whole
+string, and that string will b instantly replaced by whatever you have
+mapped it to. if you set notimeout, vi will wait forever when you
+start typing a map string, which can be most annoying if you actually
+want the string. this is also why J-P Radly put the ' on the end of
+his macros, because you rarely type wh'.
+When timeout is set vi will wait about one second after each character
+in a macro string before timing out and simply using the string as
+typed
+
+ALSO...
+>jpr@jpradley.jpr.com (Jean-Pierre Radley) writes:
+
+>>And these macros might be of interest to you:
+
+>>se nu ts=5 wm=0 sw=5
+>>map! /*		/*  */hhi
+>>map! ca'	case :	break;k0f:i
+>>map! ei'	else if () {}kk0f(a
+>>map! el'	else {}ki
+>>map! if'	if () {}k0f(a
+>>map! fo'	for (;;) {}k0f(a
+>>map! wh'	while () {}k0f(a
+>>map  #0	:!cc %
+
+firstly: there is no reason to set ts=5, tabs are 8 characters by
+default on 99% of the machines that I have ever heard of, if you less
+or more your code you will get a nasty surprise. Instead, get used to
+using ^T and ^D to do your indenting and outdenting (!?) instead of
+tabs. vi will put tabs in for you where appropriate!
+
+secondly: I played with macros like these some time ago, but found
+them somewhat clumsy, I have now come up with a system of bracketing
+and jump points. by mapping an unused key to be my 'jump to next jump
+point' I can quickly nest any number of brackets, and jump around
+within them with a minimum of fuss. Here the we use backspace (^H)
+in-stead of del keys, so the del key is my jump key.
+
+I have defined a jump point as two tilde's ( ~~ ) as I have NEVER seen
+this string in any code or text thus far :-)
+
+--- cut here ---
+:set magic sw=4 ai
+" jump to next jump point
+:map  ^?	/\~\~^M2s
+:map! ^?	^[/\~\~^M2s
+:map! ((	(  )~~^[3hi
+:map! ()	()~~^[2hi
+:map! [[	[  ]~~^[3hi
+:map! []	[]~~^[2hi
+:map! ""	""~~^[2hi
+:map! ''	''~~^[2hi
+" new block definition
+:map! }{	^[A^M{^M}~~^[O^T
+:map! {{	{  }~~^[3hi
+:map! {}	{}~~^[2hi
+:map! (_	(  );~~^[4hi
+:map! (+	( ~~ )}{~~^[?\~\~.*)^M2s
+:map! //	/* ^I*/^[F a
+:map! *&	/*^M */~~^[O*
+:map! *_	/*^M^M*/^[2ko^M
+:map! /-	^[0i/*-^[x76po^M^M*/~~^[kO^I
+" #include lines made easy
+:map! ><	.h>^[Bi<`in^[A
+:map! >"	.h"^[Bi"`in^[A
+" other # lines made easy
+:map! `if	^[0i#ifdef
+:map! `el	^[0i#else
+:map! `li	^[0i#elseif
+:map! `en	^[0i#endif
+:map! `in	^[0i#include
+:map! `de	^[0i#define
+:map! argcv	argc, argv^[oint argc;^Mchar **argv;^[/\~\~^M2s
+--- cut here ---
+
+I will leave you to work out which ^'s are ^V's :-)
+
+one of the problems with these macros is that they tend to make
+cutting and pasting in Xwindows a little nasty at times, I know of one
+person who has put a ^U in front of the (( type macros to prevent
+this.
+
+hope these help your productivity
+
+catchya
+
+======================================================================
+Stephen	Riehm [Romulis]			 s887212@minyos.xx.rmit.edu.au
+BKX Australia	Phone:	+61 3 889 0459		Fax:	+61 3 889 3227
+== Disclaimer: I claim no responsibility for my	employer's actions. ==
+
+
+From krisk@ux1.cso.uiuc.edu (Kris Klindworth)
+Newsgroups: comp.editors
+Subject: Re: vi question, replace second occurence
+Keywords: vi
+Date: 30 Oct 91 19:00:29 GMT
+Status: O
+
+(Johathan Chin ask me to post this followup for him.  Evidently
+ they are having problems with their news system.    krisk@ux1.cso.uiuc.edu)
+
+In article <1991Oct24.162454.4759@ux1.cso.uiuc.edu> krisk@ux1.cso.uiuc.edu (Kris Klindworth) writes:
+>hess@rosun1.informatik.uni-hamburg.de (Hauke Hess) writes:
+>
+>>In the Jargonfile are many words enclosed in ", like the following sentence
+>
+>>the "slow" brown fox jumps over the "crazy" dog.
+>
+>>I want to change that sentence in:
+>
+>>the ``slow'' brown fox jumps over the ``crazy'' dog.
+>
+>>for the sake of typographical correctness. In other words: how do I replace
+>>each second occurence of a string with another, with not respect to lineends 
+>>between the words?
+>>So a sentence like
+>
+>>there is a "problem
+>>extraordinaire" in here.
+>
+>>should be replaced as well.
+>
+>For this problem you can use
+>:%s/"\</``/
+>and
+>:%s/\>"/''/
+
+Perhaps a better way is:
+:g/$/s/"\([^"]*\)"/``\1''/g
+
+which replaces all occurrences of "string" in the file. It does not
+touch strings that extend over line boundaries though. For that, you
+could look for the last " on a line, change it to ``, go to next 
+occurrence of " and change to ''. Something like (untested):
+
+:1|s/"\([^"]*\)$/``\1/|s/^\([^"]*\)"/\1''/
+
+which changes the first occurrence of the quoted string. Perhaps wrapping
+this in a global will work:
+
+:g/$/1|s/"\([^"]*\)$/``\1/|s/^\([^"]*\)"/\1''/
+
+but I haven't tried it.
+
+Have fun,
+
+Jonathan Chin
+shrchin@uk.ac.rdg.susssys1 
+Department of Cybernetics, University of Reading, England.
+
+From asylvain@felix.UUCP (Alvin "the Chipmunk" Sylvain)
+Newsgroups: comp.editors
+Subject: Re: filling paragraph in vi
+Date: 30 Oct 91 21:17:12 GMT
+Status: O
+
+Written in article <754@skyking.UUCP>
+    by jc@skyking.UUCP (J.C. Webber III):
+
+: In <CKCLARK.91Oct18135300@paris.mit.edu> ckclark@athena.mit.edu
+:    (Calvin Clark) writes:
+: 
+: >Novice question: 
+: 
+: >How does one fill a paragraph in vi?
+: 
+: It requires an external unix command (ie. fmt or mfold).
+: Many unix systems have a formating command called fmt.  To use it
+: within vi you would position your curser on the first character of
+: the paragraph that you would like to format and then type "!}fmt"
+: (without the qoutes).  If you desire more or less characters than
+: the default (72 I think), say 60, then you would type "!}fmt 60".
+
+Yours may work that way.  Mine attempts to format a file named "60".
+
+Ah, here we go ... "!}fmt -60" seems to work.  Never thot of that.
+Always wanted that feature, and could never get it to work.  Oh well.
+
+: For those systems that do not have fmt, there is a public domain
+: program called mfold that does the job quite nicely.  The only problem
+: I have with it (and I have to use it because I don't have fmt) is that
+: it drops one of the double spaces after the period between sentences.
+: I have to go back and put them back in by hand.  If anyone has a fix
+: for this inconvience I would appreciate it.
+
+I have a "fix," but it's rather long.  However, it has the additional
+features of automatically hyphenating long multi-syllabled words that
+almost fit, plus you can turn that off on demand, or, change the line
+length, indentation, etc., on demand.
+
+This makes two important assumptions, and they are:
+  1) You have "nroff" on your system, located in /usr/bin
+        This is the powerhouse, the engine that drives the utility.  This is 
+        what allows you to do damn near any kind of ASCII text formatting 
+        you'd want.
+  2) You have "lex" on your system.
+        This gives you the auto-double-spaces after sentences.  "nroff"
+        doesn't do that, relying on the user to add these where needed.
+        I guess that saves it from figuring out "Mr." etc.  Well, all
+        that's loaded into the "lex" source code provided below.
+
+If you do NOT have "lex", this can still work if you write a "pre_nroff"
+utility by hand.  It's job in life is to guarantee that periods at the
+end of sentences have two spaces, something that "nroff" leaves to the
+user.  Have it filter stdin to stdout.
+
+Of course, if you don't have "lex", you probably don't have "nroff" either.
+
+First, you copy this shell script and put it on your path somewhere.  Call
+it "Nroff".  It's contents are as follows:
+
+--------cut here--------Begin of Nroff--------
+#!/bin/csh -f   # start quicker by avoiding .cshrc
+#
+# Nroff:
+# This script allows me to use "nroff" to format paragraphs from "vi"
+# Written for the C-shell.
+#
+# Alvin "the Chipmunk" Sylvain
+
+if ( $#argv == 0 ) then # no arguments, use the default
+    pre_nroff | /usr/bin/nroff -i ~/.Nroff.default
+else    # construct a new defaults file from arguments
+    cp ~/.Nroff.default ~/.Nroff.temp
+
+    while ( $#argv > 0 )        # add new parms to specifications
+        switch ( $1 )   # check for no-arg parms.
+        case .nh:       # no hyphenate
+        case .nf:       # no fill
+        case .fi:       # fill
+        case .na:       # no adjust (turn off right justification)
+        case .ad:       # adjust (turn on right justification)
+            echo $1 >> ~/.Nroff.temp
+            shift       # advance to next parameter(s)
+            breaksw
+        case *:         # all else is assumed to be 1-arg parms
+            echo $1 $2 >> ~/.Nroff.temp
+            shift       # advance to next parameter(s)
+            shift
+            breaksw
+        endsw
+    end
+
+    pre_nroff | /usr/bin/nroff -i ~/.Nroff.temp
+
+    /bin/rm -f ~/.Nroff.temp
+endif
+--------cut here--------End of Nroff--------
+
+Now, this uses a permanent datafile with defaults that instruct "nroff" 
+on how to format a paragraph.  They are stored in "$HOME/.Nroff.default",
+and the ones I've selected that suit me are:
+
+--------cut here--------Begin of $HOME/.Nroff.default--------
+.na
+.pl 1
+.ll 72
+.hy 12
+--------cut here--------End of $HOME/.Nroff.default--------
+
+The "nroff" commands above are:
+    .na    - no adjust (turns off right justification)
+    .pl 1  - page length of 1 (otherwise, it adds enough empty lines to 
+                fill a page)
+    .ll 72 - line-length of 72 (obvious enough) 
+    .hy 12 - shoot, I forget how this works, but it controls how it 
+                hyphenates.  RTFM.
+
+You can change these defaults, naturally, but I recommend you leave in
+the ".pl 1", otherwise, it will give you an entire page each time you
+use it to format a paragraph.  That results in your paragraph followed
+by enough empty lines to make whatever the page size is.
+
+"pre_nroff" is a filter written in "lex" that makes certain, more or
+less, that the number of spaces after periods is correct.  It repairs
+the complaint in J.C.Webber's article that prompted this whole thing.
+It also handles question marks, exclamation points, quotes, close
+parentheses, hyphens, and a few titles ("Mr.", "Dr.").
+
+It's contents are:
+
+--------cut here--------Begin of pre_nroff.lex--------
+punct                           [\.\!\?]
+tbsp                            [\t ]
+tbspnl                          [\t \n]
+clsprn                          [\"\)\]\}]
+%%
+"-"{tbspnl}+                    ;
+etc\." "                        printf ("etc. ");
+Dr\.{tbspnl}+                   printf ("Dr. ");
+Mr\.{tbspnl}+                   printf ("Mr. ");
+Mrs\.{tbspnl}+                  printf ("Mrs. ");
+{punct}{tbsp}+                  printf ("%c  ", yytext [0]);
+{punct}{clsprn}{tbsp}+          printf ("%c%c  ", yytext [0], yytext [1]);
+{tbsp}+                         printf (" ");
+--------cut here--------End of pre_nroff.lex--------
+
+My version appears to have a bug in handling an ellipis (...)  so I left
+that line out of this version.  As you can see, it also attempts to han-
+dle "Mr. Smith" correctly, but naturally will fail if "Mr."  is the last
+word on the sentence.  It also attempts to handles periods within
+quotes, so that, eg., "These are my words."  will be treated as a sen-
+tence, with two spaces after the ending quote.
+
+The paragraph above was left exactly as processed by the pre_nroff/nroff
+combination, so you can see exactly where it works and where it fails.
+Apparently the period-quote combination overrides the "Mr."  check, ie.,
+it puts two spaces after the period despite the title.  Well, it ain't
+perfect, obviously, and it certainly can't read your mind.
+
+It handles hyphens by eliminating them ONLY from the ends of lines.
+Ie., if the hyphen ends the line, it is removed and the word beginning
+the next line is glued to the word ending the current line.  Within the
+line, they are ignored.  This has an advantage and a disadvantage.
+
+The advantage is that if you modify the text such that the word no
+longer needs to be hyphenated, "pre_nroff" will glue the pieces back
+together again.  "nroff" doesn't do this, assuming that you are using
+separate source and target files.  The disadvantage is that words that
+are SUPPOSED to be hyphened, such as "mother-in-law," that "nroff" hap-
+pened to break at the line-end, will ALSO be glued back together.  If
+you use such words, you have to watch out for them.
+
+To create the program "pre_nroff" from this "lex" source, perform the 
+following:
+
+    lex -t pre_nroff.lex > pre_nroff.c
+    cc -o pre_nroff pre_nroff.c -ll
+
+USAGE:
+
+Don't forget to "chmod +x Nroff" in whichever directory you've placed
+it.  You may also have to enter the "rehash" command before trying it.
+
+To run it from inside "vi", follow essentially the same instructions as
+for "fmt", ie., place your cursor at the beginning of the paragraph you
+wish to format.  The paragraph is delimited by empty lines.  Enter:
+
+    !}Nroff
+
+and you'll get a more-or-less perfectly formatted paragraph, including
+hyphenation where needed.
+
+You may pass parameters to "Nroff" in the form of "nroff"
+dot-commands.  For example, if you want a shorter line-
+length, as exemplified in this paragragh, specify the new
+line-length as follows:
+
+    !}Nroff .ll 60
+
+Any "nroff" command (that I can think of and have tested) can be used.
+The common ones with no arguments are handled, as you can see in the
+"Nroff" script above, and all others are assumed to have exactly one
+argument.  You can not use any "nroff" dot-commands with more than one
+argument, altho in common "vi" use you shouldn't need any.
+
+For example, I have re-formatted one of my above paragraphs with right-
+justification, line-length 65, and indentation of 5.
+
+     My version appears to have a  bug  in  handling  an  ellipis
+     (...)   so I left that line out of this version.  As you can
+     see, it also attempts to handle "Mr. Smith"  correctly,  but
+     naturally  will  fail if "Mr."  is the last word on the sen-
+     tence.  It also attempts to handle periods within quotes, so
+     that,  eg., "These are my words."  will be treated as a sen-
+     tence, with two spaces after the ending quote.
+
+That was performed with the command:
+
+    !}Nroff .ad .ll 65 .in 5
+
+Notice: If you make changes to an indented paragraph like the one above,
+remove the indentations before re-running the "Nroff" command.  This can
+be done by placing the cursor at the beginning of the paragraph, then
+entering "<}" until the paragraph is lined up on the left margin again.
+Otherwise, your results will be somewhat peculiar.  I'm not sure why.
+
+CONCLUSION:
+
+Now, with all the discussions going back and forth about "vi's" ability
+or inability to handle formatting, and the FAQ about using "fmt" or some
+clone, I have quietly put this little package together for my own use,
+and it seems to work fine.  This is the first time it's been published.
+
+If you try it, I'd appreciate feedback.  Murphy's law being what it is,
+I'm almost 100% sure I left SOMEthing out, but we'll see.
+
+--
+Alvin "the Chipmunk" Sylvain, alvin@stanton.cts.com, asylvain@felix.UUCP
+DISCLAIMER: It's all in fun, folks, no flames intended.  IF you're real
+nice, I _might_ just let you have my opinion for free!
+OBLIGATORY QUOTE FOR THE DAY:
+You are afraid to eat your words.  There is no need to be.  I have eaten
+a great many of mine in my time and on the whole I have found them a
+most wholesome diet.
+    -- Winston Churchill
+
+
