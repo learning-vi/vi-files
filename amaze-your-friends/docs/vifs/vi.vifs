@@ -1,0 +1,160 @@
+From alf.uib.no!ugle.unit.no!sunic!mcsun!uunet!sun-barr!sh.wide!wnoc-tyo-news!sranha!sranhc!sramha!s-fujii Wed Aug 12 10:56:52 MET DST 1992
+Article: 4808 of comp.editors
+Newsgroups: comp.editors
+Path: alf.uib.no!ugle.unit.no!sunic!mcsun!uunet!sun-barr!sh.wide!wnoc-tyo-news!sranha!sranhc!sramha!s-fujii
+From: s-fujii@sra.co.jp (Seigo Fujii)
+Subject: Re: Help need in using CTAGS !
+Message-ID: <BsrLA0.1AI@sra.co.jp>
+Keywords: vi, unix, ctags, vifs
+Sender: news@sra.co.jp (USENET News)
+Reply-To: s-fujii@sramha.sra.co.jp (Seigo Fujii)
+Organization: Software Research Associates, Inc., Japan
+References: <1992Aug6.152330.28607@bnr.ca>
+Date: Mon, 10 Aug 1992 11:01:11 GMT
+Lines: 143
+
+
+I try to post in broken english. Sorry...
+
+In article <1992Aug6.152330.28607@bnr.ca> mschee@bcarh600.bnr.ca (Michael SamChee) writes:
+>Hi,
+>
+>Please, I need some help! using CTAGs in unix:
+>
+>If I recursively invoke tags (by typing "CNTRL ]" on each
+>identifier I wish to search for), say 3 times, I am unable
+>to "pop back" to the file where I *first* invoked tags. 
+>
+>When I was on campus, it used to work the way I wanted 
+>it to, but now on my job, when I create a tags file and
+>invoke it in a nested (recursive) fashion, I'm only able
+>to "pop back" to the *previous* file where tags was invoked.
+
+I just wrote a edit-file stack macro set and perl script to do it.
+
+>Also, invoking tags seem to be case sensitive ie. identifier
+>"Ct" is not treated the same as "ct". Is there a way to make it
+>case insensitive?
+
+But, I can not solve this problem.
+
+
+macro usage:
+    #+	: push edit file name and current line number.
+    #-	: pop back to last pushed file and line.
+    #=	: show edit file stack.
+    #^]	: push and tag jump.
+    #^^	: synonym of #-.
+
+vifs command usage:
+    vifs, vifs show	: printout stack to stdout.
+	# Each vi process use different workfile by pid.
+    vifs push FILE	: push FILE.
+	Count line of stdin then write file name and line number
+	to workfile. 
+    vifs pop		: pop back.
+	Pop file name and line number from workfile then make a
+	ex command file to back to poped file. 
+    vifs clear		: clear stack.
+    vifs clean		: remove all workfiles.
+	# If you don't "vifs clean", some day system remove # files.
+
+
+---- cat -v stack.ex ---------------------------------------------------
+"
+" edit-file stack ( #+:push, #-:pop, #=:list, #^^:pop, #^]:push & tag )
+"
+map	#+	:1,.w !exec vifs push %^M^M
+map	#-	:!exec vifs pop^M:so ~/tmp/vifs_pop.ex^M^M
+map	#=	:!exec vifs^M
+map	#^]	:1,.w !exec vifs push %^M^M^]
+map	#^^	:!exec vifs pop^M:so ~/tmp/vifs_pop.ex^M^M
+------------------------------------------------------------------------
+# If you set shell=/bin/sh, change ~ in the macros to $HOME.
+
+---- uuencode stack.ex -------------------------------------------------
+begin 644 stack.ex
+M(@HB(&5D:70M9FEL92!S=&%C:R`H(",K.G!U<V@L(",M.G!O<"P@(STZ;&ES
+M="P@(QXZ<&]P+"`C'3IP=7-H("8@=&%G("D*(@IM87`)(RL).C$L+G<@(65X
+M96,@=FEF<R!P=7-H("4-#0IM87`)(RT).B%E>&5C('9I9G,@<&]P#3IS;R!^
+M+W1M<"]V:69S7W!O<"YE>`T-"FUA<`DC/0DZ(65X96,@=FEF<PT*;6%P"2,=
+M"3HQ+"YW("%E>&5C('9I9G,@<'5S:"`E#0T="FUA<`DC'@DZ(65X96,@=FEF
+><R!P;W`-.G-O('XO=&UP+W9I9G-?<&]P+F5X#0T*
+`
+end
+------------------------------------------------------------------------
+
+---- vifs perl script --------------------------------------------------
+#!/usr/local/bin/perl
+#
+# vifs : vi edit-file stack
+#	usage: vifs [show|push file|pop|clear|clean]
+#
+$PPID = getppid;
+$HOME = $ENV{'HOME'};
+$STACKFILEBASE = $HOME . '/tmp/#vifs_stack';
+$STACKFILE = $STACKFILEBASE . ".$PPID";
+$POPEXFILE = $HOME . '/tmp/vifs_pop.ex';
+
+if ($ARGV[0] eq 'push' && $#ARGV == 1) {
+    &countline;
+    &getstack;
+    push(@stack, "$ARGV[1] $line\n");
+    &putstack;
+} elsif ($ARGV[0] eq 'show' || $#ARGV == -1) {
+    &getstack;
+    print @stack;
+} elsif ($ARGV[0] eq 'pop') {
+    &getstack;
+    $_ = pop(@stack);
+    chop;
+    ($file, $line) = split(' ');
+    &makepopex;
+    &putstack;
+} elsif ($ARGV[0] eq 'clear') {
+    truncate($STACKFILE, 0);
+} elsif ($ARGV[0] eq 'clean') {
+    unlink <$STACKFILEBASE.*>, $POPEXFILE;
+} else {
+    &usage;
+}
+exit 0;
+
+sub usage {
+    print STDERR "usage: vifs [show|push file|pop|clear|clean]\n";
+    exit 1;
+}
+
+sub countline {
+    while (<STDIN>) {}
+    $line = $.;
+}
+
+sub getstack {
+    if (open(STACK, "<$STACKFILE")) {
+	@stack = <STACK>;
+	close(STACK);
+    }
+}
+
+sub putstack {
+    open(STACK, ">$STACKFILE") || die "can not open $STACKFILE\n";
+    print STACK @stack;
+    close(STACK);
+}
+
+sub makepopex {
+    open(POPEX, ">$POPEXFILE") || die "can not open $POPEXFILE\n";
+    if ($file && $line) {
+	print POPEX "e $file\n$line\n";
+    } else {
+	print STDERR "edit-file stack empty\n";
+	print POPEX qq/" edit-file stack empty\n/;
+    }
+    close(POPEX);
+}
+------------------------------------------------------------------------
+--
+Seigo
+
+
