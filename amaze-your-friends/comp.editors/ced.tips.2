@@ -1,0 +1,674 @@
+From kirkenda@eecs.cs.pdx.edu (Steve Kirkendall)
+Subject: Quoting in ex/vi -- more info
+Date: 12 Nov 91 01:15:09 GMT
+Organization: Portland State University, Portland, OR
+Status: O
+
+The first results are in on my question about character quoting in ex/vi.
+The table below shows what I've learned from e-mail, and a few tests.
+Please check it out, and let me know of any errors or omissions.
+
+ ex   vi  .exrc  characters to quoted
+----+----+------+--------------------------------------------------------
+ \    \     ^V    The | command separator
+ \    ^V   n.a.   Special control characters on any command line
+ ^V  ^V^V   ^V    Whitespace in a :map or :unmap command
+ \    \     \     Whitespace in a :set command
+ \    \     \     Meta-characters in a regexp or substitution text
+ \    \     \     The %, #, and ! characters in a shell escape/filename
+
+  The "ex" column refers to command lines that are interactively typed
+  into ex, or for ex macros executed via ":@x".
+
+  The "vi" column refers to ex command lines that are interactively typed
+  using vi's ":" command.  It also works for vi macros/maps which use ":".
+  Please note that when you're defining the macro, though, you'll need to
+  quote any ^Vs to delay their effect until the macro is applied.  Also,
+  to quote a whitespace character in a :map command, you need to actually
+  insert a ^V into the command line, which is done by hitting ^V twice.
+
+  The ".exrc"  column refers to commands in the .exrc file, or a file
+  which is executed via the ":so" command, or for the value of EXINIT.
+
+The quoting character for special control characters is different, but
+this is probably due to the serial line discipline, and not so much
+ex/vi itself.  This also explains why ^V must be typed twice in vi but
+only once in ex, to quote whitespace in a :map.  Bearing this in mind,
+the quoting character is consistent in all contexts except when the
+'|' command separator is to be quoted in .exrc files.
+-------------------------------------------------------------------------------
+Steve Kirkendall     kirkenda@cs.pdx.edu      Grad student at Portland State U.
+
+
+From abed@saturn.wustl.edu (Abed M. Hammoud)
+Newsgroups: comp.editors
+Subject: Vi and Tags file...(please help).
+Date: 23 Nov 91 18:36:18 GMT
+Organization: Washington University, ESSRL
+Status: O
+
+
+	hello,  I have been a very..very..dedicated vi user for a long
+time now. I was always wondering about what people meant by tag files (I
+program in C). I looked up the manuals we have in the lab and I could not
+find something that was enough for me to understand what is a tag file
+and how to use tags. I do a lot of programming...I have a big library
+of functions that I usually call from within my programs...so what can
+tags do for me....Please if any body can help me understand this I
+would be very thankful.
+
+PS: Please no flames
+
+Thanks a million, 
++-------------------------------------------------+-----------------------+
+|Abed M. Hammoud (KB0INX)			  | abed@saturn.wustl.edu |
+|Washington University.				  | Office:               |
+|Electronic Systems & Signals Research Laboratory.| -Voice:(314) 935-7547 |
+|Department of Electrical/Biomedical Engineering. | -FAX:  (314) 935-4842 |
+|Campus Box 1161, One Brookings Drive.		  |			  |
+|St. Louis, MO , 63130 USA			  |                       |
++-------------------------------------------------+-----------------------+
+
+
+From kev@sol.acs.unt.edu (Mullet Kevin Wright)
+Subject: piping in an ex keymap
+Date: 23 Nov 91 19:34:38 GMT
+Organization: University of North Texas
+Status: O
+
+Recently, I posted a request for a way to do a pipe in an ex keymap.
+
+My post got garbled becuase I left the actual control characters from my
+.exrc in and they, and everything east of them, got dropped in my post.
+
+A few intuitive folks knew what I meant anyway and gave me this really 
+nice solution (that I wasn't able to find in my O'Reilly & Associates
+_Learning the vi Editor_ book.
+
+To place a | in an ex shell command, do a ^V^V| to put a literal ^V in front
+of it.  One ^V will just leave you with a |,  you need an actual ^V| in the 
+text.
+
+Thanks to Steve Kirkendall and Hans Mulder for their insight.  I'm writing 
+this in the inside of my O'Reilly book now. :)
+
+-Kevin Mullet
+ University of North Texas
+
+
+From soh@andromeda.trl.OZ.AU (Kam Hung Soh)
+Subject: EX / VI delete up-to and including
+Summary: Addressing lines in vi and ex
+Keywords: vi, ex
+Date: 24 Nov 91 02:53:20 GMT
+Organization: Telecom Research Labs, Melbourne, Australia
+Status: O
+
+I use vi, and I frequently work with logical blocks using ``/'' or
+``?'' to find the end or beginning of the block.  For example, here is
+a LaTeX construct:
+
+\begin{environment}
+  \begin{environment2}
+    sfdasfda
+    sfdafasd
+    asfdasfdfdas
+  \end{environment2}
+\end{environment}
+
+If I want to delete the inner environment, I usually type: 
+
+d/^  \\/ or d?^  \\?
+
+Unfortunately, this leaves the closing symbols behind, i.e:
+
+\begin{environment}
+  \end{environment2}
+\end{environment}
+
+I noticed that the whole inner environment is deleted if I typed:
+
+d/^  \\/+0 or d?^  \\?+0
+
+The ``+0'' after the pattern match makes vi think the line containing
+the pattern is included in the text to be deleted.  The SunOS 4.0.3
+manual on vi make no mention of this.  As far as addressing lines is
+concerned, what does the trailing ``+0'' mean to vi?
+
+(On a related matter, this operation seems to be equivalent to typing
+the following in ex: :.,/^  \\/d and ?^  \\?,.d)
+
+The system I am using: SparcStation 1+, SunOS 4.1.1
+
+Regards,
+
+---
+Soh, Kam Hung | h.soh@trl.oz.au | Telecom Research Laboratories,
+              | +61 3 253 6638  | POB 249 Clayton, Victoria 3168, Australia 
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: EX / VI delete up-to and including
+Keywords: vi, ex
+Date: 25 Nov 91 14:07:11 GMT
+Sender: news@sci.kun.nl (NUnet News Owner)
+Organization: University of Nijmegen, The Netherlands
+Status: O
+
+In <1991Nov24.025320.16271@trl.oz.au> soh@andromeda.trl.OZ.AU (Kam Hung Soh) writes:
+
+>I use vi, and I frequently work with logical blocks using ``/'' or
+>``?'' to find the end or beginning of the block.  For example, here is
+>a LaTeX construct:
+
+>\begin{environment}
+>  \begin{environment2}
+>    sfdasfda
+>    sfdafasd
+>    asfdasfdfdas
+>  \end{environment2}
+>\end{environment}
+
+>If I want to delete the inner environment, I usually type: 
+
+>d/^  \\/ or d?^  \\?
+
+>Unfortunately, this leaves the closing symbols behind, i.e:
+
+>\begin{environment}
+>  \end{environment2}
+>\end{environment}
+
+>I noticed that the whole inner environment is deleted if I typed:
+
+>d/^  \\/+0 or d?^  \\?+0
+
+>The ``+0'' after the pattern match makes vi think the line containing
+>the pattern is included in the text to be deleted.  The SunOS 4.0.3
+>manual on vi make no mention of this.  As far as addressing lines is
+>concerned, what does the trailing ``+0'' mean to vi?
+
+Vi distinguishes "line" moves and "character" moves.  If you apply the 'd'
+operator to a line move, vi deletes the starting line, the target line and
+all intervening lines.  If you apply the 'd' operator to a character move
+that ends on a different line, the parts of the starting and target line not
+moved over are not deleted.  The '/' operator usually produces character
+moves, but the "+0" suffix makes it a line move.
+
+You can replace the "0" by an other line count, e.g. d/foo/+3 deletes line
+up to and including the third line following the next occurrence of "foo";
+and
+
+d/^\\/-1
+
+does what Kam Hung Soh wants with fewer keystrokes.  Actually, he can save
+one more keystroke: the '1' is optional, so
+
+d/^\\/-
+
+would also work.  FWIW the '+' is also optional.
+And you can type several of these offsets, e.g.
+
+d/foo/++
+
+is equivalent to
+
+d/foo/+2
+
+Finally, there is the possibility to tack on another search:
+
+d/foo/;/bar/
+
+deletes up to (but not including) the first occurrence of "bar" after the next
+occurrence of "foo".
+
+Oh, and all trailing delimiters are optional.
+
+>(On a related matter, this operation seems to be equivalent to typing
+>the following in ex: :.,/^  \\/d and ?^  \\?,.d)
+
+They are exactly equivalent if you :set nowrapscan.  Under wrapscan, there
+are situations where :.,/foo/d would reply "First address exceeds second",
+while d/foo/0 would merrily delete a large part of your buffer.
+
+--
+Hope this helps,
+
+Hans Mulder	hansm@cs.kun.nl
+
+
+From mrd@ecs.soton.ac.uk (Mark Dobie)
+Subject: Re: Vi and Tags file...(please help).
+Date: 25 Nov 91 09:52:58 GMT
+Sender: news@ecs.soton.ac.uk
+Status: O
+
+In <1991Nov23.183618.21929@wuecl.wustl.edu> abed@saturn.wustl.edu (Abed M. Hammoud) writes:
+
+>	hello,  I have been a very..very..dedicated vi user for a long
+>time now. I was always wondering about what people meant by tag files (I
+>program in C). I looked up the manuals we have in the lab and I could not
+>find something that was enough for me to understand what is a tag file
+>and how to use tags.
+
+I used vi for a few years before I found out about tags. Tags is one
+of the features that sets vi apart from a lot of other editors.
+
+>                      I do a lot of programming...I have a big library
+>of functions that I usually call from within my programs...so what can
+>tags do for me....Please if any body can help me understand this I
+>would be very thankful.
+
+Here is how I use them. You need to run "ctags" to generate a tags file
+for vi to use. I usually have a target in my makefile and type "make
+ctags" occaisionally to keep it up to date. The ctags command (in the
+makefile) looks like,
+
+	ctags *.c *.h libsrc/*.c libsrc/*.h
+
+This generates a file called tags with references to all the functions
+in the program and library source.
+
+Now in vi, you can place the cursor at the start of a function name and
+press ctrl-]. This will take you to the function definition (even in
+another directory). You can read it or edit it and then you press
+ctrl-^ to return to where you were.  That's the simplest way to use
+tags.
+
+Any more advanced users out there who might have built a hypertext
+system :-)
+				Mark.
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Newsgroups: comp.editors
+Subject: Re: Vi and Tags file...(please help).
+Keywords: tagstack, push, pop
+Date: 26 Nov 91 16:29:09 GMT
+Organization: University of Nijmegen, The Netherlands
+Status: O
+
+In <1991Nov26.135248.6911@cc.ic.ac.uk> cyber@sig.ee.ic.ac.uk (Nick Sales) writes:
+>There is also a ":pop" command, which, not unreasonably, pops you up one
+>tag, so returning you to your previous pre-push position.
+
+In this version of vi (the one that comes with SunOS 4.1.1, :version says
+Version SVR3.1) control-T is bound to :pop.
+
+>There are some (undocumented at my site) options to do with the tagstack
+>too: taglength/tl (how long it is), and tagstack/tgstck (?).
+
+Tagstack is a Boolean option, :set notagstack disables the :pop command
+(why would anybody want to do that?).  There is also a "tags" option,
+specifying the list of files to be searched for tag definitions.
+
+>BTW, I also found option "window/wi" in there: anyone know what it does?
+
+It defines the number of lines drawn initially when you jump to a different
+part of the buffer.  More lines are drawn if you move around locally.
+Useful when editing at low baud rates.  On some versions of vi you can put
+in your .exrc (for example)
+
+:set w300=5 w1200=11
+
+This :sets the window option to 5 when working on 300 baud (or lower),
+to 11 when using 1200 baud and the default (screen height-1) when using
+a higher line speed.
+
+--
+Hope this helps,
+
+Hans Mulder		hansm@cs.kun.nl
+
+
+From gwc@root.co.uk (Geoff Clare)
+Newsgroups: comp.unix.misc,comp.editors
+Subject: What does this do? (was Re: Vi internal design doc. needed)
+Date: 26 Nov 91 14:16:06 GMT
+Organization: UniSoft Ltd., London, England
+Status: O
+
+In <8460@autodesk.COM> dansmith@Autodesk.COM (Daniel Smith) writes:
+
+>	quick!  What does this do?
+
+>map ]/ lbywo/^[p"xdd@x
+
+There's no quick answer, because the behaviour depends on the current
+cursor position and, if autoindent is set, on whether the current line
+is indented and how far.
+
+The following analysis is all done from memory of the behaviour of the
+vi commands used, not from trying out the macro, so please accept my
+apologies for any inaccuracies.  Note that the phrase "beginning of line"
+refers to the first non-white-space character on the line.
+
+1.  If the cursor is not on the last line of the file and not at the
+    end of a line, and either the line is not indented or autoindent is
+    not set, then it searches for the first occurrence of the word under
+    the cursor plus any white space which follows it, starting the search
+    from the beginning of the next line.
+
+2.  If the cursor is on the last line of the file, then it behaves as in
+    (1) except that the search starts at the beginning of the current line. 
+
+3.  If the cursor is at the end of a line, then it beeps and does nothing.
+
+4.  If autoindent is set and the current line is indented:
+
+    4a. If the indent extends beyond the first tabstop, and tab is not
+    	mapped, then it beeps and moves the cursor to the start of the
+	next line.
+    
+    4b. If the indent does not extend beyond the first tabstop, and
+        the number of spaces of indent does not exceed the number of
+	characters on the next line (not including any leading white
+	space), then it behaves as in (1) except that the search begins
+	N characters from the beginning of the next line, where N is
+	the number of spaces of indent.
+    
+    4c. If the indent does not extend beyond the first tabstop, and
+        the number of spaces of indent exceeds the number of
+	characters on the next line (not including any leading white
+	space), then it beeps and moves the cursor to the end of the
+	next line.
+
+I think that's enough to show that the macro is rather inconsistent in
+its behaviour.  I can suggest a number of improvements:
+
+    If "wb" is used instead of "lb", then it will not fail at the end
+    of a line, except on the last line of the file.
+
+    If "deu" is used instead of "yw", then white space following the
+    word will not be included in the search.
+
+    If "o^[pI/^[" is used instead of "o/^[p", then it will work properly
+    when autoindent is set and the current line is indented.
+
+    If "mx" is added at the start of the macro and "`x" is added before
+    the "@x", then the search will start from the current cursor
+    position instead of from the beginning of the next line (or the
+    current line if it is the last line of the file).
+
+Moral: there's more to writing good vi macros than you might think.
+-- 
+Geoff Clare <gwc@root.co.uk>  (USA UUCP-only mailers: ...!uunet!root.co.uk!gwc)
+UniSoft Limited, London, England.   Tel: +44 71 729 3773   Fax: +44 71 729 3273
+
+
+From jimc@isc-br.ISC-BR.COM (Jim Cathey)
+Subject: Re: Vi and Tags file...(please help).
+Keywords: tagstack, push, pop
+Date: 26 Nov 91 21:58:07 GMT
+Organization: ISC-Bunker Ramo, An Olivetti Company
+Status: O
+
+>Now in vi, you can place the cursor at the start of a function name and
+>press ctrl-]. This will take you to the function definition (even in
+>another directory). You can read it or edit it and then you press
+
+GNU Emacs also can use tag files.  I believe it can read the files
+made by ctags, and it also reads the files made by emacs' etags
+program (which I think also will tag lisp files as well as C files).
+I believe you follow a tag with M-C-., or something like that (it's
+a single keystroke [not counting shifties]).  You get back to where
+you were with the normal C-X b <ret> command for moving to the
+previous buffer.  Just fanning the flames...
+
++----------------+
+! II      CCCCCC !  Jim Cathey
+! II  SSSSCC     !  ISC-Bunker Ramo
+! II      CC     !  TAF-C8;  Spokane, WA  99220
+! IISSSS  CC     !  UUCP: uunet!isc-br!jimc (jimc@isc-br.isc-br.com)
+! II      CCCCCC !  (509) 927-5757
++----------------+
+			"PC's --- the junk bonds of the computer industry"
+
+
+From steveha@microsoft.com (Steve Hastings)
+Date: 26 Nov 91 22:08:08 GMT
+Reply-To: steveha@microsoft.UUCP (Steve Hastings)
+Organization: Microsoft International Products Group
+Status: O
+
+In article <1991Nov23.183618.21929@wuecl.wustl.edu> abed@saturn.wustl.edu (Abed M. Hammoud) writes:
+>	hello,  I have been a very..very..dedicated vi user for a long
+>time now. I was always wondering about what people meant by tag files (I
+>program in C).
+
+Tags are a limited, but nevertheless extremely useful, form of hypertext.
+You run a program, usually called "ctags", on your C source code files; it
+looks for interesting text, mainly function declarations, and adds what it
+finds to your "tags" file.
+
+The "tags" file (which is usually called "tags" -- no big surprise there)
+is an index into your sources.  Once you have it built, you can type
+":ta foo" from vi, and vi will load in the source file where foo() was
+defined, and position the cursor on the line where foo() was defined.
+
+There is also a shortcut key, Ctrl+] (to remember this, think "go right
+to").  You put the cursor on the first letter of the function you are
+interested in, hit Ctrl+], and it jumps to the definition as above.
+
+Depending on the version of vi you have, you may have a "tags stack", where
+vi keeps track of where you were before you jumped to the tags reference.
+If you have this, Ctrl+T in vi command mode will return you to where you
+were before you used Ctrl+] or the :ta command.  If you do have the tags
+stack feature, you can make multiple jumps with the tags commands, and
+still be able to return to where you started; each Ctrl+T takes you
+backwards one jump, until you wind up where you started.
+
+Here are two lines from one of my tags files:
+AbortLayout	layout.c	?^AbortLayout()$?
+AddBarChr	print3.c	?^AddBarChr( a, b)$?
+
+The first field is the tag to search for, the second field is its filename,
+and the last field is a search pattern to use to find the definition line.
+Note that vi uses a search command, instead of an absolute line number, so
+that the tags file will not be useless after you add or delete lines from
+your sources.
+
+If you don't have a tags generator, you can write one using the above
+format, or you can manually add tags that weren't automatically generated.
+For example, I wrote a program that makes tags from AWK source files.
+
+Other text editors have tags, too.  I'm pretty sure EMACS has them.
+
+Words do not adequately describe how handy this feature can be.  You want
+to know what a function will do with its arguments?  Zap -- you are looking
+at the function declaration.  Done looking?  Zap -- you are back where you
+were.  No time wasted.  I never even print out source listings anymore.
+-- 
+Steve "I don't speak for Microsoft" Hastings    ===^=== :::::
+uunet!microsoft!steveha  steveha@microsoft.uucp    ` \\==|
+
+
+From mrd@ecs.soton.ac.uk (Mark Dobie)
+Subject: Re: Vi and Tags file...(please help).
+Keywords: tagstack, push, pop
+Date: 27 Nov 91 12:09:22 GMT
+Sender: news@ecs.soton.ac.uk
+Status: O
+
+In <1991Nov26.162909.23029@sci.kun.nl> hansm@cs.kun.nl (Hans Mulder) writes:
+>In <1991Nov26.135248.6911@cc.ic.ac.uk> cyber@sig.ee.ic.ac.uk (Nick Sales) writes:
+>>There is also a ":pop" command, which, not unreasonably, pops you up one
+>>tag, so returning you to your previous pre-push position.
+
+>In this version of vi (the one that comes with SunOS 4.1.1, :version says
+>Version SVR3.1) control-T is bound to :pop.
+
+How could I miss this? Thanks very much. Forget ctrl-^ and use ctrl-T
+instead... :-)
+
+				Mark.
+-- 
+Mark Dobie                              M.Dobie@uk.ac.soton.ecs (JANET)
+University of Southampton		M.Dobie@ecs.soton.ac.uk (The World)
+
+
+From emcmanus@gr.osf.org (Eamonn McManus)
+Subject: Fun with tags
+Date: 29 Nov 91 16:17:05 GMT
+Sender: news@osf.org (USENET News System)
+Organization: Open Software Foundation Research Institute, Grenoble
+Status: O
+
+I originally posted this message a couple of months back, but have since
+discovered that no messages were getting out from OSF at that time.
+Since it contains interesting information, I am reposting it.
+
+tchrist@convex.COM (Tom Christiansen) writes:
+>From the keyboard of mrd@ecs.soton.ac.uk (Mark Dobie):
+>:Tags are one of vi's best features. They could be used for so much
+>:more...
+>
+>We need a 'next-tag' function though.  Sometimes there are multiple
+>possibilities.  This could happen because of having a taglength or
+>tagprefix set, but it could also happen in the normal course of events --
+>you might have ifdef's around something, etc.  
+>
+>Does anyone have a patch to do this?
+
+In fact with a bit of ingenuity it is possible to do multiple tag
+searches without changing vi.  One way is to have as many tags
+files as there can be entries for a particular tag, and have the
+lookup command change to a new tags-file, like this:
+
+<File tags:>
+a	file1	set tags=tags1|/pattern for a/
+b	file1	set tags=tags1|/pattern for b/
+c	file1	/pattern for only occurrence of c/
+...
+
+<File tags1:>
+a	file2	set tags=tags|/pattern for second a/
+b	file2	set tags=tags2|/pattern for second b/
+
+<File tags2:>
+b	file3	set tags=tags|/pattern for third b/
+
+Then you map something like this:
+
+" ^\ looks for first definition of following word
+map ^\ :set tags=tags^M^]
+" ^_ looks for next definition
+map ^_ :tag
+
+I imagine the ctags program is among those that have been freed by
+Berkeley, so it should be fairly easy to modify it so it can do
+this instead of complaining when there are multiple definitions.
+It might be better for every tagsX file to have an entry for every
+tag than only to have entries in the first N files when there are
+N definitions; then you can always use :tag and have it do something
+sensible.
+
+
+Another interesting possibility is to use `command` as the filename
+in a tags entry.  Thus you would like to have entries like this:
+
+a	`lookuptag a`	source where
+
+The hypothetical lookuptag program can do arbitrarily complex
+processing to determine where a is.  It outputs the name of the
+file, and puts a pattern or other ex command into the file "where".
+
+There is a small problem with the above scheme, which is that vi
+considers the file field in tags to end at the first space or tab;
+hence in the above entry it will try to edit "`lookuptag".  The
+easiest way around this is to define SPACE=' ' in the environment
+and use entries like `lookuptag${SPACE}a`.  Bourne-ish shell users
+can say `lookuptag${IFS}a` instead.
+
+,
+Eamonn
+
+
+From specht.kd@sni-usa.com (Uwe Specht, D10 PU231)
+Subject: Re: Vi and Tags file...(please help).
+Date: 29 Nov 91 15:42:59 GMT
+Sender: specht@usun01.UUCP
+Organization: Siemens Nixdorf Informationssysteme AG, Paderborn, Germany
+Status: O
+
+you can create your own tags-file with the following syntax:
+
+search_string	"filename"	^/search_string .. .. /$
+
+you call this file 'tags' and you can search for it with the
+command
+vi -t search_string 
+or when you are in a file you can search with the command
+:tags search_string
+I hope, that help you a little bit
+
+--
+MfG/Regards
+                       Siemens Nixdorf Informationssysteme AG
+  /   /   Specht       Abt.: D10 PU2232
+ /   /           ___   Heinz Nixdorf Ring
+/   /  \  /\  / /__/   W-4790 Paderborn, Germany
+\__/    \/  \/ /____   NERV:specht.kd
+---------------------------------------------------------------------
+Email: specht.kd@sni-usa.com (America (North & South))
+       specht.kd@sni.de      (Rest of world)
+
+
+From stanj@hpnmdla.sr.hp.com (Stan Jaffe)
+Subject: Re: VI search for begin/end of blocks
+Date: 4 Nov 91 22:33:30 GMT
+Organization: HP Network Measurements Div, Santa Rosa, CA
+Status: O
+
+In comp.editors, mrd@ecs.soton.ac.uk (Mark Dobie) writes:
+
+>>  I would suggest an approach based on the level of indentation.
+
+Yes, that would be nice.  However, the code typically isn't indented.
+If it was, I wouldn't need this feature in the first place!
+
+
+map ^T mx:%s/BEGIN/{@/g^M:%s/END/}@/g^M'x%mz:%s/}@/END/g^M:%s/{@/BEGIN/g^M'z
+
+The macro above maps to cntrl-T, marks the present position, substitutes a
+{@ for the BEGIN, a }@ for the END, goes back to the original position,
+finds the matching curly-brace, marks that position, then substitutes back
+the BEGIN and END, and finally returns to the marked matching position.
+
+This works, but looks like the editor is doing the cha-cha (top to bottom to
+etc).
+
+Does anyone have a better way to do this???
+
+Stan Jaffe     stanj@sr.hp.com
+
+
+From dattier@vpnet.chi.il.us (David W. Tamkin)
+Subject: Re: how do I macroize c --> |c|
+Keywords: vi, macros
+Date: 14 Nov 91 22:58:35 GMT
+Organization: VPNet Public Access Unix, Villa Park, Illinois  60181-2206
+Status: O
+
+rouben@math9.math.umbc.edu (Rouben Rostamian) wrote in
+<1991Nov14.120529.13092@umbc3.umbc.edu>:
+
+| In article <ki3ul7INNsfh@agate.berkeley.edu> casterln@are.Berkeley.EDU
+| (Gary Casterline) writes:
+| >I can't seem to get this to work.
+| >:map 'p i|la|
+|
+| You need to escape the expansion of the | characters by preceeding
+| them with ^V.
+
+You need to escape the pipes by preceding each of them with a HARD ^V;
+you'll have to type ^V twice before each pipe.  Rouben did not make that
+clear.
+
+David W. Tamkin  Box 7002  Des Plaines, Illinois  60018-7002  +1 708 518 6769
+dattier@vpnet.chi.il.us  CIS: 73720,1570  MCI Mail: 426-1818  +1 312 693 0580
+
+"Parker Lewis Can't Lose" mailing list:
+ flamingo-request@esd.sgi.com (reflector)   flamingo-request@mcs.com (digest)
+
+
