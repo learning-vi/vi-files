@@ -1,0 +1,15 @@
+Here are the instructions again.  You are currently reading "3temp".
+You have already accomplished step 1 and step 2.
+--------------------------------------------------------------------
+
+    1) WRITE "3cutpaste".  vi will not allow	:w (press RETURN)
+    you to edit another file without first
+    saving any changes you've made.
+
+    2) EDIT "3temp" without quitting vi.	:e 3temp (press RETURN)
+
+    3) YANK 6 lines from "3temp".		"ay6y
+
+    4) Return to "3cutpaste".			:e 3cutpaste (press RETURN)
+
+    5) PUT from buffer a			"ap
