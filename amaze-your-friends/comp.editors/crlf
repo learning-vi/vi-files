@@ -1,0 +1,62 @@
+From buboo@alf.uib.no (Ove Ruben R Olsen)
+Subject: Re: How do I remove new-lines [CR,LF] in vi?
+Date: Mon, 20 Jul 92 08:54:26 GMT
+
+Sergio Stewart writes:
+>How do I remove a CR,LF from a file while editing with vi?
+>In the past Ive "dd" the entire line just to remove the CR,LF. 
+>I know it is possible to use "u" undo the CR,LF is still in the
+>buffer, but what if it isnt? What Id like is a simple "x" [delete char]
+>solution to removing CR and LF's.
+>
+>Any ideas?
+
+To remove the CRLF at the end of a line:  :%s/^V^M//
+					      ^
+                                              CTRL-V-CTRL-M
+
+To remove blanklines (LF):  :%s/^$//
+                                ^
+			        NOT CTRL-$, but just ^ and $
+
+To remove blanklines containing ^M (CRLF):  :%s/^^V^M$//
+
+
+\Ruben.
+
+
+-- 
+    Ove Ruben R Olsen, Professional VI user. EMAIL: Ove.R.Olsen@ubb.uib.no
+  Maintaining the Largest  VI/EX-STUFF Archive in the WORLD (alf.uib.no) and
+the Comp.Editors FAQ file. If you have information about editing, new editors,
+  please get in touch with me. This does not apply to EMACS type of editors.
+
+
+From hansm@cs.kun.nl (Hans Mulder)
+Subject: Re: How do I remove new-lines [CR,LF] in vi?
+Date: Mon, 20 Jul 1992 10:03:00 GMT
+
+In <Brnt3s.5r6@x10siv.wariat.org> serges@x10siv.wariat.org (Sergio Stewart) writes:
+>How do I remove a CR,LF from a file while editing with vi?
+>In the past Ive "dd" the entire line just to remove the CR,LF. 
+
+If there are any CRs in the buffer (vi shows those as ^M), you can use
+"x" to get rid of them.
+
+The easiest way to get rid of an LF is usually "J" (join lines).
+Vi tries to be smart about "J" and give you the appropriate amount
+of white space instead.  If you don't want that, you can "x" it out
+or use ":j!" instead of "J" to stop vi from generating it.
+
+--
+Hope this helps,
+
+Hans Mulder			hansm@cs.kun.nl
+
+
+From albani@cadlab.sublink.org (Lanfranco Albani)
+Subject: Re: How do I remove new-lines [CR,LF] in vi?
+Date: 21 Jul 92 09:35:58 GMT
+
+buboo@alf.uib.no (Ove Ruben R Olsen) writes:
+:To remove the CRLF at the end of a
