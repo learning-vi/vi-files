@@ -1,0 +1,61 @@
+From: chris@mimsy.UUCP (Chris Torek)
+Subject: Re: vipw - the program
+Date: 18 Oct 88 12:34:45 GMT
+
+In article <218@fantasci.UUCP> jep@fantasci.UUCP (Joseph E Poplawski) writes:
+>if [ "n$EDITOR" = "n" ]
+>then
+>	EDITOR=/usr/bin/vi
+>fi
+
+Handy sh programming tip number 3,141: use
+
+	${EDITOR-/usr/bin/vi}
+
+But here is the real reason for the followup:
+
+>if [ -f "/etc/ptmp" ]
+>then
+>	echo ""
+>	echo "/etc/passwd being used, please try again in a few minutes..."
+>	echo ""
+>	exit 1
+>else
+>	cat /dev/null >/etc/ptmp
+
+This has a window during which it will not notice the lock file.
+You are much better off using links, viz.:
+
+	# The following is so that we do not remove a ptmp lock file
+	# that we did not create, yet we never ignore signals.
+	# At worst we will leave a dummy file in /etc.
+	lock=/etc/ptmp
+	tf=$lock$$
+	rm -f $tf
+	>$tf
+	trap "if [ -f $tf ]; then rm -f $tf $lock; fi; exit 1" 1 2 3 15
+	if ln $tf $lock 2>/dev/null; then
+		echo '
+	/etc/passwd busy, please try again
+	' 1>&2
+		exit 1
+	else
+		# cp /etc/passwd /etc/passwd.old # depending on paranoia level
+		(trap 1 2 3 15; ${EDITOR-/usr/ucb/vi} /etc/passwd)
+		rm -f $tf $lock
+	fi
+
+Of course, this script should not be used on systems that already
+have a `vipw' program, since it may (and probably does) use some
+other form of locking.
+
+(From C code one can use open(O_CREAT|O_EXCL) to atomically create
+a file and fail if it already exists, but the shells do not provide
+this facility.  Another approach is to write a small tool that does
+this.  But unless you have reliable signals you will still have
+windows of vulnerability.)
+-- 
+In-Real-Life: Chris Torek, Univ of MD Comp Sci Dept (+1 301 454 7163)
+Domain:	chris@mimsy.umd.edu	Path:	uunet!mimsy!chris
+
+
