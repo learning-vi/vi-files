@@ -1,0 +1,6 @@
+" std.ab -- standard abbreviations
+" Actually, I don't think a "standard-mode" shouldn't have ANY
+" abbrevs defined.  Leave that to the more specialized modes like
+" text-mode or c-mode.  So, this is just an example:
+abb fb foobar
+abb cs computer science
