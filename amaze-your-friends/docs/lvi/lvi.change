@@ -1,0 +1,22 @@
+You have typed 'c' or 'C'.  The one you typed is now activated.
+
+c     is an operator that you put before a command that would normally move
+      you to another position in order to change the text you pass over to
+      the text that you input immediately after the command.  End text insert
+      with <ESC>.  A '$' sign indicates how far the command will take effect.
+
+C     is a shorthand for the 'c$' command that changes everything from the
+      current cursor position to, but not including, the newline character.
+
+Use this text for harmless practicing.  Undo last change with 'u'. Examples:
+
+    c5wfive words<ESC>  change next 5 words to the two words "five words".
+    c}changing is easy  change all text from the cursor to the end of the
+			current paragraph to the text "changing is easy".
+    c(---               change all text from the cursor to the beginning of
+			the current sentence to the text "---".
+    c/xyz<CR>New text   change all text from the cursor to next occurrence
+			of 'xyz' to the new text "New text".
+-------------------------------------------------------------------bt 88/01/25
+Type '^c' to continue editing or 'v' to visit old buffer. Type 'q' to quit.
+
