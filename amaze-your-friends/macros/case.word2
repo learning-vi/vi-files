@@ -1,0 +1,19 @@
+" From: faf@m10ux.UUCP ( MHx5563)
+" Subject: Re: vi macros to convert the case of a word
+" Summary: modified macro to handle autoindent
+" Date: 9 Sep 88 15:59:18 GMT
+" 
+" In article <8686@ihlpb.ATT.COM>, bdewbank@ihlpb.ATT.COM (Ewbank) writes:
+" > Just for fun, I tried to write a macro...and succeeded!
+" > 
+" 
+" I modified the macro to convert the case of a word to work when
+" autoindent is set.  The following line should be stored in $HOME/.exrc
+" Note than characters preceded by ^ must be converted to control
+" characters and ^[ must be converted to <ESC>
+" 
+" map ^T i^M^[Ea^M^[-y$Pa^M^[-:s/^[   ]*//^M:s/./\~/g^M0"zd$+@z--4J
+map  iEa-y$Pa-:s/   ]*//:s/./\~/g0"zd$+@z--4J
+" 
+" Jon Eiseman, AT&T Bell Labs, att!m21ux!jon
+
