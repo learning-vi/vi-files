@@ -1,0 +1,26 @@
+Article 173 of comp.editors:
+Path: chemabs!osu-cis!cbosgd!ihnp4!homxb!mtuxo!mtune!rutgers!cmcl2!nrl-cmf!ames!amdcad!sun!pitstop!sundc!seismo!uunet!mcvax!enea!kuling!irf
+From: irf@kuling.UUCP (Bo Thide)
+Newsgroups: comp.editors
+Subject: Novice vi(1) script with on-line help
+Message-ID: <607@kuling.UUCP>
+Date: 17 Jan 88 15:36:47 GMT
+Organization: DoCS, Uppsala University, Sweden
+Lines: 205
+
+This is 'nvi', a novice 'vi' script including on-line command help (the part
+that presents all 'vi' commands fits on a 80x24 screen).  We have put 'nvi'
+in /usr/local/bin and the help text in /usr/local/lib/vi.  I also include
+TeX source code for the 'vi' command help card.  Run it and photo-copy it
+on a cardboard sheet, fold it, and keep it available in your shirt pocket.
+
+Comments/corrections welcome. Enjoy!
+
+-Bo
+
+PS. If you don't have the non-expert 'vi' version 'vedit' on your UNIX,
+replace 'vedit' by 'vi' in the 'nvi' script!
+
+>>> Bo Thide', Swedish Institute of Space Physics, S-755 90 Uppsala, Sweden <<<
+Phone: (+46) 18-300020. Telex: 76036 (IRFUPP S). UUCP: ...enea!kuling!irfu!bt
+
