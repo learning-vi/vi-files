@@ -1,0 +1,83 @@
+
+     Textbooks available for purchase from commercial bookstores:
+
+          Unix for People by Peter Birns, Patrick Brown, and  John  C.
+          C.   Munster.  Prentice-Hall, New Jersey.  ISBN 0-13-937442-
+          6(pbk).  Modules 3, 4, 8 and 11 teach vi and ex.
+
+          Learning the  vi  Editor,  by  Linda  Lamb.   Unix  Nutshell
+          Handbooks, O'Reilly & Associates, Inc.  ISBN 0-937175-17-X.
+
+          Vi-The Unix System Editor by August Hansen. Brady, New York.
+          ISBN 0-89303-928-4.
+
+     The following U.C. Berkeley documents are available for reference
+     at the Engineering Library in Bechtel. They can also be purchased
+     at Kinko's.
+
+        Tutorials:
+
+          A Tutorial Introduction to Ex and Vi (UNX 3.3.6)
+          Advanced Editing on UNIX Using Ex and Vi (UNX 3.3.3)
+
+        References:
+
+          Vi/Ex Quick Reference Card (UNX 3.4.2)
+          An Introduction to Display Editing with Vi (UNX 3.2.2)
+          Ex Reference Manual (UNX 3.2.1)
+
+     Sun workstation documents can be purchased from Sun  Microsystems
+     and are available for reference in many Sun workstation clusters:
+
+        Tutorials:
+
+          ``Editing Files'' chapter 6 in Getting  Started  with  UNIX:
+          Beginner's Guide (Part # 800-1284-03).
+
+          ``Problems Editing Text  Files  (with  vi)''  chapter  5  in
+          Getting  Started  with  UNIX:  Beginner's Guide (Part # 800-
+          1286-03).
+
+        References:
+
+          ``Using vi, the Visual Display Editor'' chapter 2 in Editing
+          Text Files on the Sun Workstation (Part # 800-1319-03).
+
+          ``Command Reference for the ex Line Editor''  chapter  3  in
+          Editing  Text Files on the Sun Workstation (Part # 800-1319-
+          03).
+
+     On-Line Learn Exercises
+          A series of several dozen interactive exercises can be  used
+          to  learn  vi.   To  try these exercises, leave ``help'' (by
+          typing ``%''), and then type ``learn vi''.
+
+     Practice File (for a taste of vi)
+          An easy way to begin  learning  cursor  movements  and  some
+          simple  vi  commands is to practice using vi on our prepared
+          practice file.  To do this, type ``vi_practice'' from within
+          help or type ``help vi_practice'' from the shell.
+
+
+--------------------------------------------------------------------------------
+From: alan@spuddy.uucp (Alan Saunders)
+Newsgroups: comp.editors
+Subject: Re: Documentation on certain editors ...
+Date: 11 Aug 92 06:34:10 GMT
+Organization: Spuddy's Public Usenet Domain
+Lines: 14
+
+In article <1992Aug10.114756.22280@organpipe.uug.arizona.edu> julien@scs.leeds.a
+c.uk (J C Flack) writes:
+>vi --- either to books or on-line files ?
+
+The one book I use, has taken me from a vi hater to a vi lover. It's
+"The Ultimate Guide to the VI and EX Text Editors" from the Hewlett Packard
+company. Apparently originally published as part of the HP documentation, it
+has now been published publicly by The Benjamin/Cummings Publishing Co. Ltd.,
+390 Bridge Parkway, Redwood City, California 94065.
+ISBN 0-8053-4460-8. Cost (Pounds Sterling) 19.95.
+
+Regards .. Alan
+
+
