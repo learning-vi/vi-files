@@ -1,0 +1,40 @@
+From brian@cis.ohio-state.edu Sun Jan 12 22:59:26 1992
+Return-Path: <brian@cis.ohio-state.edu>
+Date: Sun, 12 Jan 92 16:58:03 -0500
+From: Brian K Smith <brian@cis.ohio-state.edu>
+To: Ove.R.Olsen@uib.no, cheng@monu6.cc.monash.edu.au, dylan@ibmpcug.co.uk
+Subject: Vi editor for vms
+Status: R
+
+
+
+   Okay the information I will be giving you concerns the vi
+editor I got off of gatekeeper.dec.com in the directory:
+pub/VMS/vitpu-v5.  The editor is a front-end on tpu and installed
+bare minimum takes 250k of disk.  Installed as the designer intended
+(all doc files, neat cld to add to dcl) it takes about 560k.
+
+  The installation is very easy.  However, for a complete install where
+you change dcltables and use the install utility, you will need SYSPRV,
+and probably CMKRNL privs.  Since I am the only vi user on my system (a vax 
+8550, about 200 users) it seemed a waste to redefine dcltables and install
+something for one person.  Fortunately,  the tpu section can be set up without
+all that fanfare.  I just commented out the install line in the make.com
+file.
+
+  The editor itself has ex and vi modes, and it lets you have the
+equivalent of a .exrc/.virc to set up you own environment.  I have not
+used it extensively yet, but all the basic editing, searching, and replacing
+stuff seems to work fine.  The search case sensitivity is a little different
+from what I am used to (vi on Ultrix 4.* and SunOS 4.x) but that is minor.
+The package also defaults to be your VMS mail editor, which is nice.
+
+  One of the replies to my post was from the author of vitpu
+(gregg@cbnewsc.cb.att.com), and he seemed
+like he would not mind helping if there were problems.  I did not contact
+him though, since I ran into no difficulties.  Feel free to mail me if you
+need more information. 
+
+   Brian K Smith
+    brian@cis.ohio-state.edu
+
