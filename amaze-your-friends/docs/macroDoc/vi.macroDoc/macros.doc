@@ -1,0 +1,255 @@
+Part 2 of a series:
+
+			
+		more commands for the VI editor
+
+		Part two:
+
+		macros and abbreviations
+
+	Macros and abbreviations are ways for you to customize vi to
+suit your way of doing things, as opposed to you having to change your
+editing habits to accomodate vi. There are two types of macros, those
+that work in the input mode, and those that work from the command mode.
+Abbreviations only work in the input mode.
+
+	Where to use macros:
+
+	I use macros for things that I like to do frequently, where the
+existing key sequence for getting something done gets to be too tedious.
+If you are in vi right now, hit the colon key, and type in "map",
+like this:
+
+		:map
+
+	After hitting return, you'll see the macros that you currently
+have access to in the command mode. You should at least see four, one
+each for up, down, left, and right. Let's make a simple one to add to
+this list...you type in the colon to get the ex prompt ":"
+
+		:map g ^G     <--- that's a "control G"
+
+	When you've hit return, you'll have created a new definition for
+the "g" key. Go ahead and hit the g key a couple times, move the cursor
+a couple of lines, and try the g key again. You've made it so that
+you don't have to hit control g to get this result anymore, which is
+a slight improvement. Let's try a more useful example:
+
+		:map @m :w^M:!more %^M
+
+	This can be slightly confusing at first to try to type in, so
+I'll explain the business about the control M. When you are in vi, and
+want to represent a control character, instead of performing the action that it
+would usually do, you preceed that character with a control V (think
+of it as control V for "view", as in "view the next character"). Thus,
+the preceeding example becomes "colon, w, control V, return (which prints
+the ^M character), colon, ! (meaning: we're going to run a unix command
+from vi), more, % (which is vi's way of saying "the current file"),
+another ^M (same sequence (control V return) as before).
+
+	Now, what does this all do? First, I used "@m" to define the
+keys that I will hit for my macro. On the adm5 terminals I learned
+unix on, it is very convenient to hit "@" and then "m" very quickly.
+Now that I use a Wyse 50, I find the '[' and ']' characters very handy
+for defining macros - this is an issue best suited for the user to figure
+out what is comfortable. The rhs (right hand side of the macro) says
+"write the file by ":w^M", and then do another command by hitting the ":",
+Hit the "!" to show that we're doing a unix command, and run the current
+file that we have in vi (represented by vi as "%") through "more"
+by saying ":!more %^M"" Now let's do a fun one.
+
+	:map ^> I ^[^
+
+	This one is typed as:
+
+	control V, control greater than, space, I, space, control V,
+	escape, and then a caret (^), return
+
+	it appears as:
+
+	:map ^N I ^[^
+
+	and that is perfectly ok.
+
+	Try this one out now, while you have it on the screen in front
+of you, if you goof somehow, you can hit ^C (for now on, a "^" in
+front of a letter most often means it is a control key combination) to get out.
+
+	 This last macro shoves a whole line over to the right by
+inserting a space in front of it, and leaves the cursor on the first
+non-blank character on the line. I chose ^> because to me it symbolizes
+the direction that I am trying to move something, and it is also a
+close relative of ">>", which shifts a line over by a tab. This macro
+has the counterpart:
+
+	:map ^< ^X
+
+	and appears as
+
+	:map ^L ^X     <--- not a control x
+
+	which is typed as (left hand side) control V, control less than,
+and the rhs (right hand side) is not a control X, even though
+it appears as such. It is a caret, and then a capital X.
+
+	This macro shoves the whole line to the left by one space (or
+tab if there is one in the text) until it can't anymore.
+
+	I will come back to macros for temporary use.
+
+
+		saving macros...the .exrc file
+
+	It's nice to be able to play around with macros for now, but
+it would be even better to have them ready to go everytime you want
+to use vi for something. Fortunately, there is such a mechanism, and
+it involves a file called .exrc that is in every directory where you
+want to have vi set up a certain way. Look at an .exrc file by using
+the public domaing pager "less", or by view'ing it (view .exrc (view
+is vi without the ability to write back changes).
+
+	You should have a .exrc file in every directory where you'll be using
+vi with any consistent set of macros that you develop. Vi reads the file upon
+starting up, but you can also "source" a file while you are already in
+vi by saying:
+
+	:so .exrc
+
+	After that, you can take a look at the present macros by entering
+":map". 
+
+		Macros in input mode
+
+	The macros I just discussed all work in the command mode, a couple
+of them enter the input mode to do something, and then hit escape by them-
+selves to keep you in the command mode. There is another flavor of macros,
+and these are called "input macros". They work the same way as command
+mode macros, but they can be invoked as you are typing along. A sample
+one could be:
+
+	:map! ^W ^]:w^Mi 
+
+	Which would write out the file as you are going along, with a
+small pause...it is typed as ^V, escape, :w, ^V, return, i.
+
+There are many more macros that could be done in this mode, but you need
+to avoid ^S...it will make the terminal appear to freeze, when in fact it
+is just waiting for you to hit ^Q in order to resume (you use this
+combination to look through a long file that is being catted. A strong point
+in favor of using input macros is that they can consist of many characters.
+Let's say that you are a C, Fortran, Pascal, or Logo user, and you
+want some sort of way to speed up writing statements that print out
+a phrase. If we are dealing with pascal, we could do this:
+
+	:map! @wr writeln ('');^[hhi
+
+	in C:
+
+	:map! @pf print ("");^[hhi
+
+	in Fortran
+
+	:map! @wr write (6,)'^[hi
+
+and so on... I think you get the idea. A more advanced use is
+to place some text in a buffer (a la: "ayy), and then have that buffer
+copied out from within a macro, making for a different result from the
+macro every time. Let's say I copy this next sentence with "nyy
+
+	the time has come for all good men to tie their shoes.
+
+and let's assume we have the following macro (I'll use the
+command mode form here):
+
+	:map @w "npOprintf ("^[JxA");^[^
+
+this results in:
+
+	printf ("the time has come for all good men to tie their shoes.");
+
+The macro comes out different every time, depending on what you
+put into buffer n. Before I take a break from macros, let me share some
+things that I've found:
+
+	There is a limit to how many macros you can define, depending on
+the total amount of characters that exist in all of your macros put together.
+I find that 1024 characters total for all macros is a common limit. I changed
+a local copy of vi to handle 4096... not that I am using that many yet,
+but I like to be flexible :-)
+
+	Macros can be recursive, and can also call other macros. This can
+be fun, and confusing.
+
+	Try to write macros that you are really going to use, if they look
+impressive, but you never use them because you can't remember them, it takes
+that much more time every time you start up vi to set something up that
+is going to waste.
+
+	If you want to get into a whole series of commands, have a macro
+source a file...the file can consist of unix and vi commands, and can
+even define and undefine macros as you go!
+
+	To undefine a macro, you say :unm <macro name>, or for an input mode
+macro, you would say :unm! <macro name>
+
+		Abbreviations
+
+	Abbreviations are much easier to understand than macros. Here is
+a simple one:
+
+	:ab HT hi there!
+
+	Once this is set up, you type in "HT", and then hit the space bar,
+return key, a "*", " " " (quote), or one of many other keys. They transform
+what you have just typed into what you want them to become. I will warn
+you, but you may still run into this problem someday: Don't make an
+abbreviation that is easy to confuse with something you want to type
+normally! It can take a few seconds of watching an abbreviation appear,
+get deleted by you, and have it reappear before you figure out a way around
+it. You need to experience the annoyance this can cause to fully appreciate
+what I'm saying! It will seem that this word or phrase will not want
+to go away! In other words, use groupings such as "wrn" for "writeln",
+or "prc" for procedure. You will soon discover what you are most comfortable
+with.
+
+	Another thing about abbreviations is that they leave a space just
+after they transform themselves, such as:
+
+	:ab wrn writeln ('
+
+	which is mildly annoying. A last example is that abbreviations
+can do something that is very routine, such as:
+
+	:ab wneof while not eof do^M  begin^M 
+
+	There is a final space after the second return, and the output
+is:
+		while not eof do
+		  begin
+		    (cursor)
+
+	with the cursor resting where the next statement should go.
+
+	I'll post a file soon that goes into more detail. For now,
+I've included a uuencoded sample of my .exrc. To use it:
+
+	touch .sample		(these two lines are neceesary if you
+	chmod 666 .sample	are working with a stubborn version of 
+				uudecode)
+
+	uudecode sample_exrc
+
+	(go into vi)
+
+	:so .sample
+
+	Note that the character " is a comment line... do not have
+lines in your .exrc that are blank.
+
+	This wraps up an introduction to macros and abbreviations, 
+please mail all questions, comments, complaints, and so forth to:
+
+dan smith, island graphics, marin co., ca  | "My opinions: you can borrow them,
+uucp: ..!ucbvax!ucbcad!island!daniel       |  but don't take them out bowling"
+uucp: ..!ptsfa!unicom!daniel !well!daniels |  (415) 332 FAST (h) 491 1000 (w)
+
