@@ -1,0 +1,192 @@
+From: roy@zooks.eng.mcmaster.ca (Roy Underhill)
+Subject: Re: unmapping of keys in vi
+Keywords: unmap, map
+Date: 28 Aug 91 14:20:33 GMT
+
+This is a long posting on key binding.  If interested keep reading.
+It has been tested on both SunOS 4.1.1 and IRIX 3.3.2
+
+In article <1991Aug28.093804.12598@unibi.uni-bielefeld.de> malte@techfak.uni-bielefeld.de (Malte Uhl) writes:
+>A few days ago I asked how to unmap keys if they were bound to macros.
+>The answers I got were of the form "use unmap or unmap!".
+>Now, what I really wanted to do was
+>	:map ^X  3x
+>...
+>	:map ^X  ixxx^[
+>...
+>	:"do something that makes ^X delete 3 characters again"
+>
+>Unmap unmaps everything from a key, at last my vi does, which is the one
+>that comes with SunOS 4.1.1. It says it is :version SVR 3.1
+
+
+
+	It seems that what you want is to be able to switch easily
+between sets of key bindings.  It is common to find that editting of
+different groups of files leads to different wish lists for available
+commands.  One way to do this is:
+
+	put  a bunch of commands in a file
+	use :so filename to invoke the commands
+
+What is better is to write two files.  One installs the commands; the
+other removes them and restores ordinary settings and key bindings.
+To make this a little easier put the ``so filename'' parts in
+abbreviations.  These get expanded after the :.  To make life even
+easier have a file of these ab commands that are read in from .exrc.
+
+As a demonstration of the first level of such shannigans, you could
+create two files called demo and nodemo in a directory called ~/excom.  
+Try for demo:
+
+
+" leave no blank lines.  This is the first line of ~/excom/demo.
+" double quotes comment out a line
+"
+" demo example of use of so command.  Control characters are
+" represented by ^char.  Replace this with ^V^char in your file.
+" this demo has two commands: ^X to delete three characters,
+"                              t to put a word in parentheses.
+" It is assumed that your .exrc has (or so's a file that has)
+" map ^X ixxx^[
+" in it.
+"
+map  3x
+map t i(ea)bh
+"
+" leave no blank lines.  This is the last line of ~/excom/demo.
+
+for nodemo
+
+" leave no blank lines.  This is the first line of ~/excom/nodemo.
+"
+unmap ^X
+map ^X ixxx^[
+"
+unmap t
+" insert whatever binding, if any, you previously used for t
+"
+" leave no blank lines.  This is the last line of ~/excom/nodemo.
+
+
+
+Now start editting any piece of text.  
+Enter :ab  Zdemo so ~/excom/demo
+Enter :ab  Znodemo so ~/excom/nodemo
+Enter :Zdemo
+Play about with newly rebound keys.
+When you want the another set of bindings
+enter :Znodemo<CR> and whatever commands install the set you want.
+
+
+A further possibility is a second level of such shannigans.  As an 
+example only, I include the set up I use on one machine.  My ~/.exrc is
+
+"    the mark to comment something is the double quote
+"
+"   these call other files to set variables,
+"                             map keysequences
+"                             establish abbreviations
+"
+so ~/excom/exrcset
+so ~/excom/exrcmap
+so ~/excom/exrcab
+
+
+These files are:
+
+~/excom/exrcset
+
+"   initial setting of variables 
+"
+"   for source code take off the wrapmargin by using
+"   set wrapmargin=0 in .exrc of that directory
+"
+"
+set directory=/home/zooks/roy/temps
+set ic
+set showmode
+set nomesg
+set nowrapscan
+set wrapmargin=10
+
+~/excom/exrcmap:
+
+" default set of key mappings
+"
+" rshift and lshift are executable filters
+"
+map K dd
+map W 0w
+map , $
+map v i 
+map g i
+map q 0ic
+map ` xPP
+map = ~h
+map   :'z,.!rshift
+map   :'z,.!lshift
+map (   :.,'z!lshift
+map )   :.,'z!rshift
+
+~/excom/exrcab:
+
+" double quote comments out a line
+"
+"
+"
+"  establishes some pseudo-commands
+"
+" since everything after a colon everything is read as input for ex. One
+" can stick an input abbreviation there and have it hold a command
+" when expanded.  That's what these do.  They come in pairs.
+" each pair sets up a new set of key mappings or re-establishes 
+" the original set
+"
+"
+ab Zyesno     so ~/excom/yesno
+ab Znoyesno   so ~/excom/noyesno
+ab Zmarkd     so ~/excom/markd
+ab Znomarkd   so ~/excom/nomarkd
+ab Zsyms      so ~/excom/syms
+ab Znosyms    so ~/excom/nosyms
+ab Zparen     so ~/excom/paren
+ab Znoparen   so ~/excom/noparen
+ab Zreforms   so ~/excom/reforms
+ab Znoreforms so ~/excom/noreforms
+ab Zexpmap    so ~/excom/expmap
+ab Znoexpmap  so ~/excom/noexpmap
+
+Some of these files are quite long.  To complete the second level example 
+here are the shortest ones, paren and noparen.
+
+~/excom/paren:
+
+" places parentheses around the word starting at 
+" the cursor and leaves the cursor where it started
+" (handy for j.)
+"
+"
+map t i(ea)bh
+
+~/excom/noparen
+
+"  undoes paren
+"
+"  notice call to exrcmap
+"
+unmap t
+so ~/excom/exrcmap
+
+
+Between the use of .exrc files in the ~ directory and whatever
+directory I am working in and a selection of files that can be so'ed
+instantly I find vi a very powerful and comfortable editor.  Good
+luck.  Keep reading comp.editors!
+
+Roy
+
+   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~  
+  Roy Underhill,  (416) 525-9140 x4395   roy@zooks.eng.mcmaster.ca 
+  Department of Mechanical Engineering,  McMaster University, 
+  Hamilton,  Ontario,  Canada            L8S 4L7
