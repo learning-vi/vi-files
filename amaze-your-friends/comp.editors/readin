@@ -1,0 +1,228 @@
+From jayers@hamline.edu (Judi Ayers)
+Subject: VI editor questions
+Date: 27 May 92 19:57:24 GMT
+
+
+I have two files and this is what I'd like to accomplish:
+While using vi on one file, I would like to read
+in specific lines from a second file (I already know what the
+line numbers are).  Is there a way to do this using :r ?  I know
+I can write out specific line numbers to a file, and the command
+I want seems to be one that is just the opposite. I've tried various
+things with no luck and can't find any documentation on it.  Any ideas?
+
+I hope this is the right group to ask about a VI question.  If not,
+I'm sure I'll hear about it. Or better yet, please direct me to the
+correct group.  Thanx.
+
+Judi Ayers
+jayers@hamline.edu
+
+
+From Tom Christiansen <tchrist@convex.COM>
+Subject: Re: VI editor questions
+Reply-To: tchrist@convex.COM (Tom Christiansen)
+Date: Wed, 27 May 1992 22:12:42 GMT
+
+>From the keyboard of jayers@hamline.edu (Judi Ayers):
+<I have two files and this is what I'd like to accomplish:
+<While using vi on one file, I would like to read
+<in specific lines from a second file (I already know what the
+<line numbers are).  Is there a way to do this using :r ?  I know
+<I can write out specific line numbers to a file, and the command
+<I want seems to be one that is just the opposite. I've tried various
+<things with no luck and can't find any documentation on it.  Any ideas?
+
+Try:
+
+    :r!sed -n 50,75p file
+
+--tom
+
+
+From fgg@gemini.tmc.edu (Frank G. Gomez)
+Subject: Re: VI editor questions
+Date: 27 May 92 22:49:46 GMT
+
+You could try:
+
+   :r ! awk 'NR >= start && NR <= end' otherfile
+
+where 'start' is your starting line number from the
+other file and 'end' is the ending line number, and
+'otherfile' is of course the other file. The '!' puts
+the standard output of whatever command follows after
+the current line in the file you are editing.
+
+Frank
+
+
+From P.G.Widdop@bradford.ac.uk (Paul Widdop)
+Subject: Re: VI editor questions
+Date: 28 May 92 04:02:20 GMT
+
+jayers@hamline.edu (Judi Ayers) writes :
+
+
+>I have two files and this is what I'd like to accomplish:
+>While using vi on one file, I would like to read
+>in specific lines from a second file (I already know what the
+>line numbers are).
+
+This is probably a bit a of kludge but I suppose you could do the following
+vi command (on an empty line where you want to insert the text) ...
+
+ :.!awk '{if (NR >= startline && NR <= endline) print $0}' <file2>
+
+where startline and endline are the line numbers in <file2> that you want to
+copy between.
+
+No doubt the flames will start to fly now :)
+
+~paul
+--
+o---------------------------------------\ /-----------------------------------o
+| JANET    : P.G.Widdop@uk.ac.bradford   | " I sometimes wonder if anything   |
+| Internet : P.G.Widdop@bradford.ac.uk   |   is really worth the effort "     |
+|          : pwiddop@nyx.cs.du.edu       |                                    |
+o---------------------------------------/ \-----------------------------------o
+  If MS-DOS didn't exist, who would UNIX programmers hav to make fun of ?? 
+
+
+From felps@dfs.austin.ibm.com (Robert Felps)
+Subject: Re: VI editor questions
+Date: 27 May 92 12:26:50 GMT
+
+In article <1992May27.225326.18703@tamsun.tamu.edu> pck0276@tamsun.tamu.edu (Philip Kizer) writes:
+>In article <1992May27.195724.7568@uc.msc.edu> you write:
+>>I have two files and this is what I'd like to accomplish:
+>>While using vi on one file, I would like to read
+>>in specific lines from a second file (I already know what the
+>>line numbers are).  Is there a way to do this using :r ?  I know
+>>I can write out specific line numbers to a file, and the command
+>>I want seems to be one that is just the opposite. I've tried various
+>>things with no luck and can't find any documentation on it.  Any ideas?
+>
+>Well, the first thing that came to mind was to use a combination of head
+>and tail.  (Thank you for asking, I've wanted to work this out for a while,
+>but hadn't the motivation :)
+>
+>This will work to read lines 63 through 77 from file <file>:
+>:r !head -77 <file> | tail -15
+
+Well, I would either try,
+
+vi file1                            # edit file1 with vi
+/locate_place_to_add_lines          # locate place for add. lines in file1
+:r !sed -n 63,77p file2             # read lines 63-77 of file2 into file1
+ZZ                                  # save and exit vi
+
+or try:
+
+vi file1 file2                      # edit both files with vi
+/locate_place_to_add_lines          # locate place for add. lines in file1
+:n                                  # goto (edit) next file (file2)
+63G                                 # goto line 63 in file2
+"q15yy                              # yank 15 lines to the q register/buffer
+:e#                                 # edit the alternate file (file1)
+"qp                                 # put the contents of register q in file1
+ZZ                                  # save and exit vi
+
+or try:
+
+vi file1                            # edit file1 with vi
+/locate_place_to_add_lines          # locate place for add. lines in file1
+:e file2                            # edit alternate file (file2)
+63G                                 # goto line 63 in file2
+"q15yy                              # yank 15 lines to the q register/buffer
+:e#                                 # edit the alternate file (file1)
+"qp                                 # put the contents of register q in file1
+ZZ                                  # save and exit vi
+
+
+Hope it helps,
+Robert
+
+felps@cactus.org
+
+
+From brandy@tramp.Colorado.EDU (BRANDAUER CARL M)
+Subject: Re: VI editor questions
+Date: Fri, 29 May 1992 15:14:58 GMT
+
+ctwomey@ccvax.ucd.ie writes:
+
+>I have two files and this is what I'd like to accomplish:
+>While using vi on one file, I would like to read
+>in specific lines from a second file (I already know what the
+>line numbers are).  Is there a way to do this using :r ?
+
+Yes, indeed.
+
+	:r !unix_command
+
+will read the output of the command into the vi buffer.  For your
+particular application the following will work:
+
+	:r !sed -n x,yp source_file
+
+where x and y are the first and last line number, respectively, that you
+want to insert.  Note that with proper quoting you could use regular
+expressions in place of x or y or both.
+
+Cheers - Carl
+
+
+From weimer@garden.NoSubdomain.NoDomain (Gary Weimer (253-7796))
+Subject: Re: VI editor questions
+Reply-To: weimer@ssd.kodak.com
+Date: Fri, 29 May 92 15:43:32 GMT
+
+In article <1992May28.091554.49042@ccvax.ucd.ie>, ctwomey@ccvax.ucd.ie writes:
+|> 
+|> I have two files and this is what I'd like to accomplish:
+|> While using vi on one file, I would like to read
+|> in specific lines from a second file (I already know what the
+|> line numbers are).  Is there a way to do this using :r ?  I know
+|> I can write out specific line numbers to a file, and the command
+|> I want seems to be one that is just the opposite. I've tried various
+|> things with no luck and can't find any documentation on it.  Any ideas?
+
+There are 2 ways I can think of:
+
+The easy way to EXPLAIN:
+
+    :r! tail +<number_of_first_line> <file_to_read> | head -<number_of_lines>
+OR
+    :r! sed -n '<number_of_first_line>,<number_of_last_line>p' <file_to_read>
+
+The easy way to DO (You don't need exact line numbers--see NOTES):
+
+    :e <file_to_read>			# edit second file
+    :<number_of_first_line>		# go to first line to copy
+    <number_of_lines>"xY		# yank lines into buffer x
+    :e#					# go back to first file
+    "xp					# put lines after current line
+
+    NOTES:
+	- may have to save changes to first file before editing second file
+	- you can get to the first line using searches, cursor moves, etc.
+	- Yank command could be "xy<range> to get a word, sentence,
+          paragrah, etc.
+	- a short-cut for :e# is ^6 (ctrl-6)
+
+|> I hope this is the right group to ask about a VI question.
+
+It's the only group I can think of...
+-- 
+weimer@ssd.kodak.com ( Gary Weimer )
+
+
+From bill@Celestial.COM (Bill Campbell)
+Subject: Re: VI editor questions
+Date: 31 May 92 02:57:18 GMT
+
+In article <1992May27.195724.7568@uc.msc.edu>, jayers@hamline.edu (Judi Ayers) writes:
+	 
+	I have two files and this is what I'd like to accomplish:
+	While using vi on one file, I would like to re
