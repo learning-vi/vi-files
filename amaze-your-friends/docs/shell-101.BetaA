@@ -1,0 +1,425 @@
+
+          THE ULTIMATE SHELL- CONVERSION / EQUIVALENCE TABLE
+          """"""""""""""""""""""""""""""""""""""""""""""""""
+
+This is the ultimate shell conversion table. It's made for those
+who do shell programing and from time to time have to read shell-
+scripts for a shell they don't know.
+It is also for those who want to learn another shell.
+All errors, modifications, exstensions and contributions should
+be mailed to the author. When mailing to the author remeber to
+include the current version number.
+A tip if you are looking at this file inside vi:  :set wrapmargin=0
+No part of this file, or the file itself can be sold. You may only
+give it away for free.
+
+This file can be found on anon. ftp: alf.uib.no (129.177.30.3)
+in the directory /pub/lpf/misc/shell-100.BetaA.Z
+
+THIS IS A BETA-A RELEASE. IT WILL CONTAIN SEVERAL ERRORS IN THE
+KSH/BASH AND Z-SHELL COLLUMNS. I SUSPECT THE WHOLE INPUT/OUTPUT
+-REDIRECTION SECTION TO BE WRONG. FLAG SECTON Z-SHELL IS PROBABLY
+WRONG.  IF YOU FIND ERRORS, PLEASE REPORT THEM TO ME SO THAT I CAN
+INCLUDE THE CORRECTIONS IN THE TABLE.
+ALL CONTRIBUTIONS WILL BE NOTEFIED.
+THE ERRORS ARE DUE TO THAT I MAINLY USE CSH AND RC.
+OTHER ITEMS NOT INCLUDED IS VARIABLE SUBSTITUTION.
+
+
+Version:      1.01 BETA-A
+Copyright:    Ove Ruben R Olsen   (Ruben@uib.no)
+Contributors:
+
+
+
+INTRODUCTION
+""""""""""""
+
+The folowing shells are covered in this table:
+
+SH    - The standard UNIX Bourne shell.
+CSH   - The C shell with a syntax reminiscent of C.
+TCSH  - CSH with command line editing.
+KSH   - The Korn shell. A superset of SH
+BASH  - The GNU Bourne-Again shell.
+ZSH   - The Z Shell. Author is Paul Falstad.
+RC    - rc shell. A shell based on AT&T plan 9 shell.
+
+When looking for TCSH, use CSH. Pure TCSH's are marked with an '*'.
+When looking for BASH, use KSH. Pure BASH's are marked with an '*'.
+
+
+
+FLAGS
+"""""
+
+SH              CSH/TCSH        KSH/BASH        ZSH             RC
+--------------------------------------------------------------------------------
+a                               a               a
+                b
+c               t               c
+                                d*
+e               e               e               e               e
+f                               f
+                                f*
+                f                               f
+                                                g
+                                h
+h
+                                                h
+i               i               i               i               i
+                                                j
+k                               k
+                                                k
+                                l*              l               l
+                                m
+                                m*              m
+n               n               n               n
+                                o
+                                p
+                                r
+s               s                               s
+                                s
+t                               t
+u                               u               u
+v               v               v               v               v
+                V
+x               x                               x               x
+                X
+                                                y
+                                                1 - 9
+                                                A - Z
+-                               --
+                                -
+                                BASH's:
+                                  norc
+                                  noprofile
+                                  rcfile
+                                  version
+                                  quiet
+                                  login
+                                  nobraceexp.
+                                  nolineedi.
+                                  C
+                                  H
+
+
+
+
+
+
+          THE ULTIMATE SHELL- CONVERSION / EQUIVALENCE TABLE
+          """"""""""""""""""""""""""""""""""""""""""""""""""
+
+Copyright: Ove Ruben R Olsen  (Ruben@uib.no)
+Version:   1.01 BETA-A
+
+When looking for TCSH, use CSH. Pure TCSH's are marked with an '*'.
+When looking for BASH, use KSH. Pure BASH's are marked with an '*'.
+
+
+INTERNALS
+"""""""""
+
+SH              CSH/TCSH        KSH/BASH        ZSH             RC
+-------------------------------------------------------------------------------
+:                               :               :
+.                               .               .
+#               #               #               #
+&               &               &               &
+FOO=BAR         set FOO = BAR   FOO=BAR         FOO=BAR
+                @ FOO =EXPR
+NAME ()         alias           NAME ()         NAME ()         fn
+                alias           alias           alias           fn
+                                                autoload
+                bg              bg              bg
+                                                bindkey
+break           break           break           break           break
+                                builtin*                        builtin
+                                bye*            bye
+
+case WORD       switch ( WORD ) case WORD       case WORD       switch (LIST) {
+  in PATT )       case PATT:      in PATT )       in PATT )       case PATT CMD
+     LIST ;;           LIST          LIST ;;      LIST ;;       }
+esac              breaksw       esac            esac
+                  default:
+                    LIST
+                  breaksw
+                endsw
+
+                chdir                           chdir
+                                                chpwd
+cd              cd              cd              cd              cd
+                                commands*
+continue        continue        continue        continue
+                                declare*        declare
+                dirs            dirs*           dirs
+                                                disable
+                                                disown
+echo            echo            echo            echo            echo
+                                                echotc
+                                enable*         enable
+echo            echo            print           print
+eval            eval            eval            eval            eval
+exec            exec            exec
+exit            exit            exit            exit            exit
+export                          export          export
+                                false           false
+                                fc              fc
+                fg              fg              fg
+                                                for NAME
+                                                  in WORD;
+                                                  SUBLIST
+
+for NAME        foreach NAME    for NAME        for NAME  for (NAME in LIST) CMD
+  in WORD       ( LIST )          in WORD         in WORD
+  do LIST         LIST            do LIST         do LIST
+done            end             done            done
+
+                                function        function
+                                functions       functions
+                                                getln
+getopts                         getopts*        getopts
+                glob
+                goto
+hash            rehash          hash            rehash
+                                                hash
+                hashstat
+                                help*
+                history         history         history
+                if ( EXPR ) WORD
+
+if LIST         if ( EXPR )     if LIST         if LIST         if (EXPR) {
+  then LIST       then            then LIST       then LIST       LIST
+    elif LIST       LIST            elif LIST       elif LIST   } else LIST
+    then LIST     else              then LIST       then LIST
+  else LIST         LIST          else LIST       else LIST
+fi              endif           fi              fi
+
+                                integer         integer
+                jobs            jobs            jobs
+                                                job
+                kill            kill            kill
+                                let             let
+                limit           ulimit          limit
+                                local*          local
+                                                log
+login
+                logout          logout*         logout
+                ls-F*
+newgrp                          newgrp
+                nice
+                nohup           nohup
+                notify
+                periodic*
+                popd            popd*           popd
+                pushd           pushd*          pushd
+                precmd*                         precmd
+                                pwd             pwd
+                                                r
+read                            read            read
+readonly                        readonly        readonly
+                repeat                          repeat
+
+                                                repeat WORD
+                                                  do LIST
+                                                done
+
+return                          return          return          return
+
+                                                select NAME
+                                                  in WORD ;
+                                                  SUBLIST
+
+                                                select NAME
+                                                  in WORD
+                                                  do LIST
+                                                done
+
+                sched*                          sched
+set                             set             set
+                                                setopt
+                setenv
+shift           shift           shift           shift           shift
+                source          source*         source          .
+                stop
+                suspend         suspend*        suspend
+test                            test
+times           time            times           times
+trap            onintr          trap            trap
+                                true            trye
+type                            type            type
+                                typeset         typeset
+umask           umask           umask           umask           umask
+                unhash                          unhash
+unset           unalias         unalias
+                unlimit         ulimit          ulimit
+                                                unlimit
+unset           unset           unset           unset
+                unsetenv
+                                                unsetopt
+
+                                until LIST      until LIST
+                                  do LIST         do LIST
+                                done            done
+
+                                                vared
+wait            wait            wait            wait            wait
+                                                                whatis
+                                                whence
+
+while LIST      while ( EXPR )  while LIST      while LIST     while (EXPR) LIST
+   do LIST         LIST           do LIST         do LIST
+done            end             done            done
+
+                wich*                           wich
+
+
+          THE ULTIMATE SHELL- CONVERSION / EQUIVALENCE TABLE
+          """"""""""""""""""""""""""""""""""""""""""""""""""
+
+Copyright: Ove Ruben R Olsen  (Ruben@uib.no)
+Version:   1.01 BETA-A
+
+When looking for TCSH, use CSH. Pure TCSH's are marked with an '*'.
+When looking for BASH, use KSH. Pure BASH's are marked with an '*'.
+
+
+
+INPUT/OUTPUT - REDIRECTION
+""""""""""""""""""""""""""
+
+SH              CSH/TCSH        KSH/BASH        ZSH
+--------------------------------------------------------------------------------
+<WORD           < FILE          <WORD           <WORD
+                <<IDF           <<IDF           <<IDF
+                                                <<<WORD
+
+>WORD           > FILE          >WORD           >WORD
+                >& FILE         >$WORD
+                >! FILE                         >! WORD
+                >&! FILE
+>>WORD          >> FILE         >>WORD          >>WORD
+                >>& FILE
+                >>! FILE                        >>! WORD
+                >>&! FILE
+
+                                <$DIGIT         <&DIGIT
+                                <$-             <&-
+                                                <&p
+                                >$DIGIT         >&WORD
+                                >$-             >&-
+                                                <&p
+
+
+          THE ULTIMATE SHELL- CONVERSION / EQUIVALENCE TABLE
+          """"""""""""""""""""""""""""""""""""""""""""""""""
+
+Copyright: Ove Ruben R Olsen  (Ruben@uib.no)
+Version:   1.01 BETA-A
+
+When looking for TCSH, use CSH. Pure TCSH's are marked with an '*'.
+When looking for BASH, use KSH. Pure BASH's are marked with an '*'.
+
+
+
+PARAMETERS / SHELL ( ENVIRONMENT) VARIABLES
+"""""""""""""""""""""""""""""""""""""""""""
+
+SH              CSH/TCSH        KSH/BASH        ZSH             RC
+-------------------------------------------------------------------------------
+                                auto_resume*
+                argv                            argv
+                                BASH*
+                                BASH_VERSION*
+                                                BAUD
+CDPATH          cdpath          CDPATH          cdpath          cdpath
+                                COLUMNS         COLUMNS
+                cwd             PWD             PWD
+                dextract*
+                                                DIRSTACKSIZE
+                echo
+                edit*           EDITOR
+                                ENV
+                                EUID*
+                                                ERRNO
+                                FCEDIT
+                fignore         FIGNORE*        fignore
+                filec
+                                                fpath
+                                                GID
+                                glob_dot_filn.*
+                                allow_null_gl.*
+                hardpaths
+                histchars       histchars*      histchars
+                                HISTFILE        HISTFILE
+                history                         HISTSIZE
+                                history_control*
+HOME            home            HOME            HOME            home
+                HPATH*
+                                                HOST
+                                HOSTTYPE*       HOSTTYPE
+                                hostname_comp.*
+                ignoreeof       ignoreeof*
+IFS                             IFS             IFS             ifs
+                                LINES           LINES
+                                                LINENO
+                                                LISTMAX
+                                                LOGCHECK
+MAIL                            MAIL            MAIL
+MAILCHECK       mail            MAILCHECK       MAILCHECK
+MAILPATH        mail            MAILPATH        mailpath
+                                no_exit_on_fai.*
+                nobeep
+                noclobber       noclobber*
+                nonomatch
+                                nolinks*
+                notify          notify*
+                                LANG
+                                LINENO*
+                                LC_COLLATE
+                                LC_TYPE
+                                NO_PROMPT_VARS*
+                                OLDPWD          OLDPWD
+                                OPTARG*         OPTARG
+                                OPTERR*         OPTERR
+                                OPTIND*         OPTIND
+PATH            path            PATH            path            path
+                                PPID            PPID            pid
+                printexitvalue*
+                                PROMPT_COMMAND*
+PS1             prompt          PS1             PROMPT
+PS2             prompt2*        PS2             PROMPT2
+                                PS3             PROMPT3
+                                PS4*            PROMPT4
+                                                is also
+                                                PS1 - PS4
+                pushtohome*
+                                RANDOM          RANDOM
+                recexact*
+                                REPLY
+                                                RPROMPT
+                                                RPS1
+                savehist*                       SAVEHIST
+                                SECONDS         SECONDS
+SHELL           shell           SHELL
+                                SHLVL*          SHLVL
+                showdots*
+                                                signals
+                status                                          status
+                TERM*
+                term*
+                time                            TIMEFMT
+                                                TTY
+                autologout*     TMOUT           TMOUT
+                uid*            UID*            UID
+                                                USERNAME
+                verbose
+                version*                        VERSION
+                                VISUAL
+                watch*                          watch
+                                                WATCHFMT
+                wordchars*
+
+
+
