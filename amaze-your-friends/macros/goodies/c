@@ -1,0 +1,9 @@
+" gather all 'C'-specific stuff
+"
+so /usr/local/lib/vi/c.ck
+so /usr/local/lib/vi/c.ab
+so /usr/local/lib/vi/c.ik
+so /usr/local/lib/vi/c.se
+"
+" as usual, prepare the the loading of the macros
+map @ :so /usr/local/lib/vi/c.mc:unmap @
