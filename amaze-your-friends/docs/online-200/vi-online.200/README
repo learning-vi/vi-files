@@ -1,0 +1,40 @@
+
+                       VI ON-LINE HELP SYSTEM 
+                       ######################
+
+      Copyright (C) by Ove Ruben R Olsen (rubenro@viggo.blh.no)
+                       All rights reserved
+
+The author is NOT responsible for any damage this package may make.
+ 
+You may freely distribute this system as long as you don't get paid for 
+doing so. 
+ 
+All copyright info on all files MUST be intact.
+
+You are may NOT change this files without mailing the author your changes 
+for inclusion in later editions/versions.
+
+Please mail all bug-reports, suggestions et.al to rubenro@viggo.blh.no
+
+You may find this package on anon. ftp: alf.uib.no (129.177.30.3)
+   pub/lpf/misc/vi.online-200.tar.Z 
+
+
+To install the VI-ONLINE HELP package, just type install, or csh install.
+Follow the instruction given.
+
+The ADVANCED ON-LINE HELP is not due before version 3.00.
+
+When you start the help system you will be displayed a instruction window.
+After running the init, you will get back to your original file.
+Everytime you hit one of the help-key a "help-window" will be displayed.
+After reading the help information, just hit 'q' and it will dissapear.
+
+"Windows for VI" is Copyright (C) to Ove Ruben R Olsen. You may use this
+Windowing tech. only if you give the copyright holder credit. If you create
+a system under the "Windows for VI" tech, you may NOT SELL IT OR GET PAID
+FOR IT. Thus "Windows for VI" is a totaly free system. Everyone may build
+one as long as they don't take make money on it.
+
+
