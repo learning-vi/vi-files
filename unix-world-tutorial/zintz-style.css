@@ -1,0 +1,5 @@
+BODY,
+P		{ color:black; background:white; font-family:Verdana,Arial,Helvetica; font-size : 12px; }
+CODE	{ color:red; background:white; font-family:sans-serif; font-size: 12px; font-weight:bold;}
+TR, TD	{ color:black; background:white; font-family:Verdana,Arial,Helvetica }
+LI		{ margin-top:1em }
