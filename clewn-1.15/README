@@ -1,0 +1,75 @@
+README.txt - Clewn.
+
+Clewn is a GDB wrapper that controls the VIM editor through NetBeans. The
+Clewn user interface uses readline and, with very few exceptions, is the same
+as the GDB command line interface. Clewn stands for Command Line Editor Worker
+on NetBeans.
+
+Clewn can only be used with gvim, as vim, the version of VIM that runs in a
+terminal, does not support NetBeans.
+
+COMPILING AND INSTALLATION
+See INSTALL.
+
+DOCUMENTATION
+See the user manual in doc/clewn.txt, or type the vim command ':help clewn'
+within VIM.
+
+FEATURES
+
+* Any GDB command can be mapped in VIM to a key sequence using VIM key
+  mappings. This allows, for example, to set/clear a breakpoint or print a
+  variable's value at the current cursor or mouse position by just hitting a
+  key.
+
+* You can send an interrupt from VIM to GDB and the program it is running.
+
+* An expression value or a variable value (as given by GDB) is displayed in a
+  balloon in Vim, when the mouse pointer is hovering over the selected
+  expression or the variable.
+
+* A variable can be "dropped" and watched in the VIM "gdb-variables.gdbvar"
+  window by pointing the mouse on the variable in the source code  and
+  hitting a key. The variable's value is updated and highlighted whenever
+  changed. To remove a variable, just delete it from the VIM
+  "gdb-variables.gdbvar" window with a VIM command or a keystroke.
+
+* Assembly buffers hold the assembly code for functions that miss the source
+  code and are being stepped through, or where breakpoints have been set. This
+  feature can be selected by an option on Clewn command line.
+
+* Breakpoints are highlighted in source code and in the assembly buffers. The
+  highlighting includes the last two digits of the breakpoint number so that
+  they can be easily identified. Disabled breakpoints are noted with a
+  different highlighting color. Clewn automatically finds the source file for
+  the breakpoint if it exists, and tells VIM to load and display the file
+  and highlight the line. When there is no debugging information or source
+  files and the assembly option has been enabled, Clewn disassembles the
+  function containing the breakpoint and VIM displays and highlights its
+  line.
+
+* Each time GDB displays a stack frame, Clewn automatically finds the source
+  file for that frame and tells VIM to display and highlight the line. When
+  there is no source code for the frame or when doing instruction stepping
+  (stepi, nexti) the program counter line within an assembly window is
+  highlighted.
+
+* The project file stores the current gdb settings. They are automatically
+  sourced by clewn on gdb startup and saved by clewn when quitting or when
+  restarting gdb. These settings are the gdb current working directory, the
+  program file to debug, the command line arguments passed to this program
+  when run by gdb, and the list of breakpoints set in this program.
+
+* Depending on the GDB version you are using, Clewn may run in two different
+  modes: level 2 when using GDB annotations level 2 and level 3 when using
+  GDB/MI and the new annotations level 3. Mode selection is automatically done
+  by Clewn at startup.
+
+* The clever GDB command and file name completion. This also works while
+  entering a GDB user-defined sequence of commands or a list of commands for
+  a breakpoint.
+
+
+AUTHOR
+Xavier de Gaye    <xdegaye at users dot sourceforge dot net>
+

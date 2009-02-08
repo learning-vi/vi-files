@@ -1,0 +1,756 @@
+*clewn.txt*                                       Last change: 2008 Oct 19
+
+
+			      CLEWN USER MANUAL
+
+The Clewn user guide				    *clewn*
+
+1. Introduction					    |clewn-introduction|
+2. Starting clewn				    |clewn-starting|
+    2.1 Source path				    |clewn-source-path|
+    2.2 Clewn modes				    |clewn-modes|
+3. Clewn options				    |clewn-options|
+    3.1 Project file				    |clewn-project|
+    3.2 NetBeans connection parameters		    |clewn-netbeans|
+    3.3 Remote debugging			    |clewn-remote|
+    3.4 Debug mode				    |clewn-debug|
+4. Key mappings					    |clewn-mappings|
+    4.1 Default mappings			    |clewn-default-keys|
+    4.2 Configuration file			    |clewn-confile-keys|
+    4.3 Customizing key mappings		    |clewn-custom-keys|
+5. GDB commands					    |clewn-commands|
+    5.1 History					    |clewn-history|
+6. The variables window				    |clewn-variables|
+    6.1 createvar command			    |createvar|
+    6.2 The level 2 mode
+    6.3 The level 3 mode
+7. Gdb assembly					    |clewn-assembly|
+
+
+==============================================================================
+1. Introduction					    *clewn-introduction*
+
+Clewn is a GDB wrapper that controls the VIM editor through NetBeans. The
+clewn user interface uses readline and, with very few exceptions, is the same
+as the GDB command line interface.
+
+Clewn provides the following features:
+
+* Any GDB command can be mapped in VIM to a key sequence using VIM key
+  mappings. This allows, for example, to set/clear a breakpoint or print a
+  variable's value at the current cursor or mouse position by just hitting a
+  key.
+
+* You can send an interrupt from VIM to GDB and the program it is running.
+
+* An expression value or a variable value (as given by GDB) is displayed in a
+  balloon in Vim, when the mouse pointer is hovering over the selected
+  expression or the variable.
+
+* A variable can be "dropped" and watched in a VIM window named
+  ".clewn-watched-vars.gdbvar" by pointing the mouse on the variable in the
+  source code and hitting a key. The variable's value is updated and
+  highlighted whenever changed. To remove a variable, just delete it from the
+  ".clewn-watched-vars.gdbvar" window with a VIM command or a keystroke.
+
+* Assembly buffers hold the assembly code for functions that miss the source
+  code and are being stepped through, or where breakpoints have been set. This
+  feature can be selected by an option on clewn command line.
+
+* Breakpoints are highlighted in source code and in the assembly buffers. The
+  highlighting includes the last two digits of the breakpoint number so that
+  they can be easily identified. Disabled breakpoints are noted with a
+  different highlighting color. Clewn automatically finds the source file for
+  the breakpoint if it exists, and tells VIM to load and display the file
+  and highlight the line. When there is no debugging information or source
+  files and the assembly option has been enabled, clewn disassembles the
+  function containing the breakpoint and VIM displays and highlights its
+  line.
+
+* Each time GDB displays a stack frame, clewn automatically finds the source
+  file for that frame and tells VIM to display and highlight the line. When
+  there is no source code for the frame or when doing instruction stepping
+  (stepi, nexti) the program counter line within an assembly window is
+  highlighted.
+
+* The project file stores the current gdb settings. They are automatically
+  sourced by clewn on gdb startup and saved by clewn when quitting or when
+  restarting gdb. These settings are the gdb current working directory, the
+  program file to debug, the command line arguments passed to this program
+  when run by gdb, and the list of breakpoints set in this program.
+
+* Depending on the GDB version you are using, clewn may run in two different
+  modes: level 2 when using GDB annotations level 2 and level 3 when using
+  GDB/MI and the new annotations level 3. See |clewn-modes|. Mode selection
+  is automatically done by clewn at startup.
+
+* GDB command and file name completion. This also works while entering a GDB
+  user-defined sequence of commands or a list of commands for a breakpoint.
+
+
+==============================================================================
+2. Starting clewn				    *clewn-starting*
+
+At startup, clewn forks an instance of GDB, sets up a socket, listens to this
+socket, and forks an instance of gvim that will connect to this same socket in
+order to establish a NetBeans connection between clewn and gvim.
+
+The gvim instance sources the "clewn.vim" script. The purpose of this script
+is to load the VIM key mappings when needed (vim version prior to 7.0), enable
+ballooneval for the detection of the text below the mouse pointer, and set up
+some parameters of the ".clewn-watched-vars.gdbvar" window that is used for
+displaying the GDB watched variables.
+
+Once clewn is started, it is always possible to fork a new instance of GDB
+while retaining the existing NetBeans connection to gvim, with the clewn
+'cl_restart' command .
+
+
+						    *clewn-source-path*
+2.1 Source path:
+----------------
+When $cdir (for compilation directory) is present in the 'directory' GDB
+variable, clewn automatically locates the source file with the help of GDB, by
+using the debugging information stored in the file that is being debugged.
+This is useful when the program to debug is the result of multiple compilation
+units located in different directories. This feature is only available
+starting with GDB 6.2.1.
+
+When using a GDB version older than 6.2.1, and in order to have GDB find your
+source files when they are not located in the current directory, you must add
+the relevant directories to the GDB directory variable. For example, from
+$HOME/tmp run the following GDB commands in clewn:
+
+    (gdb) file $HOME/src/this_project/foobar ~
+
+    (gdb directory $HOME/src/this_project ~
+
+    (gdb) break main ~
+
+The last comand will set a breakpoint and have VIM edit
+$HOME/src/this_project/foobar.c with the appropriate line highlighted
+(assuming main is in foobar.c).
+
+
+						    *clewn-modes*
+2.2 Clewn modes:
+----------------
+Clewn may run in two different modes called level 2 and level 3. Level 2 uses
+GDB annotations level 2. Level 3 uses GDB/MI and annotations level 3. The
+behavior of |clewn-variables| is different, depending on the mode setting.
+When starting, clewn automatically selects the appropriate mode.
+
+GDB 5.3 runs with level 2 mode. GDB 6.0 and above, and GDB 2003-03-03-cvs on
+Cygwin all run with level 3 mode.
+
+The mode clewn is currently using is shown on the first line displayed by
+clewn after starting. Another way to know which mode you are on, is to
+run the GDB command "show annotate". The resulting "Annotation_level" has the
+same value as the clewn mode level.
+
+
+==============================================================================
+3. Clewn options				    *clewn-options*
+
+Clewn can be started with the following options:
+
+Usage: clewn [-vc gvim_cmd] [-va gvim_args]
+             [-gc gdb_cmd] [-ga gdb_args]
+             [-p project] [-x pathnames_map]
+             [-a] [-nb[:<host>[:<port>[:<passwd>]]]] [-d] [-r]
+
+  -vc gvim_cmd          gvim shell command or gvim pathname (default 'gvim')
+  -va gvim_args         gvim command line arguments
+  -gc gdb_cmd           gdb shell command or gdb pathname (default 'gdb')
+  -ga gdb_args          gdb command line arguments
+  -p  project           project file name
+  -x pathnames_map      remote debugging
+  -a                    enable assembly support
+  -nb:<host>:<port>:<passwd>  NetBeans connection parameters
+                            <host>   default {$__NETBEANS_HOST|localhost}
+                            <port>   default {$__NETBEANS_SOCKET|3219}
+                            <passwd> default {$__NETBEANS_VIM_PASSWORD|changeme}
+  -d                    enable NetBeans debug mode
+  -r                    do not set SO_REUSEADDR socket option
+
+
+Clewn listens on host:port, with host being a name or the IP address of one of
+the local network interfaces in standard dot notation.
+
+The GDB and VIM programs forked by clewn can have command line arguments, and
+these arguments may be double quoted. For example, start gdb with the program
+foobar and "this is foobar argument" as foobar's argument:
+
+    clewn -ga '--args foobar "this is foobar argument"' ~
+
+It is not possible to set the GDB "-tty" argument this way. When you want to
+set the terminal for future runs of the program being debugged, you must do it
+from GDB, once it is started.
+
+Note: To pass multiple source file names to VIM, one can use the following
+method with the 'tr' command from GNU coreutils:
+
+    file_list=`find . -name "*.c" | tr '\n'  ' '` ~
+    clewn -va "$file_list" ~
+
+
+						    *clewn-project*
+3.1 Project file:
+-----------------
+The project file stores the current gdb settings. They are automatically
+sourced by clewn on gdb startup and saved by clewn when quitting or when
+restarting gdb. These settings are the gdb current working directory, the
+program file to debug, the command line arguments passed to this program when
+run by gdb, and the list of breakpoints set in this program.
+
+Clewn does not write the project file when the program name to debug is not
+set in gdb (the gdb command 'info file' returns nothing). For this reason,
+clewn does not overwrite the existing project file when gdb finds an error
+while sourcing the project file because it cannot change to the requested
+directory, or because it cannot load the program file to debug. This is not
+the case if gdb finds an error while setting a breakpoint: an error message is
+printed, but this does not prevent clewn from overwritting the project file
+the next time the command 'cl_restart' is run, or on quitting.
+
+Note: The breakpoints are not saved to the project file when you quit Clewn
+from Vim. You must must quit Clewn by typing the 'quit' command in clewn, or by
+hitting the 'Q' key in Vim which is mapped to this same command.
+
+Note: When unloading a buffer with the Vim commands |:bdelete|, |:bunload| or
+|:bwipeout|, the breakpoints signs are deleted in Vim and in Clewn. The
+corresponding breakpoints are not saved to the project file.
+
+
+						    *clewn-netbeans*
+3.2 NetBeans connection parameters:
+-----------------------------------
+<host> is the name of one of the local IP network interfaces and may be
+an IPv4 address in standard dot notation. When omitted the environment
+variable "__NETBEANS_HOST" is used or the default "localhost".
+
+<port> is the port number for Netbeans. When omitted the environment variable
+"__NETBEANS_SOCKET" is used or the default 3219.
+
+<passwd> is the password for connecting to Netbeans.  When omitted the
+environment variable "__NETBEANS_VIM_PASSWORD" is used or "changeme".
+
+These parameters must match those used by VIM for the connection to succeed.
+
+A TCP local socket address that has been bound is unavailable for some time
+after closing to avoid conflicts caused by packets remaining in the network.
+This unavailability is not enforced when the SO_REUSEADDR socket option is
+set. By default clewn runs with the SO_REUSEADDR socket option set, and you
+can revert this by using option '-r'.
+
+
+						    *clewn-remote*
+3.3 Remote debugging:
+--------------------
+The '-x' option with its mandatory parameter pathnames_map, is used to do
+remote debugging on a target where clewn and GDB are running, from a host
+where the development is done and where VIM is running.
+
+When clewn is run with the '-x' command line option, clewn does not fork gvim.
+Gvim must be started on the host with the following command:
+
+    gvim -c "run clewn.vim" -nb:target_ip_address ~
+
+While clewn is started on the target with:
+
+    clewn -x pathnames_map -nb:target_ip_address ~
+
+There is always a small delay before the NetBeans socket is established
+because gvim attempts connecting every 5 seconds.
+
+Clewn on the target, and gvim on the host must agree on the name of the
+temporary buffer that is going to be used for displaying the watched
+variables. To do that, run the following VIM command:
+
+    :call EditWatchedVariables() ~
+
+(no need to type the full function name, use VIM completion).
+
+This opens a temporary buffer whose name ends with
+".clewn-watched-vars.gdbvar" and declares it to clewn as the watched variables
+buffer.
+
+
+The pathnames_map parameter is a list of substitution rules that may be
+applied to convert pathnames from the target (gdb-clewn) to the host (vim) and
+vice-versa:
+
+    . a rule is the string "gdb_path:vim_path"
+
+    . when gdb_path is a prefix of the source file name reported by gdb, it is
+      replaced with vim_path before being referenced with vim - when vim_path
+      is a prefix of the source file name reported by vim, it is replaced with
+      gdb_path
+
+    . when gdb_path is empty as in ":vim_path", all file names match and
+      vim_path is prepended to the file names
+
+    . when vim_path is empty as in "gdb_path:", all file names match and
+      gdb_path is prepended to the file names
+
+    . the ':' can be ommitted, and in this case "gdb_path" is equivalent to
+     "gdb_path:"
+
+    . pathnames_map is written "", when no substitution is needed
+
+    . multiple rules are separated with the '|' character (pathnames_map must
+      be quoted in this case to prevent the shell from interpreting the '|')
+
+When the gdb variable 'directories' contains the compilation directory '$cdir'
+(this is the default, use the gdb command 'show directories' to print the
+value of this variable), the full path name of the source file, as known at
+compile time, is used before doing the previous substitution operation.
+This is only available with GDB 6.2.1 or with a more recent gdb release.
+
+To get the full list of the source files and their full path name, run the gdb
+command:
+
+    (gdb) interpreter-exec mi "-file-list-exec-source-files" ~
+
+
+Run clewn in debug mode (option '-d') to figure out how to build the
+substitution rules, by setting a breakpoint from gdb, and then from vim. The
+traces output by clewn in debug mode print the source file names as seen by
+gdb with the message:
+
+    gdb source file name: gdb/path/name/to/foobar ~
+
+and by vim as:
+
+    vim source file name: vim/path/name/to/foobar ~
+
+
+Note: remote debugging is only available with mode level 3 (see below).
+
+
+						    *clewn-debug*
+3.4 Debug mode:
+---------------
+Debug mode is selected with option '-d'. In this mode all NetBeans messages
+are printed on the screen, actually to stderr.
+
+When the first non blank character typed on clewn command line is '@', the
+remaining text is interpreted as a NetBeans "command" that must be sent to
+VIM instead of GDB.
+
+When the first non blank character typed on clewn command line is '#', the
+remaining text is interpreted as a NetBeans "function" that must be sent to
+VIM instead of GDB.
+
+In both cases the text format is: >
+
+    {@|#} bufID name arg1 arg2 ...
+
+where bufID is the buffer number, name the command or function name, and args
+are the arguments of this command or function. Refer to VIM documentation
+|netbeans-protocol| for a synopsis of NetBeans commands and functions.
+
+The buffer must have been instantiated in clewn before you may reference it
+and use its number. There are two ways to instantiate a buffer in clewn:
+
+    - set a breakpoint or step in the buffer
+
+    - hit any NetBeans mapped key in the buffer
+
+When a buffer is documentListen enabled, its contents are printed in the
+local file named "documentListen.debug" for each occurence of an
+insert/remove NetBeans event or function.
+
+
+==============================================================================
+4. Key mappings					    *clewn-mappings*
+
+						    *clewn-default-keys*
+4.1 Default mappings:
+--------------------
+List of default key mappings:
+
+	CTRL-Z  send an interrupt to GDB and the program it is running
+	B	info breakpoints
+	L	info locals
+	A	info args
+	S	step
+	I	stepi
+	CTRL-N	next: next source line, skipping all function calls
+	X	nexti
+	F	finish
+	R	run
+	Q	quit
+	C	continue
+	W	where
+	CTRL-U	up: go up one frame
+	CTRL-D	down: go down one frame
+
+cursor position: ~
+	CTRL-B	set a breakpoint on the line where the cursor is located
+	CTRL-E	clear all breakpoints on the line where the cursor is located
+
+mouse pointer position: ~
+	CTRL-P	print the value of the variable defined by the mouse pointer
+		position
+	CTRL-X	print the value that is referenced by the address whose
+	        value is that of the variable defined by the mouse pointer
+	        position
+	CTRL-K	set a breakpoint at assembly address shown by mouse position
+	CTRL-H	clear a breakpoint at assembly address shown by mouse position
+	CTRL-J	add the selected variable at mouse position to the watched
+		variables window
+
+Note: You can tune Vim behavior when using netBeans keys with the mouse
+pointer position, by setting Vim balloondelay to a smaller value than its
+default. The following setting has been reported to give better results:
+
+    :set balloondelay=100 ~
+
+Note: After browsing your code, you can always return rapidly to the line of
+code where GDB is currently stopped, by using CTRL-U and CTRL-D.
+
+
+						    *clewn-confile-keys*
+4.2 Configuration file:
+----------------------
+The key mappings configuration file is named '.clewn_keys'. The file
+'.clewn_keys' must be located in $CLEWNDIR or $HOME directory. This is only
+needed if you want to setup your own key mappings.
+
+Set the environment variable $CLEWNDIR to some convenient directory and copy
+the file runtime/.clewn_keys to $CLEWNDIR. Or copy the file
+runtime/.clewn_keys to $HOME.
+
+    cp runtime/.clewn_keys	  $CLEWNDIR
+
+    or
+
+    cp runtime/.clewn_keys	  $HOME
+
+
+						    *clewn-custom-keys*
+4.3 Customizing key mappings:
+----------------------------
+4.3.1 Customizing key mappings - vim version 7.0 and above
+----------------------------------------------------------
+At startup, clewn reads '.clewn_keys' and sends a NetBeans key mapping command
+(the 'specialKeys' commmand) to vim for each key in the file. When the user
+hits one of these keys in a vim buffer known to NetBeans, an event is sent to
+clewn with the key value, and clewn runs the corresponding GDB command that is
+mapped to this key in '.clewn_keys'.
+
+The available keys are the uppercase characters, all control characters except
+<C-@>, and function keys F1-F20.
+
+To remove a default key mapping, uncomment the corresponding line in
+'.clewn_keys', and replace the gdb command with the empty string.
+
+Since the netbeans 'specialKeys' commmand does not allow to unmap a key, you
+must source 'clewn_mappings.vim' if you need that feature. Run the following
+command:
+
+    :" user local installation ~
+    :source ~/.vim/macros/clewn_mappings.vim ~
+or
+    :" standard installation ~
+    :source $VIMRUNTIME/macros/clewn_mappings.vim ~
+
+The key <F7> is used to toggle between the 'clewn_mappings.vim' mappings and
+the default VIM mappings.
+
+When you want to be able to unmap keys, you must edit both files
+('.clewn_keys' and 'clewn_mappings.vim') in order to customize the keys
+mapping to your needs.
+
+
+4.3.2 Customizing key mappings - vim version prior to 7.0
+---------------------------------------------------------
+Keys are mapped in clewn with '.clewn_keys', and keys are mapped in vim with
+'clewn_mappings.vim'. The key <F7> is used to toggle between the
+'clewn_mappings.vim' mappings and the default VIM mappings.
+
+To customize your own key mappings you need to know that key mappings is a
+two steps process (with vim version prior to 7.0). You must:
+
+    1) map VIM keys to NetBeans keys in 'clewn_mappings.vim': a NetBeans key
+       binding is the Pause key (Function key 21) followed by a NetBeans
+       supported key.
+
+		Supported key are:
+			F1		function key 1
+			F2		function key 2
+			...
+			F12		function key 12
+
+			' '		space (without the quotes)
+			!		exclamation mark
+			...		any other ASCII printable character
+			~		tilde
+			X		any unrecognized key
+
+       see how this is done in clewn_mappings.vim.
+
+
+    2) map NetBeans keys to GDB commands using the file $CLEWNDIR/.clewn_keys.
+       Refer to the explanations in file .clewn_keys.
+
+
+==============================================================================
+5. GDB commands					    *clewn-commands*
+
+Clewn interface is mostly the same as the GDB command line interface. They
+both use readline. The differences are:
+
+    - the GDB "shell" command is disabled
+
+    - you cannot change the annotation level
+
+    - you cannot set the screen height which is unlimited
+
+    - the 'createvar' command used with the watched variables window, is not a
+      GDB command
+
+    - the 'cl_restart' command used to fork a new fresh instance of GDB while
+      retaining the existing netbeans connection to gvim, is not a GDB command
+
+Note: Start rxvt or xterm with option '-sb' to be able to scroll GDB output
+in the clewn window.
+
+Note: As long as the current GDB command has not completed, clewn discards
+further commands except interrupts and displays a message on the command line
+warning that the command has been discarded.
+
+Note: When executing a GDB command through a VIM keymap, the command is
+processed by GDB and, depending on its type, may be repeated by hitting return
+in clewn, thus following standard GDB behavior.
+
+						    *clewn-history*
+5.1 History:
+------------
+The command history is recorded in a file whose name is ".clewn_history" and
+whose location is $CLEWNDIR when this environment variable exists or $HOME
+otherwise. The size of this file is limited to $HISTSIZE or 50 by default.
+
+History is handled by readline history, therefore you can use all its
+features. For example typing <CTRL-P> followed by the first keystrokes of a
+command will recall the last occurence of the command beginning with these
+keystrokes. Typing again <CTRL-P> will get you the next occurence and so on.
+
+
+==============================================================================
+6. The variables window				    *clewn-variables*
+
+The VIM buffer where variables are watched is a buffer whose name ends with
+the extension ".clewn-watched-vars.gdbvar".
+The variables window and its related commands behave differently depending on
+the mode being used. See |clewn-modes| for information on clewn modes.
+
+The first part in this section discusses what is common to both modes.
+
+						    *cr* *createvar*
+6.1 createvar command:
+----------------------
+The "createvar" command is used to drop any valid GDB variable in the
+variables window. Valid means the variable must be valid in the current frame.
+For example, to drop the variable "*curwin": >
+
+    createvar *curwin
+
+It is even easier to point the mouse on this variable in the source code and
+just hit <CTRL-J>.
+
+The "createvar" command can be entered as any GDB command but is not a GDB
+command. In level 2 this command is mapped to the GDB "display" command so
+that typing "createvar" and "display" are equivalent. In level 3 the
+"createvar" command is intercepted by clewn and internally mapped to GDB/MI
+commands.
+
+The "createvar" command syntax is:
+
+    createvar/FMT variable
+
+where /FMT is optionnal and FMT may be one of:
+    `t'
+	Print as integer in binary. The letter `t' stands for "two"
+    `d'
+	Print as integer in signed decimal
+    `x'
+	Regard the bits of the value as an integer, and print in hexadecimal
+    `o'
+	Print as integer in octal
+
+When dropping a variable into the variables window, this window is popped
+up if not already displayed. You must use VIM |:split| command to split your
+windows so that one window is the variables window and the other contains
+the current source code.
+
+In both modes, deleting a line in the variables window removes all the
+corresponding references to the tracked variable in GDB and clewn.
+
+Changed values are highlighted with the "Special" highlighting. With level 3,
+when a variable goes out of scope, its value is highlighted with the "Comment"
+highlighting.
+
+The highlighting is done with the support of the gdbvar.vim syntax file. If
+this file is missing or cannot be accessed by VIM, the equal sign that
+separates variable from value in the variables window are tagged with
+(these signs are hidden when syntax is available): >
+
+    ={=} for unchanged values
+    ={*} for changed values
+    ={-} for out of scope variables
+
+The variables window buffer is 'modifiable', which means you can move
+around lines, insert empty lines and even add your own comments as long as
+none of your lines starts with a number followed by a colon (more precisely:
+does not match the regular expression "^\s*\d\+:")
+
+
+6.2 The level 2 mode:
+---------------------
+This sub-section describes what is specific to level 2.
+
+The variables window uses the GDB "automatic display" feature. In level 2
+the "createvar" command is mapped to the GDB "display" command so that typing
+"createvar" and "display" are equivalent.
+
+Level 2 is not restricted to dropping only variables, expressions can be
+dropped as well in the variables window.
+
+The expression value is updated whenever the debuggee stops or the GDB
+"display" or clewn "createvar" command is run without argument. Note that the
+expression must be valid in the current context in order to be evaluated by
+GDB "automatic display" feature. This is one of the important differences with
+level 3. To make it easier to track data, each value is highlighted whenever
+changed.
+
+To "undisplay" an expression, just delete it from the variables window.
+Clewn will invoke GDB "undisplay" command transparently to remove this item
+from GDB "automatic display list" next time the debuggee stops or the GDB
+"display" or clewn "createvar" command is run without argument.
+
+Conversely, if you invoke the GDB "undisplay" command corresponding to a
+displayed line, clewn will delete this line from the variables window
+next time the debuggee stops or the GDB "display" or clewn "createvar"
+command is run without argument.
+
+
+6.3 The level 3 mode:
+---------------------
+This sub-section describes what is specific to level 3.
+
+Level 3 deals only with variables, not expressions. However this mode provides
+with the variables window a much more powerful tool than is provided by
+level 2.
+
+First, variables are updated any time you enter any GDB command. If you are
+tracking variable "int foo" with a current value of 100, and run the GDB
+command "print foo = 333", then its value will be highlighted in the variables
+window and the new value displayed.
+
+The variables that are out of scope are highlighted with the "Comment"
+highlighting.
+
+Variables that are in scope are updated and highlighted whenever changed.
+Here is an example involving the scope concept: >
+
+
+    typedef struct
+    {
+	int sample;
+    } store_T;
+
+    void foo(char *str, int *pnum, store_T *pt)
+    {
+	if (str != (char *)0 && *str != '\0')
+	    *str = 'X';
+	if (pnum != (int *)0)
+	    *pnum += 1;
+	if (pt != (store_T *)0)
+	    pt->sample++;
+    }
+
+    void foobar(char *ptr)
+    {
+	store_T mainstore;
+	int period = 200;
+
+	/* Step 2 - "createvar" a variable for mainstore and for period */
+	mainstore.sample = 100;
+	foo(ptr, &period, &mainstore);
+    }
+
+    int main(int argc, char * argv[])
+    {
+	if (argc >= 1)
+	    /* 
+	     * Step 1 - Set a breakpoint here and "createvar" a variable
+	     * for argv[0] after having split one window. From there,
+	     * proceed by stepping line by line through the code */
+	    foobar(argv[0]);
+	return 0;
+    }
+
+Run clewn on this module and add variables to the variables window as
+described in the module's comments step 1 and step 2. The variables argv[0],
+period and mainstore are all in scope within functions foobar() and foo().
+Their new values are displayed and highlighted as changed when changed in
+foo() except mainstore that displays a value of {...} with the same
+highlighting telling it has changed.
+
+Trying to run the GDB "print" command on "period" while stopped in foo()
+causes an error with the message 'No symbol "period" in current context'.
+While in the same time, the variables window with GDB/MI is able to detect
+changes in "period"'s value and to evaluate "period"'s value when stopped in
+foo().
+
+However, complex data such as structures cannot currently be evaluated by
+clewn when not defined in the current context. Instead the following symbol
+{...} is displayed and highlighted to tell you its value has changed. In this
+case, to get the variable's value, go in the stack frame where this variable
+is defined using the "up", "down" or "frame" GDB command and "print" it.
+
+When exiting foobar(), period and mainstore become out of scope and are
+highlighted with the "Comment" highlighting.
+
+Note: The "createvar" command requires an argument in level 3. The "automatic
+display list" and the variables are two independent features in level 3.
+
+
+==============================================================================
+7. Gdb assembly					    *clewn-assembly*
+
+Clewn must be run with option '-a' for this feature to be enabled.
+
+The assembly buffers are used:
+
+a - when setting a breakpoint and there is no debugging information or source
+    file, clewn disassembles the function containing the breakpoint and tells
+    VIM to display and highlight its line in an assembly buffer
+
+b - when the debuggee stops in a portion of code where there is no source
+    code, or when doing instruction stepping (stepi, nexti), an assembly
+    buffer is displayed and the program counter line highlighted
+
+c - when doing source code stepping (not stepi or nexti) within some source
+    code and the corresponding assembly buffer is displayed simultaneously in
+    another window, the assembly window scrolls to make the program counter
+    line visible in the assembly code
+
+You can set a breakpoint in an assembly buffer, by positionning the mouse
+pointer over the assembly address in the window and hitting CTRL-K.
+
+When filling large assembly buffers, clewn displays a busy message. You can
+interrupt the command at any time with a GDB interrupt or <CTRL-Z> from VIM
+(when clewn_mappings.vim has been sourced).
+
+Note: Assembly buffers are cleared when you run the following GDB commands:
+file, exec-file or core-file.
+
+Note: When the source is missing and the corresponding object is compiled with
+'-g', GDB skips some frame annotations and therefore some $pc highlighting do
+not occur. In this case, strip the debuggee with '--strip-debug' (or '-g':
+remove debugging symbols only) to restore the normal behavior.
+
+
+ vim:tw=78:ts=8:ft=help:norl:

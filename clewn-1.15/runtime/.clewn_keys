@@ -1,0 +1,91 @@
+# .clewn_keys file
+# The default placement for this file is $CLEWNDIR/.clewn_keys, or
+# $HOME/.clewn_keys
+#
+# Key definitions are of the form `KEY:GDB COMMAND:{%line|%text}'
+# where:
+#    %text: the text below the mouse is added to the GDB command
+#    %line: 'fname:lnum' are added to the GDB command, where fname is the
+#           current buffer full pathname, and lnum the line number at
+#           cursor position
+#
+# All characters following `#' up to the next new line are ignored.
+# Leading blanks on each line are ignored. Empty lines are ignored.
+#
+# To tune the settings in this file, you will have to uncomment them,
+# as well as change them, as the values on the commented-out lines
+# are the default values. You can also add new entries. To remove a
+# default mapping, use an empty GDB command.
+#
+# There are two different KEY naming schemes, depending on which vim
+# version is running, please refer to the documentation for an
+# explanation of this difference.
+#
+# #####################################################################
+#                     Vim version 7.0 and above
+#
+# Supported key names:
+#	key functions: F1 to F20, example: `F11:continue:'
+#	uppercase characters and control characters
+#
+#
+#	C-Z::		    # interrupt
+#	B:info breakpoints:
+#	L:info locals:
+#	A:info args:
+#	S:step:
+#	I:stepi:
+#	C-N:next:
+#	X:nexti:	    # upper case
+#	F:finish:
+#	R:run:
+#	Q:quit:
+#	C:continue:
+#	W:where:
+#	C-U:up:
+#	C-D:down:
+
+#	C-B:break:%line	    # set breakpoint at current line
+#	C-E:clear:%line	    # clear breakpoint at current line
+
+#	C-K:break *:%text   # set breakpoint at address at mouse position
+#	C-H:clear *:%text   # clear breakpoint at address at mouse position
+
+#	C-P:print:%text	    # print value of word at mouse position
+#	C-X:print *:%text   # print value referenced by text at mouse position
+#	C-J:createvar:%text # add variable (expression) at mouse position
+#
+# #####################################################################
+#                     Vim version prior to 7.0
+#   (the following table must be consistent with clewn_mappings.vim)
+#
+# Supported key names:
+#	key functions: F1 to F20, example: `F11:continue:'
+#	all ASCII printable characters except '#'
+#
+#	z::		    # interrupt
+#	B:info breakpoints:
+#	L:info locals:
+#	A:info args:
+#	S:step:
+#	I:stepi:
+#	n:next:
+#	N:nexti:	    # upper case
+#	F:finish:
+#	R:run:
+#	Q:quit:
+#	C:continue:
+#	W:where:
+#	u:up:
+#	d:down:
+
+#	b:break:%line	    # set breakpoint at current line
+#	e:clear:%line	    # clear breakpoint at current line
+
+#	k:break *:%text	    # set breakpoint at address at mouse position
+#	h:clear *:%text	    # clear breakpoint at address at mouse position
+
+#	p:print:%text	    # print value of word at mouse position
+#	a:print *:%text	    # print value referenced by text at mouse position
+#	j:createvar:%text   # add variable (expression) at mouse position
+

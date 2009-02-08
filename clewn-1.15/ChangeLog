@@ -1,0 +1,262 @@
+
+2009-11-28  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* netbeans.c gdb.h clewn.c misc.c gdb_lvl2.c gdb_lvl3.c: correct
+	compilation warnings with gcc 4.3.2.
+
+	* gdb_lvl3.c: fix clewn hangs on startup with ubuntu 9.10 where gdb
+	responses are received in one big chunk of data.
+
+===============================================================================
+2008-10-19  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* clewn.c: no error message when Vim is not compiled with
+	netbeans_intg.
+
+	* gdb_lvl3.c: fix bunch of ^M characters in vimGdb console
+	on Mac OS X.
+
+	* configure.ac netbeans.c clewn.c clewn.h misc.c gdb_lvl2.c
+	gdb_lvl3.c: suppress signedness warnings when built with gcc 4.1.2.
+
+	* obstack.c: exitfail.h and gettext.h are not needed and may not be
+	pesent on Cygwin platforms.
+
+===============================================================================
+2007-12-28  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* gdb_lvl3.c: always write at the start of a new line, the result
+	of the concatenation of multiple small chunks output by gdb.
+
+	* misc.c: find the source when they have been compiled with an
+	absolute path and moved later
+
+	* clewn.c gdb_lvl3.c: Rename the clewn 'restart' command to
+	'cl_restart'.
+
+===============================================================================
+2007-07-19  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	*  netbeans.c misc.c misc.h gdb.h gdb.c gdb_lvl3.c:
+	Retrofit the changes made in clewn 1.8 to vimgdb: locate the source
+	file by using the program debugging information provided by gdb
+
+===============================================================================
+2007-01-22  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	*  clewn.c clewn.h gdb.h netbeans.c gdb_lvl3.c: the error message
+	"Clewn cannot find file foobar.c in GDB source directories"
+	is printed at each prompt instead of once.
+
+	* netbeans.c: close the asm buffers when running netbeans version 2.4;
+	Vim version 7.0 after the patch 163.
+
+	* gdb_lvl3.c: file loaded from the project file overwrites the
+	file loaded from the command line, warn the user
+
+	* clewn.h clewn.c netbeans.c:
+	Use the new netbeans 2.4 getAnno function (vim patch 163) to get the
+	breakpoint position that is saved in the project file
+
+	* clewn.c:
+	Add support for the disable command in the project file
+
+	* netbeans.c:
+	When $cdir is set in the gdb directories variable (the default),clewn
+	uses the source full path name instead of the short name in remote
+	debugging, to map the gdb path name to the vim path name. The list of
+	source full path names can be obtained with the gdb command
+	'interpreter-exec mi "-file-list-exec-source-files"'
+
+	* clewn.c gdb_lvl3.c:
+	Get the source file list from gdb after a 'source' command, in
+	case the sourced command file includes a command loading a new
+	program.
+
+	* clewn.vim clewn.c:
+	When a project file is being used, a message is printed in Vim when
+	the user attempts to quit Vim, to warn him that the breakpoints will
+	not be saved to the project file if he proceeds with the operation.
+
+
+	* clewn.c gdb.h gdb_lvl3.c:
+	The project file stores the current gdb settings. They are
+	automatically sourced by clewn on gdb startup and saved by clewn when
+	quitting or when restarting gdb. These settings are the gdb current
+	working directory, the program file to debug, the command line
+	arguments passed to this program when run by gdb, and the list of
+	breakpoints set in this program.
+
+
+	* clewn.c: when '-va -g' is missing from the command line, vim does
+	not start the GUI
+
+	* runtime/macros/clewn_mappings.vim:
+	fix cannot unmap vim keys set by clewn, when using vim 7.0 or above
+
+	* Makefile.am, configure.ac:
+	use GNU automake to build, install and distribute clewn
+
+===============================================================================
+2006-08-25  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* Makefile.in:
+	disable pointer signedness warnings in gcc 4.0 (assume GNU make)
+
+	* gdb_lvl3.c:
+	for very large gdb startup time: increase SG_TIMEOUT to 120 seconds
+
+	* clewn.h, clewn.c, netbeans.c, clewn.vim, .clewn_keys:
+	When talking to vim 7.0, clewn sends the key maps commands directly to
+	vim, and there is no need to source a clewn_mappings.vim file at startup
+	as with the previous vim versions.
+
+	* clewn.h, clewn.c, netbeans.c:
+	When doing remote debugging, the parameter of the '-x' command line
+	argument, lists the pathname translations to be applied from target to
+	host and vice-versa.
+
+	* clewn.c, misc.c, clewn.vim:
+	New command line arguments:
+	-vc gvim_cmd  - gvim shell command or gvim pathname (dflt 'gvim')
+	-va gvim_args - gvim command line arguments
+	-gc gdb_cmd   - gdb shell command or gdb pathname (dflt 'gdb')
+	-ga gdb_args  - gdb command line arguments
+
+	* gdb.h, gdb_lvl3.c, gdb_lvl2.c:
+	fix regression in lvl2 (gdb 5.3): the lvl2 array of oobfunc functions
+	is not correctrly restored after running a one shot oobfunc function
+
+	* gdb.h, clewn.h, clewn.c, gdb_lvl3.c, netbeans.c, clewn.vim:
+	respawn gdb on the 'restart' command - 'quit' and ^D commands send the
+	netbeans function 'saveAndExit'
+	print clewn version on startup
+
+	* obstack.c, obstack.h:
+	updating obstack to latest glibc 2.4
+
+===============================================================================
+2006-07-22  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* gdb.h, clewn.c, gdb_lvl3.c:
+	fixed jumping back to last gdb frame sign after displaying a balloon
+	evaluation or after clearing a breakpoint
+
+	* gdb_lvl3.c:
+	the gdb `run' commands do input and output with the clewn terminal
+	fixed extra new line after gdb 'step' command
+
+===============================================================================
+2006-06-11  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* gdb.h, clewn.h, clewn.c, gdb_lvl3.c, netbeans.c:
+	support of $cdir (member of the 'directory' gdb variable)
+
+	* gdb.h, clewn.c, gdb_lvl3.c:
+	fixed out of sync frame stack after printing an expression that causes
+	the evaluation of one of the debugged program functions.
+
+	* gdb_lvl3.c:
+	fixed browsing the gdb frame stack after an assertion failure, when
+	assembly support is enabled.
+
+	* gdb_lvl3.c:
+	fixed parsing of a long (greater than 1024 characters) gdb 'directory'
+	list, and fixed the garbled display by clewn of very long lines output by
+	gdb, as for example in the output of the gdb command 'show directory'
+
+===============================================================================
+2006-04-08  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* gdb.h, clewn.h, clewn.c, gdb_lvl3.c, netbeans.c:
+	use netBeans showBalloon to display a variable value in Vim
+	option '-t' is left unchanged, but not documented anymore
+
+	* clewn.c:
+	read the clewn default key mappings from a static array
+
+	* runtime/clewn.vim:
+	set balloondelay to 100 msec
+
+	* clewn.c:
+	quote filenames to allow for spaces in set/delete breakpoints
+	warn the user when the Vim socket is not established yet
+	EMSG() writes to readline stdio stream
+
+	* Makefile.in, clewn.c, pty.c:
+	disable pointer signedness warnings in gcc 4.0, and fix some prototypes
+
+	* clewn.c, gdb_lvl2.c, gdb_lvl3.c, netbeans.c, obstack.c:
+	bug fix: obstack.h is not a system header
+
+	* gdb_lvl3.c:
+	gdb 6.4 does not provide annotations for breakpoints in level 3. Note
+	that they are still there when setting annotate level 2, level 2 was
+	supposed to be deprecated ? So we always look for new or changed
+	breakpoints now.
+
+===============================================================================
+2006-02-07  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* clewn.c, netbeans.c:
+	revert the meaning of option '-r'
+	options '-v', '-m' and '-i' have been removed
+
+	* clewn.c:
+	add option '-f' and fork gvim
+
+	* netbeans.c:
+	do not send the stopDocumentListen netbeans command to Vim for
+	the variables buffer; this fixes the bug that hangs the variables
+	window after a variable has been deleted
+
+	* clewn.c, misc.c, misc.h:
+	accepting multiple (possibly quoted) tokens after the -p command line
+	option
+
+	* clewn.c, netbeans.c, gdb.h, gdb_lvl3.c:
+	add option '-x' for remote debugging
+
+===============================================================================
+2005-12-02  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* build configure with autoconf 2.59 and update build for
+	cross-compiling
+
+2005-11-22  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* update configure and add some include files for freebsd build
+	(maurice barnum)
+
+===============================================================================
+2004-08-29  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* clewn.c: exec_gdb()
+	FIX: using "-async" option when spawning GDB 6.2 causes GDB to fail:
+	this option has been removed from GDB 6.2. Setting this option is
+	unnecessary anyway, since when the standard input is connected to a
+	terminal device, GDB uses the asynchronous event loop by default.
+
+===============================================================================
+2004-06-10  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* netbeans.c: cnb_define_sign():
+	FIX: cnb_define_sign() returned invalid typenr when the frame sign
+	was defined more than once in a given buffer; this caused the
+	breakpoint not to be set with Vim error message: "E155: Unknown sign: 0"
+
+===============================================================================
+
+2004-05-15  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* misc.c: define xmalloc() - misc.c is also linked with VimGDB
+
+	* obstack.c: use an obstack in searchfor(), cnb_close(), cnb_data_evt()
+	and gdb_parse_output_cli()
+
+===============================================================================
+
+2004-05-07  Xavier de Gaye <xdegaye at users dot sourceforge dot net>
+
+	* Release Clewn 1.1
+
