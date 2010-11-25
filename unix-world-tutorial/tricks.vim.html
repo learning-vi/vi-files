@@ -1,0 +1,178 @@
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+<title>vi tutorial, tips, tricks and useful commands</title>
+<meta name="Generator" content="Vim/6.3">
+</head><body text="#ffffff" bgcolor="#000000">
+
+<pre><h2><font color="#00ffff"><b>vi (aka vim) tutorial, tips, tricks and useful commands</b></font></h2>
+
+<font color="#00ffff"><b>Where grep came from (RE being Regular Expression):</b></font>
+:<font color="#ffff00"><b>g</b></font>/RE/<font color="#ffff00"><b>p</b></font>
+
+<font color="#00ffff"><b>Delete lines 10 to 20 inclusive:</b></font>
+:<font color="#ff40ff"><b>10</b></font>,<font color="#ff40ff"><b>20</b></font>d
+<font color="#00ffff"><b>or with marks a and b:</b></font>
+:<font color="#ff40ff"><b>'a</b></font>,<font color="#ff40ff"><b>'b</b></font>d
+
+<font color="#00ffff"><b>Delete lines that contain pattern:</b></font>
+:<font color="#ffff00"><b>g</b></font>/pattern/<font color="#ffff00"><b>d</b></font>
+
+<font color="#00ffff"><b>Delete all empty lines:</b></font>
+:<font color="#ffff00"><b>g</b></font>/^$/<font color="#ffff00"><b>d</b></font>
+
+<font color="#00ffff"><b>Delete lines in range that contain pattern:</b></font>
+:<font color="#ff40ff"><b>20</b></font>,<font color="#ff40ff"><b>30</b></font>/pattern/<font color="#ffff00"><b>d</b></font>
+<font color="#00ffff"><b>or with marks a and b:</b></font>
+:<font color="#ff40ff"><b>'a</b></font>,<font color="#ff40ff"><b>'b</b></font>/pattern/<font color="#ffff00"><b>d</b></font>
+
+<font color="#00ffff"><b>Substitute all lines for first occurance of pattern:</b></font>
+:<font color="#ff40ff"><b>%</b></font><font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font>pattern<font color="#ff6060"><b>/</b></font>new<font color="#ff6060"><b>/</b></font>
+:<font color="#ff40ff"><b>1</b></font>,<font color="#ff40ff"><b>$</b></font><font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font>pattern<font color="#ff6060"><b>/</b></font>new<font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b>Substitute all lines for pattern globally (more than once on the line):</b></font>
+:<font color="#ff40ff"><b>%</b></font><font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font>pattern<font color="#ff6060"><b>/</b></font>new<font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>g</b></font>
+:<font color="#ff40ff"><b>1</b></font>,<font color="#ff40ff"><b>$</b></font><font color="#ffff00"><b>s</b></font><font color="#ff6060"><b>/</b></font>pattern<font color="#ff6060"><b>/</b></font>new<font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>g</b></font>
+
+<font color="#00ffff"><b>Find all lines containing pattern and then append -new to the end of each line:</b></font>
+<font color="#ffff00"><b>:%s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>\(</b></font>.*pattern.*<font color="#ff6060"><b>\)/\1</b></font>-new<font color="#ff6060"><b>/g</b></font>
+
+<font color="#00ffff"><b>Substitute range:</b></font>
+:<font color="#ff40ff"><b>20</b></font>,<font color="#ff40ff"><b>30</b></font>s/pattern/<font color="#ffff00"><b>new</b></font>/<font color="#ffff00"><b>g</b></font>
+<font color="#00ffff"><b>with marks a and b:</b></font>
+:<font color="#ff40ff"><b>'a</b></font>,<font color="#ff40ff"><b>'b</b></font>s/pattern/<font color="#ffff00"><b>new</b></font>/<font color="#ffff00"><b>g</b></font>
+
+<font color="#00ffff"><b>Swap two patterns on a line:</b></font>
+<font color="#ffff00"><b>:s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>\(</b></font>pattern1<font color="#ff6060"><b>\)\(</b></font>pattern2<font color="#ff6060"><b>\)</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>\2\1</b></font><font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b>Capitalize the first lowercase character on a line:</b></font>
+<font color="#ffff00"><b>:s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>\(</b></font>[a-z]<font color="#ff6060"><b>\)</b></font><font color="#ff6060"><b>/</b></font>\u<font color="#ff6060"><b>\1</b></font><font color="#ff6060"><b>/</b></font>
+<font color="#00ffff"><b>more concisely:</b></font>
+<font color="#ffff00"><b>:s</b></font><font color="#ff6060"><b>/</b></font>[a-z]<font color="#ff6060"><b>/</b></font>\u&amp;<font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b>Capitalize all lowercase characters on a line:</b></font>
+<font color="#ffff00"><b>:s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>\(</b></font>[a-z]<font color="#ff6060"><b>\)</b></font><font color="#ff6060"><b>/</b></font>\u<font color="#ff6060"><b>\1</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>g</b></font>
+<font color="#00ffff"><b>more concisely:</b></font>
+<font color="#ffff00"><b>:s</b></font><font color="#ff6060"><b>/</b></font>[a-z]<font color="#ff6060"><b>/</b></font>\u&amp;<font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>g</b></font>
+
+<font color="#00ffff"><b>Capitalize all characters on a line:</b></font>
+<font color="#ffff00"><b>:s</b></font><font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>\(</b></font>.*<font color="#ff6060"><b>\)</b></font><font color="#ff6060"><b>/</b></font>\U<font color="#ff6060"><b>\1</b></font>\E<font color="#ff6060"><b>/</b></font>
+
+<font color="#00ffff"><b>Capitalize the first character of all words on a line:</b></font>
+<font color="#ffff00"><b>:s</b></font><font color="#ff6060"><b>/</b></font>\&lt;[a-z]<font color="#ff6060"><b>/</b></font>\u&amp;<font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>g</b></font>
+
+<font color="#00ffff"><b>Uncapitalize the first character of all words on a line:</b></font>
+<font color="#ffff00"><b>:s</b></font><font color="#ff6060"><b>/</b></font>\&lt;[A-Z]<font color="#ff6060"><b>/</b></font>\l&amp;<font color="#ff6060"><b>/</b></font><font color="#ff6060"><b>g</b></font>
+
+<font color="#00ffff"><b>Change case of character under cursor:</b></font>
+~
+
+<font color="#00ffff"><b>Change case of all characters on line:</b></font>
+<font color="#ffff00"><b>g</b></font>~~
+
+<font color="#00ffff"><b>Change case of remaining word from cursor:</b></font>
+<font color="#ffff00"><b>g</b></font>~<font color="#ffff00"><b>w</b></font>
+
+<font color="#00ffff"><b>Increment the number under the cursor:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>A<font color="#ffff00"><b>&gt;</b></font>
+
+<font color="#00ffff"><b>Decrement the number under the cursor:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font><font color="#ffff00"><b>X</b></font><font color="#ffff00"><b>&gt;</b></font>
+
+<font color="#00ffff"><b>redraw:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>L<font color="#ffff00"><b>&gt;</b></font>
+
+<font color="#00ffff"><b>Turn on line numbering:</b></font>
+:<font color="#ffff00"><b>set</b></font> <font color="#ffff00"><b>nu</b></font>
+<font color="#00ffff"><b>Turn it off:</b></font>
+:<font color="#ffff00"><b>set</b></font> nonu
+
+<font color="#00ffff"><b>Number lines (filter the file through a unix command and replace with output):</b></font>
+:%!cat <font color="#ffff00"><b>-</b></font><font color="#ffff00"><b>n</b></font>
+
+<font color="#00ffff"><b>Sort lines:</b></font>
+:%!sort
+
+<font color="#00ffff"><b>Sort and uniq:</b></font>
+:%!sort <font color="#ffff00"><b>-</b></font><font color="#ffff00"><b>u</b></font>
+
+<font color="#00ffff"><b>Read output of command into buffer:</b></font>
+:<font color="#ffff00"><b>r</b></font> !<font color="#ffff00"><b>ls</b></font> <font color="#ffff00"><b>-</b></font><font color="#ffff00"><b>l</b></font>
+
+<font color="#00ffff"><b>Refresh file from version on disk:</b></font>
+:<font color="#ffff00"><b>e</b></font>!
+
+<font color="#00ffff"><b>Open a new window:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font><font color="#ffff00"><b>n</b></font>
+
+<font color="#00ffff"><b>Open a new window with the same file (split):</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font>s
+
+<font color="#00ffff"><b>Split window vertically:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font><font color="#ffff00"><b>v</b></font>
+
+<font color="#00ffff"><b>Close current window:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font><font color="#ffff00"><b>c</b></font>
+:<font color="#ffff00"><b>q</b></font>
+
+<font color="#00ffff"><b>Make current window the only window:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font><font color="#ffff00"><b>o</b></font>
+
+<font color="#00ffff"><b>Cycle to next window:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font><font color="#ffff00"><b>w</b></font>
+
+<font color="#00ffff"><b>Move to window below current window:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font><font color="#ffff00"><b>j</b></font>
+
+<font color="#00ffff"><b>Move to window above current window:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font><font color="#ffff00"><b>k</b></font>
+
+<font color="#00ffff"><b>Move to window left of current window:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font><font color="#ffff00"><b>h</b></font>
+
+<font color="#00ffff"><b>Move to window right of current window:</b></font>
+<font color="#ffff00"><b>&lt;</b></font>Ctrl<font color="#ffff00"><b>-</b></font>W<font color="#ffff00"><b>&gt;</b></font><font color="#ffff00"><b>l</b></font>
+
+<font color="#00ffff"><b>Set textwidth for automatic line-wrapping as you type:</b></font>
+:<font color="#ffff00"><b>set</b></font> textwidth<font color="#ffff00"><b>=</b></font><font color="#ff40ff"><b>80</b></font>
+
+<font color="#00ffff"><b>Turn on syntax highlighting</b></font>
+:<font color="#ffff00"><b>syn</b></font> <font color="#00ff00"><b>on</b></font>
+<font color="#00ffff"><b>Turn it off:</b></font>
+:<font color="#ffff00"><b>syn</b></font> <font color="#00ff00"><b>off</b></font>
+
+<font color="#00ffff"><b>Force the filetype for syntax highlighting:</b></font>
+:<font color="#ffff00"><b>set</b></font> <font color="#ffff00"><b>filetype</b></font><font color="#ffff00"><b>=</b></font><font color="#ffff00"><b>python</b></font>
+:<font color="#ffff00"><b>set</b></font> <font color="#ffff00"><b>filetype</b></font><font color="#ffff00"><b>=</b></font><font color="#ffff00"><b>c</b></font>
+:<font color="#ffff00"><b>set</b></font> <font color="#ffff00"><b>filetype</b></font><font color="#ffff00"><b>=</b></font>php
+
+<font color="#00ffff"><b>Use lighter coloring scheme for a dark background:</b></font>
+:<font color="#ffff00"><b>set</b></font> background<font color="#ffff00"><b>=</b></font>dark
+
+
+<font color="#00ffff"><b>Htmlize a file using the current syntax highlighting:</b></font>
+:<font color="#ffff00"><b>so</b></font> <font color="#8080ff"><b>$VIMRUNTIME</b></font>/<font color="#ffff00"><b>syntax</b></font>/<font color="#ff40ff"><b>2</b></font>html<font color="#ffff00"><b>.</b></font>vim
+
+<font color="#00ffff"><b>Or, htmlize from a command prompt:</b></font>
+<font color="#00ffff"><b>in 2html.sh put:</b></font>
+
+#!/bin/<font color="#ffff00"><b>sh</b></font>
+vim <font color="#ffff00"><b>-</b></font><font color="#ffff00"><b>n</b></font> <font color="#ffff00"><b>-</b></font><font color="#ffff00"><b>c</b></font> <font color="#ff40ff"><b>':so $VIMRUNTIME/syntax/2html.vim'</b></font> <font color="#ffff00"><b>-</b></font><font color="#ffff00"><b>c</b></font> <font color="#ff40ff"><b>':wqa'</b></font> $<font color="#ff40ff"><b>1</b></font> <font color="#ffff00"><b>&gt;</b></font> /dev/null <font color="#ff40ff"><b>2</b></font><font color="#ffff00"><b>&gt;</b></font> /dev/null
+
+<font color="#00ffff"><b>Now just run:  shell&gt; 2html.sh foo.py</b></font>
+
+<font color="#00ffff"><b>Document originally from http://www.cs.ualberta.ca/~luca/tricks.vim.html</b></font>
+<font color="#00ffff"><b>updated and maintained by <a href="http://www.zinkwazi.com/">Greg Lawler</a></b></font>
+
+</pre>
+
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-256828-4");
+pageTracker._trackPageview();
+</script>
+</body></html>
