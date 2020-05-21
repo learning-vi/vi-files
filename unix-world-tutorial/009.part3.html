@@ -1,0 +1,524 @@
+<HTML>
+<HEAD>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+	<TITLE>UnixWorld Online: Tutorial: Article No. 009: Part 3</TITLE>
+</HEAD>
+
+<H1>UnixWorld Online: Tutorial: Article No. 009</H1>
+
+<H2>The vi/ex Editor, Part 3: The <code>global</code> Command</H2>
+
+<P>By <A HREF="https://www.ele.uri.edu/uworld/authors/walter-zintz/bio.html">Walter Alan
+Zintz</A>.</P>
+
+<P>Questions regarding this article should be directed to the author
+at <A HREF="mailto:walter@ccnet.com">walter@ccnet.com</A>.</P>
+
+
+<H3><A NAME="intro">The Wondrous <code>global</code> Command</A></H3>
+
+<P>If you're surprised that I made no mention of <code>global</code>
+in the preceding installment of this tutorial--well, <code>global</code>
+is not an address.  It's actually a line-mode command, and it's much
+more powerful than most users suspect.</P>
+
+<P>Even experienced users of line mode usually think of
+<code>global</code> along these lines: ``If you type
+<code>global</code> and then a search pattern and then a
+line-mode command, all on one line, then the editor finds every
+line in the file that contains that pattern and runs the
+command on every one of those lines''.  That is, typing:</P>
+
+<PRE><strong>
+global /^Chapter [1-9]/ delete
+</strong></PRE>
+
+<P>is expected to find and delete every line in the file that starts
+with a chapter heading.  This example will do just that, and so will
+many other such uses of the command.  But spectacular failures
+will happen from time to time--typing:</P>
+
+<PRE><strong>
+<A NAME="write">global /^Chapter [1-9]/ write >> t.of.contents</A>
+</strong></PRE>
+
+<P>definitely will <strong>not</strong> append each of the marked lines
+to a file named ``t.of.contents'', as moderately-experienced users
+might expect.  (It's likely to overflow your file system quota
+instead.)</P>
+
+
+<H3><A NAME="details">The Details of <code>global</code> Operations</A></H3>
+
+<P>More important, misunderstanding the <code>global</code> command
+keeps users from exploiting more than a small fraction of that
+command's power.  But you don't have to live with the limitations of
+ignorance on this--here's the full story in plain terms:</P>
+
+<DL>
+
+<DT>Searching where you tell it to look:
+
+   <DD><P>As a line-mode command, <code>global</code> can be
+   preceded by an address or pair of addresses.  Its default is
+   to search the entire file, but if you start your command as
+   <code>257 , 382 global</code> then it will only search through
+   lines 257 through 382 inclusive.  Any line-mode addresses can
+   begin a <code>global</code> command, so starting with
+   <code>?^Exercises? +++ , $ global</code> will restrict the pattern
+   search and line marking to a stretch beginning three lines past
+   the last previous line that starts with the string ``Exercises'',
+   and ending at the end of the file.</P>
+
+<DT>Marking either hits or misses:
+
+   <DD><P>Typing the command name as <code>global</code> or
+   <code>g</code> will definitely cause it to mark every line
+   in the search area that contains the pattern.  But typing it as
+   <code>global!</code> or <code>g!</code> or <code>v</code>
+   reverses the procedure--now it will only mark lines that do
+   <strong>not</strong> contain the search string.  So if you are
+   editing a copy of a log file of error messages, and only the
+   lines that begin with ``Error 3b:'' are of interest, you can
+   eliminate all the unwanted lines by typing:</P>
+
+   <PRE><strong>
+   global! /^Error 3b:/ delete
+   </strong></PRE>
+
+<DT>Choose your own search pattern delimiter:
+
+   <DD><P>Since this command always searches the file (or the section
+   of it that you select) from top to bottom, you can use almost any
+   punctuation character to mark the start and end of your search
+   pattern.  There's no need to use ? or / characters to indicate a
+   direction for the search.  If you want to eliminate lines that
+   contain three consecutive slash marks, any of:</P>
+
+   <PRE><strong>
+   global +///+ delete
+   global ;///; delete
+   global ]///] delete
+   </strong></PRE>
+
+   <P>will be a simpler choice than using slashes as delimiters and
+   backslashing all three of the slashes you are searching for.
+   (However, using <code>!</code> as you delimiter is dangerous,
+   because <code>global</code> is likely to mistake your
+   delimiter for the switch that tells it to find only lines that
+   do <strong>not</strong> contain the search pattern.)</P>
+
+   <P>Of course this applies only to the search pattern that goes
+   right after the <code>global</code> command name, the one that
+   says which lines to mark.  If you use any search patterns
+   before the command name, to say which area of the file is to
+   be searched, then use ? and / delimiters as usual.</P>
+
+<DT>Global searches that seem senseless can be very useful:
+
+   <DD><P>At times it's wise to have <code>global</code> or
+   <code>global!</code> run a search over just one line in a file.
+   This is the basis for conditional execution of line-mode commands.
+   As a simple example, you may find yourself editing files from
+   outside your organization that are sometimes (but not always)
+   sent to you with an extra, empty last line, as a spacer.
+   You need to remove that last line, if and only if it is empty.
+   You could go the end of each file and look, but it's easier
+   to have the editor do the checking and (where necessary) the
+   deletion, so you type:</P>
+
+   <PRE><strong>
+   $ global /^$/ delete
+   </strong></PRE>
+
+   <P>It can also be useful to have <code>global</code> mark every
+   line in the area of the file you tell it to search!  Our put-upon
+   programmer, Hal (in the first installment of this tutorial) used
+   this when he had to reverse the order of the lines in one file.
+   His command line, which would look like this if typed out in
+   unabbreviated form:</P>
+
+   <PRE><strong>
+   global /^/ move 0
+   </strong></PRE>
+
+   <P>begins by marking each line that has a start-of-line point,
+   which makes every line qualify.  Next it goes to the first line
+   and moves it up right after the fictitious line zero--a no-op,
+   of course.  But then it moves the second line to the same place,
+   pushing the former first line down one
+   position in the file.  As it does the same with the third line,
+   the fourth line, etcetera, it's changing the order of the lines
+   to the exact opposite of the order they were in at the start.</P>
+
+<DT>One <code>global</code> can run many commands:
+
+   <DD><P>You can put several commands on the line after a
+   <code>global</code> command and its search pattern.  After
+   marking the appropriate lines, <code>global</code> will then
+   go to each marked line and run all of the commands you've
+   given it, in the order you gave them.  Just separate these
+   commands with a vertical bar (``|'') character.  <A
+   NAME="chapter">If you type:</A></P>
+
+   <PRE><strong>
+   global /^CHAPTER/ substitute /APTER/apter/ | copy $
+   </strong></PRE>
+
+   <P>the editor will go to each line that starts with a chapter
+   heading, change ``CHAPTER'' to ``Chapter'', and then copy the
+   line (now beginning ``Chapter'' instead of ``CHAPTER'') to
+   the end of the file.  The order in which you put those two
+   commands is important -- the <code>substitute</code> command
+   must come first so the subsequent <code>copy</code> command
+   will copy the decapitalized version of the line, not the
+   original all-caps version.</P>
+
+   <P>You're not limited to just two commands in a
+   <code>global</code> command line; there is no maximum on the
+   number of commands there.  The maximum string length for the
+   command list varies with the editor version you're using, but
+   I've never encountered a limit of less then 256 characters.
+   There are a few restrictions on what the command list can
+   contain, though:</P>
+
+      <UL>
+
+      <LI>The <code>global</code> keyword and the following list of
+      commands all must be on one line.  (That is, on one physical
+      line, with no carriage returns in it.  If that one line is too
+      long for your terminal's screen width, the terminal may wrap it
+      around to occupy two or more lines on your screen, but this
+      will not cause a problem.)</LI>
+   
+      <LI>The command list cannot include an <code>undo</code>
+      or another <code>global</code> command.</LI>
+
+      <LI>If you include a command that escapes to the shell, it
+      must be the last command on the line.  (Putting two or more
+      shell-escape commands in one command list will not work.)
+      This makes it possible to use pipes (symbolized by the
+      <code>|</code> character) in your shell-escape command string,
+      without having the editor mistake the pipe symbol for the
+      separator between two editor commands in your
+      <code>global</code> command line.</LI>
+
+      </UL><BR><BR>
+
+<DT>Commands don't have to run on the lines <code>global</code> marks.
+
+   <DD><P>Using <code>global</code> is essentially the same as
+   moving to each marked line manually, then typing in the
+   command string while you are there.  Just as you no longer
+   expect every command you type in to operate on the line you
+   are on when you type it, you don't have to have the commands
+   in a <code>global</code> string operate entirely on the
+   marked lines.  Here are three points to note regarding this:</P>
+
+      <OL>
+
+      <LI><P>Any command in a <code>global</code> command line can
+      take its own address or addresses, just as it could if it
+      were typed in as a separate command.  So this command
+      string:</P>
+
+      <PRE><strong>
+      global /^XX/ - copy $ | /ZZ$/ , +5 delete
+      </strong></PRE>
+
+      <P>is entirely legitimate.  It goes to each line that begins
+      with two capital X's, then copies the line just before that
+      one to the end of the file, and finally goes forward to the
+      next line that ends with two capital Z's and deletes that
+      line and the five lines that follow it.</P></LI>
+
+      <LI><P>Even if you give no addresses for the commands in a
+      <code>global</code> string, default addresses for those
+      commands may make them operate on other than the marked line.
+      That's the fault in that <code>global</code> command string
+      <A HREF="009.part3.html#write">in the introduction</A> to this installment
+      of my tutorial that tries to write individual lines to
+      another file.  Because the default address for the
+      <code>write</code> command is the entire file, this command
+      will write the entire file the user is editing to the
+      end of the other file,
+      once for every line that <code>global</code> has marked.
+      The correct way to write individual lines is to type:</P>
+
+      <PRE><strong>
+      global /^Chapter [1-9]/ . write >> t.of.contents
+      </strong></PRE>
+
+      <P>where the dot address in front of the <code>write</code>
+      command tells it to write only the line it is on.</P></LI>
+
+      <LI><P>But even if you take a command that has the current
+      line as its default address, and put it in the string
+      following <code>global</code> without giving it an address
+      of its own, it can still operate on different lines from the
+      ones <code>global</code> has marked if it is not the first
+      command in the string.  The reason: each subsequent command
+      in a <code>global</code> takes as the current line whatever
+      line the command before it left as the current line.</P>
+
+      <P>In my <A HREF="009.part3.html#chapter">earlier example</A> about wanting
+      to both change the capitalization of lines beginning with
+      ``CHAPTER'' and copy those lines to the end of the file, the
+      task was easy because the lines were to be copied in their
+      changed state.  But what if the user wanted only the lines
+      in the midst of the file decapitalized, while the ones copied
+      to the end of the file were to remain all-caps?  It might
+      seem obvious to simply reverse the order of the two commands,
+      so the <code>copy</code> command was executed first, before
+      the <code>substitute</code> command was called to change the
+      capitalization, like this:</P>
+
+      <PRE><strong>
+      global /^CHAPTER/ copy $ | substitute /APTER/apter/
+      </strong></PRE>
+
+      <P>Surprisingly, that would produce the opposite of the
+      effect that was intended.  That is, it would decapitalize
+      the copied lines at the end of the file, but leave the
+      marked lines in the midst of the file all-caps.
+      The reason?  The <code>copy</code> command leaves the last
+      line of the copy text block, not the original text block, as
+      the current line.  So after the <code>copy</code> command
+      has run, the <code>substitute</code> command, using the
+      command's default address (the current line) because it
+      has not been given an explicit address, would operate on
+      the copy line rather than the original.</P>
+
+      <P>But there is one thing that no amount of current-line
+      shifting can change.  Wherever in the file the command
+      string may leave the current line, when the commands have
+      finished running, <code>global</code> will go to the next
+      marked line without fail.  The only way any of the commands
+      in the string can prevent this is by deleting the next
+      marked line -- in that case, <code>global</code> will
+      merely go on to the next marked line that has not been
+      deleted.  And even this fact has uses that might not
+      be obvious.</P>
+
+      <P>Let's say you want to thin out the lines in a file,
+      by deleting every second line.  You can do it by typing:</P>
+
+      <PRE><strong>
+      global /^/ + delete
+      </strong></PRE>
+
+      <P>This <code>global</code> starts off by marking every line.
+      When it goes to line 1, the command it executes will delete
+      line 2.  The next undeleted marked line is line 3, where its
+      command deletes line 4, and so on.  Or if you want to delete
+      two-thirds of the lines in your file, type:</P>
+
+      <PRE><strong>
+      global /^/ + , ++ delete
+      </strong></PRE></LI>
+
+      </OL>
+
+</DL>
+
+
+<H3><a name="more-uses">A Few More Uses</a> for <code>global</code> Commands</H3>
+
+<P>The examples above are designed to show not only the working
+principles of the <code>global</code> command, but also some
+of the less-obvious tricks it can do.  But I couldn't fit every
+important trick in above.  Here are some more that are well
+worth knowing.</P>
+
+<P><strong>Keeping Count.</strong>  At times it's a good idea
+to follow <code>global</code> with a string of commands that
+have absolutely nothing to do with the lines that
+<code>global</code> has marked.  The most common occasion for
+this comes when you need to repeat a line-mode command a
+certain number of times.</P>
+
+<P>At tradeshows I'm often invited to test a system right there
+on the show floor.  I can't carry a 10,000-line test file along
+with me in every media and format any system might require, so
+I type in a ten-line file on the spot and expand it by telling
+the editor ten times to make a copy of the entire file and put
+that copy at the end of the present file.  (Each such copy doubles
+the file's size, so I wind up with 10,240 lines.)</P>
+
+<P>But that requires accurate counting.  If I'm off by even one
+on the number of times I type that command in, I get a half-size
+or double-size file that ruins my test results.  Instead of
+trying to count without an error, I let the editor do the
+counting for me.  After I've typed in the initial ten lines,
+I give one <code>global</code> command:</P>
+
+<PRE><strong>
+global /^/ % copy $
+</strong></PRE>
+
+<P>This tells the editor to search the ten lines of the file,
+mark every line that has a start-of-line (which means every line,
+of course), and then go to each of those ten lines and run the
+subsequent command to make a whole-file copy.  This guarantees
+that the command will run exactly ten times.</P>
+
+<P>Not that this trick is limited to files that have exactly
+as many lines as the number of times I want to command to be
+repeated.  If I had typed in a twenty-line file, I could copy
+it ten times by giving my <code>global</code> as:</P>
+
+<PRE><strong>
+1 , 10 global /^/ % copy $
+</strong></PRE>
+
+<P><strong>Moving Around Automatically.</strong> At times you
+may need to handle a series of editing problems in a file,
+where the edits must be dealt with one by one, not with a
+global editing script.  But moving to each spot where work
+needs to be done can be a very tedious business.  If there is
+a text pattern that identifies each place that needs editing,
+or if you can write a script to insert such a pattern, as Hal
+did at the start of this tutorial's first installment, then
+<code>global</code> can move you around automatically.</P>
+
+<P>You may recall that Hal used a script to mark up the legacy
+source code, putting each <code>lint</code> warning at the
+end of the source line to which it referred, preceded by "XXX"
+to make the affected lines identifiable.  Suppose that the
+nefarious Vice President for Information Systems comes back
+to Hal to demand that each warning be investigated, to see
+whether the code can be rewritten to eliminate the warning.</P>
+
+<P>Should Hal just leaf through the code, searching for XXX
+patterns to guide him to the trouble spots?  Hal knows that with
+the spaghetti code he's facing, the actual problem may be a long
+way from the line <code>lint</code> has designated.  In
+traveling to the actual trouble spot he may have passed several
+XXX patterns along the way, so searching for the next XXX in the
+file may bring him to a site he's already dealt with, or may miss
+a number of XXX sites that he passed when he moved forward to get
+to the actual problem spot on the previous fix.  Besides, because
+he frequently does pattern searching while fixing a problem, he
+can't depend on a visual-mode <code>n</code> command to use the
+XXX pattern he needs to find; he must type the pattern in afresh
+each time.</P>
+
+<P>But Hal knows a way around all this--dropping back to line mode
+(by typing a capital letter Q from visual mode) and giving a simple
+<code>global</code> command:</P>
+
+<PRE><strong>
+global /XXX/ visual | write
+</strong></PRE>
+
+<P>This command brings Hal to the first "XXX" line, where it puts
+him into visual mode to do his editing.  When the edit is
+finished, Hal simply types a capital letter Q and the editor
+takes him to the second "XXX" line and puts him into visual mode
+there, no matter how much moving around Hal did during the first
+edit, and so on through the list of "XXX" lines.  As frosting on
+the cake, the <code>write</code> command automatically writes the
+changed file to disk after each individual edit.</P>
+
+
+<H3><a name="you-try">Now You Give it a Try</a></H3>
+
+<P>Here are a few exercises you can try to solve, before you
+start using advanced <code>global</code> tactics in your own
+editing.  To keep things rolling I've provided at least one
+solution to each exercise, and also a hint on the last (and
+toughest) problem.</P>
+
+<P><a name="Copy"><strong>Copy and Decapitalize.</strong></a>  Let's think back
+to the user who wanted to find each line in the file that
+begins with "CHAPTER", then copy each such line to the end
+of the file just as it is, and finally change the start of
+each original line (in mid-file) from "CHAPTER" to "Chapter"
+while leaving the copied lines (at the end of the file)
+beginning "CHAPTER".</P>
+
+<P>We've already learned that this cannot be done with either
+of:</P>
+
+<PRE><strong>
+global /^CHAPTER/ substitute /APTER/apter/ | copy $
+global /^CHAPTER/ copy $ | substitute /APTER/apter/
+</strong></PRE>
+
+<P>What <code>global</code> command (or commands) would it take
+to do what's desired here?  Finding a <A
+HREF="009.part3.answers.html#copy">solution</A> to this is not
+difficult when there are so many workable ones.</P>
+
+
+<P><a name="troff"><strong>A Precise String Length.</strong></a>  An old friend who
+does some pretty tricky work with <code>troff</code> often
+needs to insert a string of backslashes in a line--up to 64
+of them in a row.  The count of backslashes must be exactly
+right or <code>troff</code> will choke.  How can he get these
+strings exactly right without tedious counting and checking?</P>
+
+<P>Let's say he needs to put 16 backslashes in line 217, right
+before the string "n(PDu". What command(s) should he use to get
+them in there without hand counting.  My <A
+HREF="009.part3.answers.html#troff">solution</A> is pretty plain once
+you know which commands to use.</P>
+
+
+<P><a name="Numbering"><strong>Numbering Paragraphs.</strong></a>  A documentation writer
+has divided each section of a document into paragraphs, and as a
+<code>troff</code> user, marks the start of each paragraph by a
+line that contains the macro ".pp" only.  That is, a break
+between paragraphs looks like this:</P>
+
+<PRE><strong>
+which is the only way that argon gas can be dissolved
+in this liquid.
+
+.pp
+The problem of energizing the argon to fluorescence while
+it is dissolved was first approached by applying a strong
+</strong></PRE>
+
+<P>How can this tech writer use the vi editor to number the
+paragraphs in each section?  (If this seems far-fetched to
+you, consider that I once got a phone call from a Unix guru
+asking how to do just this.)  To keep the problem simple, let's
+say that there are never more than 35 paragraphs in a section,
+and that they should be numbered with Roman numerals.</P>
+
+<P>This problem is still difficult enough that I'm offering you two hints.
+The first is that <code>global</code> is essential here.  Look at
+the second <A HREF="009.part3.answers.html#hint-number">hint</A>
+only if you're about to give up and check my <A
+HREF="009.part3.answers.html#solution-number">solution</A>.</P>
+
+
+<H3>Coming Up Next</H3>
+
+<P>In the <a href="009.part4.html">next part</a> of this tutorial,
+I'll cover the less-known aspects of the other line-mode commands for
+dealing with text and files.  If you're a little overwhelmed with all
+that I've said about <code>global</code>, you'll be pleased to know
+that <code>substitute</code> is notably simpler, and all the remaining
+commands are very much simpler, than <code>global</code>.</P>
+
+<P>After that, future parts of this tutorial will deal with
+visual mode; easier and more fun than line mode any day.</P>
+
+
+<H3>Back to the <a href="009-index.html#part3">index</H3>
+
+<HR>
+
+Copyright &#169; 1995, 1996 Walter Alan Zintz. All Rights Reserved.<BR>
+<ADDRESS>
+Edited by Becca Thomas / Online Editor / UnixWorld Online /
+<A HREF="mailto:editor@unixworld.com">editor@unixworld.com</A>
+</ADDRESS>
+
+<P>
+Last Modified: Thursday, 16-May-96 07:12:11 PDT
+
+</BODY>
+</HTML>
