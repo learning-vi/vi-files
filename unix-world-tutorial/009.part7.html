@@ -1,0 +1,567 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+	<TITLE>UnixWorld Online: Tutorial: Article No. 009: Part 7</TITLE>
+</HEAD>
+
+<H1>UnixWorld Online: Tutorial: Article No. 009</H1>
+
+<H2>The vi/ex Editor, Part 7: A Little ``R'' and ``r'': The Fine Points of those
+Replacement Commands</H2>
+
+<p>By <a href="https://www.ele.uri.edu/unixworld/authors/walter-zintz/bio.html">Walter Alan
+Zintz</a>.  </p>
+
+<ul>
+<li><a href="009.part7.html#more">There's more to <code>R</code> than to <code>r</code></a>
+<li><a href="009.part7.html#quote">Quoting in Characters</a>
+<li><a href="009.part7.html#ask">Readers Ask</a>
+	<ul>
+	<li><a href="009.part7.html#tommy">Tommy Spratlin writes:</a>
+	<li><a href="009.part7.html#thai">Thai-Nghia Dinh writes:</a>
+	</ul>
+<li><a href="009.part7.html#next">Next Time Around</a>
+</ul>
+
+<p>This installment of our Vi/Ex tutorial series is a diversion from the
+subjects I promised at the end of the previous part -- the change is my
+fault, and yet it is necessary.  When I blithely suggested last time that
+the <code>R</code> command is just like the familiar
+<code>r</code> command, except for a few differences
+I mentioned, I was leading you astray.  </p>
+
+
+<p>There are several differences that can cause problems in certain uses
+unless you understand those differences.  And you won't really comprehend
+the greatest of those differences until you know about metacharacters in
+insert mode.  But as an encouragement to follow all this, consider that
+almost all of what I say here about the <code>R</code>
+command also is valid with all the other commands that put you into text
+insertion mode: <code>a A i I o O c s :a :i</code>
+etcetera.  </p>
+
+
+<h3><a name="more"></a>There's more to <code>R</code> than to
+<code>r</code></a></h3>
+
+
+<p>The <code>r</code> command replaces whatever
+character is presently under the cursor, so there must be some
+character under the cursor for it to replace -- otherwise it just
+gives you an error beep.  Not so with <code>R</code>.
+<a name="empty"></a>You can give the <code>R</code>
+command </a> on an empty line; whatever you type after that, up to the
+next escape character, will take the place of that empty line just as
+though you had typed past the end of an existing line after giving an
+<code>R</code> command.  (I was going to say ``just
+as though you had given an <code>a</code> command'',
+but I'm now very leary of making comparisons that are incomplete without
+paragraphs of explanations.)  You can even start entering text into a
+brand-new file via the <code>R</code> command.  </p>
+
+
+<p>The factor above can be useful in various situations; I only have
+space to mention one.  At times I want to type new characters to replace
+blank spaces in a place where some of the lines are empty.  These do
+not have any blanks; no characters at all.  But I do not have to look
+at each line before I start typing on it, to see whether I should use
+an <code>R</code> or an <code>a</code> command, because <code>R</code>
+will work in either case.  </p>
+
+
+<p>The <code>R</code> command is more forgiving of your typing errors,
+too.  Whatever character you type after an <code>r</code> is final.
+If you accidentally typed the wrong character, you can only put back
+what was there by typing a <code>u</code> command, if the mistake was
+the last editing command you typed, or put in the replacement you had
+in mind by returning the cursor to the spot and running another, more
+careful, <code>r</code> command.  </p>
+
+
+<p>But if you mistype during an <code>R</code> command, you can backspace
+over the error with the backspace key.  Then you can type in the character
+(or characters; you can back up multiple spaces by repeating the backspace
+key) you should have typed.  And if you simply typed too far, you'll
+be glad to know that backspacing doesn't just remove the incorrect
+characters, it restores the characters that were there, either right
+away or as soon as you hit the escape key.  You can even backspace over
+everything you've typed during this <code>R</code> command before you
+type escape, because the editor does not object to a replacement string
+length of zero.  </p>
+
+
+<p>One caveat here, though, lest my clarification turn out to need a
+clarification of its own.  With either of these commands it is possible to
+break a line, just by typing the return key as a replacement character,
+and with the <code>R</code> command this linebreaking can be done either
+while actually replacing characters or when typing on beyond the end of
+the existing line.  With almost all versions of the editor, it is not
+possible to backspace over an inserted linebreak, even while you are
+still in <code>R</code> insertion mode.  </p>
+
+
+<p>The most important difference, though, is the handling of
+metacharacters.  Yes, text insertion utilizes metacharacters
+too, quite apart from the ones that the replacement patterns in
+<code>:substitute</code> commands use.  The <code>r</code> command
+recognizes hardly any of these metacharacters, and quoting those in
+as literal characters is very simple.  The <code>R</code> command,
+though, recognizes almost all of them, and quoting characters in with
+<code>R</code> is rather complicated.  </p>
+
+
+<h3><a name="quote"></a>Quoting in Characters</a></h3>
+
+
+<p>The phrase ``quoting in'' is standard terminology, but it is rather
+misleading in the editor.  Unlike Unix shells, the editor does not use
+any of the ASCII quotation marks: <code>` ' "</code> (backquote, single
+and double quote) to quote characters into a file.  Instead, it uses
+the backslash (``<code>\</code>'') and control-V (``<code>^V</code>'');
+the latter is what you send when you press the V key while holding the
+CONTROL or CTRL key down.  In either case, you quote a character in by
+typing the quoting character just prior to the character you want to
+quote in.  So if @ is your line kill character, and you want to put that
+character in the text you are typing in, you would have to type either \@
+or ^V@ to get it there.  And if you want several consecutive characters
+quoted in, you must quote each of them individually.  That is, if you
+want to put @@@ into a line, you must type either ^V@^V@^V@ or \@\@\@
+to put that string there.  </p>
+
+
+<p>But \ and ^V are not always interchangeable.  In many cases either
+will work; but sometimes you must choose the right one.  Which one to
+use depends both on what character you want to quote in and whether
+you're using the <code>r</code> or <code>R</code> command.  </p>
+
+
+<p>One obvious use for quoting is to insert a character that normally
+erases part or all of what you've just typed in.  The ASCII backspace
+character, control-H, must be quoted in, and so must your own line-kill
+character (@ in the example above) and your own erase character if it
+is not control-H.  With the <code>r</code> command you quote in any of
+these with a backslash; when using <code>R</code> you may quote any of
+these in using either backslash or control-V.  </p>
+
+
+<p>A pause here, to answer a question that might be in the minds of
+people who know a little about Unix internals.  Ordinarily it is the
+asynchronous serial terminal line (or TTY) driver that recognizes the
+erase and line-kill characters and edits the input line accordingly
+without including these characters in the final result.  Then, how can
+one enter these same input-line characters into the edit buffer if they
+don't get past the TTY driver?  Because Vi/Ex places the TTY driver
+into a special ``raw'' mode that ignores the line-editing characters
+passing them on to the editor.  Otherwise you would not be able to
+quote these characters in.  Also, the editor is set up to discover your
+erase and line-kill characters by querying your personal environment,
+and then interpret these characters as the line driver would have.
+A nifty feature -- but unfortunately, the editor has no way to let the
+user turn this feature off.  </p>
+
+
+<p><a name="atsign">The editor's creators</a> came up with a curious
+method for repeating short text insertions, where the text to go in is
+always the same but any outgoing text varies.  They decided that when you
+are in screen mode, and have just gone into typing-in-text submode, and
+make Control-@ (``^@'') the first character you type in, then the editor
+should insert the last piece of text you had previously inserted (if it
+was not more than 128 characters long) and take you back to command mode.
+Unfortunately, they never made this work as promised.  </p>
+
+
+<p>In actuality, ^@ operates anywhere in a text insertion, not just in the
+first character position.  What a ^@ does there depends on the situation.
+If your last <code><nobr>c d y</nobr></code> command, or one of
+their variants such as <code>s D</code> etcetera,
+removed or copied a full line of text or parts of two or more lines, or
+if you haven't run one of those commands in your current editing session,
+then typing ^@ is just a nuisance.  It will take you out of text input
+submode and probably move the cursor back a few characters from where
+the input ended.  </p>
+
+
+<p>But if you have done at least one <code>c d y</code>
+command or a variant, and if the very last one you did removed or copied
+only a part of a single line of text, then surprise!  Typing a ^@ in
+this case will do three things: </p>
+
+
+<ol>
+
+<li>Unless you typed it at the first character position on a line,
+it will move the cursor back one character.  This will move over the
+last character you typed in if you've typed any, or over one existing
+character if you type ^@ as the first character of your insertion,
+but will not erase the character it passes over.  </li>
+
+<li>Just to the left of the new cursor position, the editor will insert
+the text that was removed or copied by your last <code>c d y</code>
+command or variant.  (If you went into text-insertion submode via a
+<code>c</code> command or a variant of it, the text you just took out
+is what will be put back in.)  </li>
+
+<li>Finally, the text insertion will automatically end and you will be
+back in command submode, with the cursor positioned at the start of the
+last simple word that was inserted by the ^@ metacharacter.  </li>
+
+</ol>
+
+<p>Quoting a ^@ into your text isn't possible, because the editor reserves
+that character for internal use and will not accept it as itself in
+any file you may edit.  Not that there would be any reason to put ^@
+in a file anyway: it is the ASCII character NUL, a padding character
+that is routinely inserted in data streams by device drivers, and just
+as routinely stripped at the receiving end, so any ^@ characters you
+might add would be lost in the shuffle.  But when you are using the
+<code>R</code> command, or any other command that lets you insert an
+indefinite amount of text, you can quote a ^@ anyway by preceding it
+with a ^V.  The result will be to quote ^[Pb into your file at that
+point; this being the command string the editor issues to perform the
+odd operation I've detailed above.  </p>
+
+
+<p>Those of you who are skillful with the editor may wonder why the ^@
+insertion operates only when your last text extraction was a fragment
+of one line.  After all, the <code>P</code> command by itself inserts
+the contents of the unnamed buffer, and that buffer holds whatever
+was extracted last, be it half a line or a hundred lines, doesn't it?
+The answer lies in one of the editor's undocumented features.  When you
+give a command to insert text, even the <code>r</code> command that only
+inserts a single character, the editor simultaneously flushes the unnamed
+buffer and leaves it empty -- if and only if that buffer contained more
+than a fragment of one line.  So, when you entered the text insertion
+mode from which ^@ operates, you emptied the unnamed buffer unless there
+was only a fragment of one line in it.  </p>
+
+
+<p>At times you may want to use the <var>beautify</var> option to the
+<code>set</code> command.  This tells the editor to throw away most,
+but not all, control characters you may try to type in -- the exceptions
+usually are the tab (^I), newline (^J), and form feed (^L) -- in order
+to keep you from inadvertently putting in invisible control characters
+that will be hard to detect later.  This option is normally off, but
+you can type <code>:se bf</code> to turn it on.  </p>
+
+
+<p>But even when you want most control characters thrown out, there
+will be occasions when one must go in.  This is not possible using
+a <code>r</code> command.  The usual <code>r</code> technique of
+backslashing will usually bite back in this case -- the editor will
+interpret the control character by acting on its control meaning rather
+than inserting it in the text.  Using <code>R</code>, though, you can
+insert most control characters by preceding each with ^V.  </p>
+
+
+<p>Even this may not be enough.  Some systems are set up so that when
+certain control characters are typed in, even though preceded by ^V,
+the system acts on them as control characters before the editor ever
+sees them.  To get around this problem, many implementations of
+the editor, especially older ones, interpret an ordinary character typed
+right after a ^V as a control character.  That is, on these systems,
+typing ^VF or ^Vf while running an <code>R</code>
+command inserts a ^F in the file, just as typing ^V^F would on systems
+that don't have this challenge.  </p>
+
+
+<h3><a name="ask"></a>Readers Ask</a></h3>
+
+
+<p>Here are the latest questions, and my solutions, from inquiring
+readers with problems you might face someday.</p>
+
+
+<h4><a name="tommy"></a>Tommy Spratlin writes:</a></h4>
+
+
+<blockquote>
+
+
+<p>Hi Walter, </p>
+
+
+<p>In moving files from Windows machines to UNIX, some of our users
+do binary transfers which result in ^M characters in the ASCII files.
+Usually they occur at the ends of individual lines and I do: </p>
+
+
+<pre><strong>
+:1,$ s/^M//g
+</strong></pre>
+
+
+<p>where ^M is generated by ^V^M and everything works fine to delete
+these characters.  I now have a new problem: I found a file with ^M
+characters embedded in it, but the file is one long line.  I need
+to replace them with Vi's line-end character to split this long line
+into multiple lines.  But I can't because it's the same as pressing the
+ENTER or RETURN key in the middle of the substitution command.  How can
+I replace the superfluous carriage return?  We have several files like
+this and it's causing problems viewing them with Web browsers.  </p>
+
+
+<p>I tried substituting a newline with the character code and the octal
+code unsuccessfully, and tried the ^M as a last unsuccessful resort.  </p>
+
+
+</blockquote>
+
+
+<p>Things aren't as complicated as you make them seem, Tommy.  First of
+all, Web browsers generally ignore carriage-return and/or linefeed
+characters while formatting text for display.  If your browser is choking
+on these all-one-line files, it is probably because the lines are too
+long for your browser, or for some other cause not related to embedded
+^M characters.  </p>
+
+
+<p>Now, as you have deduced, the difference between Microsoft and Unix
+text file formats is that Microsoft operating systems seem to favor
+carriage-return followed by linefeed (^J) as the line separator, while
+Unix systems use linefeed alone.  </p>
+
+
+<p>As you've discovered, you cannot directly quote a ^J into any
+editor command.  And yet, you put a ^J into your file every time you
+hit return during text entry, although the return key on most terminals
+sends a ^M character.  That's the trick; the <code>substitute</code>
+command regards a ^M in the input pattern as a signal to insert a ^J and
+discard the ^M.  So you only need to get that ^M into the replacement
+pattern by typing in your command line like this: </p>
+
+
+<pre><strong>
+:1,$ s/^V^M/^V^M/g
+</strong></pre>
+
+
+<p>You just have to overlook the appearance of futility in this command
+line, as though it were going to replace each ^M with itself.  That first
+^M is in the outgoing pattern, so it matches a real ^M. The second,
+in the replacement pattern, calls for a ^J as I explained above.  </p>
+
+
+<p>However, these all-one-line files may be too long for the Vi editor,
+which cannot handle lines much more than a thousand characters long
+in most common implementations, with shorter limits in older versions.
+The editor will truncate lines that exceed the limit, with only a minimal
+and rather cryptic warning.  In such cases, use the <code>tr</code>
+utility to replace the ^M characters (which is a very straightforward
+job with that tool), before you bring the file into the Vi editor.  </p>
+
+
+<p>You may wonder then, how you would use the <code>substitute</code>
+command to put ^M characters into your file.  The answer is to backslash
+the quoted-in ^M. To add a ^M at the end of every line in your file,
+so as to conform it to Microsoft practice, type this command: </p>
+
+
+<pre><strong>
+:%s/$/\^V^M
+</strong></pre>
+
+
+<p>(Note that it is important to type the \ first, then the ^V,
+followed by the ^M.) The ^V puts the immediately-following ^M into the
+command line, and the backslash tells the command that this ^M is to be
+considered a real one, not a metacharacter for ^J. In fact, these are
+the general principles for quoting characters almost everywhere except
+in typing-in-text mode: </p>
+
+
+<ol>
+
+
+<li>Precede a character by ^V to keep that character from being
+interpreted as a metacharacter at the moment you type it.  In this case,
+you don't want typing ^M to immediately end the substitution command.
+</li>
+
+
+<li>Precede a character by a backslash to keep that character from acting
+as a metacharacter later, when what you've typed is interpreted by the
+editor -- for example, when what you have typed in is run as a command,
+or interpreted as a search pattern.  This command uses a backslash to
+keep the command from inserting ^J instead of ^M at the time it executes.
+</li>
+
+
+<li>When you must use both, as in this case, type the backslash before
+you type the ^V. (If you think that this backslash would then affect
+the immediately following ^V rather than the later ^M, remember that the
+^V is not there when the backslash takes effect.  The ^V disappears as
+soon as it tells the editor to insert the ^M in the command instead of
+taking the ^M as the signal to end the command.)  </li>
+
+
+</ol>
+
+
+<p>Finally, you can replace linefeed characters with something else via
+line mode commands, but you must use two commands and only one of them is
+the <code>substitute</code> command.  Suppose you need
+to change a short file's format from a number of lines to the format Tommy
+encountered: a single line with ^M separators.  That is, replace each ^J
+(except the last) with a ^M. (This had better be a fairly short file,
+because even newer versions of the editor can't handle any lines longer
+than 1024 characters.)  </p>
+
+
+<p>Start by using a command similar to the one above to put ^M at the
+end of every line except the last.  (Since these ^M characters are to
+separate lines, there's no use for one at the end of the last line.)
+Then use this command: </p>
+
+
+<pre><strong>
+:%j!
+</strong></pre>
+
+
+<p>to join all the lines into one.  The ``j'' in this command line
+is the shortest abbreviation for the line mode <code>join</code> command,
+and the ``!'' switch at the end of it tells the command not to insert
+blank space between the lines it joins.  </p>
+
+<h4><a name="thai"></a>Thai-Nghia Dinh writes:</a></h4>
+
+<blockquote>
+
+
+<p>Hi,</p>
+
+
+<p>I have a question (rather simple, really) but no one seem able to
+know the answer.  Not even the help desk (with all the Vi gurus :)
+). I'm hoping you can help me with it.  </p>
+
+
+<p>I have a text file of unknown length.  Each line of the file can be
+very short or very long (from 3 characters up to 1000 characters).  </p>
+
+
+<p>Within this file, I'm trying to locate (search) the <em>n</em>th
+occurrence of a word.  </p>
+
+
+<p>Here are a few things I've tried: </p>
+
+
+<ol>
+
+
+<li>The simple solution would be (from visual command mode): a
+<code>/foobar</code> command followed by the <code>n</code> command
+typed <em>n</em>-1 times.  But what if <em>n</em> is large, say 200
+or greater?)  </li>
+
+
+<li><code>:1,$ global /^/ /foobar/</code> (and its variations) Nothing
+useful...  </li>
+
+
+</ol>
+
+
+<p>Can you suggest a better way?  </p>
+
+
+</blockquote>
+
+
+<p>Yes, although it involves a slightly tricky procedure.  Consider the
+following command string: </p>
+
+
+<pre><strong>
+:$|/\&lt;foobar\&gt;/s//QQQ
+</strong></pre>
+
+
+<p>The first command in this string takes us to the last line of our
+file and -- incidentally -- displays it on our screen, which is not
+important here.  The second command searches forward for a line containing
+``foobar'' as a word, and starting from the last line the search must
+wrap around and find the first instance in the file.  Then that second
+command replaces the word ``foobar'' with ``QQQ'', leaving the cursor
+at the point where the substitution was made.  </p>
+
+
+<p>Now let us make an addition to the start of this command string: </p>
+
+
+<pre><strong>
+:1,199g/^/$|/\&lt;foobar\&gt;/s//QQQ
+</strong></pre>
+
+
+<p>This revised string repeats the procedure 199 times; each time the
+first instance of ``foobar'' remaining in the file is the one replaced.
+So we end up sitting on the ``QQQ'' string that replaced the 199th
+instance of ``foobar''; simply typing <code>n</code> will bring us to the
+200th instance.  And if we move off that 200th instance for any reason,
+going to the top of the file and searching for ``foobar'' will bring us
+right back to it, because the first 199 are now gone.  </p>
+
+
+<p>When we are finished with that 200th ``foobar'', this command: </p>
+
+
+<pre><strong>
+:%s/QQQ/foobar/g
+</strong></pre>
+
+
+<p>will change those 199 ``QQQ'' strings back to ``foobar''.  Of course,
+if there is any chance that ``QQQ'' might occur in the document as itself,
+we can choose another dummy string.  </p>
+
+
+<blockquote>
+
+
+<p>And while I'm at it, I've got another question.  </p>
+
+
+<p>How do I delete all lines beginning with a certain string, say, !@#$
+(or foobar for that matter). And a related question: how to delete lines
+containing the word foobar (anywhere within the line)?  </p>
+
+
+</blockquote>
+
+
+<p>The first command line following will solve your first problem,
+and the second will solve your second: </p>
+
+
+<pre><strong>
+:g/^foobar/d
+:g/\&lt;foobar\&gt;/d
+</strong></pre>
+
+<h3><a name="next"></a>Next Time Around</a></h3>
+
+
+<p>To make room to answer two readers' questions, I had to
+skip presenting three great Vi tools -- <var>autoindent</var>,
+<code>abbreviate</code>, and <code>map!</code> -- and the effect their
+metacharacters have in text-insertion mode.  They'll be first up in the
+<a href="009.part8.html">next part</a> of this tutorial.  </p>
+
+
+<p>More answers to reader questions are coming, too.  I have queries to
+answer about the semicolon address separator and about yanking within
+macros -- and if a few more significant problems arrive here, I'll try
+to fit them in, too.  </p>
+
+
+<p>And this time you won't have to wait and wait for the next tutorial
+part.  As I write this paragraph, I'm already in the middle of creating
+the next part, so you should see it within a month after this part
+appears online.  </p>
+
+
+<H3>Back to the <a href="009-index.html#part7">index</H3>
+
+</body></html>
