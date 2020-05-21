@@ -1,0 +1,113 @@
+<html><head>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+	<title>Answers to Part 4 Exercises</title>
+</head
+
+<h2>Answers to Part 4 Exercises</h2>
+
+
+<h3><a name="ans1"></a>Solution to k37 Problem</h3>
+ 
+
+<pre><strong>
+% substitute /\(.*\)k37\(.*k37\)/\1q53\2
+
+</strong></pre>
+ 
+<p>will do it.  When there are two or more wild cards in a search pattern,
+the editor finds the longest match for the first one that allows any
+match for the subsequent ones, and so on.  </p>
+
+<H3>Back to the <a href="009.part4.html#Problem1">question</a></H3>
+<hr>
+
+<h3><a name="ans2"></a>Solution to Capitalization Problem </h3>
+
+
+<pre><strong>
+237 , 289 substitute :[^ ]*:\L\u&amp;:g
+
+</strong></pre>
+
+
+<p>Since the ``\u'' and ``\l'' metacharacters have limited reach, they
+don't end the effect of a ``\L'' or ``\U'' metacharacter--they only make
+a one-character exception.  </p>
+
+
+<p><em>Author's Note:</em> Since I wrote this solution, I have learned
+that it will not work under many implementations of the editor.  So,
+I've added below an alternate solution, more complex but more powerful,
+that should work everywhere.  </p>
+
+
+<pre><strong>
+237 , 289 substitute :\([A-Za-z]\)\([A-Za-z-]*\):\u\1\L\2:g
+
+</strong></pre>
+
+
+<p>Even in editing environments where my first solution would work,
+the second one has certain advantages: </p>
+
+
+<ul>
+
+<li>The second solution is not fooled by situations where a punctuation
+mark leads off a word.  </li>
+
+<li>It's up to you whether the second solution does or does not capitalize
+any but the first word in hyphenated compounds such as Frankfurt-am-Main.
+If you want to capitalize those subsequent words, just remove the last
+of the three hyphens within the second character class in my alternate
+solution.  </li>
+
+</ul>
+
+<H3>Back to the <a href="009.part4.html#Problem2">question</a></H3>
+<hr>
+
+<h3><a name="ans3"></a>Answer to No-Op Problem</h3>
+
+
+<p>The editor thinks a substitution has been successfully made whenever
+the outgoing search pattern is matched and no error condition is
+encountered, even if it is only replacing nothing with nothing.  So when
+the editor finishes up by reporting the number of substitutions it has
+made, it is giving me a count of the empty lines in my file, which
+tells me how many paragraphs plus headlines plus list items I have.
+Then I divide this number into the count of lines in the file, to see
+whether my paragraphs have gotten too long.  </p>
+
+<H3>Back to the <a href="009.part4.html#Problem3">question</a></H3>
+<hr>
+
+
+<h3><a name="ans4"></a>Solution to HTML tags problem </h3>
+
+<p>Where the substitution command to add a tag at the start of a
+paragraph presently removes and then replaces any first character on
+the line, now it should remove and replace anything except a ``&lt;''
+character in that position.  If that first character is a ``&lt;'' it is
+necessary that the substitution command fail so it will change nothing.
+To arrange this, replace that period in the search pattern with a negative
+character class -- ``[^&lt;]'' -- which matches any character except the
+one that begins every HTML tag.  </p>
+
+
+<p>Similarly, replace the period in the other substitution pattern
+with the negative character class that matches any character except the
+one that always ends an HTML tag.  Now the two commands will look like
+this: </p>
+
+
+<pre><strong>
+global /^$/ + substitute /^[^&lt;]/&lt;P&gt;&amp;/
+global /^$/ - substitute :[^&gt;]$:&amp;&lt;/P&gt;:
+</strong></pre>
+
+<H3>Back to the <a href="009.part4.html#Problem4">question</a></H3>
+
+<hr>
+<H3>Back to the <a href="009-index.html#part4">index</a></H3>
+</body></html>
