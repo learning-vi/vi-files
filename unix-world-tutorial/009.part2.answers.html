@@ -1,0 +1,66 @@
+<html><head>
+	<title>Answers to Part 2 Exercises</title>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+</head>
+
+<H2>Answers to Part 2 Exercises</H2>
+
+<h3><a name="export"></a>Solution to ``EXPORT'' Problem</h3>
+
+
+<p>Typing:</p>
+
+<pre><strong>
+1 ; ?EXPORT? delete
+</strong></pre>
+
+
+<p>will do it.  By starting from the first line in the file and
+searching backwards, you guarantee the the first line to be
+searched will be the last line of the file (due to wraparound),
+then the second-to-last line, etcetera.  As soon as the editor
+finds a match it stops, so there cannot be another ``EXPORT''
+lower down in the file.
+</p>
+
+<H3>Back to the <a href="009.part2.html#try-it">question</a></H3>
+<hr>
+
+<h3><a name="first"></a>Solution to First-Line Problem</h3>
+
+
+<p>This requires two commands: </p>
+
+<pre><strong>
+$ print
+/EXPORT/ delete
+</strong></pre>
+
+<p>The first command prints the last line in the file, which is not
+helpful in itself, but also leaves that last line as the current line.
+Then, the address of the second command causes a forward search and,
+due to wraparound, the search must begin with the file's first line.  </p>
+
+<H3>Back to the <a href="009.part2.html#try-it">question</a></H3>
+<hr>
+
+<h3><a name="include"></a>Solution to Noninclusive Problem</h3>
+
+<p>Just add a plus sign after the address before the comma, and a minus
+sign to the address after it, like this: </p>
+
+<pre><strong>
+?abc? + , /xyz/ -
+</strong></pre>
+
+<p>Each of these offsets moves one line toward the center of the
+text section the combined address specifies, so each has the
+effect of leaving out the line where the match was found.  (That
+the first search was backward and the second forward is not
+relevant.  The point is that the address before the comma,
+whatever it is, receives the plus offset, while the address after
+the comma gets the minus offset.) </p>
+
+<H3>Back to the <a href="009.part2.html#try-it">question</a></H3>
+<hr>
+<H3>Back to the <a href="009-index.html#part2">index</a></H3>
