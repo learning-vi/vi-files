@@ -1,0 +1,1360 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+	<TITLE>UnixWorld Online: Tutorial: Article No. 009: Part 4</TITLE>
+</HEAD>
+
+<H1>UnixWorld Online: Tutorial: Article No. 009</H1>
+
+<H2>The vi/ex Editor, Part 4: The Subtle Substitute Command</H2>
+
+<p>By <a href="https://www.ele.uri.edu/unixworld/authors/walter-zintz/bio.html">Walter Alan
+Zintz</a>.</p>
+
+
+<ul>
+
+<li><a href="009.part4.html#section1">Making Changes Within Lines
+</a></li>
+
+<li><a href="009.part4.html#section2">A Few More Metacharacters
+</a></li>
+
+<li><a href="009.part4.html#section3">Replacement-Pattern Metacharacters
+</a></li>
+
+<li><a href="009.part4.html#section4">Other Uses for Substitution
+</a></li>
+
+<li><a href="009.part4.html#section5">A Start on Script Writing
+</a></li>
+
+<li><a href="009.part4.html#section6">Don't Lose Your Files
+</a></li>
+
+<li><a href="009.part4.html#feedback">Reader Feedback</a></li>
+
+<li><a href="009.part4.html#next">The Next Installment
+</a></li>
+
+</ul>
+
+
+<p>[<em>Editor's Note: </em> We'll indicate a line-mode command in
+the paragraph text by prefixing it with a colon ( <code>:
+</code>), the character used to execute a single line-mode
+command from visual command mode.]  </p>
+
+
+<p>After the <code>:global </code> command, which we
+discussed in the <a href="009.part3.html">previous installment</a>
+of this tutorial series, the <code>:substitute</code>
+command is line mode's most subtle and complex tool.  When I've gone over
+those complexities we'll be ready to deal with techniques and tricks of
+building powerful line-mode command strings.</p>
+
+
+<h3><a name="section1"></a>Making Changes Within Lines</a></h3>
+
+<p>Most of you already know the <code>:substitute </code>
+command by its shortest abbreviation <code>:s </code>
+and use it in roughly this form: </p>
+
+<pre><strong>
+s/previous/former/
+%s/Smith/Lee and Smith/
+</strong></pre>
+
+
+<p>to make some change within the line you are on, in the first case,
+or change every instance in the file in the second.  If you use
+both forms you are already ahead of the game.  Too many class
+instructors and textbook writers try to tell you that the way to
+change some phrase throughout the file is to type something like:
+</p>
+
+
+<pre><strong>
+global/Smith/s//Lee and Smith/
+</strong></pre>
+
+
+<p>This is wasteful nonsense.  Both forms accomplish exactly the same
+thing, but the second version involves extra typing for you and an
+extra run through the file for your computer.  It does not matter that
+not every line in your file will contain a ``Smith'' to be changed --
+the <code>:substitute </code> command will execute
+properly in either version, and quietly if even one line in the file has a
+``Smith'' it can change.  </p>
+
+
+<p><a name="target07"></a>But neither form as it stands </a> is sure
+to change every ``Smith'' in the file.  The <code>:substitute
+</code> command is set up to change only the first example of
+the string it finds on any particular line, so a line in the text that
+originally read: </p>
+
+
+<pre>
+inure to Smith's benefit only if Smith shall
+
+</pre>
+
+
+<p>will be changed by either version of the command to read:</p>
+
+
+<pre>
+inure to Lee and Smith's benefit only if Smith shall
+
+</pre>
+
+
+<p>Line mode has a built-in solution for this problem: place a
+lower-case letter ``g'' at the very end of the command, immediately
+after the last ``/'' mark, in order to make the change on every such
+string in each line.  So typing this:
+</p>
+
+
+<pre><strong>
+% substitute /Smith/Lee and Smith/g
+
+</strong></pre>
+
+
+<p>will make that text line come out as: </p>
+
+
+<pre>
+inure to Lee and Smith's benefit only if Lee and Smith shall
+
+</pre>
+
+
+<p>Finer tuning of the instances can be done by a little
+trickery.  Suppose you are working on tables, and want to change
+only the very last ``k37'' on each line to ``q53''. This command
+will do it:
+</p>
+
+
+<pre><strong>
+% substitute /\(..*\)k37/\1q53
+
+</strong></pre>
+
+
+<p>If this seems surprising, remember that in a search pattern
+with a wild card, the editor always extends the match to the
+greatest length it can.  In this case that means the string
+starting at the beginning of the line and ending with the last
+``k37'' in the line.
+</p>
+
+
+<p><a name="Problem1"></a>Now you should be able to extend this
+example.  What command would change only the second-to-last ``k37''
+on each line?  This requires a shrewd guess from you, so I've written
+a <a href="009.part4.answers.html#ans1">solution</a> you can compare to
+your own.  </p>
+
+
+
+<h3><a name="section2"></a>A Few More Metacharacters </a></h3>
+
+
+<p>You probably already know that you don't always have to type
+the search pattern that indicates the text to be replaced by a
+substitution command.  If you want to reuse your very last search
+pattern, whether that was in a substitution command or not, you
+can use an empty search pattern string to stand for the last
+search pattern, so the two commands below are actually
+identical.
+</p>
+
+
+<pre><strong>
+/Murphy/ substitute /Murphy/Thatcher/
+/Murphy/ substitute //Thatcher/
+
+</strong></pre>
+
+
+<p>Either command will go to the next line containing ``Murphy'' and
+there replace the first ``Murphy'' with ``Thatcher''.  </p>
+
+
+<p>Within a substitution command's search pattern to find the text to
+be removed, all the normal search-pattern metacharacters apply.  So do
+two more that are reserved only for substitution commands: the ``\(''
+and ``\)'' metacharacters.  </p>
+
+
+<p>These two metacharacters don't match anything themselves, so: </p>
+
+
+<pre><strong>
+substitute /^The cat and small dog show/
+substitute /^The \(cat\) and \(small dog\) show/
+
+</strong></pre>
+
+
+<p>are exactly the same command as far as they go.  But the
+substitution command remembers what it finds to match the text
+between a pair of ``\('' and ``\)'' metacharacters, for use in
+the replacement text.  Whenever your replacement pattern contains
+``\1'' the editor replaces that metacharacter with whatever
+matched the characters that were between the first pair of ``\(''
+and ``\)'' metacharacters.  A ``\2'' in the replacement pattern
+is removed and replaced by whatever was matched the characters
+between the second pair.  And so on -- you can have up to nine
+pairs in one substitution command.  These metacharacter pairs can
+even be nested in the to-be-replaced text; the one that starts
+first will be represented by ``\1'' and so on.  So if you extend
+that second substitution command above to read:
+</p>
+
+
+
+<pre><strong>
+substitute /^The \(cat\) and \(small dog\) show/My \2-\1 fair
+
+</strong></pre>
+
+
+<p>the substitution command will produce a line that begins: </p>
+
+
+<pre>
+My small dog-cat fair
+
+</pre>
+
+
+<p>Or if you type:</p>
+
+
+<pre><strong>
+substitute :up \(and \)\(over \)\(the sky\):\2\1\2\1\2\3
+
+</strong></pre>
+
+
+<p>then your command will change the first line below to read as the
+second line, just beneath it: </p>
+
+
+<pre>
+up and over the sky
+over and over and over the sky
+
+</pre>
+
+
+<p>(I used the colon ``:'' character to separate the parts of the command,
+instead of the slash ``/'' character, solely to make it more readable
+for you.  There is no danger of the editor confusing ``/'' with ''\''
+or ``l'' (el) with ``1'' (one) etcetera.)  </p>
+
+
+<p>As the preceding examples show, the ``\('' and ``\)'' are not too
+useful with plain-text search patterns; about their only real value
+there is when you are searching for something that's difficult to spell
+correctly, and don't want to type it into the replacement pattern with
+possible spelling errors.  (Spelling errors aren't so dangerous in the
+to-be-replaced text, because they only cause the pattern match to fail.)
+</p>
+
+
+<p>These metacharacters save the day, though, when you are dealing with
+other search metacharacters in searching for text that you will want
+to put back in.  (Often the only way to specify the exact spot you want
+the replacement done is to include some neighboring text in the search
+pattern, and tell the editor that after the neighboring text has been
+taken out it is to be put back in right where it was.)  Here are three
+examples of this kind of substitution: </p>
+
+
+<pre><strong>
+% substitute :\([Ss]ection\) \([0-9][0-9]*\):\1 No. \2:g
+/\([Ss]ection\) \([0-9][0-9]*\)/ substitute ::\1 No. \2
+% substitute ,[Aa]nswer: \([TtFf] \),ANSWER: \1,g
+
+</strong></pre>
+
+
+<p>The first of these simply inserts ``No.''  in the middle of phrases
+that are section numbers, throughout the document.  But the ``\('' and
+``\)'' notation is essential to preserve the section number in each case,
+and also to leave unchanged the capitalization or noncapitalization of
+the first letter of ``section''.  </p>
+
+
+<p>The second command does the same thing, but only on the very next line
+that has a section number to change.  The surprise here is that I put
+the ``\('' and ``\)'' in the address pattern to find the correct line.
+A line address doesn't use these metacharacters, of course, but it does
+not object to them, either.  It just ignores them in its own line search,
+but does pass them along when a following substitution command reuses
+the last search pattern, as happens in this example.  </p>
+
+
+<p>The third example is useful in editing a list of answers to exercises.
+It stops at each answer to a true-or-false question and capitalizes the
+entire word ``answer''. The innovative aspect of this command is that
+it finds the letter ``T'' or ``t'' or ``F'' or ``f'' following the word
+``answer'', so it will not change the capitalization where an answer
+is numerical rather than true or false.  And yet, the letter indicating
+whether ``true'' or ``false'' is the correct answer is not discarded as a
+side effect.  This is primarily an example of a change that can be done
+more simply by using other metacharacters in the replacement pattern.
+Those other metacharacters are described below.  </p>
+
+
+
+<h3><a name="section3"></a>Replacement-Pattern Metacharacters</a></h3>
+
+
+<p>The string of characters you want to put in via a substitution command
+can use its own list of metacharacters.  They're entirely different from
+the metacharacters used in searching for a pattern you want to take out
+of a line.  </p>
+
+<dl>
+<dt><strong>&</strong>
+
+
+<dd><p>In a replacement pattern, the ``&'' stands for the entire text
+that was to be replaced.  Use this when you want to add rather than
+replace text.  For example, to change ``kit'' to ``kit and kaboodle''
+regardless of whether ``kit'' is capitalized, use: </p>
+
+
+<pre><strong>
+% substitute /[Kk]it/& and kaboodle/g
+
+</strong></pre>
+
+
+<p>If you have <var>magic</var> turned off, you must backslash
+the ``&'' to give it metavalue.  With <var>magic </var> on,
+backslash an ``&'' to insert it as a regular character. (See
+the explanation of <a href="009.part5.html#section1">set</a>
+in the <a href="009.part5.html">subsequent article</a>).)</p>
+
+
+<!-- Provide link to explanation of set and magic in a
+subsequent installment. -->
+
+<dt><strong>~</strong>
+
+<dd><p>The ``~'' character represents the replacement pattern you used in
+your last substitution command.  One good use for this is in correcting
+various misspellings of a single word: </p>
+
+
+<pre><strong>
+% substitute /[Ff]anstock clip/Fahnestock clip/g
+% substitute /[Ff]ahnstock clip/~/g
+% substitute /[Ff]ahnstocke clip/~/g
+% substitute /[Ff]annstock clip/~/g
+% substitute /[Ff]anestock clip/~/g
+% substitute /[Ff]aenstock clip/~/g
+
+</strong></pre>
+
+
+<p>If you have <var>magic</var> turned off, you must backslash the
+``~'' to give it metavalue.  With <var>magic</var> on, backslash a
+``~'' to insert it as a regular character.</p>
+
+
+<dt><strong>\U</strong>
+
+
+<dd><p>A ``\U'' metacharacter makes all letters following it
+into capitals; to the end of the replacement pattern or until
+another metacharacter turns it off.  Here's how you'd use it
+to change a section of your document to all capitals:
+</p>
+
+
+<pre><strong>
+1 , substitute /.*/\U&
+
+</strong></pre>
+
+
+<dt><strong>\L</strong>
+
+<dd><p>A ``\L'' gives the opposite effect of a ``\U''; all following
+letters become lower case.  You might use this to decapitalize acronyms:
+</p>
+
+
+<pre><strong>
+% substitute /FORTRAN and COBOL/\L&/g
+
+</strong></pre>
+
+
+<dt><strong>\E</strong>
+
+
+<dd><p>Use ``\E'' to end the effect of a ``\U'' or ``\L'' metacharacter.
+Everything following the ``\E'' has the same mix of capitalization as
+originally.  For example, to enclose a line of text in curly braces,
+and also change just the first word to all capitals: </p>
+
+<pre><strong>
+substitute :\([^ ]*\)\(.*\):{\U\1\E\2}
+
+</strong></pre>
+
+<p>No ``\E'' is needed when you switch from ``\U'' to ``\L'' in the
+middle of a replacement pattern, or vice versa.  When either of those
+metacharacters appears, it automatically ends the effect of the other.
+So if you have a list of book titles, one title per line, with only the
+first letters of the words capitalized, and you want to change those
+titles to all capitals before the colon in the middle of each title,
+and all lower case after it, just type: </p>
+
+<pre><strong>
+% substitute ,\(.*\):\(.*\),\U\1:\L\2
+
+</strong></pre>
+
+<dt><strong>\u</strong>
+
+<dd>This metacharacter capitalizes just the single letter that
+immediately follows it.  If the character that immediately
+follows it is not an alphabet letter, ``\u'' does nothing.
+
+<dt><strong>\l</strong>
+
+<dd>The same as ``\u'', except that ``\l'' makes the
+immediately following letter come out as lower case.
+</dl>
+
+<p>One more thing that's important to know about reusing patterns in
+substitution commands.  When all or part of a text-to-be-replaced
+pattern is going to be used as a replacement pattern, or vice
+versa, the command reuses the result of the original pattern,
+after all the metacharacters have been evaluated in the original
+situation.  Since the metacharacters in either of those two types
+of patterns have no meaning in the other type, it could hardly be
+otherwise.
+</p>
+
+
+<p>But when the reuse involves a text-to-be-replaced pattern
+being used a second time as a text-to-be-replaced
+ pattern, or a
+replacement pattern being reused as a replacement pattern, the
+command brings along all the original metacharacters and
+evaluates them afresh in the new situation.  Thus, in either of
+the cases in this paragraph, the second use is unlikely to
+produce exactly the same results as the first use did.
+</p>
+
+
+<p><a name="Problem2"></a>Now another exercise for you.  Suppose that
+lines 237 through 289 of a file have unknown capitalization--any line
+could be all caps, all lower case, or some mixture.  These lines are
+to be changed so that the first letter of every word is a capital
+and all other letters are lower case.  To simplify this, words are
+separated by space characters.  What is the easy way to do this
+with one line-mode substitution command?  This exercise depends
+on something I did not state directly, so don't feel bad if my <a
+href="009.part4.answers.html#ans2">solution</a> is a little simpler
+than yours.  </p>
+
+
+<h3><a name="section4"></a>Other Uses for Substitution </a></h3>
+
+
+<p>Despite the name, the <code>:substitute</code>
+command doesn't always take something out of the line and put something
+else in its place.  Here's an example that adds text at the start of
+certain lines without removing anything: </p>
+
+
+<pre><strong>
+537 , 542 substitute /^/WARNING:  /
+
+</strong></pre>
+
+
+<p>so that text which originally looked like this:
+</p>
+
+
+<pre>
+The primary output line carries very high voltage,
+which does not immediately dissipate when power to
+the system is turned off.  Therefore, after turning
+off the system and disconnecting the power cord,
+discharge the primary output line to ground before
+servicing the output section.
+
+</pre>
+
+
+<p>now looks like this:
+</p>
+
+
+<pre>
+WARNING:  The primary output line carries very high voltage,
+WARNING:  which does not immediately dissipate when power to
+WARNING:  the system is turned off.  Therefore, after turning
+WARNING:  off the system and disconnecting the power cord,
+WARNING:  discharge the primary output line to ground before
+WARNING:  servicing the output section.
+
+</pre>
+
+
+<p>It's just as practical to pull some text out of lines without putting
+anything back in its place.  Here are two command lines that do just
+that: </p>
+
+
+<pre><strong>
+% substitute / uh,//g
+. , $ substitute / *$
+
+</strong></pre>
+
+
+<p>The latter command removes superfluous spaces at the ends of lines.
+It doesn't need the final two slashes because there is no suffix to be
+distinguished from a replacement pattern.  </p>
+
+
+<p>At times you might use both the previous principles, to create
+<code>:substitute</code> commands that neither subtract
+nor add any text.  Sound pointless?  Here's one such that I sometimes
+use when I'm well along in writing one of these tutorials: </p>
+
+
+<pre><strong>
+% substitute /^$
+
+</strong></pre>
+
+
+<p><a name="Problem3"></a>Now here's a different kind of exercise for
+you.  I've already given you the command, above.  It obviously makes no
+change whatsoever in the file.  So why do I run this command?  You need
+a goodly dose of inspiration to answer this, so don't be embarrassed if
+you have to look at my <a href="009.part4.answers.html#ans3">answer</a>
+to this one.  </p>
+
+
+
+<h3><a name="section5"></a>A Start on Script Writing </a></h3>
+
+
+<p>Already you know enough about the editor to be able to plan some
+fairly complex edits.  Here's a short introduction to the art of writing
+editing scripts for this editor.  </p>
+
+
+<p><strong>BOTTOM-UP PROGRAMMING</strong>. That's usually the best way to
+build a complex editor command or command script.  That's a programmer's
+term that means putting all the little details in separately and then
+pulling them all together into a unified whole, rather than starting
+with a grand overall plan and forcing the details to fit.  </p>
+
+
+<p>For example, reader R.T. of San Francisco, California asks how to use
+the editor to automatically add HTML paragraph tags to each paragraph
+of manuscripts.  This requires inserting the string ``&lt;P&gt;'' at the
+start of the first line of each paragraph, and the string ``&lt;/P&gt;''
+at the end of the last line.  In these manuscripts, a completely empty
+line (not even a non-printing character on it) separates one paragraph
+from another.  </p>
+
+<p>This looks pretty easy.  All that seems to be needed is to go to
+each empty line, then move up to the preceding line to insert the
+end-of-paragraph string and down to the following line to put in the
+start-of-paragraph string.  But there are flaws in the obvious command
+to do this: </p>
+
+
+
+<pre><strong>
+global /^$/ - substitute :$:&lt;/P&gt;: | ++ substitute /^/&lt;P&gt;/
+
+</strong></pre>
+
+
+<p>The first problem is that when the editor goes to the empty first
+line that commonly begins a file, it will be unable to move up a line to
+do the first substitution.  No substitution is needed there, of course,
+but since the editor doesn't leave that empty first line, moving down
+two lines will put it on the second line of the following paragraph --
+definitely the wrong place for a start-of-paragraph tag.  There are
+several ways to fix this problem: </p>
+
+
+
+<ol>
+<li>Have the editor <code>:mark</code> the empty
+line before leaving it to execute (or attempt to execute) the
+first substitution.  Then it can go to the marked line (which
+works even if the editor never left it) and drop down one line to
+perform the second substitution.
+
+<li>Change the address of that second substitution command from ``++''
+to ``/./'' in order to move forward to the next nonempty line, which
+will be the first line of the following paragraph whether the search
+starts from the empty line or the line above it.
+
+<li>Run two separate <code>:global</code> searches,
+each of which executes one of the two substitution commands.
+
+</ol>
+
+
+<p>Problem number two is that there may be several empty lines between
+two paragraphs, since HTML interpretation is not affected by them.
+If the editor is on the first of two or more consecutive empty lines,
+the command I first proposed above will perform its second substitution
+on the second empty line just below it.  When it moves to the second
+previously-empty line, it will run the first substitution co mmand on the
+empty line it just left.  (Yes, the second line is no longer empty, but
+it has already been marked by the <code>:global</code>
+command before any substitutions are done.)  That is, a stretch of text
+that initially looked like this: </p>
+
+
+<pre>
+at this meeting, so be sure to be there!
+
+
+At next month's meeting we'll hear from the new
+
+</pre>
+
+
+<p>and should have been edited to look like this:
+</p>
+
+
+<pre>
+at this meeting, so be sure to be there!&lt;/P&gt;
+
+
+&lt;P&gt;At next month's meeting we'll hear from the new
+
+</pre>
+
+
+<p>actually turns out like this:
+</p>
+
+
+<pre>
+at this meeting, so be sure to be there!&lt;/P&gt;
+&lt;/P&gt;
+&lt;P&gt;
+&lt;P&gt;At next month's meeting we'll hear from the new
+
+</pre>
+
+
+<p>It may look as though this hazard can be defeated by modifying the
+number two solution to the first problem above.  That is, the address
+for both substitutions will be a search pattern that looks for a line
+that already has some text on it.  This works properly when the editor
+is on the first of two consecutive empty lines.  From the second line,
+though, it runs its substitution commands on lines that have already
+been given their tags, so the sample text now looks like this: </p>
+
+
+<pre>
+at this meeting, so be sure to be there!&lt;/P&gt;&lt;/P&gt;
+
+
+&lt;P&gt;&lt;P&gt;At next month's meeting we'll hear from the new
+
+</pre>
+
+
+<p><strong>COMPLEX CONDITIONALS</strong>. What's really needed here is
+double-conditional execution.  That is, substitution commands must run
+on a given line only if both of these conditions are true: </p>
+
+
+<ul>
+
+<li>The line to be substituted is adjacent to the empty line.
+
+
+<li>The line to be substituted is not itself empty.
+
+</ul>
+
+
+<p>In this case, the editor can handle it.  The
+<code>:global</code> portion of the command line takes
+care of the first condition if the substitution commands' addresses
+move exactly one line in each direction from the empty line.  (Of the
+three proposed solutions to the first difficulty encountered, numbers
+one and three both do this much.)  To satisfy the second condition,
+make the substitution commands remove one character from the existing
+line -- and then replace it, of course.  This ensures that if there
+is no character to remove because the line is empty, the substitution
+command will fail on that line and do nothing.  </p>
+
+<p>Either the first or third solution can be adapted to satisfy that
+second condition.  I've used the third solution in the example commands
+below, because the technique is easier to follow than it would be with
+the first solution: </p>
+
+
+<pre><strong>
+global /^$/ + substitute /^./&lt;P&gt;&amp;/
+global /^$/ - substitute :.$:&amp;&lt;/P&gt;:
+
+</strong></pre>
+
+
+<p>Bottom-up techniques can be continued if there are yet other
+special needs to be accommodated.  Reader R.T. may have headlines
+and subheads mixed in with the paragraphs, and may already have
+appropriate HTML tags at the beginnings and ends of those heads and
+subheads.  <a name="Problem4"></a>As an exercise, how would you adapt
+the commands just above so they would not add a paragraph tag where
+any text already begins or ends with an HTML tag?  Hint -- an HTML
+tag always begins with a ``&lt;'' and ends with a ``&gt;'' character.
+This is a very minor change, so you probably will not need to look at
+my <a href="009.part4.answers.html#ans4">solution</a> except to confirm
+your own answer.  </p>
+
+<p><strong>A LITTLE TRICKERY</strong>. At times a command needs to be
+supercharged by way of a far out use of substitution--something perfectly
+legitimate, but never intended by the people who wrote this editor.
+Here are a few that you may find useful.  </p>
+
+<p>You can't make a substitution that extends over more than
+a single line--not directly, that is.  Any attempt to put a
+``newline'' character in either the to-be-replaced pattern or
+the replacement pattern of a substitution command will fail.
+But by combining the <code>global</code> and
+<code>substitute</code> commands, you can often get
+the effect of a substitution that spills over a line ending.  </p>
+
+<p>Let's suppose that you have to alter a long document so that
+all references to ``Acme Distributors'' are changed to ``Barrett and
+Sons''. A simple substitution command will make most of these changes,
+but it will miss those instances where ``Acme'' appears at the end of
+one line and the next line starts with ``Distributors''. A followup
+pair of substitutions, to replace ``Acme'' wherever it appears at the
+end of a line and to replace ``Distributors'' when it starts a line,
+would wreak havoc--this document also refers to ``Acme Supply Co.''
+and to three other companies whose names end with ``Distributors''.  </p>
+
+<p>But we can handle this problem nicely with the following two command
+strings: </p>
+
+
+<pre><strong>
+global /Acme$/ + substitute /^Distributors/and Sons
+global /^and Sons/ - substitute /Acme$/Barrett
+
+</strong></pre>
+
+
+<p>The first command goes to every line that ends with ``Acme'' and
+then moves forward one line--if and only if that next line begins with
+``Distributors'', it is changed to begin with ``and Sons''. The next
+command reverses the process to change ``Acme'' to ``Barrett'', but only
+in the right instances.  (Note well that the second command searches for
+``and Sons'', not ``Distributors'', because the first command has changed
+those line-split ``Acme Distributors'' to ``Acme and Sons''.)  </p>
+
+
+<p>Often it is a good strategy to start with a change you definitely
+don't want in order to wind up with what you do want.  Suppose you are a
+technical writer who has just finished writing a number of lengthy photo
+captions full of phrases like ``the light spot in the upper righthand
+corner'' and ``dark areas near the lower lefthand edge''. Along comes
+the news that the Art Director has decided to flop all the photos: print
+them in mirror-image form.  Suddenly, everything that was on the right
+is now on the left, and vice versa.  </p>
+
+
+<p>Your captions will be accurate again if you change every ``lefthand''
+to read ``righthand'' and vice versa.  But how to do that without wading
+through the whole text and making each change individually?  The obvious
+pair of substitutions will not work: </p>
+
+
+<pre><strong>
+% substitute /lefthand/righthand/g
+% substitute /righthand/lefthand/g
+
+</strong></pre>
+
+<p>The second command doesn't just change the original instances of
+``righthand'' to ``lefthand''; it also reverses every change your first
+command made--now everything is described as being on the lefthand side.
+But the following three substitution commands will do the job nicely.
+</p>
+
+
+<pre><strong>
+% substitute /lefthand/QQQQ/g
+% substitute /righthand/lefthand/g
+% substitute /QQQQ/righthand/g
+
+</strong></pre>
+
+
+<p>By making the first command change ``lefthand'' temporarily to ``QQQQ''
+(or any other string you know will not be found in your document), you
+keep those changes safe from the effect of your second command.  Then,
+after that second command has finished, the third command changes those
+Q strings to what you had wanted in the first place.  </p>
+
+
+<p>It can even make sense to type in things incorrectly, then change
+them to what you want via substitution.  When I'm writing documents in
+plain ASCII, to be printed without any formatting, I often use a line
+across the page to separate major sections of the document.  But where
+others are satisfied with just a string of hyphens, or another single
+character, I pretty things up with multicharacter dividers like: </p>
+
+
+<pre>
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+-+--+--+--+--+--+--+--+--+--+-
+
+*~*~*~*~*~*~*~*~*~*~*~*~*~*~*~
+
+[][][][][][][][][][][][][][][]
+
+</pre>
+
+
+<p>Not that I have the patience and concentration to type in page-wide
+lines of alternating characters, especially when I would have to
+constantly get on and off the shift key, too.  No, I just use my repeat
+key to fill the line with whatever character will begin my eventual
+multicharacter pattern.  For those four patterns above, I would have
+repeat-keyed in these four lines, respectively: </p>
+
+
+
+<pre>
+------------------------------
+
+------------------------------
+
+******************************
+
+[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[
+
+</pre>
+
+
+<p>Then I only have to run a simple repeated substitution to get the
+line I actually want.  Here are the commands I would run on the four
+lines above, respectively: </p>
+
+
+
+<pre><strong>
+substitute /--/-=/g
+substitute /---/-+-/g
+substitute /\*\*/*\~/g
+substitute /\[\[/[]/g
+
+</strong></pre>
+
+
+<p><strong>SEMI-AUTOMATIC SUBSTITUTIONS</strong>.  At times you'll have to
+make changes that are so dependent on human judgment that no substitution
+tricks could possibly do exactly what's wanted.  In those cases there
+are two ways to have the editor partially automate those changes.  </p>
+
+
+<p><a name="target08"></a>The first is to use a variant form</a> of
+the <code>substitute</code> command that presents
+each potential substitution on your screen, and asks you to accept or
+reject it.  All you need to do is put a lower-case ``c'' at the end
+of your substitution command, in the same place you would put a ``g''
+to change every instance on each line, like either of these examples: </p>
+
+
+<pre><strong>
+% substitute /^something/something else/c
+% substitute /something/something else/gc
+
+</strong></pre>
+
+
+<p>The editor will then display the lines where substitutions are to
+be made on your screen, one at a time.  Each line will have ``^'' marks
+below the text to be removed, like this: </p>
+
+
+<pre>
+something in the air.  The consensus is that
+^^^^^^^^^
+
+</pre>
+
+
+<p>and if there are two or more places on the line where the substitution
+could be performed, the line will be displayed on your screen two or more
+times, with a different potential substitution marked each time. After
+displaying a line on your screen, the editor will wait for you to type
+something ending with a carriage return.  If whatever you type begins
+with a lower-case ``y'', the change will be made.  If it begins with
+anything else, the text will be left as it is.  </p>
+
+
+
+<p>Even this substitution variant may not give you enough control.
+You may need to see more than one line to verify your judgment, or the
+text to be put in may vary from one place to another.  In those cases, you
+can use one of the qualities of the <code>:global</code>
+command.  This is a simplified version of the technique our programmer
+friend Hal (in the first installment of this tutorial) used to work over
+the problem points that Lint found in the code he was updating.  </p>
+
+
+<p>If you are editing in screen mode, as usual, you must start by typing a
+capital ``Q'' to go into line mode.  From line mode's colon prompt, give
+a command like the following (if you want to make the same substitution
+as in our previous examples): </p>
+
+
+<pre><strong>
+global /something/ visual
+
+</strong></pre>
+
+
+<p><a name="feedback1-retn"></a>This command</a> <a
+href="009.part4.html#feedback1">will bring you in turn to each
+line</a> in the file that contains the string ``something'' and
+put you in screen-editing mode there.  After you've looked around,
+and made a substitution if you think it justified, typing a capital
+``Q'' takes you out of screen-editing mode and returns you to the
+<code>global</code> command, which takes you the next
+marked line and resumes screen editing.  </p>
+
+
+<p>There is an indirect <a href="009.part4.html#Q">hazard</a> in leaving
+screen editing mode, though.  And that brings us to the whole dismal
+subject of preventing loss of your changes, or of your entire file,
+while you are in the editor.  </p>
+
+
+<h3><a name="section6"></a>Don't Lose Your Files </a></h3>
+
+
+<p>The vi/ex editor is not strong on protecting you from the consequences
+of your own mistakes.  In part that's just the natural result of giving
+you a lot of editing power.  But when it comes to losing all the changes
+you've made in a file during a session, or even losing the original
+file you started with, the editor could be a lot more responsible
+without hamstringing your subtle edits.  Still, there are ways you can
+comfortably protect yourself from those hazards, and many of those ways
+I explain below.  </p>
+
+
+<p><strong>IN EMERGENCIES</strong>. Consider one of the editor's safety
+features that can accidentally but quite easily turn into a disaster.
+You may already know that when you edit with this editor, you are working
+on a copy of the file, not the original.  Your changes do not affect the
+original unless you use the <code>:write</code> command,
+for which <code>:w</code> is the shortest abbreviation,
+or leave the editor in a normal way.  That's a good precaution against
+making a mistake with this powerful editor that mangles your file,
+and then discovering you have no backup copy.  </p>
+
+
+<p>That copy you are working on lives in a volatile place, though,
+where it can easily be erased when the system crashes or your link into
+the system goes down.  That could cost you all the additions and changes
+you'd made in that session with the editor.  Your first line of defense
+against this is to run the <code>:write</code> command
+often--every time you run it, your current edited version replaces the
+previous version in the stable permanent-storage area on disk.  </p>
+
+<p>And if you don't intend to change the original?  Your edited version
+is to be a new file, with the original left untouched?  Well, you can
+use a modified form of writing the file, by typing <code><nobr>:write
+nufile</nobr></code> where ``nufile'' is whatever you want the name
+of the edited file to be.  (That can be a path name, in case you don't
+want to put the new file in your current directory.)  This will write the
+revised version only to the new file (creating the file if necessary),
+and leave the original file untouched.  </p>
+
+<p>That method of preserving the original file is dangerous,
+though.  If you forget even once to add the filename to the
+<code>:write</code> command, your original file is wiped
+off the disk.  That's why this technique is best reserved for occasions
+where you do want to change the original file, but also want a copy of
+some partially edited stage of the file saved elsewhere.  When you get
+the file to the state you want to save as a copy, run both of these
+commands: </p>
+
+<pre><strong>
+write nufile
+write
+
+</strong></pre>
+
+<p>and then go back to editing and writing to the file as usual.  </p>
+
+<p>The sane way to protect your original file from any changes is to start
+your editing with a <code><nobr>:file nufile </nobr></code> command, for
+which <code><nobr>:f nufile </nobr></code> is the shortest abbreviation.
+From that point on, the editor considers ``nufile'' to be the name of the
+file you are working on, and writes go automatically to that filename.
+(Incidentally, if you ever forget whether you have changed the file name,
+or what you've changed it to, a <code>:file</code>
+command by itself, without a file name, will tell you what the editor
+thinks the file's current name is, among other interesting facts.)  </p>
+
+
+<p><strong>CRASHES WILL HAPPEN</strong>. Still, a crash may catch you by
+surprise, with a lot of additions and changes that you have not written to
+any file.  To protect against this, the editor always attempts to save
+your current working copy of the file when a crash is imminent.  You can
+even launch an emergency save yourself when you face a sticky situation,
+such as being unable to do a normal write because it would exceed your
+filespace quota.  Just type a <code>:preserve</code>
+command (or its <code>:pre</code> abbreviation) and the
+working copy is normally preserved.  There are a few gotchas to watch
+for, though.  </p>
+
+<p>The preservation function puts the saved copy in a specific
+directory, and it will fail if that directory does not exist or
+is not writable.  (The path name of that directory varies between
+versions of the editor, although <code>/var/preserve</code> seems to
+be a common choice on modern Unix systems.)  To check writability, run
+a <code>:preserve</code> command from a short file,
+as a test.  If the result is a message something like this: </p>
+
+<pre>
+Can't open /var/preserve
+Preserve failed!
+
+</pre>
+
+<p>there is a problem you will have to take up with your system
+administrator.  (To speed up that discussion, bring along the path name
+of the directory that couldn't be opened.)  If the message reads like
+this: </p>
+
+
+<pre>
+File preserved.
+
+</pre>
+
+
+<p>so far, so good.  The next question is whether the editor has preserved
+an accurate copy or a pile of garbage--some editor implementations
+are broken in this area.  To check this, recover the file you've just
+preserved.  </p>
+
+
+<p><strong>RESCUING SAVED FILES</strong>. There are two ways to recover
+a rescued working copy, whether it was saved in a crash or because you
+used the <code>:preserve</code> command.  Usually you
+recover it from your shell command line, by entering the editor with a
+``-r'' flag: </p>
+
+
+<pre><strong>
+vi -r novel.chap3
+vi -r
+
+</strong></pre>
+
+
+<p>The first of these commands puts you in the editor, with the latest
+rescued copy of your file ``novel.chap3'' before you.  The latter command
+doesn't put you in the editor at all; it displays a list of all files that
+have been emergency-saved and then returns you to the shell command line.
+This list is useful when, say, the system crashed while you were editing
+a file that you hadn't given a name.  (Yes, you can enter the editor
+without giving a filename to edit; the editor will simply bring up an
+empty buffer and assume you will give it a name later.)  In this case
+the preservation process will give the file a name, and you must know
+this name to recover it.  </p>
+
+
+<p>I said that the first command would bring up the <em>latest</em>
+rescued copy of the file you named.  If the system has been staggering
+for a while, there may be more than one occasion when either you or the
+system caused the editor to preserve the working copy of that file.
+If the latest version is not the best copy, you can discard it and
+pull up the next most recent version, without leaving the editor.
+Just give a <code>:recover</code> command (or its
+<code>:rec</code> abbreviation) to have the current
+rescued version discarded and replaced by the next-latest of the
+saved copies.  (When you're already in the editor, there's no need
+to give the name of the file to recover if it is the same as that of
+the file you're editing at the time.  The editor assumes the current
+filename unless you give another name as an argument following the
+<code>:recover</code> command.)  If this isn't the best
+copy either, you can continue this process.  </p>
+
+
+<p>When you've recovered a file either way, look it over.  If the
+editor version you're using has a broken preservation function,
+you'll only find garbage characters or a display like this:
+</p>
+
+
+<pre>
+LOST
+LOST
+LOST
+LOST
+LOST
+
+</pre>
+
+
+<p>If that be the case, the file you preserved is hopelessly lost
+and you'd better have a talk with your system administrator about
+getting a better version of the editor.  But if what you see
+looks like what you had, then all you have to do is write the
+copy you've recovered to a file somewhere--the preserved copy was
+erased when you used one of the recovery commands, so it can't be
+recovered that way again.
+</p>
+
+
+<p>And that brings up the last gotcha.  You may believe that
+any of the three commands <code>ZZ</code> or
+<code>:x</code> or <code>:wq</code>
+will check whether the working copy needs to be written to the file,
+write it only if necessary, and then quit the editor.  Actually, the
+last of the three, the <code>:wq</code> command, always
+writes to the file regardless, and is the only one you should use.  </p>
+
+
+<p>The first two attempt some checking, but their checks are not very
+complete.  In particular, they and the <code>:quit</code>
+command often check for nothing more than the flag that is set when
+an editing change is made to the current working copy and unset
+when the working copy is written to the file.  You are courting
+disaster if you ever use the <code>ZZ</code>
+or <code>:x</code> commands, or if you use
+<code>:quit</code> carelessly.  </p>
+
+
+<p>The gotcha in the case of a recovered file is that pulling
+a new file into the buffer, whether normally or by recovering an
+emergency-saved copy, is not an editing change.  If your version of
+the editor has a weak version of <code>ZZ</code>
+or <code>:x</code> then its casual check will show
+no reason to write the file, and all your carefully recovered work
+will be lost for good when the command closes the editor without
+writing the file.  So always use <code>:wq</code>
+or separate <code>:write</code> and
+<code>:quit</code> commands to end an editing session.
+</p>
+
+
+
+<p><strong>A FEW MORE HAZARDS AND SOLUTIONS</strong>.  <a
+name="Q"></a>Worse yet</a> can befall you.  You may accidentally lose
+both your own editing changes and the original file you were working from.
+</p>
+
+
+<p>Suppose one of your global editing commands went astray and trashed
+your working copy of the file, but didn't happen to affect the part that
+is on your screen.  If you then wrote the working copy to the file, the
+garbage replaced your original file contents.  Oh, misery!  And with any
+but the smallest file, it's not practical to look over the working copy
+carefully before each <code>:write</code> command.  </p>
+
+
+<p>Or perhaps you did discover the disaster before you wrote the working
+copy to the file.  Seeing that undoing the errors was not feasible,
+you decided either to run an <code>:edit! </code>
+command to bring up a fresh copy of the original file, or a
+<code>:quit! </code> to leave the editor.  In either
+case, the ``!'' at the end of the command tells the editor to ignore
+the garbage changes that have not been written to the file.  </p>
+
+
+<p>But since you were not creating an editor script here,
+you probably typed the short form of your command, either
+<code>:e!</code> or <code>:q!</code>. At
+least you tried to.  Perilously placed between the ``e'' and ``q''
+keys on a standard keyboard is the ``w'' key.  If you accidentally
+typed <code>:w!</code> instead of what you intended,
+you told the editor to overwrite the original file with that trashed
+version, and ignore any anti-write protections you may have set.  Oh,
+misery cubed!  </p>
+
+
+<p>You are not lost yet, though, if you have been editing along in screen
+mode all the while.  At any time you can type a short sequence to put the
+working copy back the way it was when you started this editing session.
+Then you only need to write the working copy to the file to expunge the
+trash there.  </p>
+
+
+<p>Start by typing <code>Q</code> to leave
+screen mode and drop back to line mode.  Now, line mode has an
+<code>undo</code> command that works the way
+the screen mode <code>u</code> command does,
+but on line mode commands.  That is, it reverses the effect of
+the latest line mode command that changed (or may have changed)
+the working copy.  One line mode command that may well change the
+working copy is <code>visual</code>, of course.
+And -- surprise -- when you typed <code><nobr>vi novel.chap3
+</nobr></code> from your shell prompt to enter the editor, your
+shell actually launched <code>ex</code> (for which
+<code>vi</code> is just an alias) and the editor gave
+itself an initial <code>visual</code> command to boost
+you into screen mode.  </p>
+
+
+<p>So all the time you've been editing, the editor has been
+holding a complete copy of the original file, in case you go back
+to line mode and want to reverse the effect of that initial
+<code>visual</code> command.  (That's one reason
+the editor's buffer takes up so much more room than you'd expect
+in swap space.)  If you want to see the complete command sequence
+to restore the original working copy and return to visual mode,
+using shortest abbreviations and showing carriage returns as new
+lines, here it is:
+</p>
+
+
+<pre><strong>
+Qu
+w
+vi
+
+</strong></pre>
+
+
+<p>One last hazard, which may seem childish to experienced Unix users
+but trips up many a refugee from single user systems.  Unless you're
+on one of those rare Unix implementations that offers file locking,
+there is little to prevent another user on the system from editing the
+same file at the same time as you do.  </p>
+
+
+<p>You will each be editing on a separate working copy, so there
+will be nothing to tell you that someone else is also editing the
+same file.  But each time you write your changed version to the
+file, you will wipe out whatever changes the other user has
+already written to file, and vice versa.  The ultimate victor in
+this unknowing war will be the user who finishes editing last.
+The other user can come back an hour later and find no indication
+that he/she ever touched the file.
+</p>
+
+
+<p>There's no real technical solution to this danger.  You'll
+just have to coordinate carefully with other users on files
+that more than one of you may have occasion to edit.
+</p>
+
+
+
+<h3><a name="feedback"></a>Reader Feedback </a></h3>
+
+<p><a name="feedback1"></a>One of our readers </a> raised a significant
+point about <a href="009.part4.html#feedback1-retn">this technique</a>;
+important enough to deserve a reply published in this article.</p>
+
+<pre>
+Dear Walter...
+
+In your tutorial you write that you can use the command
+
+global/XXX/visual
+
+to search for the pattern "XXX" and edit/move around (remember,
+Hal needed this command to edit the linted spaghetti-code...)
+
+But there's one problem: suppose I found, after the 10th XXX of
+100, that I do not want to view the remaining 90 occurences.  It
+works as long as I don't type 'Q'. But now I want to view/edit
+the code where my lint report is something like "illegal", I have
+to type Q and then global/illegal/visual.
+
+And now there's the problem: typing Q doesn't prompt for a new
+input, it moves to the 11th occurence of "XXX".
+
+Do you know my problem?  Is there a way to stop vi moving on with
+the global command after typing Q?
+
+Thanks a lot in advance!
+
+Chris...
+</pre>
+
+<p>As Chris clearly realizes, ordinarily there is no problem with omitting
+the remaining 90 stops.  Each time this command puts you into visual
+mode somewhere in the file, you are not restricted to fixing one limited
+problem.  You may move anywhere in the file, edit whatever you like, and
+keep doing this as long as you please.  When you finally finish all the
+edits you've decided to do, you can write the file and quit the editor
+in your usual way--the suspended <code>global</code>
+command will silently disappear at this point.  </p>
+
+<p>But going into a second string of <code>visual</code>
+mode stops from a new <code>global</code> command, as
+Chris wants to do, requires finesse.  Obviously, it's not possible to use
+the <code>Q</code> command to return to the line-mode
+command prompt until every one of those 100 lines has been visited and
+the first <code>global</code> has terminated.  </p>
+
+<p>The best way out of this predicament starts with writing your changes
+to the file.  Then, instead of typing <code>Q</code>
+type an <code>:edit</code> command.  This brings up
+a fresh copy of the file you are editing, but since you've just done a
+write, the fresh copy is identical to the one you've been working on.
+Because you haven't left the editor, most of the state is saved--contents
+of the named buffers, any maps and/or abbreviations, values of the
+<code>set </code> command options.  You do wipe out a
+few small items like the contents of the unnamed buffer--and, of course,
+that suspended <code>global</code> command.  </p>
+
+<p>Now you can use the <code>Q</code> command to go
+into line mode, then run that second <code>global</code>
+command.  </p>
+
+
+<h3><a name="next"></a>In The Next Installment </a></h3>
+
+
+<p>In this tutorial to date, you've undoubtedly seen some aspects of the
+editor that you wish had been designed differently.  The good news is
+that many of these features are yours to change at will--without hacking
+up the source code and recompiling.  </p>
+
+
+<p>In <a href="009.part5.html">Part 5</a> of this tutorial, I'll
+elucidate the editor's built-in facilities for setting up your own
+editing environment, and the many factors you can modify this way.  </p>
+
+
+<H3>Back to the <a href="009-index.html#part4">index</H3>
+
+</body>
+</html>
