@@ -1,0 +1,375 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+	<TITLE>UnixWorld Online: Tutorial: Article No. 009: Part 8</TITLE>
+</HEAD>
+
+<H1>UnixWorld Online: Tutorial: Article No. 009</H1>
+
+<H2>The vi/ex Editor, Part 8: Indent, Like a Typewriter</H2>
+<p>By <a
+href="http://www.networkcomputing.com/unixworld/authors/walter-zintz/bio.html">Walter
+Alan Zintz</a>.  </p>
+
+
+<ul>
+<li><a href="009.part8.html#auto">Automatic Indentation</a></li>
+<li><a href="009.part8.html#back">Backing off Indentation</a></li>
+<li><a href="009.part8.html#set">Juggling some <code>:set</code> options</a></li>
+<li><a href="009.part8.html#you">An Exercise for You</a></li>
+<li><a href="009.part8.html#hard">Hard Tabs</a></li>
+<li><a href="009.part8.html#endis">Enable and Disable <var>autoindent</var></a></li>
+<li><a href="009.part8.html#next">Next Time</a></li>
+</ul>
+
+
+<h3><a name="auto"></a>Automatic Indentation</a></h3>
+
+<p>Computer editing is a great advance over typing on paper, the consensus
+has it.  But wouldn't you be happier yet if you had the tabstop-setting
+capability of your old typewriter, too?  With the Vi and Ex editor,
+you have a feature that's just as powerful and a lot easier to use,
+but not many users know it's there.  Yet there it is, on even early
+versions of the editor -- its name is <var>autoindent</var>.  </p>
+
+
+<p>With <var>autoindent</var> turned on, you can start a running indent
+any time you are in text-insert mode -- whether initiated from an
+<code>R</code> or from any other command that starts
+you typing in text.  Just put some whitespace at the start of the first
+line you want indented.  From then on, each time you hit the return key,
+the editor will automatically insert exactly the same amount of whitespace
+at the start of the next line.  That is, if you begin a line with five
+space characters, every following line you type in will begin with five
+space characters also; causing the left margin to line up nicely, but
+five spaces in from the normal margin setting.  </p>
+
+
+<p>Note that I said ``whitespace'' above, which includes the tab character
+as well as the space character.  Autoindentation works whether you start
+a line with spaces, or tabs, or some combination of the two.  In fact,
+it even understands redundant combinations, such as starting a line with
+two space characters followed by a tab character.  </p>
+
+
+<p>We both know that tabbing from two spaces in will reach the first
+tabstop, as surely as tabbing from the left margin would -- those two
+spaces have no effect as far as where the indented line actually starts.
+Autoindentation knows this too, and will start each subsequent line with
+just a tab character.  But if you started a line with a tab followed
+by two space characters, then the spaces would have an effect -- moving
+the margin to the right two more character positions than the tab alone
+would have.  In this case, autoindentation will incorporate those two
+following space characters, as well as the leading tab, into the text
+at the start of each subsequent line.  </p>
+
+
+<p>The general rule is that while autoindentation will always put in the
+same amount of leading whitespace that you did, or at least try hard to
+do so, it may use its own discretion as to the combination of tab and
+space characters it uses to do this.  </p>
+
+
+<p>If you want to increase the indentation at some point, just type
+more whitespace at the beginning of an (already indented) line, and
+your new indentation depth will be the rule from that point on.  You can
+even leave insert mode to correct a mistake without losing the indented
+margin setting, providing you return to insert mode with an <code>o</code>
+or <code>O</code> command.  </p>
+
+
+<h3><a name="back"></a>Backing off Indentation </a></h3>
+
+
+<p>To set the indentation back (or off), you need to use the Control-D
+character.  When you want to stop the indentation temporarily, for just
+one or a few lines, type a circumflex (^) followed by Control-D at the
+start of each such line, to move the start of just that one line back to
+the left margin.  If you type the numeral zero followed by control-D at
+the start of a line, automatic indentation disappears completely until
+you again start a line with whitespace.  This takes effect starting with
+the line you are on when you type it.  </p>
+
+
+<p>To set the indentation point back to the nearest shiftwidth (discussed
+below) stopping place that's to the left of your present indent point,
+and leave it there until you change it again, type just control-D at the
+start of the line.  If that is not enough margin reduction for you, just
+type several consecutive control-D characters to get the amount you want.
+This setback also takes effect starting with the line you are on when
+you type the control-D.  </p>
+
+
+<h3><a name="set"></a>Juggling a few <code>:set</code> options</a></h3>
+
+
+
+<p>And that brings up the whole vexed question of lengths of tabs and
+lineshifts, which are controlled by three options of the
+<code>:set</code> command.  When you are in the editor, type in the
+<code>:set</code> command query as in the first line below, and see
+whether the response is the default -- as given in the line following
+it: </p>
+
+
+<pre><strong>
+:se sw ts ht
+</strong>
+shiftwidth=8 tabstop=8 hardtabs=8
+</pre>
+
+
+<p>The first of these reflects the primary problem in using
+autoindentation.  The <var>shiftwidth</var> option was created to control
+some commands I haven't discussed yet, which add or subtract whitespace
+at the start of each line you designate; this option sets the number of
+spaces these commands add or subtract.  In addition, though, the value
+of this option also determines where your left margin will land when
+you go back part of the way to your window or screen's left margin.  </p>
+
+
+<p>So if your <var>shiftwidth</var> option is set to the default value
+of eight spaces, as shown above, then there will be a stopping point
+every eight spaces across your screen or window -- in the ninth column,
+in the seventeenth column, in the twenty-fifth column, etcetera.
+(This presumes that you call the leftmost character position on your
+window or screen column one, which is what the editor calls it, and not
+column zero.)  So if your autoindented margin is in the twenty-first
+column, typing control-D at the start of a line will put it back to
+the seventeenth column.  If the margin is presently in the eighteenth
+or the twenty-fourth column, the effect would be the same.  But if the
+present margin is in the twenty-seventh or thirtieth column, then a
+single control-D would set it back to column twenty-five.  </p>
+
+
+<p>Of course, you can reset the <var>shiftwidth</var> value via the
+<code>:set</code> command.  Many programmers reset that value to four.
+Then the stop points will be in every fourth column -- in column five,
+in column nine, in column thirteen, in column seventeen, and so on.
+This reduces line wrap in program source code with many levels of tab
+indentation.  </p>
+
+
+<p>Here's a visual representation of the difference: first of the default
+tab stops every eight columns, then as they are when reset to every four
+columns: </p>
+
+
+<pre>
++-------+-------+-------+-------+-...
+1       9      17      25      33
+
++---+---+---+---+---+---+---+---+-...
+1   5   9  13  17  21  25  29  33
+</pre>
+
+
+
+<p>But you just might be creating a problem by doing this.  With
+identical <var>shiftwidth</var> and <var>tabstop</var> values, backing
+up via a control-D requires only erasing one tab character or erasing
+one or more space characters; never anything more complex.  With a
+<var>shiftwidth</var> value of four and a <var>tabstop</var> value of
+eight, though, there will be times when a control-D requires the editor
+to remove one tab from the whitespace sequence with which it starts each
+line, and simultaneously add four space characters.  A few versions of the
+editor cannot handle this complexity in some circumstances, and will at
+times put garbage in your file.  Even more likely is that the editor will
+mess up when it encounters tab characters in the middle of lines.  </p>
+
+
+<p>The <var>tabstop</var> option controls the number of spaces the editor
+thinks you want between tabstops.  With this option at its default value
+of eight, there will be a tabstop every eight spaces, falling in the same
+columns as the <var>shiftwidth</var> stop points when that option's value
+was also at its default value of eight.  So if you set the values of both
+options to four, you will still have both options' stop points falling in
+the same columns, solving the problem posed in the last paragraph.  </p>
+
+
+<p>Solving it at quite a price, though.  The editor can use your special
+value of four spaces between tabstops (or any other value you choose to
+give) when it is inserting and removing tabs as you type, but it has no
+way to mark those characters in your file to say ``This is a four-column
+tab character'' and ``That is an eight-column tab character''. Not
+that there is any difference between the tab characters themselves.
+A tab always moves the cursor to the next tabstop point in the line,
+wherever that may be.  The difference is that some of your tabs will
+be inserted when you expected the editor to find a tabstop point every
+four columns; others when you (or someone else) were expecting tabstops
+every eight columns.  </p>
+
+
+<p>So when you set your tabs value to four and then edit a file that was
+composed with tabs at their default value of eight, indentations will be
+only about half as deep as the original writer intended they should be.
+And when you write this file back to permanent storage, anyone who uses
+the file after you and has default tab settings will find the indentations
+you added to be about twice as deep as you intended -- this will often
+cause deeply indented lines to be too long to be displayed on a single
+line of the user's screen or window.  </p>
+
+
+<p>Since you've gotten this far in the tutorial, you're surely a skilled
+user who can see how to get around this -- by writing a <code>.exrc</code>
+file entry to translate eight-column-tab indentations into four-column-tab
+equivalents as you pull in a file to edit, and a macro to do the reverse
+in the course of writing your work out to permanent storage.  </p>
+
+<h3><a name="you"></a>An Exercise for You</a></h3>
+
+
+<p>It was several tutorial parts ago that I last put exercises for
+the reader in the tutorial itself.  This seems like a good place to
+revive that practice.  Just how would you write a command sequence to
+handle that latter operation as regards start-of-line indentations?
+Let's say you edit in screen mode, with your <var>tabstop</var> option
+set to a value of four, so that a ten-column indentation consists of
+two tabs followed by two spaces and a thirteen-column indent is three
+tabs followed by one space.  But when you write the file to permanent
+storage, you want it to be in the conventional format of eight columns
+between tab points (at least for indentations) -- so that same ten-column
+indentation will now consist of just one tab followed by two spaces,
+and the thirteen-column indent will have a single tab followed by
+five spaces -- to keep the indentations at the same depth they were.
+What sequence of commands will accomplish this?  </p>
+
+
+<p>To simplify the problem, assume that the curly brace characters
+(``{'' and ``}'') never appear in files you edit (if they are present,
+which is common for program source code, choose another character pair)
+and that you will only be writing to the original file name, let ^I
+stand for a real tab character when you write your answer, and don't
+worry about how you would turn your command sequence into a macro.  But,
+definitely do remember that you will be doing a write in the middle of
+your editing session from time to time, to guard against losing work
+in a system crash, so your command sequence must leave the file copy in
+the editor buffer just as it was before you wrote the modified version
+to storage, ready for you to continue editing.  </p>
+
+
+<p>This exercise is not so difficult if you've been following this
+tutorial carefully.  The biggest hazard for those readers is that they
+may come up with a sequence that will work, but is much longer than it
+needs to be.  So if your solution seems long-winded, take a look at my
+<a href="009.part8.answers.html#h.indent">hint</a> before you jump to
+my <a href="009.part8.answers.html#indent">solution</a>.  </p>
+
+
+<p>These translator macros will work nicely for leading whitespace
+(indentations), but it would take incredibly complex scripts (whether
+Vi editor scripts or scripts for most other Unix utilities) to deal
+with tabs in the interiors of lines.  The pestilential problem there is
+that you don't know just where an interior tab character is placed --
+how many positions in from the start of the line.  For example, when you
+are trying to translate eight-column tabs into four-column equivalents,
+and your macro finds a single eight-column tab in the middle of a line,
+is that tab in a column that is five or more columns from the next tab
+stopping point?  If yes, it must be replaced by two of the four-column
+tabs; if no, it is correct as it is.  Similarly, when going from
+four-column to eight-column tabs, a solitary tab in the middle of a
+line may be left there or may have to be replaced by space characters,
+depending on its column position.  </p>
+
+
+<p>If you must do this kind of translation, your best bets are the
+<code>-e</code> and <code>-i</code> options to recent versions of the
+<code>pr</code> Unix command.  Running a file through this utility will
+make the conversions correctly, even when the whitespace appears in the
+middle of lines.  The downside is that your text may be reformatted to
+some degree.  </p>
+
+
+<h3><a name="hard"></a>Hard Tabs</a></h3>
+
+
+<p>And then there is the <var>hardtabs</var> option to the
+<code>:set</code> command.  That option is used to tell
+the editor how far apart the tab stopping points are on your physical
+terminal -- the editor uses this information to decide what mix of tab
+and space characters will represent on your screen the indentation depth
+that's in your file.  That is, the editor runs its own translator program,
+if necessary, to make the spacings on your screen the same depth as those
+in your file.  Here too, any difference between this value and either of
+the previous two is likely to cause problems.  It's fortunate that any
+value you give to this option will be overridden by the spacing value
+that is in your Termcap or Terminfo file, because a difference between
+the terminal tab setting Vi expects and that which your terminal is
+actually using will scramble your screen for sure.  </p>
+
+
+<p>So my reluctant admonition to you is to leave all three of these
+options set at their default values of eight.  Messing around with any
+of them is just too likely to cause trouble.  </p>
+
+<h3><a name="endis"></a>Enable and Disable <var>autoindent</var></a></h3>
+
+<p>Of course, all this means that when you have autoindentation on,
+the control-D, circumflex followed by control-D, and zero followed by
+control-D sequences are all metastrings at the beginning of an indented
+line.  To turn the metavalue off, so you can put one of these strings
+into the text at the start of an indented line, quote in the control-D
+character by preceding it with a control-V.  </p>
+
+
+<p>So how do you turn the whole <var>autoindent</var> mode on and off?
+It's normally off when you begin an editor session, and the usual
+way to turn it on is to use the <code>:set</code> command.  Just type
+<code>:se ai</code> to turn this feature on.  When you want to tell
+the editor to stop automatically indenting every time you start a line
+with whitespace, type <code><nobr>:se noai</nobr></code> (from command
+mode) to turn <var>autoindent</var> off again.  </p>
+
+
+<p>Autoindent also works with the line-mode <code><nobr>append
+insert</nobr></code> commands, which can be abbreviated <code><nobr>a
+i</nobr></code> respectively.  These commands let you type in new lines
+of text, below or above the current line, respectively.  That is, they
+are generally the line-mode equivalents of the screen-mode <code><nobr>o
+O</nobr></code> commands.  They can only be run when you are in line mode;
+even preceding one of them with a colon (``:'') will not let you run it
+from screen mode.  </p>
+
+
+<p>The setting of the <var>autoindent</var> option controls
+autoindentation within these text insertions, too, but there is also
+another way to control it that works only with these line-mode commands.
+Whenever you follow one of these commands or its abbreviation with an
+exclamation point (``!''), without any characters or space in between,
+you toggle the autoindention setting for that insertion only.  That is,
+if autoindentation was off, the ! turns it on during this insertion.
+Similarly, if autoindentation was on at the time, the ! turns it off
+just for this insertion.  </p>
+
+
+<p>[<em>Editor's Note </em>: Here's an example where it really helps to
+disable autoindent.  When programming, I use a simple <code>.exrc</code>
+file containing an <code><nobr>se ai bf nu sw=4 ts=4 wm=0</nobr></code>
+line.  If I cut a section of indented lines from one window and paste
+it into my program I get a staircase effect as each line is inserted
+with one more tab than the last.  Most annoying.]  </p>
+
+
+<h3><a name="next"></a>Next Time</a></h3>
+
+
+<p>The <a href="009.part9.html">next part</a> of this tutorial
+will cover the <code>:abbreviate</code> and
+<code>:map!</code> commands, both of which help you save
+typing while you are in text-insertion submode.  Then, on to the editor's
+several facilities for creating macros and pseudo-macros that you can
+use from the command submode.  And it will finish with more readers'
+questions and my answers, if you readers will send me some worthwhile
+questions soon.  </p>
+
+<p>You may be laughing at that final word, ``soon'' </p>
+
+<p>But my secret weapon this time is that, while my editor was away
+I spent some time writing about half of the next part.  So, when she
+returns from a week of well-deserved vacation in mid-November, I plan to
+have the completed tutorial installment waiting for her.  Wish me luck.
+</p>
+
+<H3>Back to the <a href="009-index.html#part8">index</H3>
+
+</body></html>
