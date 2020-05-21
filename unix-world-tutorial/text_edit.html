@@ -1,0 +1,352 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html><head>
+
+  <link rel="copyright" href="http://pobox.com/%7Etotten/copyleft/">
+  <link rel="top" href="http://pobox.com/%7Etotten/">
+  <link rel="icon" href="http://drumlin.thehutt.org/img/fred.png" type="image/png"><title>VI reference manual</title></head><body alink="#ff0000" bgcolor="#FFF8DC" link="#007000" text="#000000" vlink="#4040e0">
+  <h1 align="center"><i>VI</i> (Visual) Editor Reference manual</h1>
+
+  <p align="justify">The <i>vi</i> is a text editor. It is small, powerful,
+    and standard on most UNIX systems. The <i>vi</i> often frustrates new
+    users with a unique distinction between its two modes: <em>Command
+    Mode</em> and <em>Insert/Overtype Mode</em>. This distinction,
+    although difficult to become accustomed to for many users, provides
+    great power and ability to the editor. Insert/Overtype Mode is
+    designed for inserting text only. All text manipulations and cursor
+    moving should be done from with in Command Mode.</p>
+  <h2>Entering the <i>vi</i></h2>
+  <menu plain="">
+    <li><samp>prompt$</samp> <kbd>vi</kbd>
+    </li><li><samp>prompt$</samp> <kbd>vi file1 file2 ...</kbd>
+    </li><li><samp>prompt$</samp> <kbd>vi -r file</kbd>
+      <em>#Recover file from crash</em>
+    </li><li><samp>prompt$</samp> <kbd>vi +string file</kbd>
+      <em>#Execute ex command "string"</em>
+    </li><li><samp>prompt$</samp> <kbd>vi @rcfile</kbd>
+      <em>#Read commands from rcfile</em>
+  </li></menu>
+  <h2>Insert/Overtype Mode</h2>
+  <p align="justify">Insert/Overtype Mode is solely for entering text.
+    To leave one of these two modes press the <kbd>[ESC]</kbd> key.
+    if you wish to enter the <kbd>ESC</kbd> character or any other
+    control character while in insert mode: type
+    <kbd>[CONTROL]-V</kbd> and then the control sequence. The only
+    difference between Insert Mode and Overtype Mode is that characters
+    are placed in front of the text after the cursor in Insert Mode, where
+    as existing characters are overwritten in Overtype Mode.</p>
+  <h2>Command Mode</h2>
+  <h3>Entering Insert Mode</h3>
+  <menu plain="">
+    <li><code>a</code> &mdash; append text, after the cursor
+    </li><li><code>i</code> &mdash; insert text, before the cursor
+    </li><li><code>R</code> &mdash; enter Overtype Mode
+    </li><li><code>A</code> &mdash; append text, after end of line
+    </li><li><code>I</code> &mdash; insert text, before first non-whitespace character
+    </li><li><code>o</code> &mdash; open new line below cursor in Insert Mode
+    </li><li><code>O</code> &mdash; open new line above cursor in Insert Mode
+  </li></menu>
+  <h3><i>vi</i> Syntax</h3>
+  <dl>
+    <dt><i>vi</i> commands follow the general form:
+      </dt><dd><em>n</em> <code>operator</code> <em>m</em> <code>object</code>
+    </dd><dt>which means:
+      </dt><dd>execute <code>operator</code> <em>n</em> times on <em>m</em>
+        <code>objects</code>. If <em>n</em> and/or <em>m</em> are
+        omitted, they default to 1.
+    </dd><dt>Operators which take objects are(if the operator is pressed twice
+      then the object is the current line)
+      </dt><dd><menu plain="">
+            <li><code>c</code> &mdash; change
+            </li><li><code>d</code> &mdash; delete
+			</li><li><em>"c</em><code>y</code> &mdash; yank into buffer <em>c</em>; uses general buffer if <em>"c</em> is omitted
+            </li><li><code>&lt;</code> &mdash; shift lines left by shiftwidth variable
+            </li><li><code>&gt;</code> &mdash; shift lines right by shiftwidth variable
+            </li><li><code>!</code><em>cmd</em> &mdash; filter through <em>cmd</em>
+          </li></menu>
+          <samp>#The operators &lt;, &gt;, and ! are line based so
+            the set of <code>objects</code> is diminished greatly.</samp>
+    </dd><dt>Operators which do <strong>not</strong> take objects:
+      </dt><dd><menu plain="">
+            <li><code>s</code> &mdash; substitute
+            </li><li><code>x</code> &mdash; delete character
+            </li><li><code>r</code> &mdash; replace character
+            </li><li><code>~</code> &mdash; change case of character
+          </li></menu>
+    </dd><dt>Objects (if given without an operator, these interpreted as a
+      cursor motion command):
+      </dt><dd><menu plain="">
+            <li><code>w</code> &mdash; forward until beginning of word
+            </li><li><code>e</code> &mdash; forward until end of word
+            </li><li><code>b</code> &mdash; backward until beginning of word
+            </li><li><code>$</code> &mdash; forward until end of line
+            </li><li><code>^</code> &mdash; backward until first non-whitespace character
+            </li><li><code>0</code> &mdash; backward until first column of line
+            </li><li><em>n</em><code>G</code> &mdash; line number <em>n</em> (default: <code>$</code>, i.e. last line of file)
+            </li><li><em>n</em><code>|</code> &mdash; column <em>n</em> of current line
+
+            </li><li><code>/</code><em>pat</em> &mdash; forward to pattern <em>pat</em>
+			</li><li><code>?</code><em>pat</em> &mdash; backward to pattern <em>pat</em>
+            </li><li><code>n</code> &mdash; forward to target of last search
+            </li><li><code>N</code> &mdash; to target of last search, but in opposite direction
+            </li><li><code>%</code> &mdash; to matching parenthesis, brace, or bracket (forward or backward)
+            </li><li><code>f</code><em>c</em> &mdash; forward on current line to <em>c</em>
+            </li><li><code>F</code><em>c</em> &mdash; backward on current line to <em>c</em>
+            </li><li><code>t</code><em>c</em> &mdash; forward on current line to before <em>c</em>
+            </li><li><code>T</code><em>c</em> &mdash; backward on current line to after <em>c</em>
+            </li><li><code>;</code> &mdash; repeat last f, F, t, or T
+            </li><li><code>,</code> &mdash; repeat last f, F, t, or T in reverse
+
+            </li><li><code>}</code> &mdash; forward to end of paragraph
+            </li><li><code>{</code> &mdash; backward to end of paragraph
+            </li><li><code>)</code> &mdash; forward to end of sentence
+            </li><li><code>(</code> &mdash; backward to end of sentence
+            </li><li><code>]]</code> &mdash; forward to end of section
+            </li><li><code>[[</code> &mdash; backward to end of section
+
+            </li><li><em>n</em><code>H</code> &mdash; <em>n</em> lines before first
+              line on screen; <em>n</em> defaults to 0
+            </li><li><em>n</em><code>L</code> &mdash; <em>n</em> lines before last
+              line on screen; <em>n</em> defaults to 0
+            </li><li><code>M</code> &mdash; the middle line of the screen
+
+            </li><li><code>j</code> &mdash; down one line
+            </li><li><code>k</code> &mdash; up one line
+            </li><li><code>h</code> &mdash; left one character
+            </li><li><code>l</code> &mdash; right one character
+            </li><li><code>[BS]</code> &mdash; left one character, backspace usually equals ^H
+            </li><li><code>[SPACE]</code> &mdash; right one character
+            </li><li><code>_ (underscore)</code> &mdash; the entire current line
+            </li><li><code>- (dash)</code> &mdash; until first non-whitespace character on previous line
+            </li><li><code>+</code> &mdash; until first non-whitespace character on next line
+            </li><li><code>[RETURN]</code> &mdash; until first non-whitespace character on next line
+          </li></menu>
+  </dd></dl>  
+  <h3>Miscellaneous</h3>
+  <menu plain="">
+    <li><code>u</code> &mdash; undo last change
+    </li><li><code>U</code> &mdash; undo entire line
+
+    </li><li><em>"c</em><code>p</code> &mdash; put <em>"c</em> or general
+      buffer after the cursor
+    </li><li><em>"c</em><code>P</code> &mdash; put <em>"c</em> or general
+      buffer before the cursor
+
+    </li><li><code>m</code><em>c</em> &mdash; set mark with character <em>c</em>
+    </li><li><code>`</code><em>c</em> &mdash; goto mark <em>c</em>
+    </li><li><code>'</code><em>c</em> &mdash; goto beginning of line with mark <em>c</em>
+    </li><li><code>``</code> &mdash; return to position before mark jump or search
+    </li><li><code>''</code> &mdash; return to beginning of line before mark jump or search
+
+    </li><li><code>J</code> &mdash; join two lines
+    </li><li><code>D</code> &mdash; delete rest of line
+    </li><li><code>C</code> &mdash; change rest of line
+    </li><li><code>Y</code> &mdash; yank current line into general buffer
+    </li><li><code>&amp;</code> &mdash; execute last ex-style substitution
+    </li><li><code>.</code> &mdash; execute last modification
+    </li><li><code>!</code> <em>object command</em> &mdash; send <em>object</em> as stdin
+      to <em>command</em> and replace with stdout
+
+    </li><li><code>[Ctrl]-G</code> &mdash; print information about file
+
+    </li><li>: <code>map</code> <em>x y</em> &mdash; when character <em>x</em>
+      is pressed, execute <em>y</em>
+    </li><li>: <code>map!</code> <em>x y</em> &mdash; map input mode character <em>x</em>
+      to string <em>y</em>
+    </li><li>: <code>ab</code> <em>x y</em> &mdash; <em>x</em> is an abbreviation for
+      <em>y</em>, changes are made on the fly
+    </li><li>: <code>su</code> &mdash; Suspend the current editor session
+    </li><li>: <code>sh</code> &mdash; run a shell
+  </li></menu>
+  <h2><i>ex</i> Commands</h2>
+  <h3><i>ex</i> syntax</h3>
+    <dl>
+      <dt><i>ex</i> commands in the <i>vi</i> follow this general form:
+        </dt><dd>: <code>address</code> <em>command</em>
+      </dd><dt>which means:
+        </dt><dd>Execute <em>command</em> on specific lines obtained from the
+          <code>address</code> part of the general form. If <code>address</code>
+          is omitted, current line is used. Keep in mind that the <i>ex</i>
+          is a line based editor, so all actions are line based.
+      </dd><dt>addresses:
+        </dt><dd><menu plain="">
+              <li><code>%</code> &mdash; all lines in file
+              </li><li><code>x,y</code> &mdash; lines <code>x</code> to <code>y</code>
+              </li><li><code>.</code> &mdash; current line
+              </li><li><code>n</code> &mdash; line number: <code>n</code>
+              </li><li><code>$</code> &mdash; last line of file
+              </li><li><code>x-n</code> &mdash; <code>n</code> lines before line <code>x</code>
+              </li><li><code>x+n</code> &mdash; <code>n</code> lines after line <code>x</code>
+              </li><li><code>/pat/</code> &mdash; forward to line containing <code>pat</code>
+              </li><li><code>?pat?</code> &mdash; backward to line containing <code>pat</code>
+            </li></menu>
+      </dd><dt>Some commands:
+        </dt><dd><menu plain="">
+              <li><code>s/pat/text/</code> &mdash; substitute first match
+                of <code>pat</code> with <code>text</code>
+              </li><li><code>s/pat/text/g</code> &mdash; substitute every match of
+                <code>pat</code> with <code>text</code>
+              </li><li><code>s/pat/text/n</code> &mdash; substitute the
+                <code>n</code>th occurrence of <code>pat</code>
+                with <code>text</code>
+				</li><li><a name="yank_ex_desc1"><code>y</code> <em>c</em> &mdash; yank into buffer <em>c</em>
+                or the general buffer if <em>c</em> is omitted
+				(<a href="text_edit.html#yank_ex1">example</a>)
+				</li><li><a name="yank_ex_desc2"><code>ya</code> <em>c</em> &mdash; yank into buffer <em>c</em>
+                or the general buffer if <em>c</em> is omitted
+				(<a href="text_edit.html#yank_ex2">example</a>)
+              </li><li><code>g address cmd</code> &mdash; execute <code>cmd</code>
+                on all lines which satisfy <code>address</code>
+              </li><li><code>&gt;</code> &mdash; shift right
+              </li><li><code>&lt;</code> &mdash; shift left
+              </li><li><code>d</code> &mdash; delete line
+              </li><li><code>! UNIX-cmd</code> &mdash; execute <code>UNIX-cmd</code> on line
+              </li><li><code>m</code> <em>address</em> &mdash; move lines to address
+              </li><li><samp>refer to <i>ex</i> manual page for more commands</samp>
+            </li></menu>
+    </dd></dl>
+    <h3>The <i>vi</i> environment variables</h3>
+    <dl>
+      <dt><code>set</code>
+        </dt><dd>You can customize your environment with this command by typing
+          <code>set var=value</code>, this will set the specified
+          <code>var</code> to <code>value</code> for a scalar variable.
+          For boolean variables, use <code>set var</code> to set and
+          <code>set novar</code> to unset. You can see which variables
+          are set by just typing the <code>set</code> by its self.
+          You can see a list of all variables by typing
+          <code>set all</code>. Some environment variables are specific to
+		the <i>ex</i> editor and some are specific to the <i>vi</i>
+          editor. I have included both.
+  </dd></dl>
+  boolean variables:
+    <menu plain="">
+      <li><code>autoindent (ai)</code> &mdash; begin editing next line at
+        same level of indent-ion as this one.
+	 </li><li><code>autowrite (aw)</code> &mdash; write current buffer before leaving
+	 </li><li><code>exrc (ex)</code> &mdash; tells <i>vi</i>/<i>ex</i> if it should
+	 read the <code>.exrc</code> file in the current directory.
+	 </li><li><code>errorbells</code> &mdash; editor sends a beep to the terminal when
+	   an incorrect
+	 </li><li><code>ignorecase (ic)</code> &mdash; ignore case of characters in
+	   searches.
+	 </li><li><code>list</code> &mdash; place a <code>$</code> at the end of each line
+	   and a <code>^I</code> on each tab.
+   </li><li><code>magic</code> &mdash; allow <code>.</code>, <code>[</code>, and <code>*</code> to
+	   be interpreted as special characters in regular expressions.
+	 </code></li><li><code>number (nu)</code> &mdash; number lines in left margin
+	 </li><li>
+      </li><li><code>showmatch (sm)</code> &mdash; when closing a paren., brace or
+        bracket; move the visual cursor to opening item to check scope
+	 </li><li><code>showmode (smd)</code> &mdash; show type of insert mode
+	 </li><li><code>wrapscan (ws)</code> &mdash; when searching and at bottom of file,
+	   continue searching from the top
+    </li></menu>
+  scalar variables:
+    <menu plain="">
+      <li><code>shiftwidth (sw)</code> &mdash; number of spaces to to insert
+        on a shift operation
+    </li></menu>
+  <h2>File Saving and Loading</h2>
+  <menu plain="">
+    <li>: <code>wq</code> &mdash; write file and quit
+    </li><li>: <code>w</code> &mdash; write file
+    </li><li>: <code>w file</code> &mdash; write to specified <code>file</code>
+    </li><li>: <code>w!</code> &mdash; overwrite existing file
+    </li><li>: <code>e file</code> &mdash; edit new <code>file</code>
+    </li><li>: <code>r file</code> &mdash; put contents of <code>file</code>
+    </li><li>: <code>q</code> &mdash; quit the editor
+    </li><li>: <code>q!</code> &mdash; force quit the editor, do not save changes
+    </li><li>: <code>x</code> &mdash; quit the editor, save file if it was modified
+    </li><li><code>ZZ</code> &mdash; quit the editor, save file if it was modified
+    </li><li>: <code>n</code> &mdash; start editing next file in list
+    </li><li>: <code>rew</code> &mdash; rewind file list, start editing first
+      file on argument list again
+    </li><li><code>Q</code> &mdash; quit <i>vi</i> and enter <i>ex</i>
+	</li><li>: <code>pre</code> <em>file</em> &mdash; preserve <em>file</em> : write all text for all buffers into swap file
+	</li><li>: <code>rec</code> <em>file</em> &mdash; try to recover <em>file</em> from swap file
+  </li></menu>
+  <h2>Examples</h2>
+  <i>vi</i> commands:
+  <menu plain="">
+    <li><code>j</code> &mdash; move cursor down
+    </li><li><code>k</code> &mdash; move cursor up
+    </li><li><code>h = [BS]</code> &mdash; move cursor left
+    </li><li><code>l = [SPACE]</code> &mdash; move cursor right
+    </li><li><code>+ = [RETURN]</code> &mdash; first non-whitespace character on next
+      line
+    </li><li><code>cw</code> &mdash; change word
+    </li><li><code>dd = d_</code> &mdash; delete line
+    </li><li><code>yy = y_</code> &mdash; yank current line into the general buffer
+    </li><li><code>"ayj</code> &mdash; yank current line and one below into buffer
+      <code>a</code>
+    </li><li><code>yfc</code> &mdash; yank until next occurrence of <code>c</code>
+      on current line into the general buffer
+    </li><li><code>3dl = d3l</code> &mdash; delete next 3 characters
+    </li><li><code>2dj = d2j</code> &mdash; delete current and next 2 lines
+    </li><li><code>4c( = 2c2( = c4(</code> &mdash; change next 4 sentences 
+    </li><li><code>&gt;%</code> &mdash; while on a brace, paren., or bracket; shift
+      right until closing brace, etc.
+    </li><li><code>3J</code> &mdash; join next 2 lines to current line
+	</li></menu>
+  <i>ex</i> commands:
+  <menu plain="">
+    <li><code>:%!sort = :1,$!sort</code> &mdash; sort current file
+    </li><li><code>:5,10s/foo/bar/2</code> &mdash; change the second occurrence of
+      <code>foo</code> with <code>bar</code> on lines 5-10
+    </li><li><code>:map g 1G</code> &mdash; map <code>g</code> to really run <code>1G</code>
+	</li><li><code>:?foo?,/bar/d</code> &mdash; delete from the reverse match
+      of foo until the next match of bar
+    </li><li><code>:g/{/,/}/&lt;</code> &mdash; shift left all lines between, and
+      including, a <code>{</code> and <code>}</code>
+    </li><li><code>:$-4,$d</code> &mdash; delete last five lines of buffer
+    </li><li><code>:%s/^\(.*\) \(.*\)$/\2 \1/</code> &mdash; swap everything before
+      and after the first space
+	  </li><li><a name="yank_ex1"><code>:10,20y g</code> &mdash; yank lines 10-20 into buffer g (<a href="text_edit.html#yank_ex_desc1">descripton</a>)
+	  </li><li><a name="yank_ex2"><code>:23,45ya k</code> &mdash; yank lines 23-45 into buffer k (<a href="text_edit.html#yank_ex_desc2">descripton</a>)
+	  </li><li><a name="yank_ex3"><code>:'a,'by c</code> &mdash; yank lines with mark a and mark b into buffer c
+    </li><li><code>:3,9m$</code> &mdash; move lines 3 through 9 to the end of the file
+    </li><li><code>:j3</code> &mdash; join next 2 lines to current line
+    </li><li><code>:ab w/o with out</code> &mdash; abbreviation: when <code>w/o</code> is typed, change
+		to <code>with out</code>
+  </li></menu>
+
+  <hr>
+    <a href="http://drumlin.thehutt.org/copyleft/terms.html">Copyleft</a>: (C) 1996 2000, William Totten</p>
+  <dl>
+<font size="2"><a href="mailto:vetter@ele.uri.edu">Fred Vetter</a>&nbsp;
+<script type="text/JavaScript">
+        <!-- hide from old browsers
+	var t = new Date(document.lastModified);
+	var nhours=t.getHours();
+	var nmins=t.getMinutes();
+	var nsecn=t.getSeconds();
+	var AorP=" ";
+
+	if (nhours>=12)
+	    AorP="p.m.";
+	else
+	    AorP="a.m.";
+
+	if (nhours>=13)
+		nhours-=12;
+
+	if (nhours==0)
+		nhours=12;
+
+	if (nsecn<10)
+		nsecn="0"+nsecn;
+
+	if (nmins<10)
+		nmins="0"+nmins;
+
+	document.write(" last modifed this page at "
+		+nhours+":"+nmins+" "+AorP+" on "
+		+(t.getMonth()+1)+"/"
+		+t.getDate()+"/"
+		+t.getFullYear()+".");
+        document.write("<BR>" + document.location);
+        // -->
+</script></font><BR>
+  </dl>
+
+</body></html>
