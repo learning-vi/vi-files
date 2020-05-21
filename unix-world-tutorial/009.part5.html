@@ -1,0 +1,846 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+	<TITLE>UnixWorld Online: Tutorial: Article No. 009: Part 5</TITLE>
+</HEAD>
+
+<H1>UnixWorld Online: Tutorial: Article No. 009</H1>
+
+<H2>The vi/ex Editor, Part 5: Take Control of Your Editing Environment</H2
+
+<p>By <a href="https://www.ele.uri.edu/unixworld/authors/walter-zintz/bio.html">Walter Alan
+Zintz</a>.  </p>
+
+
+<ul>
+
+<li><a href="009.part5.html#section1">The <code>set</code> Command</a></li>
+
+
+<li><a href="009.part5.html#section2"><code>set</code>
+Command Variables that Control How to Paint the Screen</a></li>
+
+
+<li><a href="009.part5.html#sectionT">Playing ``tag''</a></li>
+
+
+<li><a href="009.part5.html#sectionL">Making Your Environment Setup
+Automatic</a></li>
+
+
+<li><a href="009.part5.html#next">The Next Installment</a></li>
+
+
+</ul>
+
+
+
+<p>Besides all the power in the Vi/Ex editor, there's a lot of flexibility
+in it, too.  You've already met some of this adaptability when I pointed
+out various ways to perform many editing functions.  Now it's time to
+meet phase two of editor flexibility -- the myriad ways to modify the
+editor's internal operations.  </p>
+
+
+<p>There's no ``setup mode'' for changing these parameters.  Instead, all
+the changes are made with line-mode commands, which can be interspersed
+with ordinary editing commands.  That is, you give the commands from the
+prompt, as usual, if you are editing in line mode.  When you are editing
+in visual (or screen) mode, precede these environment-modifying commands
+with a colon, as you would with any other line-mode commands you specify
+in visual mode.  </p>
+
+
+<p>These modifications take effect as soon as you give the commands.
+They stay in effect as long as you run the editor program.  You can switch
+from editing one file to another -- as with any of the <code>edit,
+next, rewind</code> commands -- without affecting the editing
+environment you've set up.  And, you can revoke or further modify any
+environmental changes you've made at any time, by using the same commands
+or variant forms of them.  </p>
+
+
+<p>Your environment setup does go away when you quit the editor
+altogether.  The next time you invoke the editor you'll find that
+all the environment parameters have returned to their default values.
+(This can be a blessing in disguise, because there is no direct way to
+tell the editor to restore all parameters to default settings.)  </p>
+
+
+<p>When you've found a combination of settings you'd like to use again,
+there are ways to have these settings established automatically (or
+semi-automatically) whenever you invoke the editor.  You can even have
+several of these preset environments -- which one is used will depend
+on the circumstances in which you invoke the editor.  I'll explain how
+to automate the settings at the end of this tutorial.  </p>
+
+
+<h3><a name="section1"></a>The <code>set</code> Command</a></h3>
+
+
+<p>Most of your setup will be accomplished by a single command
+that controls around fifty editor variables that affect the editing
+environment.  The <code>set</code> command, for which <code>se</code>
+is the shortest abbreviation, sets variables having three different types
+of values: string, numeric, and boolean.  Consider the examples here: </p>
+
+
+<pre><strong>
+set report=7
+set term=vt100
+set terse
+set nomagic
+</strong></pre>
+
+
+<p>Because the first two examples are assignments, they must specify
+either string or numeric values.  The first is numeric; here,
+<code>report=7</code> tells the editor to give you a
+report (warning message) whenever a command changes seven or more lines --
+the default is five or more lines.  </p>
+
+
+<p>The second example assigns a string value; the numerals in it are
+regarded as merely characters by the editor.  The <code>term=vt100
+</code> directive tells the editor to address your terminal
+as though it were a DEC model VT100.  (You specify one of the listed
+short names for the terminal -- obtained from the Termcap or Terminfo
+terminal-description systems -- as its string value.)  The default
+for this variable is to use the terminal type from your log-in shell
+environment (the value assigned to your <code>TERM</code> variable),
+if available -- and if not available, then address your terminal as
+though it were a ``dumb'' terminal.  </p>
+
+
+<p>The last two examples (without equal signs) illustrate boolean
+variables, which can be either on (enabled) or off (disabled). You turn
+a boolean variable on just by giving its name after the
+<code>set</code> command.  The first of these two
+boolean examples tells the editor to make any error messages very brief:
+cryptic to inexperienced users, but convenient for people who are quite
+familiar with the editor.  The default for this variable is ``off'' or
+``disabled'', which provides longer, more explanatory error messages.
+</p>
+
+
+<p>To turn a boolean variable off, just give its name prefixed by the
+string ``no'' without any intervening space characters.  The last of these
+examples turns off the special (``magic'') interpretation of several
+metacharacters, as discussed in <a href="009.part1.html#search-metachars">an
+earlier part of this tutorial dealing with search patterns</a>.
+The usual default for this variable's value is ``magic'', which means
+all metacharacters have their special interpretation -- but if you
+invoke the editor by the name <code>edit</code> or
+<code>vedit</code>, then ``nomagic'' is the default
+value (no special interpretation of these particular metacharacters).
+</p>
+
+
+<p>There's no need to use several distinct
+<code>set</code> commands when you want to change a
+number of these variables.  A single command can have almost any number
+of arguments.  So all four of the example commands above could be replaced
+by this single command: </p>
+
+<pre><strong>
+set report=7 term=vt100 terse nomagic
+</strong></pre>
+
+<p>Variant forms of this command will tell you the present status of
+individual variables, all that have been changed, or all the variables.
+For instance, type ``set'' without any arguments to tell the editor to
+display a list of all the variables that have been changed from their
+default values, along with their current values.  </p>
+
+
+<p>Type ``set all'' to display all the variables and their values,
+whether changed from default or not.  This is a good way to check which
+variables your version of the editor recognizes, and what their default
+values actually are -- some proprietary versions of the editor have
+played with both these factors.  </p>
+
+
+<p>If you want to check the values of only one or a few variables, you
+don't have to scan through a long list -- you can run a <code>set
+</code> command that will report the settings of only the
+variables you specify.  For a boolean variable, just give the name of
+the variable, immediately followed by a question mark, as an argument
+to the command.  For a string- or numeric-valued variable, you only need
+to specify the name itself, without the equal sign.  Thus, typing: </p>
+
+
+<pre><strong>
+set report magic?
+</strong></pre>
+
+
+<p>will produce a response like this:</p>
+
+
+<pre>
+report=7 nomagic
+</pre>
+
+
+<p>If the details of checking individual variables seem too arcane to
+remember, the editor will cut you some slack: You may specify the name
+of a boolean variable in its ``no'' form, and you may give a non-boolean
+variable with an unneeded question mark at the end of it, and your query
+will still work.  So typing: </p>
+
+
+<pre><strong>
+set report? nomagic?
+</strong></pre>
+
+
+<p>will produce the same result as the previous query did.  </p>
+
+
+<p>You can even mix option settings with inquiries in the same
+<code>set</code> command, in any order.  For example,
+if you want to turn on <code>number</code> and set
+<code>report</code> to warn you whenever even three
+lines are changed, and also want to know what terminal type the editor
+thinks you are using and whether <code>terse</code>
+is on or off, any one of the following command lines will take care of
+it all: </p>
+
+
+<pre><strong>
+set number report=3 term terse?
+set term terse? number report=3
+set term number terse? report=3
+</strong></pre>
+
+
+<p>Below, I've listed some important editor variables that modify the
+visual display, with an explanation of each.  If two names are specified,
+the first is the full name and the other is the shortest recognized
+abbreviation.  The full name will appear in the lists displayed when
+you type ``set'' by itself or type ``set all''.  </p>
+
+
+
+<h3><a name="section2"></a><code>set</code> Command
+Variables that Control How to Paint the Screen </a></h3>
+
+<h4><code>number nu</code></h4>
+
+
+<p>You already know that the editor assigns a number to every line in
+your file, and changes line numbers every time you add or delete lines,
+in order to keep the numbers consecutive.  The <code>number</code> boolean
+variable tells the editor to display those line numbers next to every file
+line that appears on the screen, in both screen and line-editing modes.
+You just have to turn it on; it's off by default.  If you have a window
+that looks like this: </p>
+
+
+<pre>
+COLOR CODING FOR POWER WIRES
+green     ground
+white     neutral
+black     hot
+red       hot
+</pre>
+
+
+<p>turning on this variable will make it look something like this: </p>
+
+
+<pre>
+  158  COLOR CODING FOR POWER WIRES
+  159  green     ground
+  160  white     neutral
+  161  black     hot
+  162  red       hot
+</pre>
+
+
+<p>The displayed numbers do not become part of the file, and nothing you
+can do, deliberate or accidental, will cause your editing to interact
+with the line numbers.  </p>
+
+
+
+<h4><code>list</code></h4>
+
+
+<p>Turning on this off-by-default variable makes two changes in the way
+file lines are displayed on the screen, whether in line- or screen-editing
+mode: </p>
+
+
+<ol>
+
+<li>The end of each line is marked by a dollar sign.  (This applies to
+actual line ends, not to places where the editor wraps a long line so
+it can all be displayed on the screen.)  </li>
+
+<li>Every tab character is replaced by a circumflex-capital-I (``^I'')
+character sequence.  (This means that columns that were kept in
+alignment by preceding tabs will not be displayed aligned with this
+variable enabled.)  </li>
+</ol>
+
+
+<p>Taking the same sample screen as in the previous example, when the
+<code>list</code> variable is on, the screen would
+look like this: </p>
+
+
+<pre>
+COLOR CODING FOR POWER WIRES$
+green^Iground$
+white^Ineutral$
+black^Ihot$
+red^Ihot$
+</pre>
+
+
+<p>This variable affects display only, the contents of the file are
+not changed in any way.  The <code>list</code>
+and <code>number</code> variables are compatible.
+Enabling them both would produce a display like this: </p>
+
+
+<pre>
+  158  COLOR CODING FOR POWER WIRES$
+  159  green^Iground$
+  160  white^Ineutral$
+  161  black^Ihot$
+  162  red^Ihot$
+</pre>
+
+
+
+<h4><code>window=</code></h4>
+
+
+<p>The numeric value of this variable tells the editor how many
+screen lines should be in the editing window (in screen-editing
+mode). The default is one less than the size of your screen or window.
+This variable's value cannot be changed while you are in screen-editing
+mode.  </p>
+
+
+<h4><code>scroll</code></h4>
+
+<p>A numeric variable that sets the number of lines to be scrolled
+down by a control-D or up by a control-U command.  The <code>z
+</code> command uses twice this count as the number of lines
+to display.  Default value is half the size of the screen or window.  </p>
+
+
+<p>You can give a count prior to one of those scrolling commands, which
+will override the value of the <code>scroll</code>
+variable.  For example, typing ``3control-D'' will scroll forward just
+three lines.  </p>
+
+
+<p><em>Caution: </em> The editor will remember any count you give, and
+use that count -- instead of the value assigned to <code>scroll</code>
+-- with any future command you give without specifying a new count.
+Because the value of the <code>scroll</code> variable remains unchanged,
+even though it is no longer being used, the <code>set</code> command
+has no way to undo this new behavior.  The only way to go back to using
+the value set for <code>scroll</code> is to look up that value -- type
+``set scroll'' -- then use this value as a count preceding another of
+the commands that normally use the <code>scroll</code> variable.  </p>
+
+
+
+<h3><a name="sectionT"></a>Playing `` <code>tag</code>''</a></h3>
+
+
+<p>If your editing work requires jumping from place to place in numerous
+files, it would be convenient to index the places you visit most.
+The editor has a system for handling this.  It's pretty simple, too;
+you set up one or more reference lists, then you can go to the place
+within the file that you want just by typing a few characters.  </p>
+
+
+<p><em>Caution: </em> the ``tags'' system described below does not simply
+switch focus briefly to another file.  It ends your editing of the current
+file, then loads the new file into the editor with the standard context
+changes, just as if you had given an <code>edit</code>
+command.  As a consequence of this, the editor will normally refuse
+to execute a <code>tag</code> command when the file
+you are presently editing has changes which you have not yet written to
+permanent storage.  If you choose to override this protection, give the
+command as <code>tag!</code> or <code>ta!
+</code>.  </p>
+
+
+<p>To use this system, you need to set up at least one ``tags'' file
+containing references to your file destinations.  If programming is
+your work and you use C, C++, Pascal, FORTRAN, lex or yacc, the Unix <a
+href="https://www.ele.uri.edu/unixworld/man/ctags.1"><code>ctags</code></a>
+utility can set up a suitable ``tags'' file for you.  If not, it isn't
+all that difficult to build such a file yourself.  </p>
+
+
+<p>Each line in a ``tags'' file is a complete reference to a place you
+might want to go.  The line has five parts, which (reading from left to
+right) are: </p>
+
+
+<ol>
+
+<li>The short name you will use to refer to the particular file and the
+place in it.  Don't start choosing names, though, until you've read the
+<a href="009.part5.html#third-way">third way to invoke a tag</a>, below.
+</li>
+
+<li>One tab character, as a separator.  A space character will not
+do here.</li>
+
+<li>The name of the destination file.  This can be a simple name, if the
+file is in your current directory, or a path name, if not.</li>
+
+<li>Another tab character.  Again, a space character won't do.</li>
+
+<li>A line-mode search command that will find the place you want within
+the file.  As you may have cleverly deduced, you can string multiple
+commands together here with the vertical-bar (``|'') character, and can
+use editing commands if you want the file pre-edited.  Spaces and even
+tabs may appear in this string if needed; only the first two tabs in a
+line are interpreted as field separators.  </li>
+
+
+</ol>
+
+
+<p>If this file structure sounds a little complex, look at this short
+example of a ``tags'' file to see how things actually work out: </p>
+
+
+<pre><strong>
+difid   ../math/calc    /^APPENDIX/;/^C. Differen
+integ   ../math/calc    /^APPENDIX/;/^D. Integrals
+log     /adm/err-log    1;?Err-7$
+rvlog   /adm/err-log    g/^/m0|0;/Err-7$
+vocab   %      /^GLOSSARY
+words   %      /^GLOSSARY
+</strong></pre>
+
+
+<p>The first line in the example above provides that using ``difid'' as a
+tag will take the user to edit a file named ``<code>calc</code>'', in a
+directory with relative path name ``<code>../math</code>''. (<em>Note:
+</em> that using this tag will not change the current directory of the
+user's shell; only the file being edited is changed.)  Once that file
+has been loaded, the editor will seek out the first line that starts
+with ``APPENDIX'', and go from there to the next line that begins with
+``C. Differen''.  </p>
+
+
+
+<p>Yes, you can specify different tags to enter the same file at different
+points.  My second example line contains a tag that leads to a different
+place in the same file.  After the editor has searched out the first line
+beginning ``APPENDIX'', as before, it goes on to a different section of
+the appendix.  </p>
+
+
+<p>You can even use multiple tags to enter the file at the same point,
+but with different preliminary editing.  My ``log'' and ``rvlog'' tags
+go to the same file and the same line -- the most recently appended line
+that ends with ``Err-7''.  The difference is that the ``rvlog'' tag first
+reverses the order of lines in the file.  (Note that the search command
+for the two tags is different, because in the second case the line being
+sought has been moved to a different position in the file.)  </p>
+
+
+<p>And you can use a tag to move to a place in the file you are
+already editing.  In the last two example lines I have used the percent
+sign (<code>%</code>) to indicate ``current file''; the pound-sign
+(<code>#</code>) for ``alternate file'' is also acceptable.  These tags
+move the user to the glossary section of the document currently being
+edited, whatever that document may be.  If I were to invoke a tag with
+an actual file name in it, and that file happened to be the file I was
+presently editing, the effect would be the same.  </p>
+
+
+<p>Finally, you undoubtedly saw that the last two entries in my tags
+file are identical except for the tag names.  Either tag will take
+you to the same place in the same file with no preliminary editing.
+This is legitimate, and often useful.  You may be building a tag file
+for multiple users -- some of these users are accustomed to a certain
+tag name for a given file and location, some to another tag name.
+The tags system allows you to accommodate both groups.  </p>
+
+
+<p>You may have noticed that the lines in my example file are arranged in
+ASCII-sort order.  This is necessary to keep the tag-search mechanism from
+missing the tag you specify.  If you don't trust your own ability to sort
+the lines, the Unix <a href="https://www.ele.uri.edu/unixworld/man/sort.1"><code>sort</code></a>
+utility can do it for you.  </p>
+
+
+<p>When you've built your ``tags'' file, you need a place to put it.
+Ordinarily, when you invoke a tag name, the editor first tries to look
+it up in a file named ``<code>tags</code>'' in your current directory.
+If it fails to find such a file, it then looks for <code>/usr/lib/tags
+</code>.  But you can override these defaults by setting a different
+value for the ``tags'' file in your editing environment.  For instance,
+if you include this command in your setup file: </p>
+
+
+<pre><strong>
+set tags=moretags
+</strong></pre>
+
+
+<p>then tag searches will take place in a file named ``moretags'' in
+your current directory.  </p>
+
+
+<p>With everything set up, you only need to know how to invoke a tag as
+needed.  There are three or four ways to do it, all enumerated below: </p>
+
+
+<ol>
+
+<li><p>When you invoke the editor from your shell's command line you
+can use the ``-t'' command-line option flag to specify a tagged item
+instead of naming a file to edit.  For example, typing the line (from
+your shell prompt): </p>
+
+<pre><strong>
+vi -t chap3
+</strong></pre>
+
+<p>tells the editor to look up the ``chap3'' tag to find the destination
+file and location in that file.  Oddly enough, you can list some file
+names to edit as well as a tag (with ``-t'') on the editor-invocation
+command line.  The rule is that the first string of non-whitespace
+characters immediately following the ``-t'' flag is regarded by the
+editor as a tag name; any other such strings that don't begin with a
+``-'' character are taken as actual names of files.  However, the tagged
+and the named files aren't remembered the same way in this case.  </p>
+
+
+<p>For instance, if you specify a tag, then two file names, the
+editor will initially place you in the tagged file and when you type
+<code>:next</code> you will move to the first named
+file, and another <code>:n</code> (the shortest abbreviation) takes you
+to the second named file.  But, the tagged file does not appear on the
+argument list -- viewed with the <code>args</code> command -- so when
+you enter a <code>:rewind</code> command you return to the first named
+file, not the tagged file, even though it was specified first on the
+command line.  </p></li>
+
+
+<li>While you are editing a file, you can invoke a tag with the
+line-mode command <code>tag</code> (shortest
+abbreviation, <code>ta</code>) followed by a space
+and the tag name.  This command can be given from screen mode as
+<code>:tag</code>, of course.</li>
+
+
+<li><p><a name="third-way"></a>While you are in screen mode, you can put
+the cursor on either the first letter of a word or the space immediately
+preceding it and then type a ``control-]'' character.  This has the same
+effect as if you'd typed the word the cursor is at as the argument to
+a <code>:tag</code> command.  </a></p>
+
+
+<p><em>Caution: </em> A ``control-]'' is the default Telnet ``escape''
+character.  So if you are editing on a remote system during a Telnet
+session and enter a ``control-]'', control will return to Telnet, which
+will interpret what you type next as a Telnet command.  You could change
+the Telnet escape character when you start your remote terminal session
+in order to use ``control-]'' with the editor.  </p></li>
+
+
+<li>Some newer versions of the editor maintain a stack of tags.  If so,
+you can repeat the last <code>:tag</code> command you gave in screen
+mode by typing ``control-T''. This can take a count, so that typing a
+``2'' and then a ``control-T'' repeats the <code>:tag</code> command
+preceding the last one you gave, etcetera.  </li>
+
+</ol>
+
+
+<h3><a name="sectionL"></a>Making Your Environment Setup Automatic</a></h3>
+
+
+<p>When you've worked out an editing environment setup that you will
+want to use frequently, or even occasionally, there is no need to type
+in all the changes from default every time you start up the editor.
+Because these are all line-mode editor commands, there are several ways
+to define them automatically, all or some of the time.  </p>
+
+
+<p>If there is an editor start-up file (which must be named
+<code>.exrc</code>) in your home directory (the dot at the start of the
+name is essential and the ``rc'' abbreviation means ``run command''),
+the editor will interpret it every time you invoke the editor and execute
+(or at least attempt to execute) the lines in the file as line-mode
+commands before it turns editing control over to you.  This applies to
+environment-setting commands as well as others, so placing your set-up
+commands somewhere in this file will cause the setup to happen every
+time you invoke the editor.  </p>
+
+
+<p>There are drawbacks to this approach, though.  You can only have one
+environment preset this way: the editor will use that same environment
+every time you invoke the editor.  One way to provide more flexibility
+is to maintain several files with various setups in them, and before
+you enter the editor, rename the appropriate one of those start-up
+files to <code>.exrc</code> and when you leave the editor, restore
+its original name.  But you shouldn't have to deal with anything this
+cumbersome just to control your editing environment.  </p>
+
+
+<p>The creators of the editor have provided a much better solution.
+Before the editor looks in your home directory for a start-up file,
+it first looks in the directory from which you invoked the editor.
+If it finds a file named <code>.exrc</code> there, it interprets that
+as the start-up file instead of the <code>.exrc</code> file in your
+home directory.  </p>
+
+
+<p>That behavior lets you have a special setup for each directory in
+which you might want to do some editing.  For instance, let's say you
+have a directory of shell scripts, another containing chapters from a
+book you're writing, still another you use for writing e-mail, plus one
+where you store and edit error logs -- you can have a separate editing
+environment for each of these purposes.  And if you invoke the editor
+from a directory where you don't maintain a separate start-up file,
+the one in your home directory will be used.  Just remember to change
+to the directory where the target file(s) are located before invoking
+the editor.  </p>
+
+
+<p><em>Caution: </em> If you invoke the editor from a directory different
+from the one containing the file you're editing, the editor will interpret
+the start-up file from your start-up directory, and not use the intended
+environment (defined by the <code>.exrc</code> file in the directory
+where the target file resides).  </p>
+
+
+<p>One caveat about multiple <code>.exrc</code> files, though.  In Unix
+System V and its successors, a security feature restricts the editor's
+access to <code>.exrc</code> files that are not in your home directory.
+The editor will not interpret a <code>.exrc</code> file that's not in
+your home directory, unless you also have a <code>.exrc</code> file
+that does live in your home directory, and that file contains a line
+that sets the <code>exrc</code> boolean variable.  </p>
+
+
+<p>The security hazard that this complex proviso guards against is a real
+one.  Let's say you need to edit several files that are in a directory
+like <code>/tmp</code>, <code>/var/tmp</code> or some other directory that
+is writable by all users.  To save the trouble of providing a full path
+name every time you want want to switch from one file to another, you
+could easily change directories (that is, ``cd'' to the directory where
+these files are located). But when you want to start editing a file, the
+Vi/Ex editor may find a Trojan horse file named <code>.exrc</code> placed
+in your current directory by a cracker to await victims.  Of course, the
+commands in this false editor start-up file will be run with your account
+ownership.  These commands aren't limited to editor set-up commands,
+but may be any shell command that you're allowed to run, including
+ones to wipe out your files, reset file permissions to allow public
+access to confidential data, send indelicate comments to your boss using
+utilities like <a href="https://www.ele.uri.edu/unixworld/man/write.1"><code>write</code></a>
+combined with <a href="https://www.ele.uri.edu/unixworld/man/banner.1"><code>banner</code></a>,
+and so forth.</p>
+
+
+<p>Now, perhaps you work on files that have different kinds of material
+in different sections, and you want to be able to make a complete change
+of editing environment whenever you move from one section to another.
+In this case, use the <code>source</code> command,
+with <code>so</code> as its shortest abbreviation.  </p>
+
+
+<p>The <code>source</code> line-mode command can be
+given at any time, although you may have to give it from line-editing
+mode, not from screen mode with a preceding colon.  It takes one argument,
+a file name or path name, and its function is to read the named set-up
+file and attempt to execute the lines in it as a series of line-mode
+commands.  </p>
+
+
+<p>Whether or not you can specify this command successfully in screen
+mode depends on the editor version you are using.  Some early versions
+were quite serious about prohibiting multiple-line line-mode commands
+while in screen mode.  So serious that these versions will execute only
+the first line of a script that has been sourced in while the user is
+in screen mode.  If you don't encounter this behavior, you can ignore
+this warning.  If you do, you at least know where the problem lies.  </p>
+
+
+<p>Now that you understand editor start-up files, I can acknowledge
+that the one you put in you home directory is not strictly necessary.
+The editor will accept the value of a shell environment variable named
+<code>EXINIT</code> as the string of line-mode commands to be run
+whenever the editor starts up.  But I don't recommend going this route,
+for several reasons: </p>
+
+
+<ul>
+
+<li>Usually the shell has a strict limit on the number of characters
+for the value of an environment variable, whereas the size of a
+<code>.exrc</code> file is practically unlimited.  As you get better at
+using the editor, you can easily develop a home-directory start-up file
+that is too large for <code>EXINIT</code>.  </li>
+
+
+<li>A start-up file can be changed by simple editing, but you have to
+redefine the <code>EXINIT</code> variable from scratch.  </li>
+
+
+<li>A change in your start-up file takes effect the next time you invoke
+the editor, whereas if your <code>EXINIT</code> variable is defined in
+a shell start-up file, it's new definition won't take effect until you
+log-in again or explicitly ``source'' the shell start-up file from the
+shell's command line.  </li>
+
+
+<li>When you want to restore the editor's environment variables to their
+beginning state, you can simply source in the editor start-up file.
+There's no way to do this with the <code>EXINIT</code> shell variable.
+</li>
+
+
+</ul>
+
+
+<p>You can use <code>source</code> to execute an editor
+set-up file from anywhere in your file space.  It will also execute any
+file of line-mode commands, no matter what the file name.  For example,
+let's say you have a special environment setup that you never use at
+the beginning of an editing job, but you do need it to edit tables.
+You invoke the editor as always, but when you're ready to edit your
+tables, you run a command like: </p>
+
+
+<pre><strong>
+:so table-defs
+</strong></pre>
+
+
+<p>where the <code>table-defs</code> file contains line-mode commands
+that set up the editor for table editing.  </p>
+
+
+<p>When you specify a file of line-mode editing commands with
+<code>source</code> to perform, say, a frequently
+used edit automatically, it's probably a good idea to have commands in
+that file to return the editing environment to what it was before the
+editing commands were run, assuming the environment was changed for the
+editing task.  </p>
+
+
+<p><em>Caution: </em> If you decide to use environment set-up files that
+you specify while you are editing -- you can't always depend on default
+values.  For example, the <code>autoindent</code>
+variable is disabled (``off'') by default.  So if you are setting up a
+start-up file that will only be used at the beginning of editor sessions,
+and you don't want to use autoindenting, you don't need to do anything
+to leave it turned off.  But if you plan to occasionally use that set-up
+file in the middle of a session, you have to ask yourself, ``Will I ever
+use this setup in a case where I previously had autoindenting turned on,
+either by another set-up file or because I manually turned it on?''
+If the answer that question is ``Yes'', then the set-up file you're
+writing must contain a <code>set noai</code> command
+to be sure that autoindentation is definitely disabled.  </p>
+
+
+<p>And, what if the <code>source</code> command is
+broken in your version of the editor?  There is still a way to make
+semiautomatic environment changes.  You have to use the line-mode
+<code>read</code> command plus a little-known feature
+of letter-named storage buffers.  </p>
+
+<p>You're probably accustomed to using the ``a'' through ``z'' named
+buffers for storing pieces of text, and returning these pieces to the
+main document with commands like <code>"jp</code>,
+which returns the contents of the ``j'' buffer right after the cursor
+position in visual mode.  Well, you can also use a visual-mode command
+of the form <code>@j</code>, which takes the text
+from the ``j'' buffer and executes it as a visual-mode command string.
+For instance, if buffer ``j'' contains ``257G3dd'' as its text, then
+typing <code>@j</code> will move the cursor to line
+257 and delete that line and the two that follow it.  </p>
+
+<p>The text in the buffer must be commands you could give from visual
+mode for this feature to work, but that includes line-mode commands that
+are preceded by a colon and terminated with a carriage-return character.
+So if buffer ``h'' contains the lines: </p>
+
+<pre><strong>
+:se nomesg terse list
+:map v :!wc -w %^M
+1G
+</strong></pre>
+
+
+<p>then typing ``@h'' will reset three variables, map a command string,
+and move the cursor to the first line in the file.  </p>
+
+
+<p>There are a few points you should keep well in mind when you are
+placing line-mode commands into a letter-named buffer for future
+execution.  All of them revolve around the fact that the editor is
+expecting screen-mode commands from this source.  </p>
+
+
+<ul>
+
+<li>Any line-mode command must fit entirely on a single line.  </li>
+
+
+<li>A line-mode command must begin with a colon character.  </li>
+
+
+<li>A line-mode command may begin at the start of a line of text or in
+the middle of it, but it must end at the end of the line.  At execution
+time, the newline character at the end of the text line is what tells
+the editor that this particular command is ended and a new command
+(either line- or screen-mode) will follow.  </li>
+
+
+<li>Never put a line break in buffer text you will execute as a command
+string unless a carriage return is part of the command string at that
+point.  </li>
+
+
+</ul>
+
+
+<p>To import this set-up command list from an outside file to the
+``h'' buffer, use the <code>read</code> command.  For example, if your
+three-line set-up file is named <code>set.5</code>, then type: </p>
+
+
+<pre><strong>
+:r set.5
+"h3dd@h
+</strong></pre>
+
+
+<p>to read the file into your editing buffer, then the
+<code>"h3dd@h</code> command will delete those three
+lines -- which came from the external file -- into the ``h'' named buffer,
+then execute the same lines as set-up commands.  </p>
+
+<h3><a name="next"></a>The Next Installment</a></h3>
+
+<p><em>You asked for it, and it's here!</em><br> Most of the e-mail
+I receive about this tutorial asks me how to do some specific kind
+of editing with Vi.  The most popular request so far has been for
+techniques to edit material in columns, and that's what I explain in
+the <a href="009.part6.html">next installment</a>. Then it's on to
+the treacherous, albeit important, topic of addresses for screen-mode
+commands.  </p>
+
+<H3>Back to the <a href="009-index.html#part5">index</H3>
+
+</body>
+</html>
