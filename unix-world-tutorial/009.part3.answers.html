@@ -1,0 +1,133 @@
+<html><head>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+	<title>Answers to Part 3 Exercises</title>
+</head>
+
+<H2>Answers to Part 3 Exercises</H2>
+
+<h3><a name="copy"></a>Solution to Copy and Decapitalize Problem</h3>
+
+
+<p>One straightforward solution is: </p>
+
+<pre><strong>
+global /^CHAPTER/ mark a | copy $ | 'a substitute /APTER/apter/
+</strong></pre>
+
+
+<p>which marks the original line, then copies it in its all-caps version
+to the end of the file, and finally returns to the original line to run
+the decapitalizing substitution.  </p>
+
+<p>Another, not quite so obvious but just as good, is to decapitalize
+"CHAPTER" first, then copy the decapitalized version to the end of
+the file, and finally run a substitution command on the current line
+(which is now the copied line at the end of the file) which changes the
+capitalization back to "CHAPTER".  </p>
+
+<H3>Back to the <a href="009.part3.html#Copy">question</a></H3>
+<hr>
+
+<h3><a name="troff"></a>Solution to <code>troff</code> Problem</h3>
+
+<p>The command line: </p>
+
+<pre><strong>
+1 , 16 global /^/ 217 substitute /n(PDu/\\n(PDu/
+</strong></pre>
+
+<p>does it by running the substitution command 16 times.  Each time it
+inserts a single backslash.  (The double backslash in the replacement
+pattern is necessary because the backslash is a special character
+even there.)  </p>
+
+<H3>Back to the <a href="009.part3.html#troff">question</a></H3>
+<hr>
+
+<h3><a name="hint-number"></a>Hint for Numbering Problem</h3>
+
+<p>My solution to this problem has an intermediate stage in which each
+macro is followed by a string of capital I letters on the same line.
+The count of the capital I letters on any macro line is equal to the
+paragraph number.  That is, the macro line for the fifth paragraph looks
+like this in the intermediate stage: </p>
+
+<pre><strong>
+.ppIIIII
+</strong></pre>
+
+<H3>Back to the <a href="009.part3.html#Numbering">question</a></H3>
+<hr>
+
+
+<h3><a name="solution-number"></a>Solution to Numbering Problem</h3>
+
+
+<p>The paragraphs can be numbered with just two <code>global</code>
+commands.  The first one: </p>
+
+
+<pre><strong>
+global /^\.pp/ . , $ substitute //.ppI/
+</strong></pre>
+
+
+<p>goes to each line beginning with a start-of-paragraph macro, then
+runs a <code>substitute</code> command from that line through the end
+of the file that puts a capital letter I after each such macro.  So the
+<code>substitute</code> command that runs from the first marked line
+puts an I after every one of the macros; from the second marked line it
+puts an I after every such macro except the first; from the third marked
+line it puts an I after every such macro except the first and the second;
+and so on.  Thus, after this <code>global </code> finishes, you have a
+string of the letter I after every macro that is equal in number to the
+paragraph's number.  That is, after the macro for the third paragraph you
+have the string "III"; after paragraph 5 you have the string "IIIII";
+etcetera.  Already you have Roman numerals (of a very primitive sort)
+numbering the paragraphs.  </p>
+
+
+<p>A second global command puts those Roman numerals into canonical
+form: </p>
+
+
+<pre><strong>
+global /^\.pp/ substitute /IIIII/V/ g \
+| substitute /VV/X/ g | substitute /IIII/IV/
+</strong></pre>
+
+
+<p>(As you'll learn in the next installment of this tutorial, a lower-case
+letter g at the end of a <code>substitute</code> command tells the
+editor to perform the substitution as many times as it can on each line,
+and a backslash at the end of a partial command line means the next line
+continues the command string.)  </p>
+
+
+<p>To see how our second <code>global</code> command sets things right,
+consider the case of the 19th paragraph.  The next four lines show what
+the macro line looks like at the start of the command and how it has
+changed after each of the three <code>substitute</code> commands has
+done its work: </p>
+
+
+<pre><strong>
+.ppIIIIIIIIIIIIIIIIIII
+.ppVVVIIII
+.ppXVIIII
+.ppXVIV
+</strong></pre>
+
+
+<p>(Astute readers will realize that the paragraphs could have been
+numbered with just one <code>global</code> command.  Each macro line
+has all the capital I letters it will get before <code>global</code>
+leaves it for the next line.  So we could have had the command string
+start by marking the line, next run the substitution that adds a capital
+I to all remaining macro lines, then return to the line and run the
+substitutions that produce a true Roman numeral.)  </p>
+
+<H3>Back to the <a href="009.part3.html#Numbering">question</a></H3>
+<hr>
+<H3>Back to the <a href="009-index.html#part3">index</a></H3>
+</body></html>
