@@ -1,0 +1,55 @@
+<html><head>
+	<title>Answers to Part 9 Exercises</title>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+</head>
+
+<font size="5">Answers to Part 9 Exercises</font><br>
+
+<h3><a name="double"></a>Answer to <code><strong>:ab</strong></code>
+Overload Exercise</h3>
+
+
+<p>In every case, the other meaning would prevail over the
+<code><strong>:ab</strong></code> meaning.  Reason: all the other
+metacharacters and metastrings take effect as soon as the last character
+of the string is typed in.  But an abbreviation doesn't take effect until
+you type the next following character in, proving that your string was a
+word by itself.  So the other metavalue will always be triggered first.
+</p>
+
+<H3>Back to the <a href="009.part9.html#Problem1">question</a></H3>
+<hr>
+<h3><a name="multi"></a>Answer to Multi-Line Problem </h3>
+
+
+<p>There are various uses for making some source-file commands
+unexecutable from screen mode.  Here are two examples.  </p>
+
+
+<ol>
+
+
+<li>You have a source file that makes complex changes in a certain
+area of your file, then prints the modified lines so you can look over
+the changes.  But when you are in screen mode, the changes are displayed
+anyway, so the line-mode <code><strong>print</strong></code> command only
+duplicates the display -- but it does require you to hit the return key
+and wait for a screen repaint before you can continue screen editing.
+Putting the command to print on a second line makes sure printing will
+only happen when you need it.  </li>
+
+
+<li>Your source file automates a lot of detail when you are doing a
+routine cleanup of an imported file while in line mode.  But when the
+file is too messed up for a blind cleanup from line mode, and you must
+work from screen mode, a few of the commands in your source file are
+likely to do more harm than good.  When those few commands are on a
+second line in the file, they only run when you are doing routine work
+from line mode.  </li>
+</ol>
+
+<H3>Back to the <a href="009.part9.html#Problem2">question</a></H3>
+
+<hr>
+<H3>Back to the <a href="009-index.html#part9">index</a></H3>
+</body></html>
