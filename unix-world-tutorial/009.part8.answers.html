@@ -1,0 +1,58 @@
+<html><head>
+	<title>Answer to Part 8 Exercise</title>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+</head>
+
+<h3><a name="h.indent"></a>Hint to Part 8 Exercise</h3>
+
+<p>Using a <code>global</code>  command can cut the length of the command
+sequence roughly in half. The correct way to use it depends on something
+I did not explicitly say about <code>global</code> commands, but which
+you should be able to guess from what I did say.</p>
+
+<H3>Back to the <a href="009.part8.html#you">question</a></H3>
+<hr>
+
+<h3><a name="indent"></a>Answer to Part 8 Exercise</h3>
+
+<p>A fairly simple way to handle both writing the tab-revised version
+of your file and keeping the original version in the editor buffer is
+this sequence: </p>
+
+
+<pre><strong>
+:.g/^/%s/\({*\)^I^I/\1{/g|%s/^\({*\)^I/\1&nbsp;&nbsp;&nbsp;&nbsp;/|%s/{/^I/g|w
+u
+
+</strong></pre>
+
+
+<p>The first line is pretty straightforward, excepting the initial
+<code><strong>global</strong></code> command.  Otherwise it just replaces
+every pair of tabs at the start of a line with the dummy character ``{'',
+then changes any remaining solitary tab in the initial whitespace with
+four space characters, changes every dummy ``{'' to a single tab, and
+finally writes the file.  </p>
+
+
+<p>That initial <code><strong>global</strong></code> command seems
+silly, I know.  It scans over just the current line, it marks that line
+without fail because every line has a starting point, and so it ends up
+running the remaining commands on the line for sure and exactly once.
+This is just what the command line would do without that initial
+<code><strong>global</strong></code>.  So why is it there?  </p>
+
+
+<p>The answer is in that second line.  When you run an undo after
+a <code><strong>global</strong></code> command, you don't just
+undo the last command the <code><strong>global</strong></code>
+ran; you undo every buffer change done by every command
+the <code><strong>global</strong></code> ran.  (Note that the
+<code><strong>u</strong></code> is not preceded by a colon (``:'');
+it is a screen-mode command.)  So as soon as the write is finished,
+the undo puts the entire buffer back as it was.  </p>
+
+<H3>Back to the <a href="009.part8.html#you">question</a></H3>
+<hr>
+<H3>Back to the <a href="009-index.html#part8">index</a></H3>
+</body></html>
