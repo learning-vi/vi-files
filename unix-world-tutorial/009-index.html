@@ -1,0 +1,157 @@
+<HTML>
+<HEAD>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+	<title>The Vi/Ex Editor</title>
+</head>
+<H1>UnixWorld Online: Tutorial: Article No. 009</H1>
+
+<H2>The Vi/Ex Editor</H2>
+
+<p>By <a
+href="http://www.networkcomputing.com/unixworld/authors/walter-zintz/bio.html">Walter
+Alan Zintz</a>.  </p>
+
+<p>[<em>Editor's Note:</em>. This tutorial series is a ``work in
+progress'' and will evolve over time.  We'll announce each new addition
+and expand this table of contents.]  </p>
+
+<h2><a name="part1"></a><a href="009.part1.html">Part 1: Vi Editor Fundamentals</a></h2>
+
+
+<ul>
+<li><a href="009.part1.html#why">Why Vi?</a>
+	<ul>
+	<li><a href="009.part1.html#heartwarming">A Heartwarming Edit</a></li>
+	<li><a href="009.part1.html#plan">The Plan Of This Ongoing Tutorial</a>
+	</li>
+	</ul></li>
+<li><a href="009.part1.html#concepts">The Editor's Basic Concepts</a></li>
+<li><a href="009.part1.html#search">Search Patterns</a>
+	<ul>
+	<li><a href="009.part1.html#search-from-here">Searching From Where You Are Now</a></li>
+	<li><a href="009.part1.html#find-them-all">The Find-Them-All Search</a></li>
+	<li><a href="009.part1.html#search-simple">Simple Search Patterns</a></li>
+	<li><a href="009.part1.html#search-metachars">Metacharacters</a></li>
+	<li><a href="009.part1.html#table">Table Of Search Pattern Metacharacters</a></li>
+	<li><a href="009.part1.html#search-charclass">Character Classes</a>.</li>
+	</ul></li>
+</ul>
+
+
+<h2><a name="part2"></a><a href="009.part2.html">Part 2: Line-Mode Addresses</a></h2>
+
+<ul>
+<li><a href="009.part2.html#addressing">Line-Mode Addressing</a></li>
+<li><a href="009.part2.html#section">Addressing a Section of Text</a></li>
+<li><a href="009.part2.html#try-it">Now You Try It</a></li>
+</ul>
+
+
+<h2><a name="part3"></a><a href="009.part3.html">Part 3: The Global Command</a></h2>
+
+<ul>
+<li><a href="009.part3.html#details">The Details of Global Operations</a></li>
+<li><a href="009.part3.html#more-uses">A Few More Uses for Global Commands</a></li>
+<li><a href="009.part3.html#you-try">Now You Give It A Try</a></li>
+</ul>
+
+
+<h2><a name="part4"></a><a href="009.part4.html">Part 4: The Substitute Command</a></h2>
+
+<ul>
+<li><a href="009.part4.html#section1">Making Changes Within Lines</a></li>
+<li><a href="009.part4.html#section2">A Few More Metacharacters</a></li>
+<li><a href="009.part4.html#section3">Replacement-Pattern Metacharacters</a></li>
+<li><a href="009.part4.html#section4">Other Uses for Substitution</a></li>
+<li><a href="009.part4.html#section5">A Start on Script Writing</a></li>
+<li><a href="009.part4.html#section6">Don't Lose Your Files</a></li>
+<li><a href="009.part4.html#feedback">Reader Feedback</a></li>
+</ul>
+
+
+<h2><a name="part5"></a><a href="009.part5.html">Part 5: Take Control of Your Editing Environment</a></h2>
+
+<ul>
+<li><a href="009.part5.html#section1">The <code>set</code> Command</a></li>
+<li><a href="009.part5.html#section2"><code>set </code> Command Variables
+that Control How to Paint the Screen </a></li>
+
+<li><a href="009.part5.html#sectionT">Playing ``<code>tag</code>'' </a></li>
+<li><a href="009.part5.html#sectionL">Making Your Environment Setup
+Automatic</a></li>
+</ul>
+
+<h2><a name="part6"></a><a href="009.part6.html">Part 6: Addresses and Columns</a></h2>
+
+<ul>
+<li><a href="009.part6.html#screen">Screen-Mode Addresses</a>
+
+<ul>
+
+<li><a href="009.part6.html#few">A Few Address Principles</a></li>
+<li><a href="009.part6.html#useful">Useful Addresses</a></li></ul>
+
+
+</li>
+<li><a href="009.part6.html#cols">Editing in Columns</a>
+
+
+<ul>
+
+<li><a href="009.part6.html#single">Single-Character Columns</a></li>
+<li><a href="009.part6.html#multi">Multi-Character Columns</a> </li></ul>
+
+</li></ul>
+
+<h2><a name="part7"></a><a href="009.part7.html">Part 7: The Replacement Commands</a></h2>
+
+<ul>
+	<li><a href="009.part7.html#more">There's more to <code>R</code> than to <code>r</code></a></li>
+	<li><a href="009.part7.html#quote">Quoting in Characters</a></li>
+	<li><a href="009.part7.html#ask">Readers Ask</a>
+
+<ul>
+	<li><a href="009.part7.html#tommy">Tommy Spratlin</a></li>
+	<li><a href="009.part7.html#thai">Thai-Nghia Dinh</a></li></ul>
+</li></ul>
+
+<h2><a name="part8"></a><a href="009.part8.html">Part 8: Indent, Like a Typewriter</a></h2>
+
+<ul>
+<li><a href="009.part8.html#auto">Automatic Indentation</a></li>
+<li><a href="009.part8.html#back">Backing off Indentation</a></li>
+<li><a href="009.part8.html#set">Juggling a few <code>:set</code> options</a></li>
+<li><a href="009.part8.html#you">An Exercise for You</a></li>
+<li><a href="009.part8.html#hard">Hard Tabs</a></li>
+<li><a href="009.part8.html#endis">Enable and Disable <var>autoindent</var></a></li>
+<li><a href="009.part8.html#next">Next Time</a></li>
+
+</ul>
+
+
+<h2><a name="part9"></a><a href="009.part9.html">Part 9: Take Charge with Macros</a></h2>
+
+<ul>
+
+<li><a href="009.part9.html#text">Text-Insertion Macros</a></li>
+	<ul>
+	<li><a href="009.part9.html#do">What These Tools Do</a></li>
+	<li><a href="009.part9.html#work">Working Principles</a></li>
+	<li><a href="009.part9.html#Problem1">Time for another exercise</a></li>
+	</ul>
+<li><a href="009.part9.html#sub">Command-Submode Macros</a></li>
+	<ul>
+	<li><a href="009.part9.html#map"><code>:map </code> Macros</a></li>
+	<li><a href="009.part9.html#buf">Buffer Macros</a></li>
+	<li><a href="009.part9.html#so"><code>:source</code> Macros</a></li>
+	<li><a href="009.part9.html#Problem2">Another Exercise</a></li>
+	<li><a href="009.part9.html#bang">Write and Read Macros</a></li>
+	</ul>
+<li><a href="009.part9.html#next">In The Next Installment of this Tutorial</a></li>
+<li><a href="009.part9.html#timeout">SIDEBAR: The <var>timeout</var>
+Function</a></li>
+
+</ul>
+<hr>
+<h3>Back to Fred's <a href="http://www.ele.uri.edu/faculty/vetter/Other-stuff/">Other Stuff</a></h3>
+</body></html>
