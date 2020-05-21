@@ -1,0 +1,570 @@
+<html>
+<head>
+	<link type="text/css" rel="stylesheet" href="zintz-style.css">
+	<TITLE>UnixWorld Online: Tutorial: Article No. 009: Part 6</TITLE>
+</HEAD>
+
+<H1>UnixWorld Online: Tutorial: Article No. 009</H1>
+
+<H2>The vi/ex Editor, Part 6: Addresses and Columns</H2>
+
+<p>By <a href="https://www.ele.uri.edu/unixworld/authors/walter-zintz/bio.html">Walter Alan
+Zintz</a>.  </p>
+
+<ul>
+<li><a href="009.part6.html#screen">Screen-Mode Addresses</a>
+	<ul>
+	<li><a href="009.part6.html#few">A Few Address Principles</a>
+	<li><a href="009.part6.html#useful">Useful Addresses</a>
+	</ul>
+<li><a href="009.part6.html#cols">Editing in Columns</a>
+	<ul>
+	<li><a href="009.part6.html#single">Single-Character Columns</a>
+	<li><a href="009.part6.html#multi">Multi-Character Columns</a>
+	</ul>
+<li><a href="009.part6.html#next">Next Installment</a>
+</ul>
+
+
+<p>By popular demand I'm trying something new in the tutorial, starting
+with this installment.  The e-mail I receive from tutorial readers
+most often asks me how to do some specific type of editing job, using
+whatever editor tools are needed.  So, I'm now mixing my general-principle
+explanations with in-depth coverage of particular work areas.  </p>
+
+
+<p>The first application area I'm covering is the one readers
+ask about most often, by far: editing files where columns are a
+major factor.  Future areas are up to you readers.  If you have
+an application area you'd like to see explained in some depth, <a
+href="mailto:walter@ccnet.com">e-mail me</a> your suggestion.  </p>
+
+
+<h3><a name="screen">Screen-Mode Addresses</a></h3>
+
+
+<p>You use them all the time.  They're the address targets that tell
+screen-mode commands like <code>c d y</code> which
+stretch of your file to act on.  And even more often you use such
+addresses without commands, to move around in the file.  </p>
+
+
+<p>For starters, I'll tell you some basics of screen-mode addressing that
+aren't particularly clear to most editor users.  Then it's on to a few
+powerful but obscure addresses that most of us rarely or never use.  </p>
+
+<p><strong><a name="few">A FEW ADDRESS PRINCIPLES</a></strong></p>
+
+<p>The first fact of screen-mode range addresses is simple enough:
+one end of the range to be affected by the command is always marked by
+the cursor itself.  The address you give the command (always a single
+address) indicates where the other end of the affected range is to be.
+The address target can be either forward or backward from the cursor
+position, in most cases.  But exactly how the cursor and the target
+terminate the two ends of the range is variable.  </p>
+
+
+<p>At the start we have to distinguish between line addresses and
+character addresses.  Line addresses are very straightforward: the
+command affects the entire line the cursor is on, the entire line where
+the address point is located, and all the lines in between.  If you
+are using an address without a command, in order to move the cursor,
+a line address generally puts the cursor on the first non-whitespace
+character in the line addressed.  </p>
+
+
+<p><a name="line-char">But line versus character</a> addresses affect
+a lot more than exactly what's included in the range.  As one example,
+if you yank or delete text using a line address and then place that text
+somewhere with a <code>p</code> or <code>P</code> command, that text
+will appear on a new line or lines, above or below the line you are on,
+respectively.  But if you yanked or deleted with a character address,
+when you put the text back in, it will appear within the line you are on,
+just just ahead of or behind the cursor.  And to dispose of one editor
+fallacy here and now, it does not make a bit of difference that the
+range of text you yanked or deleted with a character address amounts
+to exactly one or more lines -- it will still behave as any other text
+yanked or deleted with a character address.  </p>
+
+
+<p>So which addresses are line addresses?  That depends on what your
+command is.  </p>
+
+
+<p>Besides the three commands I cited as examples above, there are four
+other, less-used commands -- <code>! &lt; &gt; =</code>
+-- that also take addresses.  The only thing you have to know right now
+about these four commands is that they can act only on entire lines;
+that's inherent in what they do.  So with these four commands, every
+address is a line address.  (Except a handful of addresses, such as
+``f'', that cannot be used with these commands at all.)  </p>
+
+
+<p>With the three more-used commands <code>c d y</code>
+or with an address used by itself to move the cursor, an individual
+address is either always a line address or always a character address
+-- usually.  There are exceptions to this rule also, such as the address
+``j'', which is a character address when you are just moving the cursor,
+but a line address to any command.  </p>
+
+
+<p>So just where does a character address take you?  When you are just
+moving around in the file, the cursor lands on the character that is
+the target you sought.  Or if the target was a string of characters,
+the character address puts the cursor on the first of these.  </p>
+
+
+<p>When you are using a character address with a command, the situation
+is more complex.  The one firm rule is that if the character address is
+farther down in the file than the cursor position, the cursor position is
+included in the range the command affects; while if the address target is
+earlier in the file than the cursor, the cursor position is not included
+in the range.  </p>
+
+
+<p>The question of whether the address target is included in the
+command's range, like all the other open questions raised in the last
+few paragraphs, will have to be answered separately for each address.
+(But the usual rule is that if the address target is forward of the
+cursor, the target is not included; if the target lies backward from
+the cursor, the target is included.)  </p>
+
+
+<p>Note also that a count given with any of these seven commands is
+passed to the address.  You may give the count before or after the command
+character itself, but always before the address.  What the address does
+with the count, if anything, is also a case-by-case question.  </p>
+
+
+<p><strong><a name="useful">USEFUL ADDRESSES </a></strong></p>
+
+
+<p><a name="finding"></a>There are four addresses </a> that together
+resemble a miniaturized, localized version of the / and ? search patterns.
+In each case, the search takes place only in the current line, and only
+for a single character.  To use any of them, you type one of the four
+letters designating the kind of inline search, immediately followed by
+the character to be searched for.  (There are no metacharacters used
+with these addresses.)  </p>
+
+
+<p>The letter ``f'' means that the search will go forward in the current
+line and stop on the character typed next.  ``F'' makes the search run
+backward within the current line, otherwise the same as ``f''.  A ``t''
+search is the same as an ``f'' search except that the search stops with
+the character just short of the one you type after the ``t'', and a ``T''
+search is like a ``t'' search but running backward within the current
+line.  Any of these addresses can take a preceding count, which tells
+the search not to stop at the first instance of the character sought,
+but to go on to the <em>n</em>th, where <em>n</em> is the count.  </p>
+
+
+<p><a name="found"></a>Any of these search commands, </a> including the
+repeat-search commands mentioned below, are character addresses and can
+be used as an address for any of the three range commands that does not
+require a line address.  In every case, the character on which the cursor
+would have landed had there been no command is the furthest character
+included in the range the command will affect.  </p>
+
+
+<p>A few examples.  ``Fp'' would cause a search that went backward and
+landed on the closest prior letter ``p''.  ``3f-'' would make the search
+run forward within the current line and stop on the third instance of
+a hyphen.  ``2T '' would cause a backward search that ended one character
+short of the second closest space character.  </p>
+
+
+<p>This search system has its own repeat-search characters, which use
+storage buffers completely independent of those used for storing previous
+/ and ? search strings.  A semicolon ``;'' repeats the last inline search,
+in the same direction.  A comma ``,'' repeats the last search but reverses
+the direction.  Any count to the original search is not included in the
+repeat, but you can give a count to either repeat character which will be
+passed to the search command that is repeated.  While a search is limited
+to the current line, you can run a search, move to another line, then use
+a semicolon or comma to repeat the original search on the new line.  </p>
+
+
+<p><a name="pipe"></a>Another very useful address </a> that operates
+within a single line is the vertical bar ``|''.  When preceded by a
+count, this address takes the cursor to the <em>n</em>th character on
+the current line, where <em>n</em> is the count, regardless of where
+the cursor was when the address was given.  (In this address, <em>n</em>
+is absolute, not relative, starting from character one at the left edge
+of the text.)  </p>
+
+
+<p>This address can also be used with a command.  If the target character
+position is forward from the cursor position, the furthest character
+affected will be the last one before the target character.  If the target
+is backward from the cursor, the target character as well as all those
+between it and the cursor will be affected by the command.  </p>
+
+
+<h3><a name="cols"></a>Editing in Columns</a></h3>
+
+
+<p>Although the Vi/Ex editor was not specifically designed to deal
+with columnar material, there are ways to use it effectively for this
+kind of work.  Your choice of techniques will depend on whether you
+are dealing with <a href="009.part6.html#single">single-character
+columns</a> wherein each character in a line is in a separate column,
+or <a href="009.part6.html#multi">multi-character columns</a> where the
+columns are set apart from each other by a separator character.  </p>
+
+
+<p><strong><a name="single">SINGLE-CHARACTER COLUMNS</a></strong></p>
+
+
+<p>Here I'm using ``columns'' the way most programmers do.  A column in
+this sense is simply the characters in a vertical section of a file,
+one character wide.  That is, the first character on each line of the
+file is in the first column, the second character of each line is in
+the second column, and so on.  You'll find this usage in systems that
+use punch-card images, such as early Fortran programs; in the blocked
+records in certain databases, such as the ones used for very large
+mailing lists; etcetera.  </p>
+
+
+<p>The essential point is that the systems that use these records
+absolutely depend on each piece of information being entirely within a
+certain column or range of columns, and nothing else being within those
+columns except padding characters to fill up any column positions not
+needed for the information in a particular record.  </p>
+
+
+<p>For example, a mailing list may require that a suite or apartment
+number be in columns 122 through 125 in each record (line), with any
+padding following the actual number, so that an address printing program
+that finds ``316&nbsp;'' in those columns will print ``,&nbsp;#316''
+at the end of the street address line.  If it finds ``3A&nbsp;&nbsp;''
+it will then print ``,&nbsp;#3A'', etcetera.  Should the suite number be
+even partially shifted out of the designated columns, the system will
+either print garbage as the suite number or issue an error message and
+skip that address altogether.  The principle is the same, and even more
+important, with computer programs in punch-card image form.  </p>
+
+
+<p>When you are making changes in existing records, and editing
+visually, the first important point is to be sure your are at
+the start of the particular field you need to modify.  The <a
+href="009.part6.html#pipe"><nobr>``|'' address I've explained
+above</nobr></a> takes care of that -- wherever you are in a line,
+typing <code>122|</code> brings the cursor to the
+122nd column.  Unless there are not 122 columns in that line: then the
+cursor will be placed in the last column that does exist, without any
+warning or error message.  But files of this sort have generally been
+checked for exact block sizing, and if yours have not been, it's easy
+to check visually.  </p>
+
+
+<p>To check visually that all the lines in the file are of the proper
+length, start by running a <code><nobr>:se list</nobr></code>
+command, which will display a dollar sign at the end of each file line.
+Then scan through the file to check that all those dollar signs are
+aligned vertically.  If so, then check that the uniform line length is the
+correct one -- if your line length should be 66 characters (not counting
+the nonvisible newline), then run a <code>65|</code>
+command on any line, and make sure that the cursor lands one column away
+from the end of the line.  </p>
+
+
+<p>When you are at the start of the field to be changed, you have a
+choice of ways to change it.  If the change area is 12 characters long,
+then typing <code>12cl</code> followed by the 12 new
+characters and then the escape key will do it.  But if you miss the count
+by even one character; if the actual number of characters you type in
+is 11 or 13; then all the subsequent fields on that line will be shifted
+one character out of place, which is probably a recipe for disaster.  </p>
+
+
+<p>To avoid this hazard, make use of the little-known
+<code>R</code> command.  It starts like the familiar
+<code>r</code> command, in that when you type the letter
+``R'' in visual command mode the system waits to see what character you
+type next, and whatever that next character is, it replaces the character
+that was under the cursor.  But instead of then returning you to command
+mode, the <code>R</code> command then moves the cursor
+one character to the right and again waits to see what character you
+type next -- the character you now type replaces the character that
+is now under the cursor.  This process continues until you stop it by
+hitting the escape key.  So if your cursor is on the capital P in the
+following line: </p>
+
+
+<pre>
+but the greatest ancient Greek was Plato, who
+</pre>
+
+
+<p>and you type in ``RHomer'' followed by the escape key, your line will
+now read: </p>
+
+
+<pre>
+but the greatest ancient Greek was Homer, who
+</pre>
+
+
+<p>and the cursor will be on the letter r at the end of ``Homer''.
+This character at a time replacement is the way to make sure you don't
+inadvertently shift any fields.  Just be certain that you don't keep
+typing replacement characters beyond the existing end of the line;
+you would extend the line length that way.  You can give a count to
+the <code>R</code> command, but you don't want to in
+this use because the count will multiply the number of times the new
+character string is inserted.  That is, in that example above about
+replacing ``Plato'' with ``Homer'', if you had typed <code>3R</code>
+instead of <code>R</code> your revised line would read: </p>
+
+
+<pre>
+but the greatest ancient Greek was HomerHomerHomer, who
+</pre>
+
+
+<p>Entering completely new lines of information is another matter.
+You should just type them straight across, as you would with any text
+entry, but if the existing lines are cryptic to human eyes you may not
+be able to tell by looking just where one field ends and another begins.
+You can try to keep count of the characters, of course, but a single
+mistake will throw all the subsequent fields in that line out of position.
+</p>
+
+
+<p>What you need here is an on-screen template to show you what goes
+where.  You can make one on the spot, just by typing a template line
+into your file, entering each data line just above it, and deleting that
+template line when you are finished adding lines.  For example, suppose
+you are adding to a name file where each record (line) starts with a
+month, day and year, continues with a source code (each of the preceding
+as a two-digit number, with a leading zero to pad it if necessary),
+and then has fields for a last name, first name, and middle initial.
+It would not be practical to judge where fields break just by looking
+at the existing data lines, which might look like this: </p>
+
+
+<pre>
+07215854von TarekenstuttLeopold  J
+12077338Henderson-Blyth La Toya  P
+10108972Thistlethwaites Geraldine
+</pre>
+
+
+<p>But a simple template line can clear it all up.  Here is one for the
+job above: </p>
+
+
+<pre>
+m|d|y|s|LLLLLLLLLLLLLLL|FFFFFFFF|M
+</pre>
+
+
+<p>It has mnemonic characters to remind you of what goes in each field,
+and the ``|'' to indicate the last position of each field more noticeably.
+I've even used a lower-case letter for each field that takes numeric
+characters right justified and zero padded, and a capital letter for each
+field that takes alpha characters left justified and space padded.  </p>
+
+
+<p>The way to use this template is to start entering data lines
+immediately above the template line.  That way, as you hit return to start
+a new line, that new line replaces the one you've just finished in the
+position right above the template line.  Yes, eventually the template
+line will be driven down off the bottom of the screen, but returning
+to command mode and typing the lower-case letter ``z'' followed by the
+return key will move the template line and the lines around it to the
+top of the screen.  </p>
+
+
+<p>But there will be times when you don't want to spend time making
+individual changes that you should be able to handle globally.  Suppose an
+obsolescent operations code has been replaced, and you now need to change
+every ``B27'' to ``K53'' throughout your file, but only when the ``B27''
+appears in the operations code columns, which are columns 9 through 11.
+Th is odd-looking command will do it: </p>
+
+
+<pre><strong>
+:%s/^\(........\)B27/\1K53
+</strong></pre>
+
+
+<p>Those eight consecutive dots in the search pattern guarantee that a
+match will occur only when there are exactly eight characters between
+the beginning of the line and the ``B27''.  So of necessity, the ``B''
+must occur in column 9, and so on.  The ``\1'' puts those eight characters
+right back in again, so only the ``B27'' is actually replaced.  </p>
+
+
+<p>If your columnar file has all lines of equal length, as most do,
+you can use this technique from the right side, too.  If all lines in
+the file have 66 characters, then typing that last command as: </p>
+
+
+<pre><strong>
+:%s/B27\(...\)$/K53\1
+</strong></pre>
+
+
+<p>will accomplish the changes in a case where the operations code columns
+are 61 through 63, without the need to type (and carefully count) sixty
+consecutive dots.  </p>
+
+
+<p>But there will be times when the columns to be changed are in the
+middle of horrendously long record lines.  There are still a couple
+of tricks you may be able to use.  One is to find a landmark somewhere
+in mid-line.  Does column 158 always contain either a ``*'' or a ``|''
+character, neither of which can appear anywhere else in the lines?  Then
+you can make the above change in columns 163 through 165 by typing: </p>
+
+
+<pre><strong>
+:%s/\([*|]....\)B27/\1K53
+</strong></pre>
+
+
+<p>Failing a landmark, let the editor count out a long string of dots
+for you.  To use this technique, you must first create your substitution
+command as a text line within the file you are editing, next write that
+line as a separate file (and then delete the command line from your
+original file), and finally use the <code>:so</code>
+command to pull in that one-line file and run it as a line-mode command.
+If you need a string of 92 consecutive dots in your command, create a
+blank line at the end of your file, next type: </p>
+
+
+<pre><strong>
+:1,92g/^/$s/^/.
+</strong></pre>
+
+
+<p>to put those 92 dots there, and finally put the rest of the command
+around that dot string.  </p>
+
+
+
+<p><strong><a name="multi"></a>MULTI-CHARACTER COLUMNS</a></strong></p>
+
+
+<p>The other meaning of ``editing in columns'' has to do with text rather
+than data files.  It refers to tables of data such as you might find
+accompanying a technical article, columns of text and/or illustrations
+running in parallel as you'd find on a newspaper page, and the like.  </p>
+
+
+<p>Yes, Unix formatting utilities and some word processing programs will
+format your final output into columns.  But you may not have all these
+utilities, you may not want to spend time trying to get the results you
+want from those benighted programs, or you may plan to direct your output
+where formatters won't work.  </p>
+
+
+<p>Visually editing the columns of data in a table requires little
+explanation.  The one thing to remember: use the <code>R</code> as far as possible, to avoid shifting subsequent columns
+out of alignment inadvertently.  This holds for creating tables, too;
+start by setting up a rectangular block of space characters, then replace
+spaces with the column entries you want, to keep your next entry from
+misaligning previous ones.  This is also the best way to create pictures,
+diagrams, graphs and maps using ASCII characters.  </p>
+
+
+<p>Things become problematic when you want to shift whole columns around
+-- there are no built-in Vi facilities for doing this.  Here is what it
+is practical to do in the editor.  As a real life example, consider the
+piece below, which I use as the tail end of Usenet (Net news) posts that
+announce Indonesian classical music and dance performances at a local
+restaurant: </p>
+
+
+<pre>
+   It's at the Dutch East Indies Restaurant       ;,,,,;,,,,;,,,,;,,,,;  
+on Oakland's downtown waterfront.  The food      /%%%%%%%%%%%%%%%%%%%%%\ 
+there is very good Indonesian cuisine at        /%%%%%%%%%%%%%%%%%%%%%%%\
+reasonable prices - dinners $8.95 to $17.50.     "|""|"""|"""""|"""|""|" 
+Views are spectacular from the second floor      _|__|___|_   _|___|__|_ 
+picture windows, out over the water to Jack      =|==|===|=====|===|==|= 
+London Square, Alameda and San Francisco.       ~~~~~~~~~~~( (~~~~~~~~~~~
+Formality is medium - cloth napkins and oil                 ) )
+candles at the tables, but no supercilious
+waiters, and the wall decorations are mostly Indonesian handicrafts.
+The phone number for information and reservations is 510/444-6555.
+
+( ( (             | Broadway ||I      The Dutch East Indies Restaurant is
+ ) ) )Jack London |==========||==  in Jack London Village, a boutiques &
+( ( ( Square      |E         ||8   bistros cluster that is just down the
+ ) ) )            |m         ||8   estuary from Jack London Square.  Jack
+( ( ( JACK LONDON |b         ||0   London Village is rustic, picturesque,
+ ) ) )VILLAGE     |a         ||    quiet and safe.  To get there from the
+( ( (        Alice|r Amtrak  ||f   Interstate 880 freeway heading north,
+ ) ) ) -----------|c station ||r   take the Oak Street exit and turn left;
+( ( (       Street|a         ||e   five blocks will bring you to Embarca-
+ ) ) )            |d  Jackson||e   dero on your right, just before Oak
+( ( ( parking lot |e   ------||--  curves away to the left.  (Going south
+ ) ) )            |r   Street||w   on I-880, take the Jackson Street exit
+( ( (             |o         ||a   and go two blocks straight ahead before
+ ) ) )            |          ||y   you turn right on Oak Street.)  Turn
+( ( (           -------------||--  right onto Embarcadero and go three
+ ) ) )             Oak Street||    blocks, until you go under an overpass
+                                   of Victorian ironwork.  Immediately
+turn left onto Alice Street, where you will see Jack London Village on
+your right, and a large lot that offers validated parking on the left.
+Walk into the Village's central courtyard, and you'll see the Dutch East
+Indies on the estuary side, toward the right, and upstairs.
+
+</pre>
+
+
+<p>To create this, I started by drawing the stylized building and
+then the map.  In each case I created a large rectangular
+block of space characters, then began trying ideas with the
+<code>R</code> command until I had something that
+satisfied me.  (The pavilion sketch eventually became wider than I had
+planned, so I had to run a <code><nobr>:%s/.*/   &   / </nobr></code>
+command to give me more working space.)  Next I put additional blocks of
+space characters on the left of the drawing and the right of the map, to
+make a place for the text I wanted to include.  Then I started replacing
+spaces with text, rewriting the text as I went along to fit it in nicely.
+When the text reached the bottom of the figure I was fitting it to, I
+went to full-width text lines, entering them the usual way.  A tedious
+labor, but pretty straightforward.  </p>
+
+
+<p>Now suppose I decided to redo this piece, by moving the picture to
+where the map is now, and vice versa.  A few well chosen substitution
+and deletion commands would make copies of the two figures minus the
+text, and I could just as easily copy the text without the two figures.
+But how would I recombine them?  </p>
+
+
+<p>Short of typing the text in again from scratch, the best I could do
+is to yank the lines of each figure, one at a time, and put them after
+(or before) the appropriate text lines, one at a time.  Not that I
+would have to move back and forth between files with each yank and put;
+I could yank up to 26 lines into the named buffers, then move to the
+other file and put all 26 in their proper places.  But there is no
+Vi command to yank a rectangular block of characters.
+</p>
+
+
+<p>Also take note that I should yank using addresses that are not
+line addresses, even though I will be yanking whole lines.  If I
+should yank with line addresses, putting the pieces into the other
+file must make those pieces separate lines -- then I would have
+to join each pair of lines to create the columns I want.
+</p>
+
+
+<h3><a name="next"></a>Next Time Around </a></h3>
+
+<p>In the <a href="009.part7.html">next part</a> of this tutorial,
+I will go over host of complications and opportunities that come from
+allowing the replacement commands I've discussed to use metacharacters.
+Then I'll answer a couple of questions from readers that should be of
+use to quite a few of you from time to time.  </p>
+
+<H3>Back to the <a href="009-index.html#part6">index</H3>
+
+
+</body></html>
