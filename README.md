@@ -17,6 +17,10 @@ web sites authored with `vi`.
 * `amaze-your-friends` - The `vi`-related files originally
 available from alf.uib.no and mirrored on uunet.uu.net.
 
+* `clewn-1.15` - The `clewn` debugger assistant that connects
+GDB (the GNU debugger) to Vim, via the NetBeans interface. The original
+[home page](http://clewn.sourceforge.net) is also online.
+
 #### Last Updated
 
-Fri Jun  5 15:25:28 IDT 2020
+Sun Aug 30 20:05:12 IDT 2020
