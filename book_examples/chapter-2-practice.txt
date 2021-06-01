@@ -1,0 +1,3 @@
+With a screen editor you can scroll the page,
+move the cursor, delete lines, insert characters, and more, while seeing the results of your edits as you make them.
+Screen editors are very popular.
