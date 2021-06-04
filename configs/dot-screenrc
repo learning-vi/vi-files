@@ -1,0 +1,26 @@
+startup_message off
+defscrollback 20000
+
+# Help screen, key bindings:
+bindkey -k k9 exec sed -n '/^# Help/s/^//p;/^# F[1-9]/p' $HOME/.screenrc
+# F2 : list windows:
+bindkey -k k2 windowlist
+# F3 : detach screen (retains active sessions -- can reconnect later):
+bindkey -k k3 detach
+# F10: previous window (decrement reference from current, e.g., window 4 -> window 3):
+bindkey -k k; prev
+# F11: next window (increment reference from current, e.g., window 2 -> window 3):
+bindkey -k F1 next
+# F12: kill all windows and quit screen (you will be prompted):
+bindkey -k F2 quit
+
+screen -t "edits for chapter 1"
+screen -t "manage screen captures"
+screen -t "manage todos"
+screen -t "email and messages"
+screen -t "git status and commits"
+screen -t "system status"
+screen -t "remote login to NAS" ssh 10.0.0.999
+screen -t "solitaire"
+
+select 1
