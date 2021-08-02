@@ -1,0 +1,77 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_EXCMD	mixed	/number, pattern, mixed, or combineV2/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PATTERN_LENGTH_LIMIT	96	/0 for no limit/
+!_TAG_PROC_CWD	/home/arnold/work/ora/vi8/bookfiles/test-tags/	//
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	5.9.0	/p5.9.20201206.0/
+ELIDE_CODE	getopt.c	/^#  define ELIDE_CODE$/;"	d	file:
+ELIDE_CODE	getopt1.c	/^#define ELIDE_CODE$/;"	d	file:
+GETOPT_INTERFACE_VERSION	getopt.c	/^#define GETOPT_INTERFACE_VERSION /;"	d	file:
+GETOPT_INTERFACE_VERSION	getopt1.c	/^#define GETOPT_INTERFACE_VERSION /;"	d	file:
+NONOPTION_P	getopt.c	/^# define NONOPTION_P /;"	d	file:
+NULL	getopt1.c	/^#define NULL /;"	d	file:
+PERMUTE	getopt_int.h	/^      REQUIRE_ORDER, PERMUTE, RETURN_IN_ORDER$/;"	e	enum:_getopt_data::__anon2254ab980103
+REQUIRE_ORDER	getopt_int.h	/^      REQUIRE_ORDER, PERMUTE, RETURN_IN_ORDER$/;"	e	enum:_getopt_data::__anon2254ab980103
+RETURN_IN_ORDER	getopt_int.h	/^      REQUIRE_ORDER, PERMUTE, RETURN_IN_ORDER$/;"	e	enum:_getopt_data::__anon2254ab980103
+SWAP_FLAGS	getopt.c	/^#  define SWAP_FLAGS(/;"	d	file:
+SWAP_FLAGS	getopt.c	/^# define SWAP_FLAGS(/;"	d	file:
+_	getopt.c	/^# define _(/;"	d	file:
+_GETOPT_DATA_INITIALIZER	getopt_int.h	/^#define _GETOPT_DATA_INITIALIZER	/;"	d
+_GETOPT_H	getopt.h	/^# define _GETOPT_H /;"	d
+_GETOPT_INT_H	getopt_int.h	/^#define _GETOPT_INT_H	/;"	d
+_NO_PROTO	getopt.c	/^# define _NO_PROTO$/;"	d	file:
+__GNUC_PREREQ	getopt.h	/^#  define __GNUC_PREREQ(/;"	d
+__THROW	getopt.h	/^#  define __THROW	/;"	d
+__THROW	getopt.h	/^#  define __THROW$/;"	d
+__anon2254ab980103	getopt_int.h	/^    {$/;"	g	struct:_getopt_data
+__first_nonopt	getopt_int.h	/^  int __first_nonopt;$/;"	m	struct:_getopt_data	typeref:typename:int
+__initialized	getopt_int.h	/^  int __initialized;$/;"	m	struct:_getopt_data	typeref:typename:int
+__last_nonopt	getopt_int.h	/^  int __last_nonopt;$/;"	m	struct:_getopt_data	typeref:typename:int
+__nextchar	getopt_int.h	/^  char *__nextchar;$/;"	m	struct:_getopt_data	typeref:typename:char *
+__nonoption_flags_len	getopt_int.h	/^  int __nonoption_flags_len;$/;"	m	struct:_getopt_data	typeref:typename:int
+__nonoption_flags_max_len	getopt_int.h	/^  int __nonoption_flags_max_len;$/;"	m	struct:_getopt_data	typeref:typename:int
+__ordering	getopt_int.h	/^    } __ordering;$/;"	m	struct:_getopt_data	typeref:enum:_getopt_data::__anon2254ab980103
+__posix_getopt	getopt.c	/^__posix_getopt (int argc, char *const *argv, const char *optstring)$/;"	f	typeref:typename:int
+__posixly_correct	getopt_int.h	/^  int __posixly_correct;$/;"	m	struct:_getopt_data	typeref:typename:int
+_getopt_data	getopt_int.h	/^struct _getopt_data$/;"	s
+_getopt_initialize	getopt.c	/^_getopt_initialize (int argc, char *const *argv, const char *optstring,$/;"	f	typeref:typename:const char *	file:
+_getopt_internal	getopt.c	/^_getopt_internal (int argc, char *const *argv, const char *optstring,$/;"	f	typeref:typename:int
+_getopt_internal_r	getopt.c	/^_getopt_internal_r (int argc, char *const *argv, const char *optstring,$/;"	f	typeref:typename:int
+_getopt_long_only_r	getopt1.c	/^_getopt_long_only_r (int argc, char *const *argv, const char *options,$/;"	f	typeref:typename:int
+_getopt_long_r	getopt1.c	/^_getopt_long_r (int argc, char *const *argv, const char *options,$/;"	f	typeref:typename:int
+attribute_hidden	getopt.c	/^# define attribute_hidden$/;"	d	file:
+exchange	getopt.c	/^exchange (char **argv, struct _getopt_data *d)$/;"	f	typeref:typename:void	file:
+flag	getopt.h	/^  int *flag;$/;"	m	struct:option	typeref:typename:int *
+getopt	getopt.c	/^getopt (int argc, char *const *argv, const char *optstring)$/;"	f	typeref:typename:int
+getopt	getopt.h	/^#   define getopt /;"	d
+getopt_data	getopt.c	/^static struct _getopt_data getopt_data;$/;"	v	typeref:struct:_getopt_data	file:
+getopt_long	getopt1.c	/^getopt_long (int argc, char *const *argv, const char *options,$/;"	f	typeref:typename:int
+getopt_long_only	getopt1.c	/^getopt_long_only (int argc, char *const *argv, const char *options,$/;"	f	typeref:typename:int
+has_arg	getopt.h	/^  int has_arg;$/;"	m	struct:option	typeref:typename:int
+main	getopt.c	/^main (int argc, char **argv)$/;"	f	typeref:typename:int
+main	getopt1.c	/^main (int argc, char **argv)$/;"	f	typeref:typename:int
+main	main.c	/^main(int argc, char **argv)$/;"	f	typeref:typename:int
+name	getopt.h	/^  const char *name;$/;"	m	struct:option	typeref:typename:const char *
+needs_free	getopt.c	/^	int needs_free;$/;"	m	struct:_getopt_internal_r::option_list	typeref:typename:int	file:
+next	getopt.c	/^	struct option_list *next;$/;"	m	struct:_getopt_internal_r::option_list	typeref:struct:option_list *	file:
+no_argument	getopt.h	/^# define no_argument	/;"	d
+optab	main.c	/^static const struct option optab[] = {$/;"	v	typeref:typename:const struct option[]	file:
+optarg	getopt.c	/^char *optarg;$/;"	v	typeref:typename:char *
+optarg	getopt_int.h	/^  char *optarg;$/;"	m	struct:_getopt_data	typeref:typename:char *
+opterr	getopt.c	/^int opterr = 1;$/;"	v	typeref:typename:int
+opterr	getopt_int.h	/^  int opterr;$/;"	m	struct:_getopt_data	typeref:typename:int
+optind	getopt.c	/^int optind = 1;$/;"	v	typeref:typename:int
+optind	getopt_int.h	/^  int optind;$/;"	m	struct:_getopt_data	typeref:typename:int
+option	getopt.h	/^struct option$/;"	s
+option_list	getopt.c	/^      struct option_list$/;"	s	function:_getopt_internal_r	file:
+optional_argument	getopt.h	/^# define optional_argument	/;"	d
+optopt	getopt.c	/^int optopt = '?';$/;"	v	typeref:typename:int
+optopt	getopt_int.h	/^  int optopt;$/;"	m	struct:_getopt_data	typeref:typename:int
+p	getopt.c	/^	const struct option *p;$/;"	m	struct:_getopt_internal_r::option_list	typeref:typename:const struct option *	file:
+required_argument	getopt.h	/^# define required_argument	/;"	d
+val	getopt.h	/^  int val;$/;"	m	struct:option	typeref:typename:int
