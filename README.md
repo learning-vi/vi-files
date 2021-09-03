@@ -1,7 +1,7 @@
 # Files Accompanying *Learning The vi and Vim Editors*, Eighth Edition
 
 This repository provides files described in
-Appendix D of *Learning The vi and Vim Editors*, Eighth Edition.
+Appendix C of *Learning The vi and Vim Editors*, Eighth Edition.
 Many of these files used to be available on the Internet
 but are no longer.
 
@@ -29,4 +29,4 @@ web sites authored with `vi`.
 
 #### Last Updated
 
-Fri Jun  4 12:57:18 IDT 2021
+Fri Sep  3 16:15:53 IDT 2021
